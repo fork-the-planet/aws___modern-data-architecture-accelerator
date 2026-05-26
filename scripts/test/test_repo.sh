@@ -40,7 +40,7 @@ else
     echo "Using CONCURRENCY=${CONCURRENCY}, MAX_WORKERS=${MAX_WORKERS}"
     npx nx affected -t test --base="$NX_BASE" --head="$NX_HEAD" --parallel="$CONCURRENCY" -- --silent --maxWorkers="$MAX_WORKERS"
   else
-    npx nx affected -t test --base="$NX_BASE" --head="$NX_HEAD" "$@"
+    npx nx affected -t test --base="$NX_BASE" --head="$NX_HEAD" -- --maxWorkers="$MAX_WORKERS" "$@"
   fi
 fi
 
