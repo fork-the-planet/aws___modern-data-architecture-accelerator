@@ -1429,6 +1429,8 @@ release_version_package:
       - target
       - schemas
       - solution-manifest.yaml
+      - README.md
+      - CHANGELOG.md
     exclude:
       - '**/node_modules/**'
   allow_failure: false
