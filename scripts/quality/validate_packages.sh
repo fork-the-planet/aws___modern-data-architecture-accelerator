@@ -28,6 +28,8 @@
 #   Property 8: Packages with doc content must have test:package-docs script
 #     - Any package with typedoc.json, README.md, or SCHEMA.md must define test:package-docs
 #     - The script must reference scripts/generate_docs/test_package_docs.sh
+#   Property 9: All packages must have a .npmignore file containing !*.js
+#     - Ensures compiled JavaScript is included in the npm package
 #
 # Usage: ./scripts/quality/validate_packages.sh
 # Exit code: 0 if all packages pass, 1 if any deviations found
@@ -43,6 +45,7 @@ CANONICAL_TEST="jest --passWithNoTests --coverage"
 CANONICAL_JSII_BUILD="export JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 && jsii --project-references"
 CANONICAL_JSII_WATCH="jsii -w  --project-references"
 CANONICAL_JSII_PACKAGE="jsii-pacmak --npmignore=false"
+
 
 ERRORS=0
 CHECKED=0
@@ -292,6 +295,13 @@ for pkg_dir in $(discover_packages); do
     elif ! echo "$pkg_docs_val" | grep -q 'test_package_docs\.sh'; then
       fail "$pkg_dir" "Property 8 - test:package-docs script must reference test_package_docs.sh. Got: '$pkg_docs_val'"
     fi
+  fi
+
+  # Property 9: All packages must have a .npmignore file containing !*.js
+  if [ ! -f "${pkg_dir}/.npmignore" ]; then
+    fail "$pkg_dir" "Property 9 - .npmignore file is missing"
+  elif ! grep -q '!\*\.js' "${pkg_dir}/.npmignore"; then
+    fail "$pkg_dir" "Property 9 - .npmignore must contain '!*.js' to include compiled JavaScript"
   fi
 done
 

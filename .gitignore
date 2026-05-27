@@ -84,3 +84,4 @@ temp_configs
 *.code-workspace
 
 .gitlab/issues
+.gitlab/merge_requests
