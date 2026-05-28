@@ -2990,7 +2990,10 @@
               "Resource": "*"
             },
             {
-              "Action": "kms:Decrypt",
+              "Action": [
+                "kms:Decrypt",
+                "kms:GenerateDataKey"
+              ],
               "Effect": "Allow",
               "Resource": {
                 "Ref": "constructdomainconfigparserdomainconfigparserssmdomainkmsarnParameterB14E453F"

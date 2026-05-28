@@ -4,7 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
-import { Template } from 'aws-cdk-lib/assertions';
+import { Match, Template } from 'aws-cdk-lib/assertions';
 import { Stack } from 'aws-cdk-lib';
 import { DomainConfig, DomainConfigProps } from '../lib/domain_config';
 
@@ -329,6 +329,40 @@ describe('DomainConfig Tests', () => {
       });
       const blueprintId = domainConfig.getBlueprintId('test-blueprint');
       expect(blueprintId).toBeDefined();
+    });
+  });
+
+  describe('Domain KMS Usage Policy', () => {
+    test('should include kms:GenerateDataKey in the custom resource handler policy', () => {
+      const kmsKeyArn = 'arn:aws:kms:us-east-1:xxxxxxxxxxxxx:key/12345678-1234-1234-1234-xxxxxxxxxxxxx';
+      const props: DomainConfigProps = {
+        naming: testApp.naming,
+        domainName: 'test-domain',
+        domainVersion: '1.0.0',
+        domainId: 'dzd_test123',
+        domainArn: 'arn:aws:datazone:us-east-1:xxxxxxxxxxxxx:domain/dzd_test123',
+        domainKmsKeyArn: kmsKeyArn,
+        glueCatalogKmsKeyArns: ['arn:aws:kms:us-east-1:xxxxxxxxxxxxx:key/glue-key-1'],
+        domainKmsUsagePolicyName: 'test-kms-policy',
+        domainBucketUsagePolicyName: 'test-bucket-policy',
+        glueCatalogArns: ['arn:aws:glue:us-east-1:xxxxxxxxxxxxx:catalog'],
+        domainBucketArn: 'arn:aws:s3:us-east-1:xxxxxxxxxxxxx:bucket/bucket-name',
+        ssmParamBase: '/test-param',
+      };
+
+      new DomainConfig(testStack, 'KmsPolicyTestConfig', props);
+
+      const template = Template.fromStack(testStack);
+      template.hasResourceProperties('AWS::IAM::Policy', {
+        PolicyDocument: {
+          Statement: Match.arrayWith([
+            Match.objectLike({
+              Action: Match.arrayWith(['kms:Decrypt', 'kms:GenerateDataKey']),
+              Resource: kmsKeyArn,
+            }),
+          ]),
+        },
+      });
     });
   });
 });

@@ -8,6 +8,12 @@
 
 - Added optional `allowedModelArns` configuration parameter to scope execution role Bedrock model invocation permissions to specific model ARNs for least-privilege access
 
+### Bug Fixes
+
+#### DataZone/SMUS Modules
+
+- Added `kms:GenerateDataKey` permission to the domain config custom resource handler policy, fixing cross-account `ListDomainUnitsForParent`, adapting to SMUS service changes
+
 ## [1.6.0] - 2026-05-22
 
 ### New Features

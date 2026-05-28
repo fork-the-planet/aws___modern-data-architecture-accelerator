@@ -1023,7 +1023,10 @@
               "Resource": "*"
             },
             {
-              "Action": "kms:Decrypt",
+              "Action": [
+                "kms:Decrypt",
+                "kms:GenerateDataKey"
+              ],
               "Effect": "Allow",
               "Resource": {
                 "Ref": "sagemakerprojectdomainconfigparserdomainconfigparserssmdomainkmsarnParameter5530CEE7"

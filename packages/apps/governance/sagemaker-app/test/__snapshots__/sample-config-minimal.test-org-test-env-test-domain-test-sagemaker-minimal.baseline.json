@@ -2891,7 +2891,10 @@
               "Resource": "*"
             },
             {
-              "Action": "kms:Decrypt",
+              "Action": [
+                "kms:Decrypt",
+                "kms:GenerateDataKey"
+              ],
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [

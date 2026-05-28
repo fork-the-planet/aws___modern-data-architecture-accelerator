@@ -244,9 +244,11 @@ export class DomainConfig extends Construct {
           'datazone:ListEnvironmentBlueprints',
         ],
       }),
+      // GenerateDataKey is required for cross-account ListDomainUnitsForParent calls
+      // against domains encrypted with a customer-managed KMS key.
       new PolicyStatement({
         resources: [this.domainKmsKeyArn],
-        actions: DECRYPT_ACTIONS,
+        actions: [...DECRYPT_ACTIONS, 'kms:GenerateDataKey'],
       }),
     ];
 
