@@ -532,6 +532,22 @@ export interface BedrockAgentcoreRuntimeProps {
    **/
   readonly protocolConfiguration?: string;
   /**
+   * IAM resource ARN patterns for Bedrock model invocation permissions.
+   * When specified, scopes the bedrock:InvokeModel and bedrock:InvokeModelWithResponseStream
+   * permissions to only the listed patterns. Follows IAM Resource element syntax
+   * (supports wildcards, e.g. "arn:aws:bedrock:us-east-1::foundation-model/anthropic.*").
+   * When omitted, the broad default permissions are preserved (all foundation models).
+   *
+   * Use cases: Least privilege model access, cost control, compliance, blast radius reduction
+   *
+   * AWS: IAM Resource element patterns for bedrock:InvokeModel policy statements
+   *
+   * Validation: Optional; String[]; IAM resource ARN patterns (wildcards allowed)
+   *
+   * @minItems 1
+   **/
+  readonly allowedModelArns?: string[];
+  /**
    * Existing IAM role ARN for runtime execution.
    * If omitted, a new role is created.
    *
@@ -837,7 +853,7 @@ export class BedrockAgentcoreRuntimeL3Construct extends MdaaL3Construct {
         sid: 'BedrockModelInvocation',
         effect: Effect.ALLOW,
         actions: ['bedrock:InvokeModel', 'bedrock:InvokeModelWithResponseStream'],
-        resources: [
+        resources: props.allowedModelArns ?? [
           `arn:${stack.partition}:bedrock:*::foundation-model/*`,
           `arn:${stack.partition}:bedrock:${region}:${accountId}:*`,
         ],

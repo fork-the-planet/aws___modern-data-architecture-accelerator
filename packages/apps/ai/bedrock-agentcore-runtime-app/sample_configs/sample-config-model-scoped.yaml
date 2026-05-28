@@ -1,0 +1,27 @@
+# Bedrock AgentCore Runtime configuration with model ARN scoping.
+# Demonstrates restricting the execution role's Bedrock model invocation
+# permissions to specific model ARNs (least privilege).
+
+# Unique name for the Bedrock AgentCore Runtime
+agentRuntimeName: testAgentRuntime
+# Container deployment configuration specifying Docker image source
+agentRuntimeArtifact:
+  # Container configuration for the agent runtime Docker image
+  containerConfiguration:
+    # Pre-built container image URI from ECR
+    containerUri: '{{account}}.dkr.ecr.{{region}}.amazonaws.com/test-runtime:latest'
+# VPC network configuration for secure runtime deployment
+networkConfiguration:
+  # Security group IDs controlling inbound/outbound traffic
+  securityGroups:
+    - sg-12345678
+  # Subnet IDs for runtime instance placement
+  subnets:
+    - subnet-12345678
+# IAM resource ARN patterns for Bedrock model invocation.
+# Supports wildcards. When omitted, all foundation models are allowed (broad default).
+allowedModelArns:
+  - 'arn:{{partition}}:bedrock:{{region}}::foundation-model/anthropic.claude-sonnet-4-6-20250514-v1:0'
+  - 'arn:{{partition}}:bedrock:{{region}}::foundation-model/anthropic.claude-haiku-*'
+# Protocol configuration
+protocolConfiguration: 'HTTP'

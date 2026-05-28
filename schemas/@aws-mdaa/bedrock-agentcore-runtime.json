@@ -3030,6 +3030,14 @@
             "description": "Unique name for the Bedrock AgentCore Runtime.\n\nUse cases: Runtime identification, agent organization, configuration management\n\nAWS: Bedrock AgentCore Runtime name\n\nValidation: Required; String",
             "type": "string"
         },
+        "allowedModelArns": {
+            "description": "IAM resource ARN patterns for Bedrock model invocation permissions.\nWhen specified, scopes the bedrock:InvokeModel and bedrock:InvokeModelWithResponseStream\npermissions to only the listed patterns. Follows IAM Resource element syntax\n(supports wildcards, e.g. \"arn:aws:bedrock:us-east-1::foundation-model/anthropic.*\").\nWhen omitted, the broad default permissions are preserved (all foundation models).\n\nUse cases: Least privilege model access, cost control, compliance, blast radius reduction\n\nAWS: IAM Resource element patterns for bedrock:InvokeModel policy statements\n\nValidation: Optional; String[]; IAM resource ARN patterns (wildcards allowed)",
+            "items": {
+                "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+        },
         "authorizerConfiguration": {
             "$ref": "#/definitions/AuthorizerConfigurationProperty",
             "description": "Authentication configuration with support for custom JWT authorizers via OIDC.\n\nUse cases: Access control, JWT authentication, OIDC integration\n\nAWS: Bedrock AgentCore Runtime authorizer\n\nValidation: Optional; AuthorizerConfigurationProperty"

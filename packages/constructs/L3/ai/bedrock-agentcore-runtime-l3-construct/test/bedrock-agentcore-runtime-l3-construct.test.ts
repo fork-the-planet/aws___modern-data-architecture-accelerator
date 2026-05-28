@@ -683,6 +683,158 @@ describe('BedrockAgentcoreRuntimeL3Construct Unit Tests', () => {
     });
   });
 
+  describe('Model ARN Scoping', () => {
+    test('should use broad permissions when allowedModelArns is not provided', () => {
+      const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
+        agentRuntimeName: 'broad-model-runtime',
+        agentRuntimeArtifact: {
+          containerConfiguration: {
+            containerUri: '123456789012.dkr.ecr.us-east-1.amazonaws.com/my-runtime:latest',
+          },
+        },
+        networkConfiguration: {
+          securityGroups: ['sg-12345678'],
+          subnets: ['subnet-12345678'],
+        },
+        naming: testApp.naming,
+        roleHelper,
+      };
+
+      new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'broad-model-runtime-construct', constructProps);
+      const template = Template.fromStack(testApp.testStack);
+
+      template.hasResourceProperties('AWS::IAM::ManagedPolicy', {
+        PolicyDocument: {
+          Statement: Match.arrayWith([
+            Match.objectLike({
+              Sid: 'BedrockModelInvocation',
+              Effect: 'Allow',
+              Action: ['bedrock:InvokeModel', 'bedrock:InvokeModelWithResponseStream'],
+              Resource: [
+                'arn:test-partition:bedrock:*::foundation-model/*',
+                'arn:test-partition:bedrock:test-region:test-account:*',
+              ],
+            }),
+          ]),
+        },
+      });
+    });
+
+    test('should scope permissions to specific model ARNs when allowedModelArns is provided', () => {
+      const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
+        agentRuntimeName: 'scoped-model-runtime',
+        agentRuntimeArtifact: {
+          containerConfiguration: {
+            containerUri: '123456789012.dkr.ecr.us-east-1.amazonaws.com/my-runtime:latest',
+          },
+        },
+        networkConfiguration: {
+          securityGroups: ['sg-12345678'],
+          subnets: ['subnet-12345678'],
+        },
+        allowedModelArns: [
+          'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-sonnet-4-6-20250514-v1:0',
+          'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0',
+        ],
+        naming: testApp.naming,
+        roleHelper,
+      };
+
+      new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'scoped-model-runtime-construct', constructProps);
+      const template = Template.fromStack(testApp.testStack);
+
+      template.hasResourceProperties('AWS::IAM::ManagedPolicy', {
+        PolicyDocument: {
+          Statement: Match.arrayWith([
+            Match.objectLike({
+              Sid: 'BedrockModelInvocation',
+              Effect: 'Allow',
+              Action: ['bedrock:InvokeModel', 'bedrock:InvokeModelWithResponseStream'],
+              Resource: [
+                'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-sonnet-4-6-20250514-v1:0',
+                'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0',
+              ],
+            }),
+          ]),
+        },
+      });
+    });
+
+    test('should support wildcard model ARN patterns', () => {
+      const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
+        agentRuntimeName: 'wildcard-model-runtime',
+        agentRuntimeArtifact: {
+          containerConfiguration: {
+            containerUri: '123456789012.dkr.ecr.us-east-1.amazonaws.com/my-runtime:latest',
+          },
+        },
+        networkConfiguration: {
+          securityGroups: ['sg-12345678'],
+          subnets: ['subnet-12345678'],
+        },
+        allowedModelArns: [
+          'arn:aws:bedrock:us-east-1::foundation-model/anthropic.*',
+          'arn:aws:bedrock:us-west-2::foundation-model/anthropic.*',
+        ],
+        naming: testApp.naming,
+        roleHelper,
+      };
+
+      new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'wildcard-model-runtime-construct', constructProps);
+      const template = Template.fromStack(testApp.testStack);
+
+      template.hasResourceProperties('AWS::IAM::ManagedPolicy', {
+        PolicyDocument: {
+          Statement: Match.arrayWith([
+            Match.objectLike({
+              Sid: 'BedrockModelInvocation',
+              Effect: 'Allow',
+              Action: ['bedrock:InvokeModel', 'bedrock:InvokeModelWithResponseStream'],
+              Resource: [
+                'arn:aws:bedrock:us-east-1::foundation-model/anthropic.*',
+                'arn:aws:bedrock:us-west-2::foundation-model/anthropic.*',
+              ],
+            }),
+          ]),
+        },
+      });
+    });
+
+    test('should not affect role creation when allowedModelArns is provided with roleArn', () => {
+      const existingRoleArn = 'arn:aws:iam::123456789012:role/existing-role';
+      const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
+        agentRuntimeName: 'existing-role-scoped-runtime',
+        agentRuntimeArtifact: {
+          containerConfiguration: {
+            containerUri: '123456789012.dkr.ecr.us-east-1.amazonaws.com/my-runtime:latest',
+          },
+        },
+        networkConfiguration: {
+          securityGroups: ['sg-12345678'],
+          subnets: ['subnet-12345678'],
+        },
+        allowedModelArns: ['arn:aws:bedrock:us-east-1::foundation-model/anthropic.*'],
+        roleArn: existingRoleArn,
+        naming: testApp.naming,
+        roleHelper,
+      };
+
+      new BedrockAgentcoreRuntimeL3Construct(
+        testApp.testStack,
+        'existing-role-scoped-runtime-construct',
+        constructProps,
+      );
+      const template = Template.fromStack(testApp.testStack);
+
+      template.hasResourceProperties('AWS::BedrockAgentCore::Runtime', {
+        RoleArn: existingRoleArn,
+      });
+
+      // Should not create a new role - allowedModelArns only applies to created roles
+      template.resourceCountIs('AWS::IAM::Role', 0);
+    });
+  });
+
   describe('SSM Parameters', () => {
     test('should create SSM parameters for runtime information', () => {
       const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {

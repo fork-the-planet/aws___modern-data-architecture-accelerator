@@ -1,5 +1,13 @@
 # Change Log
 
+## [NEXT_RELEASE_VERSION] - NEXT_RELEASE_DATE
+
+### Data Science/AI/ML Changes
+
+#### Bedrock AgentCore Runtime Module
+
+- Added optional `allowedModelArns` configuration parameter to scope execution role Bedrock model invocation permissions to specific model ARNs for least-privilege access
+
 ## [1.6.0] - 2026-05-22
 
 ### New Features

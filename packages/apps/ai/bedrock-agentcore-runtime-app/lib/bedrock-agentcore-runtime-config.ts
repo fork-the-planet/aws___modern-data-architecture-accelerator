@@ -112,6 +112,22 @@ export interface BedrockAgentcoreRuntimeConfigContents extends MdaaBaseConfigCon
    **/
   readonly protocolConfiguration?: string;
   /**
+   * IAM resource ARN patterns for Bedrock model invocation permissions.
+   * When specified, scopes the bedrock:InvokeModel and bedrock:InvokeModelWithResponseStream
+   * permissions to only the listed patterns. Follows IAM Resource element syntax
+   * (supports wildcards, e.g. "arn:aws:bedrock:us-east-1::foundation-model/anthropic.*").
+   * When omitted, the broad default permissions are preserved (all foundation models).
+   *
+   * Use cases: Least privilege model access, cost control, compliance, blast radius reduction
+   *
+   * AWS: IAM Resource element patterns for bedrock:InvokeModel policy statements
+   *
+   * Validation: Optional; String[]; IAM resource ARN patterns (wildcards allowed)
+   *
+   * @minItems 1
+   **/
+  readonly allowedModelArns?: string[];
+  /**
    * Existing IAM role ARN for runtime execution.
    * If omitted, a new role is created with appropriate permissions.
    *
@@ -168,6 +184,7 @@ export class BedrockAgentcoreRuntimeConfigParser extends MdaaAppConfigParser<Bed
   public readonly authorizerConfiguration?: AuthorizerConfigurationProperty;
   public readonly requestHeaderConfiguration?: RequestHeaderConfigurationProperty;
   public readonly protocolConfiguration?: string;
+  public readonly allowedModelArns?: string[];
   public readonly roleArn?: string;
   public readonly policies?: PolicyProperty[];
   public readonly runtimeEndpoint?: RuntimeEndpointProperty;
@@ -185,6 +202,7 @@ export class BedrockAgentcoreRuntimeConfigParser extends MdaaAppConfigParser<Bed
     this.authorizerConfiguration = this.configContents.authorizerConfiguration;
     this.requestHeaderConfiguration = this.configContents.requestHeaderConfiguration;
     this.protocolConfiguration = this.configContents.protocolConfiguration;
+    this.allowedModelArns = this.configContents.allowedModelArns;
     this.roleArn = this.configContents.roleArn;
     this.policies = this.configContents.policies;
     this.runtimeEndpoint = this.configContents.runtimeEndpoint;

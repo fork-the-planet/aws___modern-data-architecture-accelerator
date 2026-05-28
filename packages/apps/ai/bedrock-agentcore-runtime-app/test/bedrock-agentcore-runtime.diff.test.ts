@@ -74,4 +74,26 @@ describe('Bedrock Agentcore Runtime Baseline Diff Tests', () => {
       },
     ),
   );
+
+  baselineDiffTestApp(
+    'Bedrock Agentcore Runtime Model Scoped',
+    Create.appProvider(
+      context => {
+        const moduleApp = new BedrockAgentcoreRuntimeApp({
+          context: {
+            ...context,
+            module_configs: path.join(__dirname, '..', 'sample_configs', 'sample-config-model-scoped.yaml'),
+          },
+        });
+        moduleApp.generateStack();
+        return moduleApp;
+      },
+      {
+        module_name: 'test-bedrock-agentcore-runtime-model-scoped',
+        org: 'test-org',
+        env: 'test-env',
+        domain: 'test-domain',
+      },
+    ),
+  );
 });

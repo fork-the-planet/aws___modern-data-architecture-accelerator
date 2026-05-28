@@ -105,6 +105,17 @@ Deploys an agent runtime using a pre-built ECR container image with VPC networki
 --8<-- "target/docs/packages/apps/ai/bedrock-agentcore-runtime-app/sample_configs/sample-config-comprehensive.yaml"
 ```
 
+#### Model-Scoped Permissions Variant
+
+Restricts the execution role's Bedrock model invocation permissions to specific model ARNs. Choose this variant when you need least-privilege access — for example, limiting agents to specific models for cost control, compliance, or blast radius reduction.
+
+[sample-config-model-scoped.yaml](sample_configs/sample-config-model-scoped.yaml)
+
+```yaml
+# Contents available via above link
+--8<-- "target/docs/packages/apps/ai/bedrock-agentcore-runtime-app/sample_configs/sample-config-model-scoped.yaml"
+```
+
 #### Local Code Path Variant
 
 Builds the container image from a local Dockerfile instead of referencing a pre-built ECR image. Choose this variant when developing custom agent runtimes from source code and you want CDK to build and push the image at deploy time. Also demonstrates the alternative `jwtAuthorizer` (vs `customJwtAuthorizer` in the comprehensive config).
