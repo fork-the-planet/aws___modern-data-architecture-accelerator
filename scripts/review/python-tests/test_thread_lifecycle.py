@@ -346,6 +346,48 @@ class TestResolveOrphanedThreads:
         mock_add.assert_not_called()
         mock_resolve.assert_not_called()
 
+    @patch("review.lib.thread_lifecycle.resolve_discussion")
+    @patch("review.lib.thread_lifecycle.add_note_to_discussion")
+    def test_keeps_human_resolved_orphan(self, mock_add, mock_resolve):
+        """A human-resolved thread is never auto-resolved as an orphan, even if source changed."""
+        discussions = [{"id": "d1", "notes": [
+            {
+                "id": "n1",
+                "body": "<!-- test-pkg:pkg-old -->\n<!-- source-hash:old111 -->\nContent",
+                "resolvable": True,
+                "resolved": True,
+            },
+            {"id": "n2", "body": "Will be fixed in !977"},
+        ]}]
+        # Source hash differs (file changed), but thread was human-resolved
+        resolve_orphaned_threads(
+            "1", "10", "tok", discussions, DETAIL_PATTERN, set(),
+            source_hashes={"pkg-old": "new222"},
+        )
+        mock_add.assert_not_called()
+        mock_resolve.assert_not_called()
+
+    @patch("review.lib.thread_lifecycle.resolve_discussion")
+    @patch("review.lib.thread_lifecycle.add_note_to_discussion")
+    def test_resolves_auto_resolved_orphan_when_source_changed(self, mock_add, mock_resolve):
+        """A bot-auto-resolved orphan with changed source gets re-auto-resolved (no-op effectively)."""
+        discussions = [{"id": "d1", "notes": [
+            {
+                "id": "n1",
+                "body": "<!-- test-pkg:pkg-old -->\n<!-- source-hash:old111 -->\nContent",
+                "resolvable": True,
+                "resolved": True,
+            },
+            {"id": "n2", "body": "_This finding was resolved by code changes. Thread auto-resolved._"},
+        ]}]
+        resolve_orphaned_threads(
+            "1", "10", "tok", discussions, DETAIL_PATTERN, set(),
+            source_hashes={"pkg-old": "new222"},
+        )
+        mock_add.assert_called_once()
+        mock_resolve.assert_called_once_with("1", "10", "d1", "tok", resolved=True)
+
+
 
 class TestCheckUnresolvedAndExit:
     """Test unresolved thread detection."""

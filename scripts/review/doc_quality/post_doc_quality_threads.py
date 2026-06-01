@@ -44,53 +44,76 @@ ICON_MAP = {"HIGH": "\u26a0\ufe0f", "MEDIUM": "\u26a0\ufe0f", "LOW": "\u2705", "
 
 
 def build_file_groups(entries: list[dict]) -> dict[str, dict]:
+    """Build per-file thread groups from the report entries.
+
+    Each entry in the new report format is already a per-file assessment.
+    Group findings by file path, taking the highest severity as the group level.
+    """
     risk_rank = {"HIGH": 0, "MEDIUM": 1, "LOW": 2, "UNKNOWN": 1}
     groups: dict[str, dict] = {}
+
     for entry in entries:
-        for finding in entry.get("findings", []):
-            file_path = finding.get("file", "Unknown")
-            finding_risk = finding.get("risk", "UNKNOWN").upper()
-            if file_path not in groups:
-                groups[file_path] = {
-                    "file": file_path,
-                    "risk_level": finding_risk,
-                    "findings": [],
-                    "source_hash": compute_file_source_hash(file_path),
-                }
-            current = risk_rank.get(groups[file_path]["risk_level"], 1)
-            new = risk_rank.get(finding_risk, 1)
-            if new < current:
-                groups[file_path]["risk_level"] = finding_risk
-            groups[file_path]["findings"].append(finding)
+        file_path = entry.get("file", "Unknown")
+        findings = entry.get("findings", [])
+        if not findings:
+            continue
+
+        if file_path not in groups:
+            groups[file_path] = {
+                "file": file_path,
+                "risk_level": entry.get("risk_level", "UNKNOWN"),
+                "findings": [],
+                "source_hash": entry.get("source_hash", compute_file_source_hash(file_path)),
+            }
+
+        # Merge findings (in case multiple entries target the same file, e.g. CHANGELOG)
+        groups[file_path]["findings"].extend(findings)
+
+        # Update risk level to highest
+        current = risk_rank.get(groups[file_path]["risk_level"], 1)
+        new = risk_rank.get(entry.get("risk_level", "UNKNOWN"), 1)
+        if new < current:
+            groups[file_path]["risk_level"] = entry.get("risk_level", "UNKNOWN")
+
     return groups
 
 
 def format_summary_body(entries: list[dict]) -> str:
+    """Format the summary note body."""
     risk_counts: dict[str, int] = {}
     total = 0
+    files_reviewed = 0
     for entry in entries:
-        for f in entry.get("findings", []):
+        findings = entry.get("findings", [])
+        files_reviewed += 1
+        for f in findings:
             r = f.get("risk", "UNKNOWN").upper()
             risk_counts[r] = risk_counts.get(r, 0) + 1
             total += 1
+
     breakdown = [f"{c} {l}" for l in ["HIGH", "MEDIUM", "LOW"] if (c := risk_counts.get(l, 0))]
-    lines = [SUMMARY_MARKER, "", "## Repo Documentation Quality Review Summary", "",
-             "_Reviews CHANGELOG updates, SCHEMA.md regeneration, starter kit docs, "
-             "MkDocs nav, and cross-document links. "
-             "Does not review per-module documentation (covered by Module Quality agent). "
-             f"[Steering file]({_steering_link('documentation-review.md')})_", "",
-             f"**Total findings:** {total}", ""]
+    lines = [
+        SUMMARY_MARKER, "",
+        "## Documentation Quality Review Summary", "",
+        "_Reviews documentation quality, accuracy, cross-references, and alignment with code changes. "
+        f"[Steering file]({_steering_link('documentation-review.md')})_", "",
+        f"**Files reviewed:** {files_reviewed}",
+        f"**Total findings:** {total}", "",
+    ]
     if breakdown:
         lines.append(f"**Findings:** {', '.join(breakdown)}")
     else:
         lines.append("**Result:** \u2705 No documentation gaps found.")
     lines.append("")
-    lines.append("_Findings have individual review threads. "
-                 "Resolve each thread to acknowledge the documentation gap._")
+    lines.append(
+        "_Findings have individual review threads. "
+        "Resolve each thread to acknowledge the documentation gap._"
+    )
     return "\n".join(lines)
 
 
 def format_file_thread(file_path: str, group: dict, content_hash: str, is_update: bool = False) -> str:
+    """Format a per-file detail thread body."""
     risk_level = group["risk_level"]
     icon = ICON_MAP.get(risk_level, "\u2753")
     ctx = _action_context()
@@ -99,8 +122,10 @@ def format_file_thread(file_path: str, group: dict, content_hash: str, is_update
         f"<!-- docs-quality-hash:{content_hash} -->",
         "", f"## {icon} Documentation Review \u2014 Documentation Gap: {risk_level}",
         "", f"**File:** `{file_path}`", "",
-        f"_{ctx}_" if ctx else "", "",
     ]
+    if ctx:
+        lines.append(f"_{ctx}_")
+        lines.append("")
     if is_update:
         lines.append("_Findings have changed since last review. Please re-acknowledge._")
         lines.append("")
@@ -115,6 +140,7 @@ def format_file_thread(file_path: str, group: dict, content_hash: str, is_update
 
 
 def _compute_hash(file_path: str, group: dict) -> str:
+    """Compute structural hash for change detection."""
     structural = sorted(
         (file_path, f.get("category", ""), f.get("risk", ""), str(f.get("line", "")))
         for f in group["findings"]
@@ -123,6 +149,7 @@ def _compute_hash(file_path: str, group: dict) -> str:
 
 
 def _get_position(file_path: str) -> dict | None:
+    """Try to position the thread inline on the MR diff."""
     return _build_diff_position(file_path, 1)
 
 

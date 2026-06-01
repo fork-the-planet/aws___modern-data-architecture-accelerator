@@ -91,18 +91,29 @@ Code diff (lib/ changes in this MR):
 {code_diff}
 ```
 
-In addition to README and sample config coverage, review the config schema design for
-user-friendliness. Pay special attention to the Config Schema Usability Conventions in
-the steering file:
-- Named object maps vs arrays with name properties
-- Top-level extensibility for new resource types
-- Support for multiple resources of the same type via named maps
-- Strong typing (no any/unknown/untyped object where avoidable)
-- Schema-level validation vs runtime-only checks
+Review the following aspects:
 
-Use the `schema_design` category for these findings.
+1. README structural completeness — are all 7 required sections present and correctly formatted?
+   - Title + description, Deployed Resources, Architecture diagram, Related Modules,
+     Security/Compliance, MDAA Config, Sample Config Samples and Variants
+   - Is compliance language correctly placed in Security/Compliance (not Deployed Resources)?
+   - Are all sample configs referenced in the README?
+   - Do NOT flag spelling, grammar, or prose quality — that is handled by the Documentation Quality agent.
+
+2. Config schema design — is the schema user-friendly?
+   - Named object maps vs arrays with name properties
+   - Top-level extensibility for new resource types
+   - Support for multiple resources of the same type via named maps
+   - Strong typing (no any/unknown/untyped object where avoidable)
+   - Schema-level validation vs runtime-only checks
+
+3. Sample config coverage — are all schema properties exercised?
+   - Are mutually exclusive branches covered by separate config files?
+   - Do sample configs use template variables (not hardcoded accounts/regions)?
+   - Do sample configs have proper inline documentation comments?
 
 DO NOT flag these concerns (they are handled by other agents):
+- Spelling, grammar, prose quality, cross-references → Documentation Quality agent
 - Import direction violations, cross-app imports, dependency layering → Architecture agent
 - Missing encryption, IAM policy issues, security controls → Compliance agent
 - Missing tests, test coverage, baseline gaps → Test Standards agent

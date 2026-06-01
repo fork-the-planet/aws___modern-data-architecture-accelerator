@@ -1,11 +1,11 @@
 ---
 inclusion: fileMatch
-fileMatchPattern: 'packages/apps/**/README.md,packages/apps/**/sample-config*.yaml,packages/apps/**/config-schema.json,packages/constructs/**/README.md,packages/utilities/**/README.md'
+fileMatchPattern: 'packages/apps/**/README.md,packages/apps/**/sample-config*.yaml,packages/apps/**/config-schema.json,packages/apps/**/lib/*-config.ts,packages/constructs/**/README.md,packages/utilities/**/README.md'
 ---
 
 # Module Quality - Steering Guide
 
-Audit and improve module quality across MDAA app modules — covering both README documentation and sample configuration completeness. This steering file combines the README and sample config workflows into a unified process.
+Audit and improve module quality across MDAA app modules — focusing on README structural completeness, sample configuration coverage, config schema design, and interface documentation.
 
 The standards for READMEs and sample configs are defined in CONTRIBUTING.md. This steering file provides the process for auditing and implementing those standards.
 
@@ -17,12 +17,13 @@ The standards for READMEs and sample configs are defined in CONTRIBUTING.md. Thi
 - **App modules**: `packages/apps/{category}/{module}-app/`
 - **Construct packages**: `packages/constructs/L2/*/` and `packages/constructs/L3/{category}/*/`
 - **Utility packages**: `packages/utilities/*/`
-- **READMEs**: `README.md` in each module/package root
+- **READMEs**: `README.md` in each module/package root (structural completeness only)
 - **Sample configs**: `sample_configs/sample-config*.yaml` (app modules only)
 - **Config schemas**: `lib/config-schema.json` (JSON Schema draft-07, auto-generated from TypeScript interfaces; app modules only)
+- **Config interfaces**: `lib/*-config.ts` (TypeScript interfaces that generate the schema)
 - **Architecture diagrams**: `packages/constructs/L3/{category}/{module-l3-construct}/docs/`
 
-For construct and utility packages, only spelling, grammar, and AWS capitalization checks apply (sections 2.Quality Checks). The full README structure audit (sections, sample config coverage, schema assessment) applies only to app modules.
+For construct and utility packages, only README structural presence is checked. The full README structure audit (all 7 required sections, sample config references) applies only to app modules.
 
 ### Excluded Modules
 
@@ -32,11 +33,11 @@ For construct and utility packages, only spelling, grammar, and AWS capitalizati
 
 ### Out of Scope
 
-Documentation outside `packages/` is NOT reviewed by this agent — that is handled by the Documentation Quality Review agent. Do NOT review or flag issues in:
-- `starter_kits/*/README.md`
-- `sample_blueprints/*/README.md`
-- `sample_configs/*/README.md` (top-level sample configs, not module `sample_configs/` subdirectories)
-- Root-level docs (`README.md`, `CONTRIBUTING.md`, `DEPLOYMENT.md`, etc.)
+Prose quality (spelling, grammar, language clarity) and cross-reference validity are handled by the Documentation Quality agent. Do NOT review or flag:
+- Spelling and grammar mistakes
+- Cross-reference / link validity
+- CHANGELOG, SCHEMA.md, or mkdocs.yml issues
+- Prose quality or writing style
 
 ## Process
 
@@ -47,14 +48,15 @@ For each module, read:
 1. **README.md** — current documentation state
 2. **Config schema** (`lib/config-schema.json`) — source of truth for all properties
 3. **Existing sample configs** (`sample_configs/sample-config*.yaml`) — current coverage
-4. **L3 construct source** (`packages/constructs/L3/{category}/{module}-l3-construct/lib/`) — discover deployed AWS resources and compliance controls from the code
-5. **L3 construct docs/** — verify architecture diagram exists
+4. **Config interface files** (`lib/*-config.ts`) — TypeScript interfaces that generate the schema
+5. **L3 construct source** (`packages/constructs/L3/{category}/{module}-l3-construct/lib/`) — discover deployed AWS resources from the code
+6. **L3 construct docs/** — verify architecture diagram exists
 
 Do NOT rely on a static resource reference table. Discover AWS services and resources by reading the L3 construct source code — look for CDK resource instantiations, MDAA helper construct usage, and CloudFormation resource types.
 
-### 2. Assess README
+### 2. Assess README Structure
 
-Score each module against the required structure from CONTRIBUTING.md:
+Check that the module README has all required sections from CONTRIBUTING.md:
 
 | Section | Check |
 |---------|-------|
@@ -66,14 +68,16 @@ Score each module against the required structure from CONTRIBUTING.md:
 | MDAA Config | `mdaa.yaml` wiring snippet |
 | Sample config sections | All configs referenced with dual-include pattern, ordered minimal → comprehensive → variants |
 
-#### Quality Checks
+#### Structural Rules
 
-- Description is substantive, not just "CDK application to deploy {thing}"
 - No compliance language in Deployed Resources (grep for "MDAA configures", "securely managed", "encrypted using")
+- All `sample_configs/*.yaml` files must be represented in the README
 - Sample config descriptions use user-facing language
-- All `sample_configs/*.yaml` files are represented in the README
-- No spelling mistakes in prose (technical terms, AWS service names, and code identifiers are excluded)
-- No grammatical errors — check for subject-verb agreement, correct article usage (a/an/the), proper pluralization, and awkward phrasing (e.g., "follow the following" → "follow these")
+- Never refer to modules as "CDK applications" — they are configurable modules
+- Use `**Bold** - description` format for resources, not bullet lists with colons
+- Related Modules use relative paths and explain the relationship
+
+Note: Do NOT flag spelling, grammar, or prose quality — that is handled by the Documentation Quality agent.
 
 ### 3. Assess Sample Config Coverage
 
@@ -113,15 +117,17 @@ Detect from the schema: `oneOf`/`anyOf` blocks, `if`/`then`/`else`, `not` constr
 ```
 Module: {module-name}
 
-README Status: GOOD | NEEDS_WORK | MISSING_README
+README Structure: GOOD | NEEDS_WORK | MISSING_README
   Missing sections: [list]
-  Quality issues: [list]
+  Structural issues: [list]
 
 Sample Config Coverage: M/N (X%)
   Root-level gaps: [list]
   Subtree gaps: [grouped by parent]
   Partially covered enums: [list]
   Mutually exclusive groups: [list]
+
+Schema Design: [issues found]
 ```
 
 ### 5. Implement Fixes
@@ -129,8 +135,8 @@ Sample Config Coverage: M/N (X%)
 #### README Fixes
 
 - For missing READMEs: create from scratch using L3 construct source to discover deployed resources
+- For missing sections: add the section following the standard structure
 - For non-conforming structure: restructure to match the standard, preserving useful extra content
-- For weak descriptions: rewrite to explain what the module deploys, what use case it enables
 - For missing diagrams: add `<!-- Architecture diagram not yet available -->` placeholder
 - Never refer to modules as "CDK applications"
 
@@ -201,7 +207,7 @@ outside the JSON. The file must contain ONLY valid JSON.
   "findings": [
     {
       "risk": "HIGH | MEDIUM | LOW",
-      "category": "readme_gap | schema_coverage | config_usability | schema_design | sample_config | jsdoc",
+      "category": "readme_structure | schema_coverage | config_usability | schema_design | sample_config | jsdoc",
       "file": "path/to/file",
       "property": "propertyName (if applicable, empty string otherwise)",
       "detail": "What's wrong and what should be done."
@@ -254,17 +260,18 @@ Config errors should be caught at schema validation time (JSON Schema `required`
 
 ### Severity Classification for CI Agent
 
-- **HIGH:** Missing README, missing comprehensive sample config, required config property with no JSDoc (users can't configure without reading source), required property that should have a default, use of `any`/`unknown`/untyped `object` in a config-exposed interface where a specific type is feasible
-- **MEDIUM:** README section missing or non-conforming, schema property not exercised in any sample config, inconsistent property naming, missing template variables (hardcoded account/region), sample config missing inline documentation comments, array-with-name-property pattern where a named map would be more user-friendly, missing schema-level validation for constraints that are currently only enforced in code, `additionalProperties: true` on objects that have a known fixed set of keys
-- **LOW:** Minor documentation improvements, style issues in sample config comments, enum value not exercised (but covered by other configs), weak JSDoc that restates the property name, opportunities to tighten string types to enums or patterns
+- **HIGH:** Missing README, missing comprehensive sample config, required README section missing (Deployed Resources, Security/Compliance, Configuration), required config property with no JSDoc (users can't configure without reading source), required property that should have a default, use of `any`/`unknown`/untyped `object` in a config-exposed interface where a specific type is feasible
+- **MEDIUM:** README section non-conforming (wrong format, compliance language in Deployed Resources), schema property not exercised in any sample config, sample config not referenced in README, inconsistent property naming, missing template variables (hardcoded account/region), sample config missing inline documentation comments, array-with-name-property pattern where a named map would be more user-friendly, missing schema-level validation for constraints that are currently only enforced in code, `additionalProperties: true` on objects that have a known fixed set of keys
+- **LOW:** Missing architecture diagram, missing Related Modules section, style issues in sample config comments, enum value not exercised (but covered by other configs), weak JSDoc that restates the property name, opportunities to tighten string types to enums or patterns
 
 ### Rules for CI Agent Findings
 
-- One finding per quality concern. Group related issues (e.g., multiple missing README sections) into one finding per category.
+- One finding per quality concern. Group related issues (e.g., multiple missing schema properties) into one finding per category.
 - Every finding must include `file` pointing to the file with the issue.
 - For config usability, schema design, and JSDoc findings, include the `property` name.
 - Only flag issues related to code that was CHANGED in this MR. Do not flag pre-existing quality gaps.
+- For README structure findings (`readme_structure` category), flag missing or non-conforming sections. Do NOT flag spelling, grammar, or prose quality — those are handled by the Documentation Quality agent.
 - For schema design findings (`schema_design` category), flag new or modified interfaces that violate the Config Schema Usability Conventions (arrays-with-name instead of maps, untyped properties, missing schema-level validation). Pre-existing patterns in unchanged code are not flagged.
-- For L3 construct changes that affect the app module, check if the README's Deployed Resources and Security/Compliance sections still accurately reflect the construct's behavior.
+- For L3 construct changes that affect the app module, check if the README's Deployed Resources and Security/Compliance sections still list the correct resources.
 - Order findings: HIGH first, then MEDIUM, then LOW.
 - Use only ASCII characters in all string values.

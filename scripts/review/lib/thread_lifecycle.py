@@ -423,6 +423,17 @@ def resolve_orphaned_threads(
                 print(f"  Thread for '{orphan_key}' locked by reviewer, skipping")
                 continue
 
+            # If the thread is already resolved and was NOT auto-resolved by the bot,
+            # it was human-resolved. Don't touch it — human resolves are durable.
+            resolvable_notes = [n for n in notes if n.get("resolvable", False)]
+            is_currently_resolved = (
+                len(resolvable_notes) > 0
+                and all(n.get("resolved", False) for n in resolvable_notes)
+            )
+            if is_currently_resolved and not _was_auto_resolved(discussion):
+                print(f"  Thread for '{orphan_key}' human-resolved, skipping orphan resolution")
+                continue
+
             # If we have source hashes, check if source actually changed
             if source_hashes is not None:
                 stored_source_hash = None
