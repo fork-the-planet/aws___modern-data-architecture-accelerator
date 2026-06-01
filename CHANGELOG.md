@@ -6,6 +6,9 @@
 
 #### Bedrock AgentCore Runtime Module
 
+- Added optional `enforceVpcOnly` configuration to restrict JWT/OAuth callers to VPC-only invocation via an auto-generated resource-based policy
+- Added optional `networkConfiguration.vpcId` field (required when `enforceVpcOnly` is true) to identify the VPC for the resource policy condition
+- Added new `@aws-mdaa/agentcore-shared` package for shared AgentCore construct utilities (reusable by future Gateway module)
 - Added optional `allowedModelArns` configuration parameter to scope execution role Bedrock model invocation permissions to specific model ARNs for least-privilege access
 
 ### Bug Fixes

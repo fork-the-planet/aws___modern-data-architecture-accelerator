@@ -8,6 +8,7 @@ import { MdaaRole } from '@aws-mdaa/iam-constructs';
 import { MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 import { aws_xray as xray, CfnResource, Stack } from 'aws-cdk-lib';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { createAgentCoreResourcePolicy } from '@aws-mdaa/agentcore-shared';
 import { DockerImageAsset, Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import { Effect, ManagedPolicy, PolicyDocument, PolicyStatement, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { ResourcePolicy } from 'aws-cdk-lib/aws-logs';
@@ -100,6 +101,18 @@ export interface AgentRuntimeArtifactProperty {
  * Validation: Both securityGroups and subnets required with 1-16 items each
  */
 export interface NetworkConfigurationProperty {
+  /**
+   * VPC ID for the network where the runtime is deployed.
+   * Required when `enforceVpcOnly` is enabled, to generate the resource-based policy
+   * restricting invocations to this VPC.
+   *
+   * Use cases: VPC-only enforcement for JWT callers, network boundary identification
+   *
+   * AWS: VPC ID for resource-based policy condition
+   *
+   * Validation: Optional; String; required when enforceVpcOnly is true
+   **/
+  readonly vpcId?: string;
   /**
    * Security group IDs controlling inbound/outbound traffic for runtime instances.
    *
@@ -578,6 +591,19 @@ export interface BedrockAgentcoreRuntimeProps {
    * Validation: Optional; RuntimeEndpointProperty
    **/
   readonly runtimeEndpoint?: RuntimeEndpointProperty;
+  /**
+   * Enforce VPC-only invocation by creating a resource-based policy on the Runtime.
+   * When true, MDAA auto-generates a policy restricting invocations to traffic
+   * originating from the VPC specified in networkConfiguration.vpcId.
+   * Critical for JWT/OAuth callers since SCPs cannot restrict non-IAM principals.
+   *
+   * Use cases: VPC-only access for JWT callers, network boundary enforcement
+   *
+   * AWS: Bedrock AgentCore resource-based policy with aws:SourceVpc condition
+   *
+   * Validation: Optional; Boolean; requires networkConfiguration.vpcId when true
+   **/
+  readonly enforceVpcOnly?: boolean;
 }
 
 /** L3 construct props combining runtime config with MDAA infrastructure properties. */
@@ -687,6 +713,22 @@ export class BedrockAgentcoreRuntimeL3Construct extends MdaaL3Construct {
     // Create runtime endpoint if specified
     if (props.runtimeEndpoint) {
       this.runtimeEndpoint = this.createRuntimeEndpoint(props.runtimeEndpoint, props.agentRuntimeName);
+    }
+
+    // Create resource-based policy restricting invocations to VPC-only traffic
+    if (props.enforceVpcOnly) {
+      if (!props.networkConfiguration.vpcId) {
+        throw new Error(
+          'networkConfiguration.vpcId is required when enforceVpcOnly is true. The VPC ID is used to restrict invocations to traffic originating from your VPC.',
+        );
+      }
+      const runtimeArn = this.runtime.getAtt('AgentRuntimeArn').toString();
+      const resourcePolicy = createAgentCoreResourcePolicy(this, 'ResourcePolicy', {
+        resourceArn: runtimeArn,
+        vpcId: props.networkConfiguration.vpcId,
+        naming: this.props.naming,
+      });
+      resourcePolicy.node.addDependency(this.runtime);
     }
 
     // Store runtime information in SSM Parameter Store

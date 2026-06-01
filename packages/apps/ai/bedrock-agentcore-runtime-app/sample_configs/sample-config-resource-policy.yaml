@@ -1,0 +1,31 @@
+# Bedrock AgentCore Runtime with VPC-only enforcement.
+# Demonstrates restricting JWT/OAuth callers to VPC-only invocation.
+#
+# Why: SCPs and VPC endpoint policies cannot restrict OAuth/JWT callers
+# because they are not IAM principals. MDAA auto-generates a resource-based
+# policy with an aws:SourceVpc condition to enforce this restriction.
+
+# Unique name for the Bedrock AgentCore Runtime
+agentRuntimeName: testAgentRuntime
+# Container deployment configuration
+agentRuntimeArtifact:
+  containerConfiguration:
+    containerUri: '{{account}}.dkr.ecr.{{region}}.amazonaws.com/test-runtime:latest'
+# VPC network configuration for secure runtime deployment.
+# vpcId is required when enforceVpcOnly is true.
+networkConfiguration:
+  vpcId: vpc-0123456789abcdef0
+  securityGroups:
+    - sg-12345678
+  subnets:
+    - subnet-12345678
+    - subnet-87654321
+# JWT authentication configuration
+authorizerConfiguration:
+  customJwtAuthorizer:
+    discoveryUrl: 'https://cognito-idp.{{region}}.amazonaws.com/{{region}}_test/.well-known/openid-configuration'
+    allowedAudience:
+      - 'test-client-id'
+# Enforce VPC-only invocation. MDAA auto-generates a resource-based policy
+# restricting invocations to traffic from the VPC specified above.
+enforceVpcOnly: true

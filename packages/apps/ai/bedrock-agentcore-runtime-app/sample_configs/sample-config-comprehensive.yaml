@@ -30,6 +30,9 @@ environmentVariables:
 # VPC network configuration for secure runtime deployment. MDAA
 # enforces VPC mode for all runtimes to ensure network isolation.
 networkConfiguration:
+  # (Optional) VPC ID for resource-based policy condition.
+  # Required when enforceVpcOnly is true.
+  vpcId: vpc-0123456789abcdef0
   # Security group IDs controlling inbound/outbound traffic for
   # runtime instances (1-16 items)
   # Often created by your VPC/networking stack.
@@ -136,3 +139,6 @@ runtimeEndpoint:
   agentRuntimeVersion: '1.0.0'
 # (Optional) Enable XRay Transaction Search Configuration (singleton per account-region)
 enableTransactionSearch: true
+# (Optional) Enforce VPC-only invocation via resource-based policy.
+# Requires networkConfiguration.vpcId when true.
+enforceVpcOnly: true

@@ -5,12 +5,32 @@
 
 import { MdaaRoleHelper } from '@aws-mdaa/iam-role-helper';
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { CustomResource } from 'aws-cdk-lib';
 import { Match, Template } from 'aws-cdk-lib/assertions';
 import {
   BedrockAgentcoreRuntimeL3Construct,
   BedrockAgentcoreRuntimeL3ConstructProps,
   NetworkConfigurationProperty,
 } from '../lib';
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+jest.mock('@aws-mdaa/agentcore-shared', () => {
+  const original = jest.requireActual('@aws-mdaa/agentcore-shared');
+  return {
+    ...original,
+    createAgentCoreResourcePolicy: (scope: any, id: string, props: any) => {
+      return new CustomResource(scope, id, {
+        serviceToken: 'arn:aws:lambda:us-east-1:123456789012:function:mock',
+        resourceType: 'Custom::AgentCoreResourcePolicy',
+        properties: {
+          resourceArn: props.resourceArn,
+          policy: JSON.stringify({ mock: true }),
+        },
+      });
+    },
+  };
+});
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 describe('BedrockAgentcoreRuntimeL3Construct Unit Tests', () => {
   let testApp: MdaaTestApp;
@@ -1038,6 +1058,122 @@ describe('BedrockAgentcoreRuntimeL3Construct Unit Tests', () => {
       expect(() => {
         new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'invalid-lifetime-runtime-construct', constructProps);
       }).toThrow('MaxLifetime must be between 60 and 28800 seconds');
+    });
+  });
+
+  describe('Enforce VPC Only', () => {
+    test('should create resource policy with correct resourceArn and dependency on runtime', () => {
+      const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
+        agentRuntimeName: 'vpc-enforced-runtime',
+        agentRuntimeArtifact: {
+          containerConfiguration: {
+            containerUri: '123456789012.dkr.ecr.us-east-1.amazonaws.com/my-runtime:latest',
+          },
+        },
+        networkConfiguration: {
+          vpcId: 'vpc-0123456789abcdef0',
+          securityGroups: ['sg-12345678'],
+          subnets: ['subnet-12345678'],
+        },
+        enforceVpcOnly: true,
+        naming: testApp.naming,
+        roleHelper,
+      };
+
+      new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'vpc-enforced-runtime-construct', constructProps);
+      const template = Template.fromStack(testApp.testStack);
+
+      template.resourceCountIs('Custom::AgentCoreResourcePolicy', 1);
+
+      // Verify the resource policy references the runtime ARN
+      template.hasResourceProperties('Custom::AgentCoreResourcePolicy', {
+        resourceArn: Match.objectLike({
+          'Fn::GetAtt': Match.arrayWith([Match.stringLikeRegexp('.*Runtime.*'), 'AgentRuntimeArn']),
+        }),
+      });
+
+      // Verify the resource policy depends on the runtime resource
+      const resources = template.toJSON().Resources;
+      const policyLogicalId = Object.keys(resources).find(
+        key => resources[key].Type === 'Custom::AgentCoreResourcePolicy',
+      );
+      expect(policyLogicalId).toBeDefined();
+      const policyResource = resources[policyLogicalId!];
+      expect(policyResource.DependsOn).toBeDefined();
+
+      const runtimeLogicalId = Object.keys(resources).find(
+        key => resources[key].Type === 'AWS::BedrockAgentCore::Runtime',
+      );
+      expect(runtimeLogicalId).toBeDefined();
+      expect(policyResource.DependsOn).toContain(runtimeLogicalId);
+    });
+
+    test('should not create resource policy when enforceVpcOnly is absent', () => {
+      const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
+        agentRuntimeName: 'no-enforce-runtime',
+        agentRuntimeArtifact: {
+          containerConfiguration: {
+            containerUri: '123456789012.dkr.ecr.us-east-1.amazonaws.com/my-runtime:latest',
+          },
+        },
+        networkConfiguration: {
+          securityGroups: ['sg-12345678'],
+          subnets: ['subnet-12345678'],
+        },
+        naming: testApp.naming,
+        roleHelper,
+      };
+
+      new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'no-enforce-runtime-construct', constructProps);
+      const template = Template.fromStack(testApp.testStack);
+
+      template.resourceCountIs('Custom::AgentCoreResourcePolicy', 0);
+    });
+
+    test('should not create resource policy when enforceVpcOnly is false', () => {
+      const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
+        agentRuntimeName: 'enforce-false-runtime',
+        agentRuntimeArtifact: {
+          containerConfiguration: {
+            containerUri: '123456789012.dkr.ecr.us-east-1.amazonaws.com/my-runtime:latest',
+          },
+        },
+        networkConfiguration: {
+          vpcId: 'vpc-0123456789abcdef0',
+          securityGroups: ['sg-12345678'],
+          subnets: ['subnet-12345678'],
+        },
+        enforceVpcOnly: false,
+        naming: testApp.naming,
+        roleHelper,
+      };
+
+      new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'enforce-false-runtime-construct', constructProps);
+      const template = Template.fromStack(testApp.testStack);
+
+      template.resourceCountIs('Custom::AgentCoreResourcePolicy', 0);
+    });
+
+    test('should throw error when enforceVpcOnly is true but vpcId is missing', () => {
+      const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
+        agentRuntimeName: 'no-vpcid-runtime',
+        agentRuntimeArtifact: {
+          containerConfiguration: {
+            containerUri: '123456789012.dkr.ecr.us-east-1.amazonaws.com/my-runtime:latest',
+          },
+        },
+        networkConfiguration: {
+          securityGroups: ['sg-12345678'],
+          subnets: ['subnet-12345678'],
+        },
+        enforceVpcOnly: true,
+        naming: testApp.naming,
+        roleHelper,
+      };
+
+      expect(() => {
+        new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'no-vpcid-runtime-construct', constructProps);
+      }).toThrow('networkConfiguration.vpcId is required when enforceVpcOnly is true');
     });
   });
 

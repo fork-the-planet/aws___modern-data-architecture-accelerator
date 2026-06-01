@@ -160,6 +160,19 @@ export interface BedrockAgentcoreRuntimeConfigContents extends MdaaBaseConfigCon
    **/
   readonly runtimeEndpoint?: RuntimeEndpointProperty;
   /**
+   * Enforce VPC-only invocation by creating a resource-based policy on the Runtime.
+   * When true, MDAA auto-generates a policy restricting invocations to traffic
+   * originating from the VPC specified in networkConfiguration.vpcId.
+   * Critical for JWT/OAuth callers since SCPs cannot restrict non-IAM principals.
+   *
+   * Use cases: VPC-only access for JWT callers, network boundary enforcement
+   *
+   * AWS: Bedrock AgentCore resource-based policy with aws:SourceVpc condition
+   *
+   * Validation: Optional; Boolean; requires networkConfiguration.vpcId when true
+   **/
+  readonly enforceVpcOnly?: boolean;
+  /**
    * Enable X-Ray Transaction Search Config for enhanced trace analysis.
    * This resource is a singleton per AWS account per region.
    * Set to false if this resource already exists in your account/region.
@@ -188,6 +201,7 @@ export class BedrockAgentcoreRuntimeConfigParser extends MdaaAppConfigParser<Bed
   public readonly roleArn?: string;
   public readonly policies?: PolicyProperty[];
   public readonly runtimeEndpoint?: RuntimeEndpointProperty;
+  public readonly enforceVpcOnly?: boolean;
   public readonly enableTransactionSearch?: boolean;
 
   constructor(stack: Stack, props: MdaaAppConfigParserProps) {
@@ -206,6 +220,7 @@ export class BedrockAgentcoreRuntimeConfigParser extends MdaaAppConfigParser<Bed
     this.roleArn = this.configContents.roleArn;
     this.policies = this.configContents.policies;
     this.runtimeEndpoint = this.configContents.runtimeEndpoint;
+    this.enforceVpcOnly = this.configContents.enforceVpcOnly;
     this.enableTransactionSearch = this.configContents.enableTransactionSearch;
   }
 }

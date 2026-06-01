@@ -96,4 +96,26 @@ describe('Bedrock Agentcore Runtime Baseline Diff Tests', () => {
       },
     ),
   );
+
+  baselineDiffTestApp(
+    'Bedrock Agentcore Runtime Resource Policy',
+    Create.appProvider(
+      context => {
+        const moduleApp = new BedrockAgentcoreRuntimeApp({
+          context: {
+            ...context,
+            module_configs: path.join(__dirname, '..', 'sample_configs', 'sample-config-resource-policy.yaml'),
+          },
+        });
+        moduleApp.generateStack();
+        return moduleApp;
+      },
+      {
+        module_name: 'test-bedrock-agentcore-runtime-resource-policy',
+        org: 'test-org',
+        env: 'test-env',
+        domain: 'test-domain',
+      },
+    ),
+  );
 });

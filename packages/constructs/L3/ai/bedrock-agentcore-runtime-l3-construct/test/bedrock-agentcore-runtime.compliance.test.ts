@@ -6,9 +6,28 @@
 import { MdaaRoleHelper } from '@aws-mdaa/iam-role-helper';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Annotations, Match } from 'aws-cdk-lib/assertions';
-import { Aspects } from 'aws-cdk-lib';
+import { Aspects, CustomResource } from 'aws-cdk-lib';
 import { AwsSolutionsChecks } from 'cdk-nag';
 import { BedrockAgentcoreRuntimeL3Construct, BedrockAgentcoreRuntimeL3ConstructProps } from '../lib';
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+jest.mock('@aws-mdaa/agentcore-shared', () => {
+  const original = jest.requireActual('@aws-mdaa/agentcore-shared');
+  return {
+    ...original,
+    createAgentCoreResourcePolicy: (scope: any, id: string, props: any) => {
+      return new CustomResource(scope, id, {
+        serviceToken: 'arn:aws:lambda:us-east-1:123456789012:function:mock',
+        resourceType: 'Custom::AgentCoreResourcePolicy',
+        properties: {
+          resourceArn: props.resourceArn,
+          policy: JSON.stringify({ mock: true }),
+        },
+      });
+    },
+  };
+});
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 describe('BedrockAgentcoreRuntimeL3Construct Compliance Tests', () => {
   let testApp: MdaaTestApp;
@@ -123,6 +142,37 @@ describe('BedrockAgentcoreRuntimeL3Construct Compliance Tests', () => {
     new BedrockAgentcoreRuntimeL3Construct(
       testApp.testStack,
       'model-scoped-compliant-runtime-construct',
+      constructProps,
+    );
+
+    Aspects.of(testApp.testStack).add(new AwsSolutionsChecks({ verbose: true }));
+
+    const errors = Annotations.fromStack(testApp.testStack).findError('*', Match.stringLikeRegexp('AwsSolutions-.*'));
+
+    expect(errors).toHaveLength(0);
+  });
+
+  test('should pass cdk-nag checks for runtime with enforceVpcOnly', () => {
+    const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
+      agentRuntimeName: 'vpc-enforced-compliant-runtime',
+      agentRuntimeArtifact: {
+        containerConfiguration: {
+          containerUri: '123456789012.dkr.ecr.us-east-1.amazonaws.com/my-runtime:latest',
+        },
+      },
+      networkConfiguration: {
+        vpcId: 'vpc-0123456789abcdef0',
+        securityGroups: ['sg-12345678'],
+        subnets: ['subnet-12345678'],
+      },
+      enforceVpcOnly: true,
+      naming: testApp.naming,
+      roleHelper,
+    };
+
+    new BedrockAgentcoreRuntimeL3Construct(
+      testApp.testStack,
+      'vpc-enforced-compliant-runtime-construct',
       constructProps,
     );
 

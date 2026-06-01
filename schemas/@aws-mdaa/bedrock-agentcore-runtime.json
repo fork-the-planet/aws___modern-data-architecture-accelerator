@@ -2219,6 +2219,10 @@
                         "type": "string"
                     },
                     "type": "array"
+                },
+                "vpcId": {
+                    "description": "VPC ID for the network where the runtime is deployed.\nRequired when `enforceVpcOnly` is enabled, to generate the resource-based policy\nrestricting invocations to this VPC.\n\nUse cases: VPC-only enforcement for JWT callers, network boundary identification\n\nAWS: VPC ID for resource-based policy condition\n\nValidation: Optional; String; required when enforceVpcOnly is true",
+                    "type": "string"
                 }
             },
             "required": [
@@ -3049,6 +3053,10 @@
         "enableTransactionSearch": {
             "default": true,
             "description": "Enable X-Ray Transaction Search Config for enhanced trace analysis.\nThis resource is a singleton per AWS account per region.\nSet to false if this resource already exists in your account/region.\n\nUse cases: X-Ray trace search, natural language trace analysis, avoiding resource conflicts\n\nAWS: X-Ray Transaction Search Config\n\nValidation: Optional; Boolean",
+            "type": "boolean"
+        },
+        "enforceVpcOnly": {
+            "description": "Enforce VPC-only invocation by creating a resource-based policy on the Runtime.\nWhen true, MDAA auto-generates a policy restricting invocations to traffic\noriginating from the VPC specified in networkConfiguration.vpcId.\nCritical for JWT/OAuth callers since SCPs cannot restrict non-IAM principals.\n\nUse cases: VPC-only access for JWT callers, network boundary enforcement\n\nAWS: Bedrock AgentCore resource-based policy with aws:SourceVpc condition\n\nValidation: Optional; Boolean; requires networkConfiguration.vpcId when true",
             "type": "boolean"
         },
         "environmentVariables": {

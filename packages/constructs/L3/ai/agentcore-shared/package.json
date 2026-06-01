@@ -1,7 +1,7 @@
 {
-  "name": "@aws-mdaa/bedrock-agentcore-runtime-l3-construct",
+  "name": "@aws-mdaa/agentcore-shared",
   "version": "1.6.0",
-  "description": "MDAA Bedrock AgentCore Runtime L3 Construct",
+  "description": "MDAA AgentCore Shared Constructs",
   "license": "Apache-2.0",
   "author": {
     "name": "Amazon Web Services",
@@ -15,16 +15,15 @@
     "build": "export JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 && jsii --project-references",
     "watch": "jsii -w  --project-references",
     "package": "jsii-pacmak --npmignore=false",
-    "test": "jest --passWithNoTests --coverage",
     "lint": "eslint --max-warnings 0 -c ../../../../../eslint.config.mjs",
+    "test": "jest --passWithNoTests --coverage",
     "test:package-docs": "../../../../../scripts/generate_docs/test_package_docs.sh"
   },
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "devDependencies": {
-    "@aws-mdaa/iam-constructs": "1.6.0",
-    "@aws-mdaa/iam-role-helper": "1.6.0",
-    "@aws-mdaa/l3-construct": "1.6.0",
+    "@aws-mdaa/construct": "1.6.0",
+    "@aws-mdaa/custom-constructs": "1.6.0",
     "@aws-mdaa/testing": "1.6.0",
     "@types/jest": "29.5.14",
     "@types/node": "22.9.0",
@@ -35,29 +34,20 @@
     "source-map-support": "0.5.21",
     "ts-jest": "29.4.9",
     "ts-node": "10.9.2",
-    "typescript": "5.9.3",
-    "typescript-json-schema": "0.67.4"
+    "typescript": "5.9.3"
   },
   "peerDependencies": {
-    "@aws-mdaa/iam-constructs": "1.6.0",
-    "@aws-mdaa/iam-role-helper": "1.6.0",
-    "@aws-mdaa/l3-construct": "1.6.0",
+    "@aws-mdaa/construct": "1.6.0",
+    "@aws-mdaa/custom-constructs": "1.6.0",
     "aws-cdk-lib": "2.220.0",
     "constructs": "10.0.96"
-  },
-  "overrides": {
-    "aws-cdk-lib": "2.220.0",
-    "@types/babel__traverse": "7.18.2"
   },
   "dependencies": {
-    "@aws-mdaa/agentcore-shared": "1.6.0",
-    "@aws-mdaa/iam-constructs": "1.6.0",
-    "@aws-mdaa/iam-role-helper": "1.6.0",
-    "@aws-mdaa/l3-construct": "1.6.0",
+    "@aws-mdaa/construct": "1.6.0",
+    "@aws-mdaa/custom-constructs": "1.6.0",
     "aws-cdk-lib": "2.220.0",
     "constructs": "10.0.96"
   },
-  "gitHead": "8b49a2b371014baec046605ffdbfe38951099c31",
   "stability": "experimental",
   "jsii": {
     "outdir": "jsii-dist",

@@ -13,6 +13,7 @@ This module deploys and integrates the following resources:
 <!-- TODO: Add architecture diagram -->
 
 - **Bedrock AgentCore Runtime** — Custom agent runtime deployed in VPC mode. Supports Docker containers from ECR or built from source at deploy time.
+- **Bedrock AgentCore Resource-Based Policy** (Optional) — Resource-based policy restricting runtime invocations to traffic originating from the configured VPC. Created when `enforceVpcOnly` is true.
 - **Bedrock AgentCore Runtime Endpoint** (Optional) — API endpoint for invoking the agent runtime via Bedrock AgentCore APIs.
 - **ECR Docker Image Asset** — Container image built and pushed to ECR at deploy time (when using `codePath`).
 - **IAM Execution Role + Managed Policy** — Runtime execution role with permissions for ECR image access, CloudWatch Logs, X-Ray tracing, CloudWatch Metrics, Bedrock AgentCore workload identity tokens, and Bedrock model invocation. Can use an existing role via `roleArn` or auto-create one.
@@ -125,6 +126,17 @@ Builds the container image from a local Dockerfile instead of referencing a pre-
 ```yaml
 # Contents available via above link
 --8<-- "target/docs/packages/apps/ai/bedrock-agentcore-runtime-app/sample_configs/sample-config-codepath.yaml"
+```
+
+#### VPC-Only Enforcement Variant
+
+Restricts runtime invocations to traffic originating from the configured VPC using a resource-based policy. Choose this variant when JWT/OAuth callers must be restricted to VPC-only access — SCPs and VPC endpoint policies cannot restrict non-IAM principals, so a resource-based policy with an `aws:SourceVpc` condition is required.
+
+[sample-config-resource-policy.yaml](sample_configs/sample-config-resource-policy.yaml)
+
+```yaml
+# Contents available via above link
+--8<-- "target/docs/packages/apps/ai/bedrock-agentcore-runtime-app/sample_configs/sample-config-resource-policy.yaml"
 ```
 
 ### Troubleshooting
