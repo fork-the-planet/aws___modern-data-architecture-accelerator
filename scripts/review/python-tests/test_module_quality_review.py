@@ -61,7 +61,7 @@ class TestFormatSummaryBody:
     def test_includes_marker(self):
         entries = [
             {"package_name": "pkg-a", "type": "app", "risk_level": "HIGH", "risk_summary": "Issues found", "findings": [
-                {"risk": "HIGH", "category": "readme_gap"},
+                {"risk": "HIGH", "category": "readme_structure"},
             ]},
         ]
         body = format_summary_body(entries)
@@ -104,12 +104,12 @@ class TestFormatModuleThread:
             "type": "app",
             "risk_level": "HIGH",
             "findings": [
-                {"risk": "HIGH", "category": "readme_gap", "file": "README.md", "property": "", "detail": "Missing section"},
+                {"risk": "HIGH", "category": "readme_structure", "file": "README.md", "property": "", "detail": "Missing section"},
                 {"risk": "MEDIUM", "category": "schema_coverage", "file": "sample_configs/", "property": "", "detail": "Gap"},
             ],
         }
         body = format_module_thread("pkg-a", entry, "abc123")
-        assert "### README Gaps" in body
+        assert "### README Structure" in body
         assert "### Schema Coverage" in body
 
     def test_update_flag(self):
@@ -184,7 +184,7 @@ class TestSchemaDesignCategory:
             "findings": [
                 {
                     "risk": "HIGH",
-                    "category": "readme_gap",
+                    "category": "readme_structure",
                     "file": "README.md",
                     "property": "",
                     "detail": "Missing architecture section",
@@ -199,7 +199,7 @@ class TestSchemaDesignCategory:
             ],
         }
         body = format_module_thread("my-app", entry, "hash456")
-        assert "### README Gaps" in body
+        assert "### README Structure" in body
         assert "Missing architecture section" in body
         assert "### Schema Design" in body
         assert "Array type lacks item validation" in body

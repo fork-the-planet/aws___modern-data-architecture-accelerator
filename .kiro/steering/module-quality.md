@@ -260,7 +260,7 @@ Config errors should be caught at schema validation time (JSON Schema `required`
 
 ### Severity Classification for CI Agent
 
-- **HIGH:** Missing README, missing comprehensive sample config, required README section missing (Deployed Resources, Security/Compliance, Configuration), required config property with no JSDoc (users can't configure without reading source), required property that should have a default, use of `any`/`unknown`/untyped `object` in a config-exposed interface where a specific type is feasible
+- **HIGH:** Missing README, missing comprehensive sample config, required README section missing (Deployed Resources, Security/Compliance, MDAA Config), required config property with no JSDoc (users can't configure without reading source), required property that should have a default, use of `any`/`unknown`/untyped `object` in a config-exposed interface where a specific type is feasible
 - **MEDIUM:** README section non-conforming (wrong format, compliance language in Deployed Resources), schema property not exercised in any sample config, sample config not referenced in README, inconsistent property naming, missing template variables (hardcoded account/region), sample config missing inline documentation comments, array-with-name-property pattern where a named map would be more user-friendly, missing schema-level validation for constraints that are currently only enforced in code, `additionalProperties: true` on objects that have a known fixed set of keys
 - **LOW:** Missing architecture diagram, missing Related Modules section, style issues in sample config comments, enum value not exercised (but covered by other configs), weak JSDoc that restates the property name, opportunities to tighten string types to enums or patterns
 

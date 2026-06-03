@@ -37,6 +37,12 @@ class TestHasCodeChanges:
     def test_py_file_in_lib(self):
         assert has_code_changes(["packages/constructs/L3/datalake/lib/handler.py"]) is True
 
+    def test_lambda_handler(self):
+        assert has_code_changes(["packages/constructs/L3/ai/agentcore-shared/src/lambda/resource_policy/resource_policy.py"]) is True
+
+    def test_bin_entrypoint(self):
+        assert has_code_changes(["packages/apps/datalake/datalake-app/bin/datalake.ts"]) is True
+
     def test_md_only(self):
         assert has_code_changes(["README.md", "CHANGELOG.md"]) is False
 
@@ -48,6 +54,9 @@ class TestHasCodeChanges:
 
     def test_test_files_not_code(self):
         assert has_code_changes(["packages/apps/datalake/test/datalake.test.ts"]) is False
+
+    def test_declaration_files_not_code(self):
+        assert has_code_changes(["packages/constructs/L2/s3/lib/index.d.ts"]) is False
 
 
 class TestGetChangedMarkdownFiles:
@@ -158,6 +167,11 @@ class TestGetChangedPackagesSummary:
         assert "packages/apps/datalake/datalake-app" in result
         assert "packages/constructs/L2/s3" in result
 
+    def test_utilities_depth_3(self):
+        files = ["packages/utilities/ai-helper/lib/index.ts"]
+        result = get_changed_packages_summary(files)
+        assert "packages/utilities/ai-helper" in result
+
     def test_no_packages(self):
         result = get_changed_packages_summary(["README.md", "scripts/build.sh"])
         assert "no package changes" in result
@@ -226,6 +240,7 @@ class TestFormatFileThread:
         assert "<!-- docs-quality-file:CHANGELOG.md -->" in body
         assert "Documentation Review" in body
         assert "Documentation Gap: HIGH" in body
+        assert "CHANGELOG.md" in body
         assert "Contributor: fix the issue" in body
 
     def test_update(self):

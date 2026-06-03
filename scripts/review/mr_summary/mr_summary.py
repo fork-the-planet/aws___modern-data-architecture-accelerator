@@ -16,6 +16,8 @@ Outputs:
 
 Environment:
   KIRO_API_KEY           - Required for narrative generation (Kiro headless auth)
+  KIRO_DIFF_BUDGET       - Max chars of diff to send to Kiro (default: 100000)
+  KIRO_DIFF_PER_FILE_CAP - Max chars of diff per individual file (default: 4000)
   CI_API_V4_URL          - GitLab API base URL (set by GitLab CI)
   CI_PROJECT_ID          - Project ID (set by GitLab CI)
   CI_MERGE_REQUEST_IID   - MR IID (set by GitLab CI)
@@ -45,6 +47,15 @@ from review.lib.gitlab_threads import gitlab_api
 
 SUMMARY_MARKER = "<!-- mr-summary-auto -->"
 
+# Maximum characters of diff content to send to Kiro for narrative generation.
+# Large diffs are sampled by priority (code > config > docs > tests).
+# Override via KIRO_DIFF_BUDGET env var in CI.
+DIFF_BUDGET = int(os.environ.get("KIRO_DIFF_BUDGET", "100000"))
+
+# Maximum characters of diff per individual file when sampling.
+# Override via KIRO_DIFF_PER_FILE_CAP env var in CI.
+DIFF_PER_FILE_CAP = int(os.environ.get("KIRO_DIFF_PER_FILE_CAP", "4000"))
+
 # File category classification rules — ordered by specificity (most specific first)
 # Each rule is (category_name, include_pattern, exclude_pattern_or_None)
 FILE_CATEGORIES = [
@@ -59,7 +70,10 @@ FILE_CATEGORIES = [
         r"\.(diff|snapshot|synth)\.test\.ts$|"
         r"^packages/utilities/mdaa-testing/"
     )),
+    ("Steering / Agent Rules", re.compile(r"^\.kiro/"), None),
+    ("Review Scripts", re.compile(r"^scripts/review/"), None),
     ("CI/CD Pipeline", re.compile(r"^(\.gitlab-ci\.yml|scripts/)"), None),
+    ("Starter Kits", re.compile(r"^starter_kits/"), None),
     ("Documentation", re.compile(r"\.md$"), None),
     ("Sample Configs", re.compile(r"sample_configs/.*\.yaml$"), None),
     ("Build / Config", re.compile(
@@ -80,6 +94,28 @@ FILE_CATEGORIES = [
         r"^packages/cli/lib/.*\.ts$"
     ), re.compile(r"^packages/utilities/mdaa-testing/")),
     ("Lambda / Python", re.compile(r"^packages/.*/lambda/.*\.py$"), None),
+]
+
+# Priority order for diff sampling — higher priority categories get more of the budget.
+# Code and config changes are most informative; docs and tests are lower priority.
+DIFF_PRIORITY: list[str] = [
+    "L2 Constructs",
+    "L3 Constructs",
+    "App Modules",
+    "Utilities / CLI",
+    "Lambda / Python",
+    "Review Scripts",
+    "Starter Kits",
+    "CI/CD Pipeline",
+    "Steering / Agent Rules",
+    "Configuration Schemas",
+    "Sample Configs",
+    "Documentation",
+    "Tests — Unit",
+    "Tests — Diff/Snapshot",
+    "Test Harness",
+    "Build / Config",
+    "Other",
 ]
 
 
@@ -148,16 +184,126 @@ def get_commit_messages() -> str:
     return result.stdout.strip()
 
 
-def get_code_diff(max_chars: int = 30000) -> str:
-    """Get the full code diff, truncated to max_chars."""
+def get_renamed_files() -> list[str]:
+    """Get list of renamed files as 'old_path → new_path' strings."""
     result = subprocess.run(
-        ["git", "diff", _target_ref()],
+        ["git", "diff", "--diff-filter=R", "--name-status", "-M", _target_ref()],
         capture_output=True, text=True, cwd=str(PROJECT_ROOT),
     )
-    diff = result.stdout.strip()
-    if len(diff) > max_chars:
-        diff = diff[:max_chars] + f"\n\n... (truncated, {len(diff)} total chars)"
-    return diff
+    renames = []
+    for line in result.stdout.strip().split("\n"):
+        if not line.strip():
+            continue
+        # Format: R100\told_path\tnew_path
+        parts = line.split("\t")
+        if len(parts) >= 3:
+            renames.append(f"{parts[1]} → {parts[2]}")
+    return renames
+
+
+def _split_diff_by_file(full_diff: str) -> list[tuple[str, str]]:
+    """Split a unified diff into per-file (header, content) tuples."""
+    file_diffs: list[tuple[str, str]] = []
+    current_header = ""
+    current_lines: list[str] = []
+
+    for line in full_diff.split("\n"):
+        if line.startswith("diff --git "):
+            if current_header and current_lines:
+                file_diffs.append((current_header, "\n".join(current_lines)))
+            current_header = line
+            current_lines = [line]
+        else:
+            current_lines.append(line)
+    if current_header and current_lines:
+        file_diffs.append((current_header, "\n".join(current_lines)))
+
+    return file_diffs
+
+
+def _group_diffs_by_category(file_diffs: list[tuple[str, str]]) -> dict[str, list[str]]:
+    """Group per-file diffs by their file category, excluding duplicates."""
+    category_diffs: dict[str, list[str]] = {}
+    for file_header, diff_text in file_diffs:
+        m = re.search(r"diff --git a/(\S+)", file_header)
+        filepath = m.group(1) if m else ""
+        cat = classify_file(filepath)
+        if cat == "Duplicates":
+            continue
+        category_diffs.setdefault(cat, []).append(diff_text)
+    return category_diffs
+
+
+def _allocate_budget(priority_cats: list[str], max_chars: int) -> dict[str, int]:
+    """Allocate character budget across categories by priority.
+
+    Top half of the priority list gets 2x weight.
+    """
+    half = len(priority_cats) // 2
+    weights = {cat: (2 if i < half else 1) for i, cat in enumerate(priority_cats)}
+    total_weight = sum(weights.values())
+    return {cat: (weights[cat] * max_chars) // total_weight for cat in priority_cats}
+
+
+def _sample_category(diffs: list[str], budget: int, per_file_cap: int) -> list[str]:
+    """Sample diffs from a single category within a character budget."""
+    cat_content: list[str] = []
+    cat_used = 0
+
+    for diff_text in diffs:
+        snippet = diff_text[:per_file_cap]
+        if len(diff_text) > per_file_cap:
+            snippet += f"\n... (file truncated, {len(diff_text)} chars total)"
+        if cat_used + len(snippet) > budget:
+            remaining = len(diffs) - len(cat_content)
+            if remaining > 0:
+                cat_content.append(f"... ({remaining} more file(s) in this category)")
+            break
+        cat_content.append(snippet)
+        cat_used += len(snippet)
+
+    return cat_content
+
+
+def get_code_diff(max_chars: int | None = None) -> str:
+    """Get a prioritized, representative sample of the diff.
+
+    - Excludes renames (reported separately as a list)
+    - Prioritizes code > config > docs > tests
+    - Samples proportionally from each category with a per-file cap
+    """
+    if max_chars is None:
+        max_chars = DIFF_BUDGET
+
+    result = subprocess.run(
+        ["git", "diff", "--diff-filter=ACMTD", _target_ref()],
+        capture_output=True, text=True, cwd=str(PROJECT_ROOT),
+    )
+    full_diff = result.stdout.strip()
+
+    if len(full_diff) <= max_chars:
+        return full_diff
+
+    file_diffs = _split_diff_by_file(full_diff)
+    category_diffs = _group_diffs_by_category(file_diffs)
+
+    priority_cats = [c for c in DIFF_PRIORITY if c in category_diffs]
+    if not priority_cats:
+        return full_diff[:max_chars] + f"\n\n... (truncated, {len(full_diff)} total chars)"
+
+    budgets = _allocate_budget(priority_cats, max_chars)
+    per_file_cap = DIFF_PER_FILE_CAP
+    parts: list[str] = []
+
+    for cat in priority_cats:
+        diffs = category_diffs[cat]
+        cat_content = _sample_category(diffs, budgets[cat], per_file_cap)
+        if cat_content:
+            parts.append(f"# --- {cat} ({len(diffs)} file(s)) ---\n" + "\n".join(cat_content))
+
+    sampled = "\n\n".join(parts)
+    sampled += f"\n\n# [Diff: {len(file_diffs)} files, {len(full_diff)} chars total. Sampled by priority, renames excluded.]"
+    return sampled
 
 
 def build_stats_table(changed_files: list[str]) -> str:
@@ -221,6 +367,9 @@ Here is the context for this MR:
 ## Change Summary by Category
 {stats_table}
 
+## Renamed Files
+{renamed_files}
+
 ## Commit Messages
 ```
 {commit_messages}
@@ -245,15 +394,21 @@ def generate_narrative(
     commit_messages: str,
     code_diff: str,
     config_diff: str,
+    renamed_files: list[str],
 ) -> str:
     """Generate narrative summary via Kiro and assemble into markdown."""
     config_section = ""
     if config_diff:
         config_section = f"## Config Schema Changes\n```diff\n{config_diff}\n```"
 
+    renamed_section = "(no renames)"
+    if renamed_files:
+        renamed_section = "\n".join(f"  - {r}" for r in renamed_files)
+
     prompt = KIRO_PROMPT.format(
         overall_stats=overall_stats,
         stats_table=stats_table,
+        renamed_files=renamed_section,
         commit_messages=commit_messages,
         code_diff=code_diff,
         config_section=config_section,
@@ -448,12 +603,18 @@ def main() -> None:
     # Phase 3: Generate narrative (Kiro)
     print("\nGenerating narrative summary via Kiro...")
     code_diff = get_code_diff()
+    renamed_files = get_renamed_files()
+
+    if renamed_files:
+        print(f"\n  {len(renamed_files)} renamed file(s) detected (excluded from diff).")
+
     summary = generate_narrative(
         overall_stats=overall_stats,
         stats_table=stats_table,
         commit_messages=commit_messages,
         code_diff=code_diff,
         config_diff=config_diff,
+        renamed_files=renamed_files,
     )
 
     # Save to file for debugging

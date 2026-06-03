@@ -93,6 +93,9 @@ One entry per non-code file category that has changes:
 | Documentation | Markdown and docs (`**/*.md`, `docs/**`) |
 | Build / Config | Project configuration (`package.json`, `tsconfig*.json`, `jest.config.*`, etc.) |
 | Sample Configs | Module sample configurations (`**/sample_configs/**/*.yaml`) |
+| Starter Kits | Files under `starter_kits/` — deployment configs, READMEs, YAML module configs |
+| Steering / Agent Rules | Files under `.kiro/` — steering files and review agent configuration |
+| Review Scripts | Files under `scripts/review/` — review agent Python scripts |
 
 Only include categories with changes. Empty array if no non-code files changed.
 

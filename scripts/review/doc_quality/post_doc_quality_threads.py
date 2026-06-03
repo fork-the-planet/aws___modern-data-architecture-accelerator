@@ -15,6 +15,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -112,6 +113,16 @@ def format_summary_body(entries: list[dict]) -> str:
     return "\n".join(lines)
 
 
+def _file_link(file_path: str) -> str:
+    """Build a markdown link to the file in the MR diff."""
+    project_url = os.environ.get("CI_PROJECT_URL", "")
+    mr_iid = os.environ.get("CI_MERGE_REQUEST_IID", "")
+    if project_url and mr_iid:
+        path_hash = hashlib.sha1(file_path.encode()).hexdigest()
+        return f"[`{file_path}`]({project_url}/-/merge_requests/{mr_iid}/diffs#diff-content-{path_hash})"
+    return f"`{file_path}`"
+
+
 def format_file_thread(file_path: str, group: dict, content_hash: str, is_update: bool = False) -> str:
     """Format a per-file detail thread body."""
     risk_level = group["risk_level"]
@@ -121,7 +132,7 @@ def format_file_thread(file_path: str, group: dict, content_hash: str, is_update
         f"<!-- docs-quality-file:{file_path} -->",
         f"<!-- docs-quality-hash:{content_hash} -->",
         "", f"## {icon} Documentation Review \u2014 Documentation Gap: {risk_level}",
-        "", f"**File:** `{file_path}`", "",
+        "", f"**File:** {_file_link(file_path)}", "",
     ]
     if ctx:
         lines.append(f"_{ctx}_")

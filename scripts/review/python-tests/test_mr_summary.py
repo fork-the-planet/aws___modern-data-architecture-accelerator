@@ -21,6 +21,11 @@ from review.mr_summary.mr_summary import (
     update_mr_description,
     format_summary_markdown,
     generate_narrative,
+    _split_diff_by_file,
+    _group_diffs_by_category,
+    _allocate_budget,
+    _sample_category,
+    get_renamed_files,
 )
 
 
@@ -77,7 +82,16 @@ class TestClassifyFile:
         assert classify_file(".gitlab-ci.yml") == "CI/CD Pipeline"
 
     def test_ci_scripts(self):
-        assert classify_file("scripts/review/baseline/baseline_review.py") == "CI/CD Pipeline"
+        assert classify_file("scripts/build/build_package.sh") == "CI/CD Pipeline"
+
+    def test_review_scripts(self):
+        assert classify_file("scripts/review/baseline/baseline_review.py") == "Review Scripts"
+
+    def test_steering_files(self):
+        assert classify_file(".kiro/steering/module-quality.md") == "Steering / Agent Rules"
+
+    def test_starter_kits(self):
+        assert classify_file("starter_kits/basic_datalake/mdaa.yaml") == "Starter Kits"
 
     def test_documentation(self):
         assert classify_file("packages/apps/datalake/datalake-app/README.md") == "Documentation"
@@ -304,7 +318,7 @@ class TestGenerateNarrative:
             "config_changes": "",
             "commit_log": "",
         })
-        result = generate_narrative("3 files", "| t |", "feat: add kms", "diff", "")
+        result = generate_narrative("3 files", "| t |", "feat: add kms", "diff", "", [])
         assert "Added S3 encryption." in result
         assert "L2" in result
 
@@ -319,13 +333,13 @@ class TestGenerateNarrative:
             "commit_log": "",
         })
         mock_kiro.return_value = f"```json\n{payload}\n```"
-        result = generate_narrative("1 file", "| t |", "fix: bug", "diff", "")
+        result = generate_narrative("1 file", "| t |", "fix: bug", "diff", "", [])
         assert "Fixed bug." in result
 
     @patch("review.mr_summary.mr_summary.run_kiro_assessment")
     def test_invalid_json_returns_raw(self, mock_kiro):
         mock_kiro.return_value = "This is not JSON, just a plain summary."
-        result = generate_narrative("1 file", "| t |", "fix: x", "diff", "")
+        result = generate_narrative("1 file", "| t |", "fix: x", "diff", "", [])
         assert result == "This is not JSON, just a plain summary."
 
     @patch("review.mr_summary.mr_summary.run_kiro_assessment")
@@ -337,7 +351,7 @@ class TestGenerateNarrative:
             "config_changes": "New field added",
             "commit_log": "",
         })
-        result = generate_narrative("1 file", "| t |", "feat: cfg", "diff", "schema diff here")
+        result = generate_narrative("1 file", "| t |", "feat: cfg", "diff", "schema diff here", [])
         # Verify config_section was passed (function should work without error)
         assert "Config updated." in result
 
@@ -350,5 +364,140 @@ class TestGenerateNarrative:
             "config_changes": "",
             "commit_log": "",
         })
-        result = generate_narrative("1 file", "| t |", "feat: x", "diff", "")
+        result = generate_narrative("1 file", "| t |", "feat: x", "diff", "", [])
         assert "No config." in result
+
+    @patch("review.mr_summary.mr_summary.run_kiro_assessment")
+    def test_renamed_files_included_in_prompt(self, mock_kiro):
+        """Verify renamed files are passed to Kiro in the prompt."""
+        mock_kiro.return_value = json.dumps({
+            "change_summary": "Renamed modules.",
+            "code_changes": [],
+            "file_changes": [],
+            "config_changes": "",
+            "commit_log": "",
+        })
+        renames = ["old/path.ts → new/path.ts", "a/b.yaml → c/d.yaml"]
+        result = generate_narrative("2 files", "| t |", "refactor: rename", "diff", "", renames)
+        assert "Renamed modules." in result
+        # Verify the prompt included the renames
+        prompt_arg = mock_kiro.call_args[0][0]
+        assert "old/path.ts" in prompt_arg
+        assert "new/path.ts" in prompt_arg
+
+
+class TestSplitDiffByFile:
+    """Test _split_diff_by_file helper."""
+
+    def test_splits_multiple_files(self):
+        diff = (
+            "diff --git a/lib/a.ts b/lib/a.ts\n"
+            "--- a/lib/a.ts\n"
+            "+++ b/lib/a.ts\n"
+            "@@ -1,3 +1,4 @@\n"
+            " line1\n"
+            "+added\n"
+            " line2\n"
+            "diff --git a/lib/b.ts b/lib/b.ts\n"
+            "--- a/lib/b.ts\n"
+            "+++ b/lib/b.ts\n"
+            "@@ -1,2 +1,2 @@\n"
+            "-old\n"
+            "+new\n"
+        )
+        result = _split_diff_by_file(diff)
+        assert len(result) == 2
+        assert "a/lib/a.ts" in result[0][0]
+        assert "a/lib/b.ts" in result[1][0]
+
+    def test_single_file(self):
+        diff = "diff --git a/README.md b/README.md\n+hello\n"
+        result = _split_diff_by_file(diff)
+        assert len(result) == 1
+
+    def test_empty_diff(self):
+        assert _split_diff_by_file("") == []
+
+
+class TestGroupDiffsByCategory:
+    """Test _group_diffs_by_category helper."""
+
+    def test_groups_by_category(self):
+        file_diffs = [
+            ("diff --git a/packages/constructs/L2/s3/lib/bucket.ts b/...", "content1"),
+            ("diff --git a/packages/apps/datalake/datalake-app/lib/datalake.ts b/...", "content2"),
+            ("diff --git a/packages/constructs/L2/s3/lib/policy.ts b/...", "content3"),
+        ]
+        result = _group_diffs_by_category(file_diffs)
+        assert "L2 Constructs" in result
+        assert len(result["L2 Constructs"]) == 2
+        assert "App Modules" in result
+        assert len(result["App Modules"]) == 1
+
+    def test_excludes_duplicates(self):
+        file_diffs = [
+            ("diff --git a/schemas/@aws-mdaa/datalake.json b/...", "content"),
+        ]
+        result = _group_diffs_by_category(file_diffs)
+        assert "Duplicates" not in result
+        assert len(result) == 0
+
+
+class TestAllocateBudget:
+    """Test _allocate_budget helper."""
+
+    def test_top_half_gets_double(self):
+        cats = ["L2 Constructs", "App Modules", "Documentation", "Tests — Unit"]
+        budgets = _allocate_budget(cats, 6000)
+        # Top half (L2, App) get weight 2, bottom half (Doc, Tests) get weight 1
+        # Total weight = 2+2+1+1 = 6
+        assert budgets["L2 Constructs"] == 2000
+        assert budgets["App Modules"] == 2000
+        assert budgets["Documentation"] == 1000
+        assert budgets["Tests — Unit"] == 1000
+
+    def test_single_category(self):
+        budgets = _allocate_budget(["L2 Constructs"], 5000)
+        assert budgets["L2 Constructs"] == 5000
+
+
+class TestSampleCategory:
+    """Test _sample_category helper."""
+
+    def test_fits_within_budget(self):
+        diffs = ["short diff 1", "short diff 2", "short diff 3"]
+        result = _sample_category(diffs, budget=1000, per_file_cap=100)
+        assert len(result) == 3
+
+    def test_truncates_large_files(self):
+        diffs = ["x" * 200]
+        result = _sample_category(diffs, budget=1000, per_file_cap=50)
+        assert len(result) == 1
+        assert "file truncated" in result[0]
+
+    def test_stops_at_budget(self):
+        diffs = ["x" * 100 for _ in range(20)]
+        result = _sample_category(diffs, budget=250, per_file_cap=200)
+        # Should stop before all 20 and append a "more files" note
+        assert len(result) < 20
+        assert "more file(s)" in result[-1]
+
+
+class TestGetRenamedFiles:
+    """Test get_renamed_files helper."""
+
+    @patch("review.mr_summary.mr_summary.subprocess.run")
+    def test_parses_renames(self, mock_run):
+        mock_run.return_value = MagicMock(
+            stdout="R100\told/path.ts\tnew/path.ts\nR095\ta/b.yaml\tc/d.yaml\n"
+        )
+        result = get_renamed_files()
+        assert len(result) == 2
+        assert "old/path.ts → new/path.ts" in result
+        assert "a/b.yaml → c/d.yaml" in result
+
+    @patch("review.mr_summary.mr_summary.subprocess.run")
+    def test_empty_output(self, mock_run):
+        mock_run.return_value = MagicMock(stdout="")
+        result = get_renamed_files()
+        assert result == []

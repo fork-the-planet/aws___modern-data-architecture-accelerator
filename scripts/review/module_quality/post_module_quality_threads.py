@@ -160,7 +160,7 @@ def format_module_thread(
         categories.setdefault(cat, []).append(finding)
 
     category_labels = {
-        "readme_gap": "README Gaps",
+        "readme_structure": "README Structure",
         "schema_coverage": "Schema Coverage",
         "config_usability": "Config Usability",
         "schema_design": "Schema Design",
@@ -169,7 +169,7 @@ def format_module_thread(
         "other": "Other",
     }
 
-    for cat_key in ["readme_gap", "config_usability", "schema_design", "schema_coverage", "sample_config", "jsdoc", "other"]:
+    for cat_key in ["readme_structure", "config_usability", "schema_design", "schema_coverage", "sample_config", "jsdoc", "other"]:
         findings = categories.get(cat_key, [])
         if not findings:
             continue

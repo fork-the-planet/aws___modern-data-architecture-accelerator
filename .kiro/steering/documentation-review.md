@@ -20,7 +20,7 @@ Review documentation quality across the entire repository — prose quality, spe
 - **Doc-code alignment** — documentation must reflect related code changes in the same MR
 
 **Out of scope** (handled by other agents — do NOT review these):
-- Config schema design, sample config coverage, type safety → Config Quality agent
+- Config schema design, sample config coverage, type safety → Module Quality agent
 - Code architecture, dependency direction, construct hierarchy → Architecture agent
 - Compliance controls, encryption, IAM policies → Compliance agent
 - Test coverage, baseline gaps, test standards → Test Standards agent

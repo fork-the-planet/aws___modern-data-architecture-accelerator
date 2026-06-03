@@ -303,10 +303,17 @@ def get_changed_packages_summary(changed_files: list[str]) -> str:
         if not f.startswith("packages/"):
             continue
         parts = f.split("/")
-        if len(parts) < 4:
+        if len(parts) < 3:
             continue
-        # e.g. packages/apps/analytics/emr-app -> packages/apps/analytics/emr-app
-        pkg_root = "/".join(parts[:4])
+        # Determine package root based on directory structure
+        if parts[1] in ("apps", "constructs") and len(parts) >= 4:
+            pkg_root = "/".join(parts[:4])
+        elif parts[1] == "utilities" and len(parts) >= 3:
+            pkg_root = "/".join(parts[:3])
+        elif parts[1] == "cli" and len(parts) >= 3:
+            pkg_root = "/".join(parts[:3])
+        else:
+            continue
         ext = Path(f).suffix
         packages.setdefault(pkg_root, set()).add(ext)
 
@@ -330,7 +337,7 @@ def classify_change_types(changed_files: list[str]) -> str:
             types.add("construct code changes")
         if f.endswith("config-schema.json"):
             types.add("config schema changes")
-        if f.endswith("sample-config") or "sample_configs/" in f:
+        if "sample_configs/" in f:
             types.add("sample config changes")
         if f.startswith("scripts/") or f.startswith(".gitlab"):
             types.add("CI/infrastructure changes")
@@ -347,7 +354,11 @@ def classify_change_types(changed_files: list[str]) -> str:
 def has_code_changes(changed_files: list[str]) -> bool:
     """Check if there are user-impacting code changes that might need CHANGELOG."""
     return any(
-        f.startswith("packages/") and "/lib/" in f and (f.endswith(".ts") or f.endswith(".py"))
+        f.startswith("packages/")
+        and (f.endswith(".ts") or f.endswith(".py"))
+        and not f.endswith(".test.ts")
+        and not f.endswith(".d.ts")
+        and "/test/" not in f
         for f in changed_files
     )
 
@@ -446,7 +457,7 @@ def build_report(md_files: list[str], changed_files: list[str]) -> list[dict]:
                 file_path = futures[future]
                 try:
                     entries.append(future.result())
-                except KiroError as e:
+                except Exception as e:
                     print(f"  [error] {file_path} — {e}", file=sys.stderr)
                     entries.append({
                         "file": file_path,
@@ -463,7 +474,7 @@ def build_report(md_files: list[str], changed_files: list[str]) -> list[dict]:
         changelog_result = assess_changelog(changed_files)
         if changelog_result:
             entries.append(changelog_result)
-    except KiroError as e:
+    except Exception as e:
         print(f"  [error] CHANGELOG assessment failed — {e}", file=sys.stderr)
         entries.append({
             "file": "CHANGELOG.md",
