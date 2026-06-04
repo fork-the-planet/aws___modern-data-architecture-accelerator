@@ -23,6 +23,11 @@ from aws_lambda_powertools.event_handler.api_gateway import Router, Response
 from aws_lambda_powertools.event_handler.exceptions import BadRequestError, InternalServerError, ServiceError
 from botocore.exceptions import ClientError
 from utils.auth_utils import get_user_id, is_admin
+from utils.pagination import (
+    encode_pagination_token,
+    decode_pagination_token,
+    InvalidPaginationTokenError,
+)
 
 # Configuration constants
 MAX_TEXT_FEEDBACK_LENGTH = 1000
@@ -30,6 +35,11 @@ MAX_MODEL_NAME_LENGTH = 100
 DEFAULT_PAGINATION_LIMIT = 10
 MAX_PAGINATION_LIMIT = 100
 MAX_DATE_RANGE_DAYS = 730  # Maximum date range for admin queries
+
+# Pagination token purposes. Each binds a token to a specific endpoint so a
+# token minted for one cannot be replayed against another.
+ADMIN_FEEDBACK_PAGINATION_PURPOSE = "admin-feedback"
+USER_FEEDBACK_PAGINATION_PURPOSE = "user-feedback-history"
 VALID_RATINGS = {'thumbs_up', 'thumbs_down'}
 # Load valid reasons from environment variable (required - no default)
 _env_reasons = os.environ.get("FEEDBACK_REASONS")
@@ -411,16 +421,17 @@ def get_feedback_in_date_range(start_date: str, end_date: str, limit: int = DEFA
         "Limit": limit
     }
 
-    # Handle pagination token
+    # Handle pagination token. The token is an opaque, versioned, KMS-encrypted
+    # form of the DynamoDB LastEvaluatedKey; decoding validates its integrity and
+    # purpose binding. A tampered or foreign token is rejected as a 400.
     if next_token:
         try:
-            exclusive_start_key = {
-                "PK": "FEEDBACK",
-                "SK": next_token
-            }
-            query_params["ExclusiveStartKey"] = exclusive_start_key
-        except Exception as e:
-            logger.warning(f"Invalid pagination token in admin query: {type(e).__name__}")
+            query_params["ExclusiveStartKey"] = decode_pagination_token(
+                next_token, purpose=ADMIN_FEEDBACK_PAGINATION_PURPOSE
+            )
+        except InvalidPaginationTokenError:
+            logger.warning("Invalid pagination token in admin feedback query")
+            raise ValidationError("Invalid next_token")
 
     try:
         response = feedback_table.query(**query_params)
@@ -457,9 +468,12 @@ def get_feedback_in_date_range(start_date: str, end_date: str, limit: int = DEFA
         }
     }
 
-    # Add next token if available
+    # Add next token if available, as an opaque, versioned token so the internal
+    # key structure is never exposed to the client.
     if 'LastEvaluatedKey' in response:
-        result['next_token'] = response['LastEvaluatedKey']['SK']
+        result['next_token'] = encode_pagination_token(
+            response['LastEvaluatedKey'], purpose=ADMIN_FEEDBACK_PAGINATION_PURPOSE
+        )
 
     return result
 
@@ -482,10 +496,23 @@ def get_user_feedback_history(user_id: str, limit: int = DEFAULT_PAGINATION_LIMI
     Returns:
         User's feedback history with pagination
     """
-    try:
-        # Validate and limit results
-        limit = max(1, min(limit, MAX_PAGINATION_LIMIT))
+    # Validate and limit results
+    limit = max(1, min(limit, MAX_PAGINATION_LIMIT))
 
+    # Decode the opaque pagination token before opening the DynamoDB
+    # error-handling scope below, so an invalid token surfaces to the caller as a
+    # 400 rather than being swallowed into an empty result set. The token is
+    # bound to this user_id (the FEEDBACK partition is shared across users) so a
+    # token minted for one user cannot be replayed by another.
+    exclusive_start_key = None
+    if next_token:
+        exclusive_start_key = decode_pagination_token(
+            next_token,
+            purpose=USER_FEEDBACK_PAGINATION_PURPOSE,
+            extra_context={"user_id": user_id},
+        )
+
+    try:
         # Query the "FEEDBACK" partition but filter for the specific user_id
         query_params = {
             "KeyConditionExpression": "PK = :pk",
@@ -498,17 +525,8 @@ def get_user_feedback_history(user_id: str, limit: int = DEFAULT_PAGINATION_LIMI
             "Limit": limit
         }
 
-        # Handle pagination token
-        if next_token:
-            try:
-                # Reconstruct the full DynamoDB key using the provided timestamp
-                exclusive_start_key = {
-                    "PK": "FEEDBACK",
-                    "SK": next_token
-                }
-                query_params["ExclusiveStartKey"] = exclusive_start_key
-            except Exception as e:
-                logger.warning(f"Invalid pagination token: {type(e).__name__}")
+        if exclusive_start_key is not None:
+            query_params["ExclusiveStartKey"] = exclusive_start_key
 
         response = feedback_table.query(**query_params)
 
@@ -534,9 +552,14 @@ def get_user_feedback_history(user_id: str, limit: int = DEFAULT_PAGINATION_LIMI
             'items': items
         }
 
-        # Add next_token if there are more results (just the SK timestamp)
+        # Add next_token if there are more results, as an opaque, versioned token
+        # bound to this user so the internal key structure is never exposed.
         if 'LastEvaluatedKey' in response:
-            result['next_token'] = response['LastEvaluatedKey']['SK']
+            result['next_token'] = encode_pagination_token(
+                response['LastEvaluatedKey'],
+                purpose=USER_FEEDBACK_PAGINATION_PURPOSE,
+                extra_context={"user_id": user_id},
+            )
 
         return result
 
@@ -778,7 +801,15 @@ def get_feedback_history():
         # Get next_token parameter
         next_token = query_params.get("next_token")
 
-        result = get_user_feedback_history(user_id, limit, next_token)
+        try:
+            result = get_user_feedback_history(user_id, limit, next_token)
+        except InvalidPaginationTokenError:
+            logger.warning("Invalid pagination token in feedback history request")
+            return Response(
+                status_code=400,
+                content_type="application/json",
+                body=json.dumps({"error": "Invalid next_token"})
+            )
 
         response = {
             "feedback": result['items']

@@ -767,6 +767,9 @@ export class RestApi extends MdaaL3Construct {
       FEEDBACK_TABLE_NAME: this.props.feedbackTable.tableName,
       FEEDBACK_REASONS: this.props.feedbackReasons.join(','),
       ADMIN_GROUP: this.props.adminGroup ? this.props.adminGroup.toString() : '',
+      // CMK used to encrypt opaque pagination tokens (see routes/.../pagination.py).
+      // The handler role is already granted encrypt/decrypt on this key.
+      ENCRYPTION_KEY_ARN: this.props.encryptionKey.keyArn,
     };
 
     // Add service interruption table name if provided

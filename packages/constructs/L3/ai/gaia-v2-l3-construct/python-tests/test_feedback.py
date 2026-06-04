@@ -153,41 +153,75 @@ class TestFeedbackRoutes:
         assert item['created_at'] == '2023-07-11T17:30:00.123456+00:00'
 
     @patch('routes.feedback.feedback_table')
-    def test_get_user_feedback_history_with_pagination(self, mock_table):
-        """Test feedback history retrieval with pagination"""
+    def test_get_user_feedback_history_with_pagination(self, mock_table, kms_pagination):
+        """Test feedback history returns an opaque, user-bound pagination token"""
         mock_items = [{'feedback_id': 'feedback-1'}]
         mock_last_key = {
-            'PK': f'USER#{self.mock_user_id}',
+            'PK': 'FEEDBACK',
             'SK': 'FEEDBACK#2023-07-11T17:30:00.123456+00:00#feedback-1'
         }
-        
+
         mock_table.query.return_value = {
             'Items': mock_items,
             'LastEvaluatedKey': mock_last_key
         }
-        
+
         result = get_user_feedback_history(self.mock_user_id, 50)
-        
+
         assert 'next_token' in result
-        assert result['next_token'] == mock_last_key['SK']
+        token = result['next_token']
+        # Opaque: versioned and not the raw sort key.
+        assert token.startswith('v1.')
+        # Check the decoded ciphertext bytes, not the base64 text: base64url's
+        # alphabet produces chance substring collisions that aren't a real leak.
+        import base64 as _b64
+        raw = _b64.urlsafe_b64decode(token.partition('.')[2].encode('utf-8'))
+        assert mock_last_key['SK'].encode('utf-8') not in raw
+        # Decodes back only under the same purpose AND the same user binding.
+        decoded = kms_pagination.decode_pagination_token(
+            token, purpose='user-feedback-history', extra_context={'user_id': self.mock_user_id}
+        )
+        assert decoded == mock_last_key
+        with pytest.raises(kms_pagination.InvalidPaginationTokenError):
+            kms_pagination.decode_pagination_token(
+                token, purpose='user-feedback-history', extra_context={'user_id': 'someone-else'}
+            )
 
     @patch('routes.feedback.feedback_table')
-    def test_get_user_feedback_history_with_next_token(self, mock_table):
-        """Test feedback history retrieval using next_token"""
-        next_token = 'FEEDBACK#2023-07-11T17:30:00.123456+00:00#feedback-1'
-        
+    def test_get_user_feedback_history_with_next_token(self, mock_table, kms_pagination):
+        """Test feedback history accepts its own opaque token as ExclusiveStartKey"""
+        original_key = {
+            'PK': 'FEEDBACK',
+            'SK': 'FEEDBACK#2023-07-11T17:30:00.123456+00:00#feedback-1'
+        }
+        next_token = kms_pagination.encode_pagination_token(
+            original_key, purpose='user-feedback-history', extra_context={'user_id': self.mock_user_id}
+        )
+
         mock_table.query.return_value = {
             'Items': [],
         }
-        
+
         result = get_user_feedback_history(self.mock_user_id, 50, next_token)
-        
-        # Verify query was called with ExclusiveStartKey
+
+        # Verify query was called with the decoded ExclusiveStartKey
         mock_table.query.assert_called_once()
         call_kwargs = mock_table.query.call_args[1]
         assert 'ExclusiveStartKey' in call_kwargs
-        assert call_kwargs['ExclusiveStartKey']['PK'] == 'FEEDBACK'
-        assert call_kwargs['ExclusiveStartKey']['SK'] == next_token
+        assert call_kwargs['ExclusiveStartKey'] == original_key
+
+    @patch('routes.feedback.feedback_table')
+    def test_get_user_feedback_history_rejects_foreign_user_token(self, mock_table, kms_pagination):
+        """A token minted for another user must not be usable to paginate this user's history"""
+        original_key = {'PK': 'FEEDBACK', 'SK': 'FEEDBACK#2023-07-11T17:30:00+00:00#feedback-1'}
+        foreign_token = kms_pagination.encode_pagination_token(
+            original_key, purpose='user-feedback-history', extra_context={'user_id': 'attacker'}
+        )
+        mock_table.query.return_value = {'Items': []}
+
+        with pytest.raises(kms_pagination.InvalidPaginationTokenError):
+            get_user_feedback_history(self.mock_user_id, 50, foreign_token)
+        mock_table.query.assert_not_called()
 
     def test_get_user_id_success(self):
         """Test successful user ID extraction from router context"""
@@ -307,10 +341,35 @@ class TestFeedbackRoutes:
         mock_get_history.assert_called_once_with(self.mock_user_id, 10, 'pagination_token')
 
     @patch('routes.feedback.get_user_id')
+    @patch('routes.feedback.get_user_feedback_history')
+    def test_get_feedback_history_endpoint_invalid_next_token(self, mock_get_history, mock_get_user_id):
+        """Test get_feedback_history route handler returns 400 on an invalid token.
+
+        Mirrors test_admin_get_feedback_invalid_next_token: exercises the
+        route-handler-level catch of InvalidPaginationTokenError that maps a bad
+        token to a 400 response rather than a 500.
+        """
+        from routes.feedback import InvalidPaginationTokenError
+
+        mock_get_user_id.return_value = self.mock_user_id
+        mock_get_history.side_effect = InvalidPaginationTokenError("Pagination token is invalid")
+
+        router.current_event = {
+            'queryStringParameters': {
+                'next_token': 'not-a-valid-token'
+            }
+        }
+
+        result = get_feedback_history()
+
+        assert result.status_code == 400
+        assert "Invalid next_token" in result.body
+
+    @patch('routes.feedback.get_user_id')
     def test_get_feedback_history_endpoint_no_auth(self, mock_get_user_id):
         """Test get_feedback_history endpoint without authentication"""
         mock_get_user_id.return_value = None
-        
+
         # The endpoint returns a 401 Response, not an exception
         result = get_feedback_history()
         assert result.status_code == 401
@@ -397,19 +456,29 @@ class TestGetFeedbackInDateRange:
         assert exc_info.value.error_code == "INTERNAL_ERROR"
 
     @patch('routes.feedback.feedback_table')
-    def test_get_feedback_in_date_range_with_pagination(self, mock_table):
-        """Test feedback retrieval with pagination token"""
+    def test_get_feedback_in_date_range_with_pagination(self, mock_table, kms_pagination):
+        """Test admin date-range feedback returns an opaque pagination token"""
         from routes.feedback import get_feedback_in_date_range
-        
+
+        last_key = {'PK': 'FEEDBACK', 'SK': '2023-07-15T12:00:00+00:00'}
         mock_table.query.return_value = {
             'Items': [],
-            'LastEvaluatedKey': {'PK': 'FEEDBACK', 'SK': '2023-07-15T12:00:00+00:00'}
+            'LastEvaluatedKey': last_key
         }
-        
+
         result = get_feedback_in_date_range('2023-07-01', '2023-07-31')
-        
+
         assert 'next_token' in result
-        assert result['next_token'] == '2023-07-15T12:00:00+00:00'
+        token = result['next_token']
+        # Opaque: versioned and not exposing the raw sort key.
+        assert token.startswith('v1.')
+        # Check the decoded ciphertext bytes, not the base64 text: base64url's
+        # alphabet produces chance substring collisions that aren't a real leak.
+        import base64 as _b64
+        raw = _b64.urlsafe_b64decode(token.partition('.')[2].encode('utf-8'))
+        assert b'2023-07-15T12:00:00+00:00' not in raw
+        decoded = kms_pagination.decode_pagination_token(token, purpose='admin-feedback')
+        assert decoded == last_key
 
 
 class TestAdminGetFeedback:
@@ -467,17 +536,38 @@ class TestAdminGetFeedback:
     def test_admin_get_feedback_missing_dates(self, mock_is_admin):
         """Test admin endpoint returns 400 when dates are missing"""
         from routes.feedback import admin_get_feedback
-        
+
         mock_is_admin.return_value = True
-        
+
         router.current_event = {
             'queryStringParameters': {}
         }
-        
+
         result = admin_get_feedback()
-        
+
         assert result.status_code == 400
         assert "start_date and end_date parameters are required" in result.body
+
+    @patch('routes.feedback.is_admin')
+    @patch('routes.feedback.feedback_table')
+    def test_admin_get_feedback_invalid_next_token(self, mock_table, mock_is_admin, kms_pagination):
+        """Admin date-range endpoint returns 400 for a malformed pagination token"""
+        from routes.feedback import admin_get_feedback
+
+        mock_is_admin.return_value = True
+        router.current_event = {
+            'queryStringParameters': {
+                'start_date': '2023-07-01',
+                'end_date': '2023-07-31',
+                'next_token': 'not-a-valid-token'
+            }
+        }
+
+        result = admin_get_feedback()
+
+        assert result.status_code == 400
+        assert "Invalid next_token" in result.body
+        mock_table.query.assert_not_called()
 
     @patch('routes.feedback.is_admin')
     @patch('routes.feedback.get_feedback_in_date_range')
@@ -602,18 +692,23 @@ class TestEdgeCases:
         assert validated['model_used'] == 'unknown'
 
     @patch('routes.feedback.feedback_table')
-    def test_invalid_pagination_token_handling(self, mock_table):
-        """Test handling of invalid pagination tokens"""
+    def test_invalid_pagination_token_handling(self, mock_table, kms_pagination):
+        """An invalid token is rejected rather than silently ignored.
+
+        The previous implementation swallowed a bad token and returned the first
+        page, which let a client pass a malformed/forged token unnoticed. The
+        opaque-token implementation raises so the route can return a 400.
+        """
         invalid_token = "not-a-valid-feedback-token"
-        
+
         mock_table.query.return_value = {
             'Items': []
         }
-        
-        # Should continue without error even with invalid token
-        result = get_user_feedback_history("user-123", 50, invalid_token)
-        
-        assert len(result['items']) == 0
+
+        with pytest.raises(kms_pagination.InvalidPaginationTokenError):
+            get_user_feedback_history("user-123", 50, invalid_token)
+        # The query must not run with an unvalidated token.
+        mock_table.query.assert_not_called()
 
 
 if __name__ == '__main__':

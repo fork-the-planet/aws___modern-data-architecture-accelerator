@@ -20,6 +20,7 @@
   - WAF rate-based protection is now **enabled by default** (previously opt-in and, due to a wiring gap, never applied even when configured). A per-IP rate-based rule plus a per-user rule keyed on the `authorization` header (REGIONAL scope) are created unless disabled via `waf.rateLimit.enabled: false`.
   - Added `restApi.alarms.throttle429` (metric-filter-backed 429 count alarm) and `restApi.alarms.lambdaConcurrency` (Lambda concurrent-execution saturation alarm).
 - **Breaking:** WAF rate-based rules are now evaluated **before** the IP allowlist rule so abusive allowlisted traffic is still throttled. This moves the built-in `ipAllow` rule from priority 0 to priority 2 and reserves priorities 0 (per-IP rate), 1 (per-user rate), and 2 (IP allowlist). Any `waf.wafRules` configured with priorities 0–2 must be renumbered to 3 or higher (10+ recommended); a synth-time error is raised on collision. The GAIA v2 sample configs renumber their managed rules to 10–15.
+- Made REST API pagination tokens (`next_token`) opaque and versioned. The admin sessions, admin feedback, and user feedback-history endpoints previously returned the raw DynamoDB pagination key (base64-encoded or plain), exposing internal table structure and allowing client-side tampering. Tokens are now KMS-encrypted, integrity-protected, and bound to their issuing endpoint (and user, where applicable); tampered or mismatched tokens are rejected with `400 Invalid next_token`
 
 #### DataZone/SMUS Modules
 

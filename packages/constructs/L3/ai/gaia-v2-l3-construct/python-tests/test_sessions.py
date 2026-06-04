@@ -650,38 +650,98 @@ class TestAdminEndpoints:
 
     @patch('routes.sessions.is_admin')
     @patch('routes.sessions.table')
-    def test_admin_get_sessions_with_pagination(self, mock_table, mock_is_admin):
-        """Test admin sessions listing with pagination"""
+    def test_admin_get_sessions_with_pagination(self, mock_table, mock_is_admin, kms_pagination):
+        """Test admin sessions listing returns an opaque, decodable pagination token"""
         mock_is_admin.return_value = True
+        last_key = {"PK": "user-1", "SK": "CONV#session-1", "GSI1PK": "SESSION", "DateModified": 1689100200}
         mock_table.query.return_value = {
             "Items": [{"PK": "user-1", "SK": "CONV#session-1", "DateModified": 1689100200}],
-            "LastEvaluatedKey": {"PK": "user-1", "SK": "CONV#session-1", "GSI1PK": "SESSION", "DateModified": 1689100200}
+            "LastEvaluatedKey": last_key
         }
-        
+
         router.current_event = {
             "queryStringParameters": {"limit": "10"}
         }
-        
+
         result = admin_get_sessions()
-        
+
         assert "sessions" in result
         assert "next_token" in result
 
+        token = result["next_token"]
+        # Token must be opaque: versioned and not exposing the raw key structure.
+        assert token.startswith("v1.")
+        # Opacity is a property of the ciphertext, so assert against the decoded
+        # bytes -- not the base64 text, whose 64-symbol alphabet yields chance
+        # substring collisions (e.g. a stray "SK") that are not a real leak.
+        import base64 as _b64
+        raw = _b64.urlsafe_b64decode(token.partition(".")[2].encode("utf-8"))
+        for marker in ("CONV#session-1", "GSI1PK", "SESSION", "DateModified"):
+            assert marker.encode("utf-8") not in raw
+        # And it must decode back to the original key under the matching purpose.
+        decoded = kms_pagination.decode_pagination_token(token, purpose="admin-sessions")
+        assert decoded["SK"] == "CONV#session-1"
+        assert decoded["GSI1PK"] == "SESSION"
+
     @patch('routes.sessions.is_admin')
-    def test_admin_get_sessions_invalid_next_token(self, mock_is_admin):
+    @patch('routes.sessions.table')
+    def test_admin_get_sessions_round_trip_pagination(self, mock_table, mock_is_admin, kms_pagination):
+        """A token minted by one page is accepted as ExclusiveStartKey on the next"""
+        mock_is_admin.return_value = True
+        last_key = {"PK": "user-1", "SK": "CONV#session-1", "GSI1PK": "SESSION", "DateModified": 1689100200}
+        mock_table.query.return_value = {
+            "Items": [{"PK": "user-1", "SK": "CONV#session-1", "DateModified": 1689100200}],
+            "LastEvaluatedKey": last_key
+        }
+        router.current_event = {"queryStringParameters": {"limit": "10"}}
+        first = admin_get_sessions()
+        token = first["next_token"]
+
+        # Second page: the server must accept its own token and resolve it back
+        # to the exact ExclusiveStartKey.
+        mock_table.query.reset_mock()
+        mock_table.query.return_value = {"Items": []}
+        router.current_event = {"queryStringParameters": {"limit": "10", "next_token": token}}
+        admin_get_sessions()
+
+        call_kwargs = mock_table.query.call_args[1]
+        assert call_kwargs["ExclusiveStartKey"] == last_key
+
+    @patch('routes.sessions.is_admin')
+    def test_admin_get_sessions_invalid_next_token(self, mock_is_admin, kms_pagination):
         """Test admin sessions listing with invalid pagination token"""
         mock_is_admin.return_value = True
-        
+
         router.current_event = {
             "queryStringParameters": {
                 "next_token": "invalid-token"
             }
         }
-        
+
         result = admin_get_sessions()
-        
+
         assert result.status_code == 400
         assert "Invalid next_token" in result.body
+
+    @patch('routes.sessions.is_admin')
+    @patch('routes.sessions.table')
+    def test_admin_get_sessions_tampered_next_token_rejected(self, mock_table, mock_is_admin, kms_pagination):
+        """A token whose ciphertext has been altered is rejected with a 400"""
+        mock_is_admin.return_value = True
+        last_key = {"PK": "user-1", "SK": "CONV#session-1", "GSI1PK": "SESSION", "DateModified": 1689100200}
+        token = kms_pagination.encode_pagination_token(last_key, purpose="admin-sessions")
+        import base64 as _b64
+        prefix, _, body = token.partition(".")
+        raw = bytearray(_b64.urlsafe_b64decode(body.encode("utf-8")))
+        raw[-1] ^= 0xFF
+        tampered = f"{prefix}.{_b64.urlsafe_b64encode(bytes(raw)).decode('utf-8')}"
+
+        router.current_event = {"queryStringParameters": {"next_token": tampered}}
+        result = admin_get_sessions()
+
+        assert result.status_code == 400
+        assert "Invalid next_token" in result.body
+        mock_table.query.assert_not_called()
 
     @patch('routes.sessions.is_admin')
     @patch('routes.sessions.table')

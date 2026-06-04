@@ -3818,6 +3818,12 @@
             },
             "FEEDBACK_REASONS": "accuracy,unhelpful,app_issue,other",
             "ADMIN_GROUP": "analytics-admin",
+            "ENCRYPTION_KEY_ARN": {
+              "Fn::GetAtt": [
+                "gaiaStackEncryptionKey9D8ED7C8",
+                "Arn"
+              ]
+            },
             "SERVICE_INTERRUPTION_TABLE_NAME": {
               "Ref": "gaiaChatBotApiWebSocketApiServiceInterruptionServiceInterruptionTable97894F93"
             },

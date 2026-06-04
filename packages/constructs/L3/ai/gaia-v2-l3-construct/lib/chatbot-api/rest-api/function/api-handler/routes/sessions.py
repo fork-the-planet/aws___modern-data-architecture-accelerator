@@ -21,6 +21,14 @@ import os
 import boto3
 from botocore.exceptions import ClientError
 from utils.auth_utils import is_admin, get_user_id
+from utils.pagination import (
+    encode_pagination_token,
+    decode_pagination_token,
+    InvalidPaginationTokenError,
+)
+
+# Pagination token purpose binding the admin-sessions token to this endpoint.
+SESSIONS_PAGINATION_PURPOSE = "admin-sessions"
 
 # Configuration constants
 DEFAULT_PAGINATION_LIMIT = 10
@@ -447,19 +455,14 @@ def admin_get_sessions():
         
         if next_token:
             try:
-                # Parse the next_token (should be base64 encoded serialized LastEvaluatedKey)
-                import base64
-                from boto3.dynamodb.types import TypeDeserializer
-                
-                decoded_token = base64.b64decode(next_token).decode('utf-8')
-                serialized_key = json.loads(decoded_token)
-                
-                # Deserialize back to DynamoDB format
-                deserializer = TypeDeserializer()
-                last_evaluated_key = {k: deserializer.deserialize(v) for k, v in serialized_key.items()}
-                gsi_query_params['ExclusiveStartKey'] = last_evaluated_key
-            except Exception as e:
-                logger.warning(f"Invalid next_token provided: {e}")
+                # Decrypt the opaque, versioned pagination token back into the
+                # DynamoDB ExclusiveStartKey. KMS validates integrity and the
+                # purpose binding; tampered or foreign tokens raise below.
+                gsi_query_params['ExclusiveStartKey'] = decode_pagination_token(
+                    next_token, purpose=SESSIONS_PAGINATION_PURPOSE
+                )
+            except InvalidPaginationTokenError as e:
+                logger.warning(f"Invalid next_token provided: {type(e).__name__}")
                 return Response(
                     status_code=400,
                     content_type="application/json",
@@ -482,19 +485,13 @@ def admin_get_sessions():
             'sessions': items
         }
         
-        # Add next_token if there are more results
+        # Add next_token if there are more results. The token is an opaque,
+        # versioned, KMS-encrypted form of the LastEvaluatedKey so the internal
+        # key structure is never exposed to the client.
         if 'LastEvaluatedKey' in response:
-            import base64
-            from boto3.dynamodb.types import TypeSerializer
-            
-            # Use DynamoDB's type serializer to properly handle Decimal objects
-            serializer = TypeSerializer()
-            serialized_key = {k: serializer.serialize(v) for k, v in response['LastEvaluatedKey'].items()}
-            
-            next_token = base64.b64encode(
-                json.dumps(serialized_key).encode('utf-8')
-            ).decode('utf-8')
-            result['next_token'] = next_token
+            result['next_token'] = encode_pagination_token(
+                response['LastEvaluatedKey'], purpose=SESSIONS_PAGINATION_PURPOSE
+            )
         
         return result
         

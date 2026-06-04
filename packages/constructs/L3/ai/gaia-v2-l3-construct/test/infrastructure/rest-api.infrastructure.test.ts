@@ -108,6 +108,20 @@ describe('REST API Infrastructure Tests', () => {
       template.hasResource('AWS::ApiGateway::RestApi', {});
     });
 
+    test('wires ENCRYPTION_KEY_ARN into the API handler for opaque pagination tokens', () => {
+      const template = createConstruct();
+      // The handler encrypts DynamoDB pagination cursors with the deployment CMK
+      // so pagination tokens are opaque and tamper-proof; the key ARN must be
+      // exposed to the function via the environment.
+      template.hasResourceProperties('AWS::Lambda::Function', {
+        Environment: {
+          Variables: Match.objectLike({
+            ENCRYPTION_KEY_ARN: Match.anyValue(),
+          }),
+        },
+      });
+    });
+
     test('creates REST API with log group path prefix', () => {
       const template = createConstruct({
         logGroupNamePathPrefix: 'custom-prefix',

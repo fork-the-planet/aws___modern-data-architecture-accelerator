@@ -433,6 +433,19 @@ History message fields:
   - `type: "source"`: Contains retrieved `documents` with title, URI, and excerpt
 - `metadata` (assistant messages only): Response metadata including `modelId` and `responseTimeMs`
 
+### Pagination
+
+Paginated endpoints (`GET /v1/admin/sessions`, `GET /v1/feedback`, `GET /v1/admin/feedback`) accept a `limit` query parameter and, when more results are available, return a `next_token` in the response body:
+
+```json
+{
+  "sessions": [ ... ],
+  "next_token": "v1.aBcD..."
+}
+```
+
+To fetch the next page, pass the value back unchanged as the `next_token` query parameter. The token is **opaque** and **versioned** (the `v1.` prefix identifies the format): it is an encrypted, integrity-protected encoding of the server's internal pagination cursor. Clients must treat it as a meaningless string — do not decode, construct, or modify it. A token that has been tampered with, or one issued for a different endpoint or user, is rejected with `400 Invalid next_token`. Tokens are not guaranteed to remain valid across service deployments.
+
 ### Feedback API
 
 The Feedback API enables collecting user ratings on AI responses for quality monitoring and improvement. Users can submit thumbs up/down ratings with configurable reasons (e.g., "accuracy", "unhelpful") and optional free-text feedback. This data can be used for analytics dashboards, model fine-tuning decisions, and compliance auditing.
