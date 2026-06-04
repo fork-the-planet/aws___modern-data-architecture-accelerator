@@ -2551,6 +2551,25 @@
             ],
             "type": "object"
         },
+        "MethodThrottlingConfig": {
+            "additionalProperties": false,
+            "description": "Per-method throttling override for a single API Gateway method.",
+            "properties": {
+                "burstLimit": {
+                    "description": "Burst limit (maximum concurrent requests) for this method before returning 429.",
+                    "type": "number"
+                },
+                "rateLimit": {
+                    "description": "Steady-state request rate limit for this method, in requests per second.",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "burstLimit",
+                "rateLimit"
+            ],
+            "type": "object"
+        },
         "Node": {
             "additionalProperties": false,
             "description": "Represents the construct node in the scope tree.",
@@ -2646,6 +2665,41 @@
             ],
             "type": "object"
         },
+        "PerUserRateLimitConfig": {
+            "additionalProperties": false,
+            "description": "Per-user rate limiting configuration.\n\nAdds a second rate-based rule that aggregates request counts on the value of the `authorization`\nheader (the Cognito-issued bearer token) rather than on source IP. This enforces a per-principal\nlimit that survives distributed clients or shared NAT — the scenario where many users share one\negress IP, or one abusive client spreads requests across many IPs. Only applied for `REGIONAL`\nscope (API Gateway); CloudFront-scoped WAFs front the UI where this header is not present.",
+            "properties": {
+                "enabled": {
+                    "default": true,
+                    "description": "Whether per-user (Authorization header) rate limiting is enabled.\nHas effect only on `REGIONAL`-scoped WAFs.",
+                    "type": "boolean"
+                },
+                "evaluationWindowSec": {
+                    "default": "60 (1 minute)",
+                    "description": "Time window in seconds for counting per-user requests.",
+                    "enum": [
+                        120,
+                        300,
+                        60,
+                        600
+                    ],
+                    "type": "number"
+                },
+                "limit": {
+                    "default": 600,
+                    "description": "Maximum requests allowed per distinct `authorization` header value within the evaluation window.\nWhen exceeded, requests bearing that token are blocked until the rate drops below the limit.",
+                    "maximum": 2000000000,
+                    "minimum": 10,
+                    "type": "number"
+                },
+                "priority": {
+                    "default": 1,
+                    "description": "Priority for the per-user rate limit rule in the WAF rule evaluation order.\nMust be unique across all rules and is reserved by default.",
+                    "type": "number"
+                }
+            },
+            "type": "object"
+        },
         "Port": {
             "additionalProperties": false,
             "description": "Interface for classes that provide the connection-specification parts of a security group rule",
@@ -2686,6 +2740,46 @@
             ],
             "type": "object"
         },
+        "RateLimitConfig": {
+            "additionalProperties": false,
+            "description": "Rate limiting configuration for DDoS and abuse protection.\n\nRate-based rules help protect against DDoS and authenticated denial-of-service by automatically\nblocking IP addresses (and, optionally, individual users) that exceed a request threshold within\na time window.\n\nIMPORTANT: Rate-based rules are evaluated **before** the IP allowlist rule so that an abusive but\nallowlisted IP (or token) is still blocked. The allowlist rule's terminating `Allow` action would\notherwise short-circuit evaluation before any rate rule could fire. Built-in rules reserve\npriorities 0 (per-IP), 1 (per-user), and 2 (IP allowlist); assign any `wafRules` priorities of 3\nor higher (10+ recommended).",
+            "properties": {
+                "enabled": {
+                    "default": true,
+                    "description": "Whether per-IP rate limiting is enabled. Rate limiting is on by default; set this to `false`\nto opt out (for example, when rate limiting is managed centrally via AWS Firewall Manager).",
+                    "type": "boolean"
+                },
+                "evaluationWindowSec": {
+                    "default": "300 (5 minutes)",
+                    "description": "Time window in seconds for counting requests.\nAWS WAF counts requests within this sliding window to determine if the limit is exceeded.",
+                    "enum": [
+                        120,
+                        300,
+                        60,
+                        600
+                    ],
+                    "type": "number"
+                },
+                "limit": {
+                    "default": 2000,
+                    "description": "Maximum requests allowed per IP within the evaluation window.\nWhen exceeded, the IP is blocked until the request rate drops below the limit.",
+                    "maximum": 2000000000,
+                    "minimum": 10,
+                    "type": "number"
+                },
+                "perUser": {
+                    "$ref": "#/definitions/PerUserRateLimitConfig",
+                    "default": "- per-user rate limiting enabled with default limits on REGIONAL scope",
+                    "description": "Per-user (Authorization header) rate limiting. Adds a second rate-based rule keyed on the bearer\ntoken so a single authenticated client cannot exhaust capacity even from many IPs. Applied only\nto `REGIONAL`-scoped WAFs (API Gateway)."
+                },
+                "priority": {
+                    "default": 0,
+                    "description": "Priority for the per-IP rate limit rule in the WAF rule evaluation order.\nLower numbers are evaluated first. Must be unique across all rules.\nEvaluated before the IP allowlist rule (priority 2) so abusive allowlisted IPs are still blocked.",
+                    "type": "number"
+                }
+            },
+            "type": "object"
+        },
         "Record<string,Grant>": {
             "additionalProperties": false,
             "type": "object"
@@ -2723,6 +2817,11 @@
                     "default": "{ threshold: 5, period: 300, evaluationPeriods: 3 }",
                     "description": "5XX error rate alarm. Threshold is a percentage (0-100)."
                 },
+                "lambdaConcurrency": {
+                    "$ref": "#/definitions/AlarmThresholdConfig",
+                    "default": "{ threshold: 100, period: 300, evaluationPeriods: 3 }",
+                    "description": "Lambda concurrent-execution saturation alarm on the REST API handler. Fires when concurrent\nexecutions approach the function's ceiling, giving operators warning before requests start being\nthrottled at the Lambda layer. Threshold is an absolute concurrent-execution count and should be\nset below the account/reserved concurrency limit for the function."
+                },
                 "latencyP99": {
                     "$ref": "#/definitions/AlarmThresholdConfig",
                     "default": "{ threshold: 10000, period: 300, evaluationPeriods: 3 }",
@@ -2731,6 +2830,11 @@
                 "snsTopicArn": {
                     "description": "SNS topic ARN for alarm notifications. If not provided, a new topic is created.",
                     "type": "string"
+                },
+                "throttle429": {
+                    "$ref": "#/definitions/AlarmThresholdConfig",
+                    "default": "{ threshold: 100, period: 300, evaluationPeriods: 1 }",
+                    "description": "Throttle (HTTP 429) alarm. Fires when the number of throttled requests in a period exceeds the\nthreshold (an absolute count, not a percentage), surfacing either client abuse or a misconfigured\ncaller hammering the API. API Gateway's `4XXError` CloudWatch metric is not broken down by status\ncode, so this alarm is backed by a metric filter on the access log that counts responses with\n`status = 429`."
                 }
             },
             "type": "object"
@@ -2745,6 +2849,10 @@
                 "alarms": {
                     "$ref": "#/definitions/RestApiAlarmConfig",
                     "description": "CloudWatch alarm configuration for monitoring API health (5XX, 4XX, latency).\nWhen provided, alarms and an SNS notification topic are created."
+                },
+                "apiGwThrottlingBurstLimit": {
+                    "description": "Stage-level burst throttle (maximum concurrent requests API Gateway will serve before returning 429).\nWithout a burst limit, a client can sustain exactly the steady-state rate indefinitely without ever\ntripping a 429, which defeats the purpose of throttling. Set this alongside `apiGwThrottlingRateLimit`\nto enforce a meaningful ceiling. If undefined, API Gateway's account-level burst default applies and\nno stage-level burst cap is set.",
+                    "type": "number"
                 },
                 "apiGwThrottlingRateLimit": {
                     "description": "Specifies API GW throttling rate limit. The total rate of all requests in your AWS account is limited to 10,000 requests per second (rps). If undefined 2500 is used.",
@@ -2783,6 +2891,13 @@
                 "logGroupNamePathPrefix": {
                     "description": "Prefix for CloudWatch log group names",
                     "type": "string"
+                },
+                "methodThrottling": {
+                    "additionalProperties": {
+                        "$ref": "#/definitions/MethodThrottlingConfig"
+                    },
+                    "description": "Per-method throttling overrides, keyed by API Gateway method path in the form\n`/{resourcePath}/{HTTP_METHOD}` — the resource path first, HTTP method last (e.g.\n`/v1/{proxy+}/GET`, or the all-methods wildcard used by the stage's default entry). This is the\nsame key format API Gateway uses for method settings. Each value sets a `rateLimit` (steady-state\nrps) and `burstLimit` (concurrent requests) for that method, overriding the stage-level limits.\n\nNote: GAIA routes all operations through a single `/v1/{proxy+}` ANY method, so per-operation\ngranularity is enforced primarily via WAF per-principal rate limiting rather than method-level\nthrottling. This map is provided for operators who split the proxy into explicit routes, or who\nwish to throttle the proxy method differently from the stage default.",
+                    "type": "object"
                 },
                 "powertoolsDevLogging": {
                     "description": "Enable PowerTools development logging",
@@ -3404,6 +3519,10 @@
                 "globalWafArn": {
                     "description": "ARN of an existing global (CLOUDFRONT-scoped) WAF Web ACL to associate with\nCloudFront distributions. Must be in us-east-1. Only used when `skipGlobalDefaultWaf` is true.",
                     "type": "string"
+                },
+                "rateLimit": {
+                    "$ref": "#/definitions/RateLimitConfig",
+                    "description": "Rate limiting configuration for the default WAFs created by this module.\n\nRate limiting is enabled by default (secure-by-default): when omitted, a per-IP rate-based rule\nis applied to both the regional and global WAFs, plus a per-user (Authorization header) rule on\nthe regional (API Gateway) WAF. Set `{ enabled: false }` to opt out, or tune `limit` /\n`evaluationWindowSec` / `perUser` to adjust thresholds. Only applies to WAFs created by this\nmodule — has no effect when `regionalWafArn` / `globalWafArn` reference an externally managed WAF."
                 },
                 "regionalWafArn": {
                     "description": "ARN of an existing regional WAF Web ACL to associate with API Gateway and Cognito.\nOnly used when `skipRegionalDefaultWaf` is true.",

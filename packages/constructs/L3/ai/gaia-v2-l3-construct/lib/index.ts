@@ -18,7 +18,12 @@ export { ChatHistoryProps } from './chatbot-api/chat-history/chat-history';
 export { UserFeedbackProps } from './chatbot-api/user-feedback/user-feedback';
 export { AuthenticationProps } from './authentication/authentication';
 export { EntraIdOIDCProps } from './authentication/authentication';
-export { RestApiProps, RestApiAlarmConfig, AlarmThresholdConfig } from './chatbot-api/rest-api/rest-api';
+export {
+  RestApiProps,
+  RestApiAlarmConfig,
+  AlarmThresholdConfig,
+  MethodThrottlingConfig,
+} from './chatbot-api/rest-api/rest-api';
 export { WebSocketApiProps } from './chatbot-api/websocket-api/websocket-api';
 
 // Service interruption components
@@ -38,4 +43,4 @@ export { ClientUiProps } from './client-ui/client-ui';
 export { AdminUiProps } from './admin-ui/admin-ui';
 
 // WAF configuration
-export { WafRulesProps } from './chatbot-api/waf/waf';
+export { WafRulesProps, RateLimitConfig, PerUserRateLimitConfig } from './chatbot-api/waf/waf';

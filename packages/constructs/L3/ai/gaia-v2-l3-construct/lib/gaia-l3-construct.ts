@@ -22,7 +22,7 @@ import { MdaaNagSuppressions } from '@aws-mdaa/construct';
 import { MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 import { RestApiProps } from './chatbot-api/rest-api/rest-api';
 import { UserFeedbackProps } from './chatbot-api/user-feedback/user-feedback';
-import { Waf, WafRulesProps } from './chatbot-api/waf/waf';
+import { RateLimitConfig, Waf, WafRulesProps } from './chatbot-api/waf/waf';
 import { WebSocketApiProps } from './chatbot-api/websocket-api/websocket-api';
 
 /**
@@ -90,6 +90,16 @@ export interface WafProps {
   readonly allowedCidrs?: string[];
   /** Custom WAF rules with priorities */
   readonly wafRules?: { [key: string]: WafRulesProps };
+  /**
+   * Rate limiting configuration for the default WAFs created by this module.
+   *
+   * Rate limiting is enabled by default (secure-by-default): when omitted, a per-IP rate-based rule
+   * is applied to both the regional and global WAFs, plus a per-user (Authorization header) rule on
+   * the regional (API Gateway) WAF. Set `{ enabled: false }` to opt out, or tune `limit` /
+   * `evaluationWindowSec` / `perUser` to adjust thresholds. Only applies to WAFs created by this
+   * module — has no effect when `regionalWafArn` / `globalWafArn` reference an externally managed WAF.
+   */
+  readonly rateLimit?: RateLimitConfig;
 }
 
 /**
@@ -211,6 +221,7 @@ export class GAIAL3Construct extends MdaaL3Construct {
             wafNamePrefix: 'regional',
             allowedCidrs: props.gaia.waf?.allowedCidrs,
             wafRules: props.gaia.waf?.wafRules,
+            rateLimit: props.gaia.waf?.rateLimit,
           }).webACL.attrArn;
 
     // Configure Global WAF for CloudFront protection
@@ -414,6 +425,7 @@ export class GAIAL3Construct extends MdaaL3Construct {
         wafNamePrefix: 'global',
         allowedCidrs: props.gaia.waf?.allowedCidrs,
         wafRules: props.gaia.waf?.wafRules,
+        rateLimit: props.gaia.waf?.rateLimit,
       }).webACL.attrArn;
     }
 
@@ -444,6 +456,7 @@ export class GAIAL3Construct extends MdaaL3Construct {
       wafNamePrefix: 'global',
       allowedCidrs: props.gaia.waf?.allowedCidrs,
       wafRules: props.gaia.waf?.wafRules,
+      rateLimit: props.gaia.waf?.rateLimit,
     }).webACL.attrArn;
   }
 

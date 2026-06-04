@@ -25,6 +25,17 @@ describe('GAIA v2 L3 Construct Compliance Tests', () => {
       restApi: {
         restApiDomainName: 'rest-api-domain',
         hostedZoneName: 'test',
+        // Exercise the throttling + alarm paths under CDK Nag so the MetricFilter, 429 throttle alarm,
+        // and Lambda concurrency alarm added for the throttling fix are validated against the rulesets.
+        apiGwThrottlingRateLimit: 100,
+        apiGwThrottlingBurstLimit: 200,
+        alarms: {
+          error5xxRate: { threshold: 5 },
+          error4xxRate: { threshold: 20 },
+          latencyP99: { threshold: 10000 },
+          throttle429: { threshold: 100 },
+          lambdaConcurrency: { threshold: 100 },
+        },
       },
       bedrock: {
         knowledgeBaseId: 'knowledgeBaseId',

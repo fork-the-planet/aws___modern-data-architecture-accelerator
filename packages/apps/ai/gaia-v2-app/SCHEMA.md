@@ -595,26 +595,28 @@ Validation: Optional boolean; defaults to false
 
 **Description:** REST API configuration
 
-| Property                                                                                      | Pattern | Type             | Deprecated | Definition                          | Title/Description                                                                                                                                                             |
-| --------------------------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| - [adminGroup](#gaia_restApi_adminGroup )                                                     | No      | string           | No         | -                                   | Admin group name for access to the admin interface                                                                                                                            |
-| - [alarms](#gaia_restApi_alarms )                                                             | No      | object           | No         | In #/definitions/RestApiAlarmConfig | CloudWatch alarm configuration for monitoring API health (5XX, 4XX, latency).<br />When provided, alarms and an SNS notification topic are created.                           |
-| - [apiGwThrottlingRateLimit](#gaia_restApi_apiGwThrottlingRateLimit )                         | No      | number           | No         | -                                   | Specifies API GW throttling rate limit. The total rate of all requests in your AWS account is limited to 10,000 requests per second (rps). If undefined 2500 is used.         |
-| - [disableExecuteApiEndpoint](#gaia_restApi_disableExecuteApiEndpoint )                       | No      | boolean          | No         | -                                   | Disable the default execute-api endpoint. When true, clients must use the custom domain.<br />Recommended when a custom domain is configured to enforce TLS 1.2+ exclusively. |
-| - [endpointType](#gaia_restApi_endpointType )                                                 | No      | enum (of string) | No         | -                                   | API Gateway endpoint type                                                                                                                                                     |
-| - [hostedZoneName](#gaia_restApi_hostedZoneName )                                             | No      | string           | No         | -                                   | Route53 hosted zone name for domain setup                                                                                                                                     |
-| - [lambdaArchitecture](#gaia_restApi_lambdaArchitecture )                                     | No      | enum (of string) | No         | -                                   | Lambda architecture (ARM64 or x86_64). If undefined, Architecture.X86_64 is used                                                                                              |
-| - [logGroupAccessLogRetentionDays](#gaia_restApi_logGroupAccessLogRetentionDays )             | No      | number           | No         | -                                   | Number of days to retain access logs in CloudWatch log group for access logs. If undefined, infinite is used.                                                                 |
-| - [logGroupNamePathPrefix](#gaia_restApi_logGroupNamePathPrefix )                             | No      | string           | No         | -                                   | Prefix for CloudWatch log group names                                                                                                                                         |
-| - [powertoolsDevLogging](#gaia_restApi_powertoolsDevLogging )                                 | No      | enum (of string) | No         | -                                   | Enable PowerTools development logging                                                                                                                                         |
-| - [privateApiSourceVpcEndpointIds](#gaia_restApi_privateApiSourceVpcEndpointIds )             | No      | array of string  | No         | -                                   | VPC endpoint IDs for private API access (Restrict access to specific VPC endpoints if configured).                                                                            |
-| - [provisionedConcurrentExecutions](#gaia_restApi_provisionedConcurrentExecutions )           | No      | number           | No         | -                                   | Provisioned concurrency for Lambda functions                                                                                                                                  |
-| - [pythonRuntime](#gaia_restApi_pythonRuntime )                                               | No      | string           | No         | -                                   | Python runtime version. If undefined, Runtime.PYTHON_3_13 is used.                                                                                                            |
-| - [restApiDomainName](#gaia_restApi_restApiDomainName )                                       | No      | string           | No         | -                                   | Custom domain name for REST API. Will be configured if hostedZoneName is specified as well.                                                                                   |
-| - [restApiHandlerLambdaMemorySize](#gaia_restApi_restApiHandlerLambdaMemorySize )             | No      | number           | No         | -                                   | Memory allocation for the REST API handler Lambda function in MB. If undefined, 1024MB is used.                                                                               |
-| - [restApiHandlerLambdaTimeoutInSeconds](#gaia_restApi_restApiHandlerLambdaTimeoutInSeconds ) | No      | number           | No         | -                                   | Timeout for the REST API handler Lambda function in seconds. If unspecified, 10 minutes is used (600 seconds)                                                                 |
-| - [setApiGateWayAccountCloudwatchRole](#gaia_restApi_setApiGateWayAccountCloudwatchRole )     | No      | boolean          | No         | -                                   | Whether to set API Gateway account CloudWatch role                                                                                                                            |
-| - [wafArn](#gaia_restApi_wafArn )                                                             | No      | string           | No         | -                                   | WAF ARN for API protection                                                                                                                                                    |
+| Property                                                                                      | Pattern | Type             | Deprecated | Definition                          | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| --------------------------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [adminGroup](#gaia_restApi_adminGroup )                                                     | No      | string           | No         | -                                   | Admin group name for access to the admin interface                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| - [alarms](#gaia_restApi_alarms )                                                             | No      | object           | No         | In #/definitions/RestApiAlarmConfig | CloudWatch alarm configuration for monitoring API health (5XX, 4XX, latency).<br />When provided, alarms and an SNS notification topic are created.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| - [apiGwThrottlingBurstLimit](#gaia_restApi_apiGwThrottlingBurstLimit )                       | No      | number           | No         | -                                   | Stage-level burst throttle (maximum concurrent requests API Gateway will serve before returning 429).<br />Without a burst limit, a client can sustain exactly the steady-state rate indefinitely without ever<br />tripping a 429, which defeats the purpose of throttling. Set this alongside \`apiGwThrottlingRateLimit\`<br />to enforce a meaningful ceiling. If undefined, API Gateway's account-level burst default applies and<br />no stage-level burst cap is set.                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| - [apiGwThrottlingRateLimit](#gaia_restApi_apiGwThrottlingRateLimit )                         | No      | number           | No         | -                                   | Specifies API GW throttling rate limit. The total rate of all requests in your AWS account is limited to 10,000 requests per second (rps). If undefined 2500 is used.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| - [disableExecuteApiEndpoint](#gaia_restApi_disableExecuteApiEndpoint )                       | No      | boolean          | No         | -                                   | Disable the default execute-api endpoint. When true, clients must use the custom domain.<br />Recommended when a custom domain is configured to enforce TLS 1.2+ exclusively.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| - [endpointType](#gaia_restApi_endpointType )                                                 | No      | enum (of string) | No         | -                                   | API Gateway endpoint type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| - [hostedZoneName](#gaia_restApi_hostedZoneName )                                             | No      | string           | No         | -                                   | Route53 hosted zone name for domain setup                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| - [lambdaArchitecture](#gaia_restApi_lambdaArchitecture )                                     | No      | enum (of string) | No         | -                                   | Lambda architecture (ARM64 or x86_64). If undefined, Architecture.X86_64 is used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| - [logGroupAccessLogRetentionDays](#gaia_restApi_logGroupAccessLogRetentionDays )             | No      | number           | No         | -                                   | Number of days to retain access logs in CloudWatch log group for access logs. If undefined, infinite is used.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| - [logGroupNamePathPrefix](#gaia_restApi_logGroupNamePathPrefix )                             | No      | string           | No         | -                                   | Prefix for CloudWatch log group names                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| - [methodThrottling](#gaia_restApi_methodThrottling )                                         | No      | object           | No         | -                                   | Per-method throttling overrides, keyed by API Gateway method path in the form<br />\`/{resourcePath}/{HTTP_METHOD}\` — the resource path first, HTTP method last (e.g.<br />\`/v1/{proxy+}/GET\`, or the all-methods wildcard used by the stage's default entry). This is the<br />same key format API Gateway uses for method settings. Each value sets a \`rateLimit\` (steady-state<br />rps) and \`burstLimit\` (concurrent requests) for that method, overriding the stage-level limits.<br /><br />Note: GAIA routes all operations through a single \`/v1/{proxy+}\` ANY method, so per-operation<br />granularity is enforced primarily via WAF per-principal rate limiting rather than method-level<br />throttling. This map is provided for operators who split the proxy into explicit routes, or who<br />wish to throttle the proxy method differently from the stage default. |
+| - [powertoolsDevLogging](#gaia_restApi_powertoolsDevLogging )                                 | No      | enum (of string) | No         | -                                   | Enable PowerTools development logging                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| - [privateApiSourceVpcEndpointIds](#gaia_restApi_privateApiSourceVpcEndpointIds )             | No      | array of string  | No         | -                                   | VPC endpoint IDs for private API access (Restrict access to specific VPC endpoints if configured).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| - [provisionedConcurrentExecutions](#gaia_restApi_provisionedConcurrentExecutions )           | No      | number           | No         | -                                   | Provisioned concurrency for Lambda functions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| - [pythonRuntime](#gaia_restApi_pythonRuntime )                                               | No      | string           | No         | -                                   | Python runtime version. If undefined, Runtime.PYTHON_3_13 is used.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| - [restApiDomainName](#gaia_restApi_restApiDomainName )                                       | No      | string           | No         | -                                   | Custom domain name for REST API. Will be configured if hostedZoneName is specified as well.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| - [restApiHandlerLambdaMemorySize](#gaia_restApi_restApiHandlerLambdaMemorySize )             | No      | number           | No         | -                                   | Memory allocation for the REST API handler Lambda function in MB. If undefined, 1024MB is used.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| - [restApiHandlerLambdaTimeoutInSeconds](#gaia_restApi_restApiHandlerLambdaTimeoutInSeconds ) | No      | number           | No         | -                                   | Timeout for the REST API handler Lambda function in seconds. If unspecified, 10 minutes is used (600 seconds)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| - [setApiGateWayAccountCloudwatchRole](#gaia_restApi_setApiGateWayAccountCloudwatchRole )     | No      | boolean          | No         | -                                   | Whether to set API Gateway account CloudWatch role                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| - [wafArn](#gaia_restApi_wafArn )                                                             | No      | string           | No         | -                                   | WAF ARN for API protection                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 
 #### <a name="gaia_restApi_adminGroup"></a>1.8.1. Property `root > gaia > restApi > adminGroup`
 
@@ -637,12 +639,14 @@ Validation: Optional boolean; defaults to false
 **Description:** CloudWatch alarm configuration for monitoring API health (5XX, 4XX, latency).
 When provided, alarms and an SNS notification topic are created.
 
-| Property                                             | Pattern | Type   | Deprecated | Definition                            | Title/Description                                                               |
-| ---------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------- | ------------------------------------------------------------------------------- |
-| - [error4xxRate](#gaia_restApi_alarms_error4xxRate ) | No      | object | No         | In #/definitions/AlarmThresholdConfig | 4XX error rate alarm. Threshold is a percentage (0-100).                        |
-| - [error5xxRate](#gaia_restApi_alarms_error5xxRate ) | No      | object | No         | In #/definitions/AlarmThresholdConfig | 5XX error rate alarm. Threshold is a percentage (0-100).                        |
-| - [latencyP99](#gaia_restApi_alarms_latencyP99 )     | No      | object | No         | In #/definitions/AlarmThresholdConfig | P99 latency alarm. Threshold is in milliseconds.                                |
-| - [snsTopicArn](#gaia_restApi_alarms_snsTopicArn )   | No      | string | No         | -                                     | SNS topic ARN for alarm notifications. If not provided, a new topic is created. |
+| Property                                                       | Pattern | Type   | Deprecated | Definition                            | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| -------------------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [error4xxRate](#gaia_restApi_alarms_error4xxRate )           | No      | object | No         | In #/definitions/AlarmThresholdConfig | 4XX error rate alarm. Threshold is a percentage (0-100).                                                                                                                                                                                                                                                                                                                                                                                 |
+| - [error5xxRate](#gaia_restApi_alarms_error5xxRate )           | No      | object | No         | In #/definitions/AlarmThresholdConfig | 5XX error rate alarm. Threshold is a percentage (0-100).                                                                                                                                                                                                                                                                                                                                                                                 |
+| - [lambdaConcurrency](#gaia_restApi_alarms_lambdaConcurrency ) | No      | object | No         | In #/definitions/AlarmThresholdConfig | Lambda concurrent-execution saturation alarm on the REST API handler. Fires when concurrent<br />executions approach the function's ceiling, giving operators warning before requests start being<br />throttled at the Lambda layer. Threshold is an absolute concurrent-execution count and should be<br />set below the account/reserved concurrency limit for the function.                                                          |
+| - [latencyP99](#gaia_restApi_alarms_latencyP99 )               | No      | object | No         | In #/definitions/AlarmThresholdConfig | P99 latency alarm. Threshold is in milliseconds.                                                                                                                                                                                                                                                                                                                                                                                         |
+| - [snsTopicArn](#gaia_restApi_alarms_snsTopicArn )             | No      | string | No         | -                                     | SNS topic ARN for alarm notifications. If not provided, a new topic is created.                                                                                                                                                                                                                                                                                                                                                          |
+| - [throttle429](#gaia_restApi_alarms_throttle429 )             | No      | object | No         | In #/definitions/AlarmThresholdConfig | Throttle (HTTP 429) alarm. Fires when the number of throttled requests in a period exceeds the<br />threshold (an absolute count, not a percentage), surfacing either client abuse or a misconfigured<br />caller hammering the API. API Gateway's \`4XXError\` CloudWatch metric is not broken down by status<br />code, so this alarm is backed by a metric filter on the access log that counts responses with<br />\`status = 429\`. |
 
 ##### <a name="gaia_restApi_alarms_error4xxRate"></a>1.8.2.1. Property `root > gaia > restApi > alarms > error4xxRate`
 
@@ -760,17 +764,20 @@ When provided, alarms and an SNS notification topic are created.
 
 **Description:** Threshold value for the alarm
 
-##### <a name="gaia_restApi_alarms_latencyP99"></a>1.8.2.3. Property `root > gaia > restApi > alarms > latencyP99`
+##### <a name="gaia_restApi_alarms_lambdaConcurrency"></a>1.8.2.3. Property `root > gaia > restApi > alarms > lambdaConcurrency`
 
-|                           |                                                             |
-| ------------------------- | ----------------------------------------------------------- |
-| **Type**                  | `object`                                                    |
-| **Required**              | No                                                          |
-| **Additional properties** | Not allowed                                                 |
-| **Default**               | `"{ threshold: 10000, period: 300, evaluationPeriods: 3 }"` |
-| **Defined in**            | #/definitions/AlarmThresholdConfig                          |
+|                           |                                                           |
+| ------------------------- | --------------------------------------------------------- |
+| **Type**                  | `object`                                                  |
+| **Required**              | No                                                        |
+| **Additional properties** | Not allowed                                               |
+| **Default**               | `"{ threshold: 100, period: 300, evaluationPeriods: 3 }"` |
+| **Defined in**            | #/definitions/AlarmThresholdConfig                        |
 
-**Description:** P99 latency alarm. Threshold is in milliseconds.
+**Description:** Lambda concurrent-execution saturation alarm on the REST API handler. Fires when concurrent
+executions approach the function's ceiling, giving operators warning before requests start being
+throttled at the Lambda layer. Threshold is an absolute concurrent-execution count and should be
+set below the account/reserved concurrency limit for the function.
 
 | Property                                                                    | Pattern | Type    | Deprecated | Definition | Title/Description                             |
 | --------------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | --------------------------------------------- |
@@ -818,7 +825,65 @@ When provided, alarms and an SNS notification topic are created.
 
 **Description:** Threshold value for the alarm
 
-##### <a name="gaia_restApi_alarms_snsTopicArn"></a>1.8.2.4. Property `root > gaia > restApi > alarms > snsTopicArn`
+##### <a name="gaia_restApi_alarms_latencyP99"></a>1.8.2.4. Property `root > gaia > restApi > alarms > latencyP99`
+
+|                           |                                                             |
+| ------------------------- | ----------------------------------------------------------- |
+| **Type**                  | `object`                                                    |
+| **Required**              | No                                                          |
+| **Additional properties** | Not allowed                                                 |
+| **Default**               | `"{ threshold: 10000, period: 300, evaluationPeriods: 3 }"` |
+| **Defined in**            | #/definitions/AlarmThresholdConfig                          |
+
+**Description:** P99 latency alarm. Threshold is in milliseconds.
+
+| Property                                                                    | Pattern | Type    | Deprecated | Definition | Title/Description                             |
+| --------------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | --------------------------------------------- |
+| - [enabled](#gaia_restApi_alarms_error4xxRate_enabled )                     | No      | boolean | No         | -          | Whether this alarm is enabled.                |
+| - [evaluationPeriods](#gaia_restApi_alarms_error4xxRate_evaluationPeriods ) | No      | number  | No         | -          | Number of evaluation periods before alarming. |
+| - [period](#gaia_restApi_alarms_error4xxRate_period )                       | No      | number  | No         | -          | Evaluation period in seconds.                 |
+| + [threshold](#gaia_restApi_alarms_error4xxRate_threshold )                 | No      | number  | No         | -          | Threshold value for the alarm                 |
+
+###### <a name="gaia_restApi_alarms_error4xxRate_enabled"></a>1.8.2.4.1. Property `root > gaia > restApi > alarms > error4xxRate > enabled`
+
+|              |           |
+| ------------ | --------- |
+| **Type**     | `boolean` |
+| **Required** | No        |
+| **Default**  | `true`    |
+
+**Description:** Whether this alarm is enabled.
+
+###### <a name="gaia_restApi_alarms_error4xxRate_evaluationPeriods"></a>1.8.2.4.2. Property `root > gaia > restApi > alarms > error4xxRate > evaluationPeriods`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `number` |
+| **Required** | No       |
+| **Default**  | `3`      |
+
+**Description:** Number of evaluation periods before alarming.
+
+###### <a name="gaia_restApi_alarms_error4xxRate_period"></a>1.8.2.4.3. Property `root > gaia > restApi > alarms > error4xxRate > period`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `number` |
+| **Required** | No       |
+| **Default**  | `300`    |
+
+**Description:** Evaluation period in seconds.
+
+###### <a name="gaia_restApi_alarms_error4xxRate_threshold"></a>1.8.2.4.4. Property `root > gaia > restApi > alarms > error4xxRate > threshold`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `number` |
+| **Required** | Yes      |
+
+**Description:** Threshold value for the alarm
+
+##### <a name="gaia_restApi_alarms_snsTopicArn"></a>1.8.2.5. Property `root > gaia > restApi > alarms > snsTopicArn`
 
 |              |          |
 | ------------ | -------- |
@@ -827,7 +892,82 @@ When provided, alarms and an SNS notification topic are created.
 
 **Description:** SNS topic ARN for alarm notifications. If not provided, a new topic is created.
 
-#### <a name="gaia_restApi_apiGwThrottlingRateLimit"></a>1.8.3. Property `root > gaia > restApi > apiGwThrottlingRateLimit`
+##### <a name="gaia_restApi_alarms_throttle429"></a>1.8.2.6. Property `root > gaia > restApi > alarms > throttle429`
+
+|                           |                                                           |
+| ------------------------- | --------------------------------------------------------- |
+| **Type**                  | `object`                                                  |
+| **Required**              | No                                                        |
+| **Additional properties** | Not allowed                                               |
+| **Default**               | `"{ threshold: 100, period: 300, evaluationPeriods: 1 }"` |
+| **Defined in**            | #/definitions/AlarmThresholdConfig                        |
+
+**Description:** Throttle (HTTP 429) alarm. Fires when the number of throttled requests in a period exceeds the
+threshold (an absolute count, not a percentage), surfacing either client abuse or a misconfigured
+caller hammering the API. API Gateway's `4XXError` CloudWatch metric is not broken down by status
+code, so this alarm is backed by a metric filter on the access log that counts responses with
+`status = 429`.
+
+| Property                                                                    | Pattern | Type    | Deprecated | Definition | Title/Description                             |
+| --------------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | --------------------------------------------- |
+| - [enabled](#gaia_restApi_alarms_error4xxRate_enabled )                     | No      | boolean | No         | -          | Whether this alarm is enabled.                |
+| - [evaluationPeriods](#gaia_restApi_alarms_error4xxRate_evaluationPeriods ) | No      | number  | No         | -          | Number of evaluation periods before alarming. |
+| - [period](#gaia_restApi_alarms_error4xxRate_period )                       | No      | number  | No         | -          | Evaluation period in seconds.                 |
+| + [threshold](#gaia_restApi_alarms_error4xxRate_threshold )                 | No      | number  | No         | -          | Threshold value for the alarm                 |
+
+###### <a name="gaia_restApi_alarms_error4xxRate_enabled"></a>1.8.2.6.1. Property `root > gaia > restApi > alarms > error4xxRate > enabled`
+
+|              |           |
+| ------------ | --------- |
+| **Type**     | `boolean` |
+| **Required** | No        |
+| **Default**  | `true`    |
+
+**Description:** Whether this alarm is enabled.
+
+###### <a name="gaia_restApi_alarms_error4xxRate_evaluationPeriods"></a>1.8.2.6.2. Property `root > gaia > restApi > alarms > error4xxRate > evaluationPeriods`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `number` |
+| **Required** | No       |
+| **Default**  | `3`      |
+
+**Description:** Number of evaluation periods before alarming.
+
+###### <a name="gaia_restApi_alarms_error4xxRate_period"></a>1.8.2.6.3. Property `root > gaia > restApi > alarms > error4xxRate > period`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `number` |
+| **Required** | No       |
+| **Default**  | `300`    |
+
+**Description:** Evaluation period in seconds.
+
+###### <a name="gaia_restApi_alarms_error4xxRate_threshold"></a>1.8.2.6.4. Property `root > gaia > restApi > alarms > error4xxRate > threshold`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `number` |
+| **Required** | Yes      |
+
+**Description:** Threshold value for the alarm
+
+#### <a name="gaia_restApi_apiGwThrottlingBurstLimit"></a>1.8.3. Property `root > gaia > restApi > apiGwThrottlingBurstLimit`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `number` |
+| **Required** | No       |
+
+**Description:** Stage-level burst throttle (maximum concurrent requests API Gateway will serve before returning 429).
+Without a burst limit, a client can sustain exactly the steady-state rate indefinitely without ever
+tripping a 429, which defeats the purpose of throttling. Set this alongside `apiGwThrottlingRateLimit`
+to enforce a meaningful ceiling. If undefined, API Gateway's account-level burst default applies and
+no stage-level burst cap is set.
+
+#### <a name="gaia_restApi_apiGwThrottlingRateLimit"></a>1.8.4. Property `root > gaia > restApi > apiGwThrottlingRateLimit`
 
 |              |          |
 | ------------ | -------- |
@@ -836,7 +976,7 @@ When provided, alarms and an SNS notification topic are created.
 
 **Description:** Specifies API GW throttling rate limit. The total rate of all requests in your AWS account is limited to 10,000 requests per second (rps). If undefined 2500 is used.
 
-#### <a name="gaia_restApi_disableExecuteApiEndpoint"></a>1.8.4. Property `root > gaia > restApi > disableExecuteApiEndpoint`
+#### <a name="gaia_restApi_disableExecuteApiEndpoint"></a>1.8.5. Property `root > gaia > restApi > disableExecuteApiEndpoint`
 
 |              |           |
 | ------------ | --------- |
@@ -847,7 +987,7 @@ When provided, alarms and an SNS notification topic are created.
 **Description:** Disable the default execute-api endpoint. When true, clients must use the custom domain.
 Recommended when a custom domain is configured to enforce TLS 1.2+ exclusively.
 
-#### <a name="gaia_restApi_endpointType"></a>1.8.5. Property `root > gaia > restApi > endpointType`
+#### <a name="gaia_restApi_endpointType"></a>1.8.6. Property `root > gaia > restApi > endpointType`
 
 |              |                    |
 | ------------ | ------------------ |
@@ -861,7 +1001,7 @@ Must be one of:
 * "PRIVATE"
 * "REGIONAL"
 
-#### <a name="gaia_restApi_hostedZoneName"></a>1.8.6. Property `root > gaia > restApi > hostedZoneName`
+#### <a name="gaia_restApi_hostedZoneName"></a>1.8.7. Property `root > gaia > restApi > hostedZoneName`
 
 |              |          |
 | ------------ | -------- |
@@ -870,7 +1010,7 @@ Must be one of:
 
 **Description:** Route53 hosted zone name for domain setup
 
-#### <a name="gaia_restApi_lambdaArchitecture"></a>1.8.7. Property `root > gaia > restApi > lambdaArchitecture`
+#### <a name="gaia_restApi_lambdaArchitecture"></a>1.8.8. Property `root > gaia > restApi > lambdaArchitecture`
 
 |              |                    |
 | ------------ | ------------------ |
@@ -883,7 +1023,7 @@ Must be one of:
 * "ARM_64"
 * "X86_64"
 
-#### <a name="gaia_restApi_logGroupAccessLogRetentionDays"></a>1.8.8. Property `root > gaia > restApi > logGroupAccessLogRetentionDays`
+#### <a name="gaia_restApi_logGroupAccessLogRetentionDays"></a>1.8.9. Property `root > gaia > restApi > logGroupAccessLogRetentionDays`
 
 |              |          |
 | ------------ | -------- |
@@ -892,7 +1032,7 @@ Must be one of:
 
 **Description:** Number of days to retain access logs in CloudWatch log group for access logs. If undefined, infinite is used.
 
-#### <a name="gaia_restApi_logGroupNamePathPrefix"></a>1.8.9. Property `root > gaia > restApi > logGroupNamePathPrefix`
+#### <a name="gaia_restApi_logGroupNamePathPrefix"></a>1.8.10. Property `root > gaia > restApi > logGroupNamePathPrefix`
 
 |              |          |
 | ------------ | -------- |
@@ -901,7 +1041,64 @@ Must be one of:
 
 **Description:** Prefix for CloudWatch log group names
 
-#### <a name="gaia_restApi_powertoolsDevLogging"></a>1.8.10. Property `root > gaia > restApi > powertoolsDevLogging`
+#### <a name="gaia_restApi_methodThrottling"></a>1.8.11. Property `root > gaia > restApi > methodThrottling`
+
+|                           |                                                                                                            |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                   |
+| **Required**              | No                                                                                                         |
+| **Additional properties** | [Each additional property must conform to the schema](#gaia_restApi_methodThrottling_additionalProperties) |
+
+**Description:** Per-method throttling overrides, keyed by API Gateway method path in the form
+`/{resourcePath}/{HTTP_METHOD}` — the resource path first, HTTP method last (e.g.
+`/v1/{proxy+}/GET`, or the all-methods wildcard used by the stage's default entry). This is the
+same key format API Gateway uses for method settings. Each value sets a `rateLimit` (steady-state
+rps) and `burstLimit` (concurrent requests) for that method, overriding the stage-level limits.
+
+Note: GAIA routes all operations through a single `/v1/{proxy+}` ANY method, so per-operation
+granularity is enforced primarily via WAF per-principal rate limiting rather than method-level
+throttling. This map is provided for operators who split the proxy into explicit routes, or who
+wish to throttle the proxy method differently from the stage default.
+
+| Property                                                   | Pattern | Type   | Deprecated | Definition                              | Title/Description                                               |
+| ---------------------------------------------------------- | ------- | ------ | ---------- | --------------------------------------- | --------------------------------------------------------------- |
+| - [](#gaia_restApi_methodThrottling_additionalProperties ) | No      | object | No         | In #/definitions/MethodThrottlingConfig | Per-method throttling override for a single API Gateway method. |
+
+##### <a name="gaia_restApi_methodThrottling_additionalProperties"></a>1.8.11.1. Property `root > gaia > restApi > methodThrottling > MethodThrottlingConfig`
+
+|                           |                                      |
+| ------------------------- | ------------------------------------ |
+| **Type**                  | `object`                             |
+| **Required**              | No                                   |
+| **Additional properties** | Not allowed                          |
+| **Defined in**            | #/definitions/MethodThrottlingConfig |
+
+**Description:** Per-method throttling override for a single API Gateway method.
+
+| Property                                                                        | Pattern | Type   | Deprecated | Definition | Title/Description                                                               |
+| ------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------------------------------------------- |
+| + [burstLimit](#gaia_restApi_methodThrottling_additionalProperties_burstLimit ) | No      | number | No         | -          | Burst limit (maximum concurrent requests) for this method before returning 429. |
+| + [rateLimit](#gaia_restApi_methodThrottling_additionalProperties_rateLimit )   | No      | number | No         | -          | Steady-state request rate limit for this method, in requests per second.        |
+
+###### <a name="gaia_restApi_methodThrottling_additionalProperties_burstLimit"></a>1.8.11.1.1. Property `root > gaia > restApi > methodThrottling > additionalProperties > burstLimit`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `number` |
+| **Required** | Yes      |
+
+**Description:** Burst limit (maximum concurrent requests) for this method before returning 429.
+
+###### <a name="gaia_restApi_methodThrottling_additionalProperties_rateLimit"></a>1.8.11.1.2. Property `root > gaia > restApi > methodThrottling > additionalProperties > rateLimit`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `number` |
+| **Required** | Yes      |
+
+**Description:** Steady-state request rate limit for this method, in requests per second.
+
+#### <a name="gaia_restApi_powertoolsDevLogging"></a>1.8.12. Property `root > gaia > restApi > powertoolsDevLogging`
 
 |              |                    |
 | ------------ | ------------------ |
@@ -914,7 +1111,7 @@ Must be one of:
 * "false"
 * "true"
 
-#### <a name="gaia_restApi_privateApiSourceVpcEndpointIds"></a>1.8.11. Property `root > gaia > restApi > privateApiSourceVpcEndpointIds`
+#### <a name="gaia_restApi_privateApiSourceVpcEndpointIds"></a>1.8.13. Property `root > gaia > restApi > privateApiSourceVpcEndpointIds`
 
 |              |                   |
 | ------------ | ----------------- |
@@ -935,14 +1132,14 @@ Must be one of:
 | ------------------------------------------------------------------------------------------ | ----------- |
 | [privateApiSourceVpcEndpointIds items](#gaia_restApi_privateApiSourceVpcEndpointIds_items) | -           |
 
-##### <a name="gaia_restApi_privateApiSourceVpcEndpointIds_items"></a>1.8.11.1. root > gaia > restApi > privateApiSourceVpcEndpointIds > privateApiSourceVpcEndpointIds items
+##### <a name="gaia_restApi_privateApiSourceVpcEndpointIds_items"></a>1.8.13.1. root > gaia > restApi > privateApiSourceVpcEndpointIds > privateApiSourceVpcEndpointIds items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-#### <a name="gaia_restApi_provisionedConcurrentExecutions"></a>1.8.12. Property `root > gaia > restApi > provisionedConcurrentExecutions`
+#### <a name="gaia_restApi_provisionedConcurrentExecutions"></a>1.8.14. Property `root > gaia > restApi > provisionedConcurrentExecutions`
 
 |              |          |
 | ------------ | -------- |
@@ -951,7 +1148,7 @@ Must be one of:
 
 **Description:** Provisioned concurrency for Lambda functions
 
-#### <a name="gaia_restApi_pythonRuntime"></a>1.8.13. Property `root > gaia > restApi > pythonRuntime`
+#### <a name="gaia_restApi_pythonRuntime"></a>1.8.15. Property `root > gaia > restApi > pythonRuntime`
 
 |              |          |
 | ------------ | -------- |
@@ -960,7 +1157,7 @@ Must be one of:
 
 **Description:** Python runtime version. If undefined, Runtime.PYTHON_3_13 is used.
 
-#### <a name="gaia_restApi_restApiDomainName"></a>1.8.14. Property `root > gaia > restApi > restApiDomainName`
+#### <a name="gaia_restApi_restApiDomainName"></a>1.8.16. Property `root > gaia > restApi > restApiDomainName`
 
 |              |          |
 | ------------ | -------- |
@@ -969,7 +1166,7 @@ Must be one of:
 
 **Description:** Custom domain name for REST API. Will be configured if hostedZoneName is specified as well.
 
-#### <a name="gaia_restApi_restApiHandlerLambdaMemorySize"></a>1.8.15. Property `root > gaia > restApi > restApiHandlerLambdaMemorySize`
+#### <a name="gaia_restApi_restApiHandlerLambdaMemorySize"></a>1.8.17. Property `root > gaia > restApi > restApiHandlerLambdaMemorySize`
 
 |              |          |
 | ------------ | -------- |
@@ -978,7 +1175,7 @@ Must be one of:
 
 **Description:** Memory allocation for the REST API handler Lambda function in MB. If undefined, 1024MB is used.
 
-#### <a name="gaia_restApi_restApiHandlerLambdaTimeoutInSeconds"></a>1.8.16. Property `root > gaia > restApi > restApiHandlerLambdaTimeoutInSeconds`
+#### <a name="gaia_restApi_restApiHandlerLambdaTimeoutInSeconds"></a>1.8.18. Property `root > gaia > restApi > restApiHandlerLambdaTimeoutInSeconds`
 
 |              |          |
 | ------------ | -------- |
@@ -987,7 +1184,7 @@ Must be one of:
 
 **Description:** Timeout for the REST API handler Lambda function in seconds. If unspecified, 10 minutes is used (600 seconds)
 
-#### <a name="gaia_restApi_setApiGateWayAccountCloudwatchRole"></a>1.8.17. Property `root > gaia > restApi > setApiGateWayAccountCloudwatchRole`
+#### <a name="gaia_restApi_setApiGateWayAccountCloudwatchRole"></a>1.8.19. Property `root > gaia > restApi > setApiGateWayAccountCloudwatchRole`
 
 |              |           |
 | ------------ | --------- |
@@ -996,7 +1193,7 @@ Must be one of:
 
 **Description:** Whether to set API Gateway account CloudWatch role
 
-#### <a name="gaia_restApi_wafArn"></a>1.8.18. Property `root > gaia > restApi > wafArn`
+#### <a name="gaia_restApi_wafArn"></a>1.8.20. Property `root > gaia > restApi > wafArn`
 
 |              |          |
 | ------------ | -------- |
@@ -1142,14 +1339,15 @@ Must be one of:
 
 **Description:** WAF configuration for security protection
 
-| Property                                                      | Pattern | Type            | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| ------------------------------------------------------------- | ------- | --------------- | ---------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| - [allowedCidrs](#gaia_waf_allowedCidrs )                     | No      | array of string | No         | -          | CIDR blocks allowed to access the application                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| - [globalWafArn](#gaia_waf_globalWafArn )                     | No      | string          | No         | -          | ARN of an existing global (CLOUDFRONT-scoped) WAF Web ACL to associate with<br />CloudFront distributions. Must be in us-east-1. Only used when \`skipGlobalDefaultWaf\` is true.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| - [regionalWafArn](#gaia_waf_regionalWafArn )                 | No      | string          | No         | -          | ARN of an existing regional WAF Web ACL to associate with API Gateway and Cognito.<br />Only used when \`skipRegionalDefaultWaf\` is true.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| - [skipGlobalDefaultWaf](#gaia_waf_skipGlobalDefaultWaf )     | No      | boolean         | No         | -          | Skip creating the default global (CLOUDFRONT-scoped) WAF.<br /><br />When true, no global WAF is created. CloudFront distributions (client UI and admin UI)<br />will have no WAF protection unless you provide an existing WAF ARN via \`globalWafArn\`.<br />This means no IP allowlisting, rate limiting, or managed rules on the frontend.<br /><br />For non-us-east-1 deployments that want automatic global WAF creation, leave this<br />false and configure \`additional_stacks: [{region: 'us-east-1'}]\` in mdaa.yaml instead.<br /><br />Use cases: using AWS Firewall Manager, providing a pre-created global WAF via<br />\`globalWafArn\`, or intentionally running without CloudFront WAF protection. |
-| - [skipRegionalDefaultWaf](#gaia_waf_skipRegionalDefaultWaf ) | No      | boolean         | No         | -          | Skip creating the default regional WAF.<br /><br />When true, no regional WAF is created. API Gateway and Cognito will have<br />no WAF protection unless you provide an existing WAF ARN via \`regionalWafArn\`.<br /><br />Use cases: using AWS Firewall Manager, or providing a pre-created regional WAF.                                                                                                                                                                                                                                                                                                                                                                                                          |
-| - [wafRules](#gaia_waf_wafRules )                             | No      | object          | No         | -          | Custom WAF rules with priorities                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| Property                                                      | Pattern | Type            | Deprecated | Definition                       | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ------------------------------------------------------------- | ------- | --------------- | ---------- | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [allowedCidrs](#gaia_waf_allowedCidrs )                     | No      | array of string | No         | -                                | CIDR blocks allowed to access the application                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| - [globalWafArn](#gaia_waf_globalWafArn )                     | No      | string          | No         | -                                | ARN of an existing global (CLOUDFRONT-scoped) WAF Web ACL to associate with<br />CloudFront distributions. Must be in us-east-1. Only used when \`skipGlobalDefaultWaf\` is true.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| - [rateLimit](#gaia_waf_rateLimit )                           | No      | object          | No         | In #/definitions/RateLimitConfig | Rate limiting configuration for the default WAFs created by this module.<br /><br />Rate limiting is enabled by default (secure-by-default): when omitted, a per-IP rate-based rule<br />is applied to both the regional and global WAFs, plus a per-user (Authorization header) rule on<br />the regional (API Gateway) WAF. Set \`{ enabled: false }\` to opt out, or tune \`limit\` /<br />\`evaluationWindowSec\` / \`perUser\` to adjust thresholds. Only applies to WAFs created by this<br />module — has no effect when \`regionalWafArn\` / \`globalWafArn\` reference an externally managed WAF.                                                                                                            |
+| - [regionalWafArn](#gaia_waf_regionalWafArn )                 | No      | string          | No         | -                                | ARN of an existing regional WAF Web ACL to associate with API Gateway and Cognito.<br />Only used when \`skipRegionalDefaultWaf\` is true.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| - [skipGlobalDefaultWaf](#gaia_waf_skipGlobalDefaultWaf )     | No      | boolean         | No         | -                                | Skip creating the default global (CLOUDFRONT-scoped) WAF.<br /><br />When true, no global WAF is created. CloudFront distributions (client UI and admin UI)<br />will have no WAF protection unless you provide an existing WAF ARN via \`globalWafArn\`.<br />This means no IP allowlisting, rate limiting, or managed rules on the frontend.<br /><br />For non-us-east-1 deployments that want automatic global WAF creation, leave this<br />false and configure \`additional_stacks: [{region: 'us-east-1'}]\` in mdaa.yaml instead.<br /><br />Use cases: using AWS Firewall Manager, providing a pre-created global WAF via<br />\`globalWafArn\`, or intentionally running without CloudFront WAF protection. |
+| - [skipRegionalDefaultWaf](#gaia_waf_skipRegionalDefaultWaf ) | No      | boolean         | No         | -                                | Skip creating the default regional WAF.<br /><br />When true, no regional WAF is created. API Gateway and Cognito will have<br />no WAF protection unless you provide an existing WAF ARN via \`regionalWafArn\`.<br /><br />Use cases: using AWS Firewall Manager, or providing a pre-created regional WAF.                                                                                                                                                                                                                                                                                                                                                                                                          |
+| - [wafRules](#gaia_waf_wafRules )                             | No      | object          | No         | -                                | Custom WAF rules with priorities                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
 #### <a name="gaia_waf_allowedCidrs"></a>1.11.1. Property `root > gaia > waf > allowedCidrs`
 
@@ -1189,7 +1387,163 @@ Must be one of:
 **Description:** ARN of an existing global (CLOUDFRONT-scoped) WAF Web ACL to associate with
 CloudFront distributions. Must be in us-east-1. Only used when `skipGlobalDefaultWaf` is true.
 
-#### <a name="gaia_waf_regionalWafArn"></a>1.11.3. Property `root > gaia > waf > regionalWafArn`
+#### <a name="gaia_waf_rateLimit"></a>1.11.3. Property `root > gaia > waf > rateLimit`
+
+|                           |                               |
+| ------------------------- | ----------------------------- |
+| **Type**                  | `object`                      |
+| **Required**              | No                            |
+| **Additional properties** | Not allowed                   |
+| **Defined in**            | #/definitions/RateLimitConfig |
+
+**Description:** Rate limiting configuration for the default WAFs created by this module.
+
+Rate limiting is enabled by default (secure-by-default): when omitted, a per-IP rate-based rule
+is applied to both the regional and global WAFs, plus a per-user (Authorization header) rule on
+the regional (API Gateway) WAF. Set `{ enabled: false }` to opt out, or tune `limit` /
+`evaluationWindowSec` / `perUser` to adjust thresholds. Only applies to WAFs created by this
+module — has no effect when `regionalWafArn` / `globalWafArn` reference an externally managed WAF.
+
+| Property                                                          | Pattern | Type              | Deprecated | Definition                              | Title/Description                                                                                                                                                                                                                                         |
+| ----------------------------------------------------------------- | ------- | ----------------- | ---------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [enabled](#gaia_waf_rateLimit_enabled )                         | No      | boolean           | No         | -                                       | Whether per-IP rate limiting is enabled. Rate limiting is on by default; set this to \`false\`<br />to opt out (for example, when rate limiting is managed centrally via AWS Firewall Manager).                                                           |
+| - [evaluationWindowSec](#gaia_waf_rateLimit_evaluationWindowSec ) | No      | enum (of integer) | No         | -                                       | Time window in seconds for counting requests.<br />AWS WAF counts requests within this sliding window to determine if the limit is exceeded.                                                                                                              |
+| - [limit](#gaia_waf_rateLimit_limit )                             | No      | number            | No         | -                                       | Maximum requests allowed per IP within the evaluation window.<br />When exceeded, the IP is blocked until the request rate drops below the limit.                                                                                                         |
+| - [perUser](#gaia_waf_rateLimit_perUser )                         | No      | object            | No         | In #/definitions/PerUserRateLimitConfig | Per-user (Authorization header) rate limiting. Adds a second rate-based rule keyed on the bearer<br />token so a single authenticated client cannot exhaust capacity even from many IPs. Applied only<br />to \`REGIONAL\`-scoped WAFs (API Gateway).     |
+| - [priority](#gaia_waf_rateLimit_priority )                       | No      | number            | No         | -                                       | Priority for the per-IP rate limit rule in the WAF rule evaluation order.<br />Lower numbers are evaluated first. Must be unique across all rules.<br />Evaluated before the IP allowlist rule (priority 2) so abusive allowlisted IPs are still blocked. |
+
+##### <a name="gaia_waf_rateLimit_enabled"></a>1.11.3.1. Property `root > gaia > waf > rateLimit > enabled`
+
+|              |           |
+| ------------ | --------- |
+| **Type**     | `boolean` |
+| **Required** | No        |
+| **Default**  | `true`    |
+
+**Description:** Whether per-IP rate limiting is enabled. Rate limiting is on by default; set this to `false`
+to opt out (for example, when rate limiting is managed centrally via AWS Firewall Manager).
+
+##### <a name="gaia_waf_rateLimit_evaluationWindowSec"></a>1.11.3.2. Property `root > gaia > waf > rateLimit > evaluationWindowSec`
+
+|              |                     |
+| ------------ | ------------------- |
+| **Type**     | `enum (of integer)` |
+| **Required** | No                  |
+| **Default**  | `"300 (5 minutes)"` |
+
+**Description:** Time window in seconds for counting requests.
+AWS WAF counts requests within this sliding window to determine if the limit is exceeded.
+
+Must be one of:
+* 120
+* 300
+* 60
+* 600
+
+##### <a name="gaia_waf_rateLimit_limit"></a>1.11.3.3. Property `root > gaia > waf > rateLimit > limit`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `number` |
+| **Required** | No       |
+| **Default**  | `2000`   |
+
+**Description:** Maximum requests allowed per IP within the evaluation window.
+When exceeded, the IP is blocked until the request rate drops below the limit.
+
+| Restrictions |                 |
+| ------------ | --------------- |
+| **Minimum**  | &ge; 10         |
+| **Maximum**  | &le; 2000000000 |
+
+##### <a name="gaia_waf_rateLimit_perUser"></a>1.11.3.4. Property `root > gaia > waf > rateLimit > perUser`
+
+|                           |                                                                            |
+| ------------------------- | -------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                   |
+| **Required**              | No                                                                         |
+| **Additional properties** | Not allowed                                                                |
+| **Default**               | `"- per-user rate limiting enabled with default limits on REGIONAL scope"` |
+| **Defined in**            | #/definitions/PerUserRateLimitConfig                                       |
+
+**Description:** Per-user (Authorization header) rate limiting. Adds a second rate-based rule keyed on the bearer
+token so a single authenticated client cannot exhaust capacity even from many IPs. Applied only
+to `REGIONAL`-scoped WAFs (API Gateway).
+
+| Property                                                                  | Pattern | Type              | Deprecated | Definition | Title/Description                                                                                                                                                                                    |
+| ------------------------------------------------------------------------- | ------- | ----------------- | ---------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [enabled](#gaia_waf_rateLimit_perUser_enabled )                         | No      | boolean           | No         | -          | Whether per-user (Authorization header) rate limiting is enabled.<br />Has effect only on \`REGIONAL\`-scoped WAFs.                                                                                  |
+| - [evaluationWindowSec](#gaia_waf_rateLimit_perUser_evaluationWindowSec ) | No      | enum (of integer) | No         | -          | Time window in seconds for counting per-user requests.                                                                                                                                               |
+| - [limit](#gaia_waf_rateLimit_perUser_limit )                             | No      | number            | No         | -          | Maximum requests allowed per distinct \`authorization\` header value within the evaluation window.<br />When exceeded, requests bearing that token are blocked until the rate drops below the limit. |
+| - [priority](#gaia_waf_rateLimit_perUser_priority )                       | No      | number            | No         | -          | Priority for the per-user rate limit rule in the WAF rule evaluation order.<br />Must be unique across all rules and is reserved by default.                                                         |
+
+###### <a name="gaia_waf_rateLimit_perUser_enabled"></a>1.11.3.4.1. Property `root > gaia > waf > rateLimit > perUser > enabled`
+
+|              |           |
+| ------------ | --------- |
+| **Type**     | `boolean` |
+| **Required** | No        |
+| **Default**  | `true`    |
+
+**Description:** Whether per-user (Authorization header) rate limiting is enabled.
+Has effect only on `REGIONAL`-scoped WAFs.
+
+###### <a name="gaia_waf_rateLimit_perUser_evaluationWindowSec"></a>1.11.3.4.2. Property `root > gaia > waf > rateLimit > perUser > evaluationWindowSec`
+
+|              |                     |
+| ------------ | ------------------- |
+| **Type**     | `enum (of integer)` |
+| **Required** | No                  |
+| **Default**  | `"60 (1 minute)"`   |
+
+**Description:** Time window in seconds for counting per-user requests.
+
+Must be one of:
+* 120
+* 300
+* 60
+* 600
+
+###### <a name="gaia_waf_rateLimit_perUser_limit"></a>1.11.3.4.3. Property `root > gaia > waf > rateLimit > perUser > limit`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `number` |
+| **Required** | No       |
+| **Default**  | `600`    |
+
+**Description:** Maximum requests allowed per distinct `authorization` header value within the evaluation window.
+When exceeded, requests bearing that token are blocked until the rate drops below the limit.
+
+| Restrictions |                 |
+| ------------ | --------------- |
+| **Minimum**  | &ge; 10         |
+| **Maximum**  | &le; 2000000000 |
+
+###### <a name="gaia_waf_rateLimit_perUser_priority"></a>1.11.3.4.4. Property `root > gaia > waf > rateLimit > perUser > priority`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `number` |
+| **Required** | No       |
+| **Default**  | `1`      |
+
+**Description:** Priority for the per-user rate limit rule in the WAF rule evaluation order.
+Must be unique across all rules and is reserved by default.
+
+##### <a name="gaia_waf_rateLimit_priority"></a>1.11.3.5. Property `root > gaia > waf > rateLimit > priority`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `number` |
+| **Required** | No       |
+| **Default**  | `0`      |
+
+**Description:** Priority for the per-IP rate limit rule in the WAF rule evaluation order.
+Lower numbers are evaluated first. Must be unique across all rules.
+Evaluated before the IP allowlist rule (priority 2) so abusive allowlisted IPs are still blocked.
+
+#### <a name="gaia_waf_regionalWafArn"></a>1.11.4. Property `root > gaia > waf > regionalWafArn`
 
 |              |          |
 | ------------ | -------- |
@@ -1199,7 +1553,7 @@ CloudFront distributions. Must be in us-east-1. Only used when `skipGlobalDefaul
 **Description:** ARN of an existing regional WAF Web ACL to associate with API Gateway and Cognito.
 Only used when `skipRegionalDefaultWaf` is true.
 
-#### <a name="gaia_waf_skipGlobalDefaultWaf"></a>1.11.4. Property `root > gaia > waf > skipGlobalDefaultWaf`
+#### <a name="gaia_waf_skipGlobalDefaultWaf"></a>1.11.5. Property `root > gaia > waf > skipGlobalDefaultWaf`
 
 |              |           |
 | ------------ | --------- |
@@ -1219,7 +1573,7 @@ false and configure `additional_stacks: [{region: 'us-east-1'}]` in mdaa.yaml in
 Use cases: using AWS Firewall Manager, providing a pre-created global WAF via
 `globalWafArn`, or intentionally running without CloudFront WAF protection.
 
-#### <a name="gaia_waf_skipRegionalDefaultWaf"></a>1.11.5. Property `root > gaia > waf > skipRegionalDefaultWaf`
+#### <a name="gaia_waf_skipRegionalDefaultWaf"></a>1.11.6. Property `root > gaia > waf > skipRegionalDefaultWaf`
 
 |              |           |
 | ------------ | --------- |
@@ -1234,7 +1588,7 @@ no WAF protection unless you provide an existing WAF ARN via `regionalWafArn`.
 
 Use cases: using AWS Firewall Manager, or providing a pre-created regional WAF.
 
-#### <a name="gaia_waf_wafRules"></a>1.11.6. Property `root > gaia > waf > wafRules`
+#### <a name="gaia_waf_wafRules"></a>1.11.7. Property `root > gaia > waf > wafRules`
 
 |                           |                                                                                                |
 | ------------------------- | ---------------------------------------------------------------------------------------------- |
@@ -1248,7 +1602,7 @@ Use cases: using AWS Firewall Manager, or providing a pre-created regional WAF.
 | ---------------------------------------------- | ------- | ------ | ---------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | - [](#gaia_waf_wafRules_additionalProperties ) | No      | object | No         | In #/definitions/WafRulesProps | WAF rule configuration with priority.<br /><br />Used by {@link WafProps.wafRules} in the parent GAIA configuration to<br />override the default priority of individual managed-rule groups, which is<br />required when combining multiple rule groups whose default priorities<br />would otherwise conflict. |
 
-##### <a name="gaia_waf_wafRules_additionalProperties"></a>1.11.6.1. Property `root > gaia > waf > wafRules > WafRulesProps`
+##### <a name="gaia_waf_wafRules_additionalProperties"></a>1.11.7.1. Property `root > gaia > waf > wafRules > WafRulesProps`
 
 |                           |                             |
 | ------------------------- | --------------------------- |
@@ -1268,7 +1622,7 @@ would otherwise conflict.
 | --------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------- |
 | + [priority](#gaia_waf_wafRules_additionalProperties_priority ) | No      | number | No         | -          | Priority order for the WAF rule |
 
-###### <a name="gaia_waf_wafRules_additionalProperties_priority"></a>1.11.6.1.1. Property `root > gaia > waf > wafRules > additionalProperties > priority`
+###### <a name="gaia_waf_wafRules_additionalProperties_priority"></a>1.11.7.1.1. Property `root > gaia > waf > wafRules > additionalProperties > priority`
 
 |              |          |
 | ------------ | -------- |

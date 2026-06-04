@@ -13,20 +13,29 @@ gaia:
     #    globalWafArn: "arn:aws:wafv2:us-east-1:{{account}}:global/webacl/global-waf-name/a1b2c3d4-e5f6-4789-a012-3456789abcde"
     #    regionalWafArn: "arn:aws:wafv2:us-east-1:{{account}}:global/webacl/regional-waf-name/a1b2c3d4-e5f6-4789-a012-3456789abcde"
     skipGlobalDefaultWaf: true
+    # Rate-based protection is on by default. Built-in rules reserve priorities 0 (per-IP), 1
+    # (per-user/Authorization), and 2 (IP allowlist); managed wafRules below must use priority 3+
+    # (10+ recommended). Set rateLimit.enabled: false to opt out.
+    rateLimit:
+      limit: 2000
+      evaluationWindowSec: 300
+      perUser:
+        limit: 600
+        evaluationWindowSec: 60
     wafRules:
       # WAF rule to enable, will be used only if the WAF is created within the solution
       AWSManagedRulesAmazonIpReputationList:
-        priority: 1
+        priority: 10
       AWSManagedRulesAnonymousIpList:
-        priority: 2
+        priority: 11
       AWSManagedRulesCommonRuleSet:
-        priority: 3
+        priority: 12
       AWSManagedRulesAdminProtectionRuleSet:
-        priority: 4
+        priority: 13
       AWSManagedRulesKnownBadInputsRuleSet:
-        priority: 5
+        priority: 14
       AWSManagedRulesSQLiRuleSet:
-        priority: 6
+        priority: 15
     allowedCidrs:
       # Example IP address which will be added to the allow list IP set
       - 203.0.113.42
@@ -63,6 +72,21 @@ gaia:
     setApiGateWayAccountCloudwatchRole: true
     # Cognito group that will have access to the admin webapp
     adminGroup: analytics-admin
+    # Realistic chatbot throttling: 100 rps steady-state, 200 burst (burst is required to trip 429s).
+    apiGwThrottlingRateLimit: 100
+    apiGwThrottlingBurstLimit: 200
+    # API health, throttling (429), and Lambda concurrency alarms.
+    alarms:
+      error5xxRate:
+        threshold: 5
+      error4xxRate:
+        threshold: 20
+      latencyP99:
+        threshold: 10000
+      throttle429:
+        threshold: 100
+      lambdaConcurrency:
+        threshold: 100
   webSocketApi:
     bedrockRagDataSource:
       guardrailId: ssm:/{{org}}/{{domain}}/bedrock-builder/guardrail/chatbot-guardrail/id

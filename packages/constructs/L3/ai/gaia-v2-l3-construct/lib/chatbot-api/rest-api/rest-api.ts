@@ -17,7 +17,7 @@ import { MdaaDDBTable } from '@aws-mdaa/ddb-constructs';
 import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
 import { MdaaLambdaFunction, MdaaLambdaRole } from '@aws-mdaa/lambda-constructs';
-import { MdaaAlarm, MdaaLogGroup, MdaaLogGroupProps } from '@aws-mdaa/cloudwatch-constructs';
+import { MdaaAlarm, MdaaLogGroup, MdaaLogGroupProps, MdaaMetricFilter } from '@aws-mdaa/cloudwatch-constructs';
 import { MdaaSnsTopic } from '@aws-mdaa/sns-constructs';
 import { MdaaManagedPolicy, MdaaRole } from '@aws-mdaa/iam-constructs';
 import { MdaaNagSuppressions } from '@aws-mdaa/construct';
@@ -63,6 +63,33 @@ export interface RestApiAlarmConfig {
    * @default { threshold: 10000, period: 300, evaluationPeriods: 3 }
    */
   readonly latencyP99?: AlarmThresholdConfig;
+  /**
+   * Throttle (HTTP 429) alarm. Fires when the number of throttled requests in a period exceeds the
+   * threshold (an absolute count, not a percentage), surfacing either client abuse or a misconfigured
+   * caller hammering the API. API Gateway's `4XXError` CloudWatch metric is not broken down by status
+   * code, so this alarm is backed by a metric filter on the access log that counts responses with
+   * `status = 429`.
+   * @default { threshold: 100, period: 300, evaluationPeriods: 1 }
+   */
+  readonly throttle429?: AlarmThresholdConfig;
+  /**
+   * Lambda concurrent-execution saturation alarm on the REST API handler. Fires when concurrent
+   * executions approach the function's ceiling, giving operators warning before requests start being
+   * throttled at the Lambda layer. Threshold is an absolute concurrent-execution count and should be
+   * set below the account/reserved concurrency limit for the function.
+   * @default { threshold: 100, period: 300, evaluationPeriods: 3 }
+   */
+  readonly lambdaConcurrency?: AlarmThresholdConfig;
+}
+
+/**
+ * Per-method throttling override for a single API Gateway method.
+ */
+export interface MethodThrottlingConfig {
+  /** Steady-state request rate limit for this method, in requests per second. */
+  readonly rateLimit: number;
+  /** Burst limit (maximum concurrent requests) for this method before returning 429. */
+  readonly burstLimit: number;
 }
 
 export interface RestApiProps {
@@ -76,6 +103,31 @@ export interface RestApiProps {
   readonly hostedZoneName?: string;
   /** Specifies API GW throttling rate limit. The total rate of all requests in your AWS account is limited to 10,000 requests per second (rps). If undefined 2500 is used. */
   readonly apiGwThrottlingRateLimit?: number;
+  /**
+   * Stage-level burst throttle (maximum concurrent requests API Gateway will serve before returning 429).
+   * Without a burst limit, a client can sustain exactly the steady-state rate indefinitely without ever
+   * tripping a 429, which defeats the purpose of throttling. Set this alongside `apiGwThrottlingRateLimit`
+   * to enforce a meaningful ceiling. If undefined, API Gateway's account-level burst default applies and
+   * no stage-level burst cap is set.
+   */
+  readonly apiGwThrottlingBurstLimit?: number;
+  /**
+   * Per-method throttling overrides, keyed by API Gateway method path in the form
+   * `/{resourcePath}/{HTTP_METHOD}` — the resource path first, HTTP method last (e.g.
+   * `/v1/{proxy+}/GET`, or the all-methods wildcard used by the stage's default entry). This is the
+   * same key format API Gateway uses for method settings. Each value sets a `rateLimit` (steady-state
+   * rps) and `burstLimit` (concurrent requests) for that method, overriding the stage-level limits.
+   *
+   * Note: GAIA routes all operations through a single `/v1/{proxy+}` ANY method, so per-operation
+   * granularity is enforced primarily via WAF per-principal rate limiting rather than method-level
+   * throttling. This map is provided for operators who split the proxy into explicit routes, or who
+   * wish to throttle the proxy method differently from the stage default.
+   *
+   * @see https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-request-throttling.html#apigateway-api-level-throttling-in-usage-plan
+   */
+  readonly methodThrottling?: {
+    [methodAndPath: string]: MethodThrottlingConfig;
+  };
   /** Whether to set API Gateway account CloudWatch role */
   readonly setApiGateWayAccountCloudwatchRole?: boolean;
   /** Provisioned concurrency for Lambda functions */
@@ -177,7 +229,7 @@ export class RestApi extends MdaaL3Construct {
     const apiHandler: MdaaLambdaFunction = this.createApiHandler(props);
 
     // Create API Gateway with authentication and logging
-    const chatBotApi = this.createRestChatbotApi(apiHandler);
+    const { api: chatBotApi, accessLogGroup } = this.createRestChatbotApi(apiHandler);
 
     // Store API ID in SSM for reference by other components
     if (this.props?.restApiDomainName === undefined) {
@@ -191,14 +243,20 @@ export class RestApi extends MdaaL3Construct {
 
     // Create CloudWatch alarms for API health monitoring
     if (this.props.alarms) {
-      this.createApiAlarms(chatBotApi);
+      this.createApiAlarms(chatBotApi, apiHandler, accessLogGroup);
     }
   }
 
   /**
-   * Creates the REST API Gateway with authentication, logging, and security features
+   * Creates the REST API Gateway with authentication, logging, and security features.
+   *
+   * Returns the API alongside its access log group so callers (e.g. alarm creation) can attach
+   * metric filters to the log without relying on shared mutable construct state.
    */
-  private createRestChatbotApi(apiHandler: MdaaLambdaFunction) {
+  private createRestChatbotApi(apiHandler: MdaaLambdaFunction): {
+    api: apigateway.RestApi;
+    accessLogGroup: MdaaLogGroup;
+  } {
     // Create CloudWatch log group for API Gateway access logs
     const accessLogGroupProps: MdaaLogGroupProps = {
       logGroupName: 'genai-admin-backend-rest-api-access-logs',
@@ -355,7 +413,7 @@ export class RestApi extends MdaaL3Construct {
       true,
     );
 
-    return chatBotApi;
+    return { api: chatBotApi, accessLogGroup };
   }
 
   /**
@@ -448,12 +506,31 @@ export class RestApi extends MdaaL3Construct {
         tracingEnabled: true,
         metricsEnabled: true,
         throttlingRateLimit: this.props.apiGwThrottlingRateLimit ?? 2500,
+        // Burst is only applied when explicitly configured so the code default remains non-breaking
+        // for existing deployments. Operators should set both rate and burst to get a real ceiling.
+        ...(this.props.apiGwThrottlingBurstLimit === undefined
+          ? {}
+          : { throttlingBurstLimit: this.props.apiGwThrottlingBurstLimit }),
         methodOptions: {
           '/*/*': {
             loggingLevel: apigateway.MethodLoggingLevel.INFO,
             cachingEnabled: false,
             cacheDataEncrypted: false,
           },
+          // Per-method throttling overrides (keyed by `<METHOD>:<path>`). Only emitted when configured,
+          // so the generated template is unchanged unless an operator opts in via `methodThrottling`.
+          ...Object.fromEntries(
+            Object.entries(this.props.methodThrottling ?? {}).map(([methodAndPath, cfg]) => [
+              methodAndPath,
+              {
+                loggingLevel: apigateway.MethodLoggingLevel.INFO,
+                cachingEnabled: false,
+                cacheDataEncrypted: false,
+                throttlingRateLimit: cfg.rateLimit,
+                throttlingBurstLimit: cfg.burstLimit,
+              },
+            ]),
+          ),
         },
       },
     };
@@ -701,9 +778,10 @@ export class RestApi extends MdaaL3Construct {
   }
 
   /**
-   * Creates CloudWatch alarms for API Gateway health monitoring (5XX, 4XX, latency).
+   * Creates CloudWatch alarms for API Gateway health monitoring (5XX, 4XX, latency, 429 throttling)
+   * and Lambda concurrency saturation.
    */
-  private createApiAlarms(api: apigateway.RestApi) {
+  private createApiAlarms(api: apigateway.RestApi, apiHandler: MdaaLambdaFunction, accessLogGroup: MdaaLogGroup) {
     const alarmConfig = this.props.alarms!;
 
     // Resolve or create SNS topic for alarm notifications
@@ -780,5 +858,68 @@ export class RestApi extends MdaaL3Construct {
       'p99',
       `REST API p99 latency exceeds ${latency.threshold}ms`,
     );
+
+    // 429 throttle alarm — backed by a metric filter on the access log, because API Gateway's
+    // AWS/ApiGateway 4XXError metric is not broken down by status code and so cannot isolate 429s.
+    const throttle429 = alarmConfig.throttle429 ?? { threshold: 100 };
+    if (throttle429.enabled !== false) {
+      const throttleMetricNamespace = 'GAIA/RestApi';
+      const throttleMetricName = this.props.naming.resourceName('rest-api-throttled-requests', 255);
+      new MdaaMetricFilter(this, 'Throttle429MetricFilter', {
+        filterName: this.props.naming.resourceName('rest-api-429', 255),
+        logGroup: accessLogGroup,
+        // Access logs are emitted as JSON (see accessLogFormat); `status` is a string field.
+        filterPattern: '{ $.status = "429" }',
+        metricTransformations: [
+          {
+            metricName: throttleMetricName,
+            metricNamespace: throttleMetricNamespace,
+            metricValue: '1',
+            defaultValue: 0,
+            unit: 'Count',
+          },
+        ],
+        naming: this.props.naming,
+      });
+      new MdaaAlarm(this, 'Throttle429Alarm', {
+        alarmName: this.props.naming.resourceName('rest-api-429-throttles', 255),
+        metricName: throttleMetricName,
+        namespace: throttleMetricNamespace,
+        statistic: 'Sum',
+        period: throttle429.period ?? 300,
+        evaluationPeriods: throttle429.evaluationPeriods ?? 1,
+        threshold: throttle429.threshold,
+        comparisonOperator: 'GreaterThanThreshold',
+        treatMissingData: 'notBreaching',
+        alarmDescription: `REST API returned more than ${throttle429.threshold} throttled (HTTP 429) responses in the evaluation period`,
+        alarmActions,
+        naming: this.props.naming,
+        createParams: true,
+        createOutputs: false,
+      });
+    }
+
+    // Lambda concurrent-execution saturation alarm on the REST API handler. Warns operators before
+    // sustained load drives the function into Lambda-level throttling.
+    const lambdaConcurrency = alarmConfig.lambdaConcurrency ?? { threshold: 100 };
+    if (lambdaConcurrency.enabled !== false) {
+      new MdaaAlarm(this, 'LambdaConcurrencyAlarm', {
+        alarmName: this.props.naming.resourceName('rest-api-lambda-concurrency', 255),
+        metricName: 'ConcurrentExecutions',
+        namespace: 'AWS/Lambda',
+        statistic: 'Maximum',
+        period: lambdaConcurrency.period ?? 300,
+        evaluationPeriods: lambdaConcurrency.evaluationPeriods ?? 3,
+        threshold: lambdaConcurrency.threshold,
+        comparisonOperator: 'GreaterThanThreshold',
+        treatMissingData: 'notBreaching',
+        alarmDescription: `REST API handler concurrent executions exceed ${lambdaConcurrency.threshold}, approaching Lambda concurrency saturation`,
+        dimensions: { FunctionName: apiHandler.functionName },
+        alarmActions,
+        naming: this.props.naming,
+        createParams: true,
+        createOutputs: false,
+      });
+    }
   }
 }

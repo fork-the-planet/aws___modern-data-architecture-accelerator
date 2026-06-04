@@ -343,10 +343,61 @@
         "Rules": [
           {
             "Action": {
+              "Block": {}
+            },
+            "Name": "RateLimitRule",
+            "Priority": 0,
+            "Statement": {
+              "RateBasedStatement": {
+                "AggregateKeyType": "IP",
+                "EvaluationWindowSec": 300,
+                "Limit": 2000
+              }
+            },
+            "VisibilityConfig": {
+              "CloudWatchMetricsEnabled": true,
+              "MetricName": "regional-rate-limit",
+              "SampledRequestsEnabled": true
+            }
+          },
+          {
+            "Action": {
+              "Block": {}
+            },
+            "Name": "RateLimitPerAuthorizationToken",
+            "Priority": 1,
+            "Statement": {
+              "RateBasedStatement": {
+                "AggregateKeyType": "CUSTOM_KEYS",
+                "CustomKeys": [
+                  {
+                    "Header": {
+                      "Name": "authorization",
+                      "TextTransformations": [
+                        {
+                          "Priority": 0,
+                          "Type": "NONE"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "EvaluationWindowSec": 60,
+                "Limit": 600
+              }
+            },
+            "VisibilityConfig": {
+              "CloudWatchMetricsEnabled": true,
+              "MetricName": "regional-rate-limit-per-user",
+              "SampledRequestsEnabled": true
+            }
+          },
+          {
+            "Action": {
               "Allow": {}
             },
             "Name": "ipAllow",
-            "Priority": 0,
+            "Priority": 2,
             "Statement": {
               "IPSetReferenceStatement": {
                 "Arn": {
@@ -368,7 +419,7 @@
             "OverrideAction": {
               "None": {}
             },
-            "Priority": 1,
+            "Priority": 10,
             "Statement": {
               "ManagedRuleGroupStatement": {
                 "Name": "AWSManagedRulesAmazonIpReputationList",
@@ -386,7 +437,7 @@
             "OverrideAction": {
               "None": {}
             },
-            "Priority": 2,
+            "Priority": 11,
             "Statement": {
               "ManagedRuleGroupStatement": {
                 "Name": "AWSManagedRulesAnonymousIpList",
@@ -404,7 +455,7 @@
             "OverrideAction": {
               "None": {}
             },
-            "Priority": 3,
+            "Priority": 12,
             "Statement": {
               "ManagedRuleGroupStatement": {
                 "Name": "AWSManagedRulesCommonRuleSet",
@@ -422,7 +473,7 @@
             "OverrideAction": {
               "None": {}
             },
-            "Priority": 4,
+            "Priority": 13,
             "Statement": {
               "ManagedRuleGroupStatement": {
                 "Name": "AWSManagedRulesAdminProtectionRuleSet",
@@ -440,7 +491,7 @@
             "OverrideAction": {
               "None": {}
             },
-            "Priority": 5,
+            "Priority": 14,
             "Statement": {
               "ManagedRuleGroupStatement": {
                 "Name": "AWSManagedRulesKnownBadInputsRuleSet",
@@ -458,7 +509,7 @@
             "OverrideAction": {
               "None": {}
             },
-            "Priority": 6,
+            "Priority": 15,
             "Statement": {
               "ManagedRuleGroupStatement": {
                 "Name": "AWSManagedRulesSQLiRuleSet",
@@ -4278,7 +4329,8 @@
             "LoggingLevel": "INFO",
             "MetricsEnabled": true,
             "ResourcePath": "/*",
-            "ThrottlingRateLimit": 2500
+            "ThrottlingBurstLimit": 200,
+            "ThrottlingRateLimit": 100
           },
           {
             "CacheDataEncrypted": false,
@@ -4899,6 +4951,721 @@
         "Type": "String",
         "Value": {
           "Ref": "gaiaChatBotApiRestApiChatBotApiDD29B052"
+        }
+      }
+    },
+    "gaiaChatBotApiRestApiAlarmTopic7DC96D97": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": {
+        "KmsMasterKeyId": {
+          "Fn::GetAtt": [
+            "gaiaStackEncryptionKey9D8ED7C8",
+            "Arn"
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "mdaa_cdk_app",
+            "Value": "gaia-v2"
+          },
+          {
+            "Key": "mdaa_domain",
+            "Value": "test-domain"
+          },
+          {
+            "Key": "mdaa_env",
+            "Value": "test-env"
+          },
+          {
+            "Key": "mdaa_module_name",
+            "Value": "test-gaia-v2-app"
+          },
+          {
+            "Key": "mdaa_org",
+            "Value": "test-org"
+          }
+        ],
+        "TopicName": "test-org-test-env-test-domain-test-gaia-v2-app-rest-api-alarms"
+      }
+    },
+    "gaiaChatBotApiRestApiAlarmTopicPolicy25A0A576": {
+      "Type": "AWS::SNS::TopicPolicy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "sns:Publish",
+                "sns:RemovePermission",
+                "sns:SetTopicAttributes",
+                "sns:DeleteTopic",
+                "sns:ListSubscriptionsByTopic",
+                "sns:GetTopicAttributes",
+                "sns:Receive",
+                "sns:AddPermission",
+                "sns:Subscribe"
+              ],
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": "false"
+                }
+              },
+              "Effect": "Deny",
+              "Principal": {
+                "AWS": "*"
+              },
+              "Resource": "*",
+              "Sid": "EnforceSSL"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Topics": [
+          {
+            "Ref": "gaiaChatBotApiRestApiAlarmTopic7DC96D97"
+          }
+        ]
+      }
+    },
+    "gaiaChatBotApiRestApiAlarmTopicTopicrestapialarmsnamessm2FA19E87": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-gaia-v2-app/topic/rest-api-alarms/name",
+        "Tags": {
+          "mdaa_cdk_app": "gaia-v2",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-gaia-v2-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::GetAtt": [
+            "gaiaChatBotApiRestApiAlarmTopic7DC96D97",
+            "TopicName"
+          ]
+        }
+      }
+    },
+    "gaiaChatBotApiRestApiAlarmTopicTopicrestapialarmsarnssmDEE47463": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-gaia-v2-app/topic/rest-api-alarms/arn",
+        "Tags": {
+          "mdaa_cdk_app": "gaia-v2",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-gaia-v2-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Ref": "gaiaChatBotApiRestApiAlarmTopic7DC96D97"
+        }
+      }
+    },
+    "gaiaChatBotApiRestApi5xxAlarm176821CB": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "ActionsEnabled": true,
+        "AlarmActions": [
+          {
+            "Ref": "gaiaChatBotApiRestApiAlarmTopic7DC96D97"
+          }
+        ],
+        "AlarmDescription": "REST API 5XX error rate exceeds 5%",
+        "AlarmName": "test-org-test-env-test-domain-test-gaia-v2-app-rest-api-5xx-errors",
+        "ComparisonOperator": "GreaterThanThreshold",
+        "Dimensions": [
+          {
+            "Name": "ApiName",
+            "Value": "ChatBotApi"
+          },
+          {
+            "Name": "Stage",
+            "Value": {
+              "Ref": "gaiaChatBotApiRestApiChatBotApiDeploymentStageapiFA8EDD3D"
+            }
+          }
+        ],
+        "EvaluationPeriods": 3,
+        "MetricName": "5XXError",
+        "Namespace": "AWS/ApiGateway",
+        "Period": 300,
+        "Statistic": "Average",
+        "Tags": [
+          {
+            "Key": "mdaa_cdk_app",
+            "Value": "gaia-v2"
+          },
+          {
+            "Key": "mdaa_domain",
+            "Value": "test-domain"
+          },
+          {
+            "Key": "mdaa_env",
+            "Value": "test-env"
+          },
+          {
+            "Key": "mdaa_module_name",
+            "Value": "test-gaia-v2-app"
+          },
+          {
+            "Key": "mdaa_org",
+            "Value": "test-org"
+          }
+        ],
+        "Threshold": 5,
+        "TreatMissingData": "notBreaching"
+      }
+    },
+    "gaiaChatBotApiRestApi5xxAlarmalarmtestorgtestenvtestdomaintestgaiav2apprestapi5xxerrorsarnssmD23141BB": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-gaia-v2-app/alarm/test-org-test-env-test-domain-test-gaia-v2-app-rest-api-5xx-errors/arn",
+        "Tags": {
+          "mdaa_cdk_app": "gaia-v2",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-gaia-v2-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::GetAtt": [
+            "gaiaChatBotApiRestApi5xxAlarm176821CB",
+            "Arn"
+          ]
+        }
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/cloudwatch-constructs/lib/ssm-utils.ts] Parameter stores observability metadata (alarm ARN); not sensitive data.",
+              "id": "AwsSolutions-SSM4"
+            }
+          ]
+        }
+      }
+    },
+    "gaiaChatBotApiRestApi5xxAlarmalarmtestorgtestenvtestdomaintestgaiav2apprestapi5xxerrorsnamessm7079E305": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-gaia-v2-app/alarm/test-org-test-env-test-domain-test-gaia-v2-app-rest-api-5xx-errors/name",
+        "Tags": {
+          "mdaa_cdk_app": "gaia-v2",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-gaia-v2-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": "test-org-test-env-test-domain-test-gaia-v2-app-rest-api-5xx-errors"
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/cloudwatch-constructs/lib/ssm-utils.ts] Parameter stores observability metadata (alarm name); not sensitive data.",
+              "id": "AwsSolutions-SSM4"
+            }
+          ]
+        }
+      }
+    },
+    "gaiaChatBotApiRestApi4xxAlarmC531A1CA": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "ActionsEnabled": true,
+        "AlarmActions": [
+          {
+            "Ref": "gaiaChatBotApiRestApiAlarmTopic7DC96D97"
+          }
+        ],
+        "AlarmDescription": "REST API 4XX error rate exceeds 20%",
+        "AlarmName": "test-org-test-env-test-domain-test-gaia-v2-app-rest-api-4xx-errors",
+        "ComparisonOperator": "GreaterThanThreshold",
+        "Dimensions": [
+          {
+            "Name": "ApiName",
+            "Value": "ChatBotApi"
+          },
+          {
+            "Name": "Stage",
+            "Value": {
+              "Ref": "gaiaChatBotApiRestApiChatBotApiDeploymentStageapiFA8EDD3D"
+            }
+          }
+        ],
+        "EvaluationPeriods": 3,
+        "MetricName": "4XXError",
+        "Namespace": "AWS/ApiGateway",
+        "Period": 300,
+        "Statistic": "Average",
+        "Tags": [
+          {
+            "Key": "mdaa_cdk_app",
+            "Value": "gaia-v2"
+          },
+          {
+            "Key": "mdaa_domain",
+            "Value": "test-domain"
+          },
+          {
+            "Key": "mdaa_env",
+            "Value": "test-env"
+          },
+          {
+            "Key": "mdaa_module_name",
+            "Value": "test-gaia-v2-app"
+          },
+          {
+            "Key": "mdaa_org",
+            "Value": "test-org"
+          }
+        ],
+        "Threshold": 20,
+        "TreatMissingData": "notBreaching"
+      }
+    },
+    "gaiaChatBotApiRestApi4xxAlarmalarmtestorgtestenvtestdomaintestgaiav2apprestapi4xxerrorsarnssm4D5E4EFC": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-gaia-v2-app/alarm/test-org-test-env-test-domain-test-gaia-v2-app-rest-api-4xx-errors/arn",
+        "Tags": {
+          "mdaa_cdk_app": "gaia-v2",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-gaia-v2-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::GetAtt": [
+            "gaiaChatBotApiRestApi4xxAlarmC531A1CA",
+            "Arn"
+          ]
+        }
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/cloudwatch-constructs/lib/ssm-utils.ts] Parameter stores observability metadata (alarm ARN); not sensitive data.",
+              "id": "AwsSolutions-SSM4"
+            }
+          ]
+        }
+      }
+    },
+    "gaiaChatBotApiRestApi4xxAlarmalarmtestorgtestenvtestdomaintestgaiav2apprestapi4xxerrorsnamessmB0FC709E": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-gaia-v2-app/alarm/test-org-test-env-test-domain-test-gaia-v2-app-rest-api-4xx-errors/name",
+        "Tags": {
+          "mdaa_cdk_app": "gaia-v2",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-gaia-v2-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": "test-org-test-env-test-domain-test-gaia-v2-app-rest-api-4xx-errors"
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/cloudwatch-constructs/lib/ssm-utils.ts] Parameter stores observability metadata (alarm name); not sensitive data.",
+              "id": "AwsSolutions-SSM4"
+            }
+          ]
+        }
+      }
+    },
+    "gaiaChatBotApiRestApiLatencyAlarm4C0AB833": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "ActionsEnabled": true,
+        "AlarmActions": [
+          {
+            "Ref": "gaiaChatBotApiRestApiAlarmTopic7DC96D97"
+          }
+        ],
+        "AlarmDescription": "REST API p99 latency exceeds 10000ms",
+        "AlarmName": "test-org-test-env-test-domain-test-gaia-v2-app-rest-api-p99-latency",
+        "ComparisonOperator": "GreaterThanThreshold",
+        "Dimensions": [
+          {
+            "Name": "ApiName",
+            "Value": "ChatBotApi"
+          },
+          {
+            "Name": "Stage",
+            "Value": {
+              "Ref": "gaiaChatBotApiRestApiChatBotApiDeploymentStageapiFA8EDD3D"
+            }
+          }
+        ],
+        "EvaluationPeriods": 3,
+        "ExtendedStatistic": "p99",
+        "MetricName": "Latency",
+        "Namespace": "AWS/ApiGateway",
+        "Period": 300,
+        "Tags": [
+          {
+            "Key": "mdaa_cdk_app",
+            "Value": "gaia-v2"
+          },
+          {
+            "Key": "mdaa_domain",
+            "Value": "test-domain"
+          },
+          {
+            "Key": "mdaa_env",
+            "Value": "test-env"
+          },
+          {
+            "Key": "mdaa_module_name",
+            "Value": "test-gaia-v2-app"
+          },
+          {
+            "Key": "mdaa_org",
+            "Value": "test-org"
+          }
+        ],
+        "Threshold": 10000,
+        "TreatMissingData": "notBreaching"
+      }
+    },
+    "gaiaChatBotApiRestApiLatencyAlarmalarmtestorgtestenvtestdomaintestgaiav2apprestapip99latencyarnssm1A6321F1": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-gaia-v2-app/alarm/test-org-test-env-test-domain-test-gaia-v2-app-rest-api-p99-latency/arn",
+        "Tags": {
+          "mdaa_cdk_app": "gaia-v2",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-gaia-v2-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::GetAtt": [
+            "gaiaChatBotApiRestApiLatencyAlarm4C0AB833",
+            "Arn"
+          ]
+        }
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/cloudwatch-constructs/lib/ssm-utils.ts] Parameter stores observability metadata (alarm ARN); not sensitive data.",
+              "id": "AwsSolutions-SSM4"
+            }
+          ]
+        }
+      }
+    },
+    "gaiaChatBotApiRestApiLatencyAlarmalarmtestorgtestenvtestdomaintestgaiav2apprestapip99latencynamessmF1AA7B5E": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-gaia-v2-app/alarm/test-org-test-env-test-domain-test-gaia-v2-app-rest-api-p99-latency/name",
+        "Tags": {
+          "mdaa_cdk_app": "gaia-v2",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-gaia-v2-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": "test-org-test-env-test-domain-test-gaia-v2-app-rest-api-p99-latency"
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/cloudwatch-constructs/lib/ssm-utils.ts] Parameter stores observability metadata (alarm name); not sensitive data.",
+              "id": "AwsSolutions-SSM4"
+            }
+          ]
+        }
+      }
+    },
+    "gaiaChatBotApiRestApiThrottle429MetricFilterMetricFilter093519F89": {
+      "Type": "AWS::Logs::MetricFilter",
+      "Properties": {
+        "FilterName": "test-org-test-env-test-domain-test-gaia-v2-app-rest-api-429",
+        "FilterPattern": "{ $.status = \"429\" }",
+        "LogGroupName": {
+          "Ref": "gaiaChatBotApiRestApirestapiaccessloggroup09689EB9"
+        },
+        "MetricTransformations": [
+          {
+            "DefaultValue": 0,
+            "MetricName": "test-org-test-env-test-domain-test-gaia-v2-app-rest-api-throttled-requests",
+            "MetricNamespace": "GAIA/RestApi",
+            "MetricValue": "1",
+            "Unit": "Count"
+          }
+        ]
+      }
+    },
+    "gaiaChatBotApiRestApiThrottle429MetricFiltermetricfiltertestorgtestenvtestdomaintestgaiav2apprestapi429namessmD71105AD": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-gaia-v2-app/metric-filter/test-org-test-env-test-domain-test-gaia-v2-app-rest-api-429/name",
+        "Tags": {
+          "mdaa_cdk_app": "gaia-v2",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-gaia-v2-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": "test-org-test-env-test-domain-test-gaia-v2-app-rest-api-429"
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/cloudwatch-constructs/lib/ssm-utils.ts] Parameter stores observability metadata (metric filter name); not sensitive data.",
+              "id": "AwsSolutions-SSM4"
+            }
+          ]
+        }
+      }
+    },
+    "gaiaChatBotApiRestApiThrottle429MetricFiltermetricfiltertestorgtestenvtestdomaintestgaiav2apprestapi429loggroupssmAC450146": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-gaia-v2-app/metric-filter/test-org-test-env-test-domain-test-gaia-v2-app-rest-api-429/log-group",
+        "Tags": {
+          "mdaa_cdk_app": "gaia-v2",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-gaia-v2-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Ref": "gaiaChatBotApiRestApirestapiaccessloggroup09689EB9"
+        }
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/cloudwatch-constructs/lib/ssm-utils.ts] Parameter stores observability metadata (log group name); not sensitive data.",
+              "id": "AwsSolutions-SSM4"
+            }
+          ]
+        }
+      }
+    },
+    "gaiaChatBotApiRestApiThrottle429Alarm594005A1": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "ActionsEnabled": true,
+        "AlarmActions": [
+          {
+            "Ref": "gaiaChatBotApiRestApiAlarmTopic7DC96D97"
+          }
+        ],
+        "AlarmDescription": "REST API returned more than 100 throttled (HTTP 429) responses in the evaluation period",
+        "AlarmName": "test-org-test-env-test-domain-test-gaia-v2-app-rest-api-429-throttles",
+        "ComparisonOperator": "GreaterThanThreshold",
+        "EvaluationPeriods": 1,
+        "MetricName": "test-org-test-env-test-domain-test-gaia-v2-app-rest-api-throttled-requests",
+        "Namespace": "GAIA/RestApi",
+        "Period": 300,
+        "Statistic": "Sum",
+        "Tags": [
+          {
+            "Key": "mdaa_cdk_app",
+            "Value": "gaia-v2"
+          },
+          {
+            "Key": "mdaa_domain",
+            "Value": "test-domain"
+          },
+          {
+            "Key": "mdaa_env",
+            "Value": "test-env"
+          },
+          {
+            "Key": "mdaa_module_name",
+            "Value": "test-gaia-v2-app"
+          },
+          {
+            "Key": "mdaa_org",
+            "Value": "test-org"
+          }
+        ],
+        "Threshold": 100,
+        "TreatMissingData": "notBreaching"
+      }
+    },
+    "gaiaChatBotApiRestApiThrottle429Alarmalarmtestorgtestenvtestdomaintestgaiav2apprestapi429throttlesarnssmF59027C0": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-gaia-v2-app/alarm/test-org-test-env-test-domain-test-gaia-v2-app-rest-api-429-throttles/arn",
+        "Tags": {
+          "mdaa_cdk_app": "gaia-v2",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-gaia-v2-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::GetAtt": [
+            "gaiaChatBotApiRestApiThrottle429Alarm594005A1",
+            "Arn"
+          ]
+        }
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/cloudwatch-constructs/lib/ssm-utils.ts] Parameter stores observability metadata (alarm ARN); not sensitive data.",
+              "id": "AwsSolutions-SSM4"
+            }
+          ]
+        }
+      }
+    },
+    "gaiaChatBotApiRestApiThrottle429Alarmalarmtestorgtestenvtestdomaintestgaiav2apprestapi429throttlesnamessm94DB80F3": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-gaia-v2-app/alarm/test-org-test-env-test-domain-test-gaia-v2-app-rest-api-429-throttles/name",
+        "Tags": {
+          "mdaa_cdk_app": "gaia-v2",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-gaia-v2-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": "test-org-test-env-test-domain-test-gaia-v2-app-rest-api-429-throttles"
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/cloudwatch-constructs/lib/ssm-utils.ts] Parameter stores observability metadata (alarm name); not sensitive data.",
+              "id": "AwsSolutions-SSM4"
+            }
+          ]
+        }
+      }
+    },
+    "gaiaChatBotApiRestApiLambdaConcurrencyAlarmFB1F448D": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "ActionsEnabled": true,
+        "AlarmActions": [
+          {
+            "Ref": "gaiaChatBotApiRestApiAlarmTopic7DC96D97"
+          }
+        ],
+        "AlarmDescription": "REST API handler concurrent executions exceed 100, approaching Lambda concurrency saturation",
+        "AlarmName": "test-org-test-env-test-domain-test-gaia-v2-app-rest-api-lambda-concurrency",
+        "ComparisonOperator": "GreaterThanThreshold",
+        "Dimensions": [
+          {
+            "Name": "FunctionName",
+            "Value": {
+              "Ref": "gaiaChatBotApiRestApiApiHandler1ABC3322"
+            }
+          }
+        ],
+        "EvaluationPeriods": 3,
+        "MetricName": "ConcurrentExecutions",
+        "Namespace": "AWS/Lambda",
+        "Period": 300,
+        "Statistic": "Maximum",
+        "Tags": [
+          {
+            "Key": "mdaa_cdk_app",
+            "Value": "gaia-v2"
+          },
+          {
+            "Key": "mdaa_domain",
+            "Value": "test-domain"
+          },
+          {
+            "Key": "mdaa_env",
+            "Value": "test-env"
+          },
+          {
+            "Key": "mdaa_module_name",
+            "Value": "test-gaia-v2-app"
+          },
+          {
+            "Key": "mdaa_org",
+            "Value": "test-org"
+          }
+        ],
+        "Threshold": 100,
+        "TreatMissingData": "notBreaching"
+      }
+    },
+    "gaiaChatBotApiRestApiLambdaConcurrencyAlarmalarmtestorgtestenvtestdomaintestgaiav2apprestapilambdaconcurrencyarnssm3FF5FE82": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-gaia-v2-app/alarm/test-org-test-env-test-domain-test-gaia-v2-app-rest-api-lambda-concurrency/arn",
+        "Tags": {
+          "mdaa_cdk_app": "gaia-v2",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-gaia-v2-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::GetAtt": [
+            "gaiaChatBotApiRestApiLambdaConcurrencyAlarmFB1F448D",
+            "Arn"
+          ]
+        }
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/cloudwatch-constructs/lib/ssm-utils.ts] Parameter stores observability metadata (alarm ARN); not sensitive data.",
+              "id": "AwsSolutions-SSM4"
+            }
+          ]
+        }
+      }
+    },
+    "gaiaChatBotApiRestApiLambdaConcurrencyAlarmalarmtestorgtestenvtestdomaintestgaiav2apprestapilambdaconcurrencynamessmF69040F7": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-gaia-v2-app/alarm/test-org-test-env-test-domain-test-gaia-v2-app-rest-api-lambda-concurrency/name",
+        "Tags": {
+          "mdaa_cdk_app": "gaia-v2",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-gaia-v2-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": "test-org-test-env-test-domain-test-gaia-v2-app-rest-api-lambda-concurrency"
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/cloudwatch-constructs/lib/ssm-utils.ts] Parameter stores observability metadata (alarm name); not sensitive data.",
+              "id": "AwsSolutions-SSM4"
+            }
+          ]
         }
       }
     },

@@ -10,19 +10,29 @@ gaia:
       - "other"
   waf:
     skipGlobalDefaultWaf: true
+    # Rate-based protection is enabled by default. Built-in rules reserve priorities 0 (per-IP rate
+    # limit), 1 (per-user/Authorization rate limit), and 2 (IP allowlist), so managed wafRules below
+    # start at priority 10. Rate rules are deliberately evaluated before the IP allowlist so that an
+    # abusive but allowlisted IP (or token) is still throttled.
+    rateLimit:
+      limit: 2000 # per-IP requests per evaluation window
+      evaluationWindowSec: 300
+      perUser:
+        limit: 600 # per-Authorization-token requests (~10 rps sustained)
+        evaluationWindowSec: 60
     wafRules:
       AWSManagedRulesAmazonIpReputationList:
-        priority: 1
+        priority: 10
       AWSManagedRulesAnonymousIpList:
-        priority: 2
+        priority: 11
       AWSManagedRulesCommonRuleSet:
-        priority: 3
+        priority: 12
       AWSManagedRulesAdminProtectionRuleSet:
-        priority: 4
+        priority: 13
       AWSManagedRulesKnownBadInputsRuleSet:
-        priority: 5
+        priority: 14
       AWSManagedRulesSQLiRuleSet:
-        priority: 6
+        priority: 15
     allowedCidrs:
       - 203.0.113.42
   dataAdminRoles:
@@ -54,6 +64,22 @@ gaia:
     logGroupNamePathPrefix: "{{org}}-{{domain}}-{{env}}"
     setApiGateWayAccountCloudwatchRole: true
     adminGroup: analytics-admin
+    # Throttling: realistic chatbot ceiling rather than the permissive code default (2500 rps).
+    # 100 rps steady-state with a 200 burst cap; burst is required for the limit to actually trip 429s.
+    apiGwThrottlingRateLimit: 100
+    apiGwThrottlingBurstLimit: 200
+    # CloudWatch alarms for API health, throttling (429), and Lambda concurrency saturation.
+    alarms:
+      error5xxRate:
+        threshold: 5
+      error4xxRate:
+        threshold: 20
+      latencyP99:
+        threshold: 10000
+      throttle429:
+        threshold: 100
+      lambdaConcurrency:
+        threshold: 100
   webSocketApi:
     bedrockRagDataSource:
       guardrailId: ssm:/{{org}}/{{domain}}/bedrock-builder/guardrail/chatbot-guardrail/id

@@ -254,4 +254,65 @@ describe('REST API Infrastructure Tests', () => {
       expect(foundNetworkAccountInVpcArn).toBe(true);
     });
   });
+
+  describe('Throttling Configuration', () => {
+    test('defaults to a stage rate limit of 2500 and no burst limit (non-breaking)', () => {
+      const template = createConstruct();
+      template.hasResourceProperties('AWS::ApiGateway::Stage', {
+        MethodSettings: Match.arrayWith([
+          Match.objectLike({
+            ResourcePath: '/*',
+            HttpMethod: '*',
+            ThrottlingRateLimit: 2500,
+          }),
+        ]),
+      });
+      // No burst limit should be emitted unless explicitly configured.
+      const stages = template.findResources('AWS::ApiGateway::Stage');
+      const methodSettings = Object.values(stages)
+        .flatMap(s => (s as { Properties: { MethodSettings?: unknown[] } }).Properties.MethodSettings ?? [])
+        .filter(Boolean);
+      for (const setting of methodSettings as { ThrottlingBurstLimit?: number }[]) {
+        expect(setting.ThrottlingBurstLimit).toBeUndefined();
+      }
+    });
+
+    test('applies configured stage rate and burst limits', () => {
+      const template = createConstruct({
+        apiGwThrottlingRateLimit: 100,
+        apiGwThrottlingBurstLimit: 200,
+      });
+      template.hasResourceProperties('AWS::ApiGateway::Stage', {
+        MethodSettings: Match.arrayWith([
+          Match.objectLike({
+            ResourcePath: '/*',
+            HttpMethod: '*',
+            ThrottlingRateLimit: 100,
+            ThrottlingBurstLimit: 200,
+          }),
+        ]),
+      });
+    });
+
+    test('applies per-method throttling overrides', () => {
+      const template = createConstruct({
+        apiGwThrottlingRateLimit: 100,
+        apiGwThrottlingBurstLimit: 200,
+        methodThrottling: {
+          '/v1/{proxy+}/GET': { rateLimit: 5, burstLimit: 10 },
+        },
+      });
+      template.hasResourceProperties('AWS::ApiGateway::Stage', {
+        MethodSettings: Match.arrayWith([
+          Match.objectLike({
+            HttpMethod: 'GET',
+            // API Gateway escapes '/' to '~1' in the rendered method-settings resource path.
+            ResourcePath: '/~1v1~1{proxy+}',
+            ThrottlingRateLimit: 5,
+            ThrottlingBurstLimit: 10,
+          }),
+        ]),
+      });
+    });
+  });
 });
