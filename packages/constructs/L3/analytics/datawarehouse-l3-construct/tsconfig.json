@@ -65,6 +65,9 @@
       "path": "../../../L2/s3-constructs"
     },
     {
+      "path": "../../../L2/sns-constructs"
+    },
+    {
       "path": "../../../../utilities/mdaa-testing"
     }
   ],

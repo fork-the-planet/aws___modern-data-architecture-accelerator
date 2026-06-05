@@ -237,6 +237,24 @@
               "Resource": "*"
             },
             {
+              "Action": [
+                "kms:GenerateDataKey*",
+                "kms:Decrypt",
+                "kms:DescribeKey"
+              ],
+              "Condition": {
+                "StringEquals": {
+                  "aws:SourceAccount": "test-account"
+                }
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "redshift.amazonaws.com"
+              },
+              "Resource": "*",
+              "Sid": "AllowRedshiftEventsToUseKey"
+            },
+            {
               "Action": "kms:Decrypt",
               "Condition": {
                 "StringEquals": {
@@ -3253,6 +3271,12 @@
     "clustereventssnstopicB474257E": {
       "Type": "AWS::SNS::Topic",
       "Properties": {
+        "KmsMasterKeyId": {
+          "Fn::GetAtt": [
+            "warehousekey618891EF",
+            "Arn"
+          ]
+        },
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -3276,28 +3300,6 @@
           }
         ],
         "TopicName": "test-org-test-env-test-domain-test-datawarehouse-main-cluster-events"
-      },
-      "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
-              "id": "AwsSolutions-SNS2"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
-              "id": "NIST.800.53.R5-SNSEncryptedKMS"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
-              "id": "HIPAA.Security-SNSEncryptedKMS"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
-              "id": "PCI.DSS.321-SNSEncryptedKMS"
-            }
-          ]
-        }
       }
     },
     "clustereventssnstopicPolicy1D02CA87": {
@@ -3330,29 +3332,20 @@
               "Sid": "EnforceSSL"
             },
             {
-              "Action": [
-                "SNS:GetTopicAttributes",
-                "SNS:SetTopicAttributes",
-                "SNS:AddPermission",
-                "SNS:RemovePermission",
-                "SNS:DeleteTopic",
-                "SNS:Subscribe",
-                "SNS:ListSubscriptionsByTopic",
-                "SNS:Publish"
-              ],
+              "Action": "sns:Publish",
               "Condition": {
                 "StringEquals": {
-                  "AWS:SourceOwner": "test-account"
+                  "aws:SourceAccount": "test-account"
                 }
               },
               "Effect": "Allow",
               "Principal": {
-                "AWS": "*"
+                "Service": "redshift.amazonaws.com"
               },
               "Resource": {
                 "Ref": "clustereventssnstopicB474257E"
               },
-              "Sid": "Publish Policy"
+              "Sid": "AllowRedshiftEventsPublish"
             }
           ],
           "Version": "2012-10-17"
@@ -3362,27 +3355,42 @@
             "Ref": "clustereventssnstopicB474257E"
           }
         ]
-      },
-      "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
-              "id": "AwsSolutions-SNS2"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
-              "id": "NIST.800.53.R5-SNSEncryptedKMS"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
-              "id": "HIPAA.Security-SNSEncryptedKMS"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
-              "id": "PCI.DSS.321-SNSEncryptedKMS"
-            }
+      }
+    },
+    "clustereventssnstopicTopicclustereventsnamessm7E1BC975": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-datawarehouse-main/topic/cluster-events/name",
+        "Tags": {
+          "mdaa_cdk_app": "datawarehouse",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-datawarehouse-main",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::GetAtt": [
+            "clustereventssnstopicB474257E",
+            "TopicName"
           ]
+        }
+      }
+    },
+    "clustereventssnstopicTopicclustereventsarnssmA3C8C75E": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-datawarehouse-main/topic/cluster-events/arn",
+        "Tags": {
+          "mdaa_cdk_app": "datawarehouse",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-datawarehouse-main",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Ref": "clustereventssnstopicB474257E"
         }
       }
     },
@@ -5957,6 +5965,25 @@
       },
       "Export": {
         "Name": "test-org:test-domain:test-datawarehouse-main:role:scheduler:name"
+      }
+    },
+    "clustereventssnstopicTopicclustereventsnameout2AEDE8E6": {
+      "Value": {
+        "Fn::GetAtt": [
+          "clustereventssnstopicB474257E",
+          "TopicName"
+        ]
+      },
+      "Export": {
+        "Name": "test-org:test-domain:test-datawarehouse-main:topic:clusterevents:name"
+      }
+    },
+    "clustereventssnstopicTopicclustereventsarnoutBFAB6F2B": {
+      "Value": {
+        "Ref": "clustereventssnstopicB474257E"
+      },
+      "Export": {
+        "Name": "test-org:test-domain:test-datawarehouse-main:topic:clusterevents:arn"
       }
     }
   },

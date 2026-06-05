@@ -22,6 +22,7 @@ import { MdaaRedshiftCluster, MdaaRedshiftClusterParameterGroup } from '@aws-mda
 import { MultiAzValidationError } from '@aws-mdaa/redshift-constructs/lib/utils';
 import { RestrictBucketToRoles, RestrictObjectPrefixToRoles } from '@aws-mdaa/s3-bucketpolicy-helper';
 import { MdaaBucket, PUBLIC_ACCESS_BLOCK_NAG_SUPPRESSIONS } from '@aws-mdaa/s3-constructs';
+import { MdaaSnsTopic } from '@aws-mdaa/sns-constructs';
 import { Duration, Fn, RemovalPolicy, Stack } from 'aws-cdk-lib';
 import { Port, Protocol, Subnet, Vpc } from 'aws-cdk-lib/aws-ec2';
 import {
@@ -36,7 +37,6 @@ import {
 import { CfnEventSubscription, CfnEventSubscriptionProps, CfnScheduledAction } from 'aws-cdk-lib/aws-redshift';
 import { BlockPublicAccess, Bucket, BucketEncryption, CfnBucket, IBucket } from 'aws-cdk-lib/aws-s3';
 import { CfnSecret, ISecret } from 'aws-cdk-lib/aws-secretsmanager';
-import { Topic } from 'aws-cdk-lib/aws-sns';
 import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 import { Construct } from 'constructs';
 import { ensureNodeType, sanitizeScheduledActionName } from './utils';
@@ -367,7 +367,12 @@ export class DataWarehouseL3Construct extends MdaaL3Construct {
     const scheduledActions = this.createRedshiftScheduledActions(cluster);
 
     if (this.props.eventNotifications) {
-      this.createClusterEventNotifications(cluster.clusterName, scheduledActions, this.props.eventNotifications);
+      this.createClusterEventNotifications(
+        cluster.clusterName,
+        scheduledActions,
+        this.props.eventNotifications,
+        warehouseKmsKey,
+      );
     }
 
     this.createClusterUsers(cluster, warehouseKmsKey);
@@ -378,80 +383,51 @@ export class DataWarehouseL3Construct extends MdaaL3Construct {
     clusterName: string,
     scheduledActions: CfnScheduledAction[],
     eventNotifications: EventNotificationsProps,
+    warehouseKmsKey: MdaaKmsKey,
   ) {
-    // prettier-ignore
-    const topic = new Topic(this.scope, 'cluster-events-sns-topic', { // NOSONAR — Redshift event notifications do not support encrypted topics
-      topicName: this.props.naming.resourceName('cluster-events'),
-    });
-    const enforceSslStatement = new PolicyStatement({
-      sid: 'EnforceSSL',
-      effect: Effect.DENY,
-      actions: [
-        'sns:Publish',
-        'sns:RemovePermission',
-        'sns:SetTopicAttributes',
-        'sns:DeleteTopic',
-        'sns:ListSubscriptionsByTopic',
-        'sns:GetTopicAttributes',
-        'sns:Receive',
-        'sns:AddPermission',
-        'sns:Subscribe',
-      ],
-      resources: ['*'],
-      conditions: {
-        Bool: {
-          'aws:SecureTransport': 'false',
+    // Allow the Redshift events service principal to use the warehouse CMK so that it can publish
+    // notifications to the KMS-encrypted topic below. redshift.amazonaws.com is a supported SNS event
+    // source that grants access via its service principal (not an IAM role).
+    // The aws:SourceAccount condition prevents the confused-deputy attack on the cross-service KMS
+    // call, mirroring the publish policy below and following AWS's recommendation in
+    // https://docs.aws.amazon.com/sns/latest/dg/sns-key-management.html (the only documented exception
+    // is EventBridge-to-encrypted-topics, which is not applicable here).
+    warehouseKmsKey.addToResourcePolicy(
+      new PolicyStatement({
+        sid: 'AllowRedshiftEventsToUseKey',
+        effect: Effect.ALLOW,
+        principals: [new ServicePrincipal('redshift.amazonaws.com')],
+        actions: ['kms:GenerateDataKey*', 'kms:Decrypt', 'kms:DescribeKey'],
+        resources: ['*'],
+        conditions: {
+          StringEquals: {
+            'aws:SourceAccount': this.account,
+          },
         },
-      },
-    });
-    enforceSslStatement.addAnyPrincipal();
-    topic.addToResourcePolicy(enforceSslStatement);
-
-    MdaaNagSuppressions.addCodeResourceSuppressions(
-      topic,
-      [
-        {
-          id: 'AwsSolutions-SNS2',
-          reason: 'Redshift event subscriptions do not currently support an encrypted SNS topic.',
-        },
-        {
-          id: 'NIST.800.53.R5-SNSEncryptedKMS',
-          reason: 'Redshift event subscriptions do not currently support an encrypted SNS topic.',
-        },
-        {
-          id: 'HIPAA.Security-SNSEncryptedKMS',
-          reason: 'Redshift event subscriptions do not currently support an encrypted SNS topic.',
-        },
-        {
-          id: 'PCI.DSS.321-SNSEncryptedKMS',
-          reason: 'Redshift event subscriptions do not currently support an encrypted SNS topic.',
-        },
-      ],
-      true,
+      }),
     );
 
-    //Allow redshift events to be published to the Topic
+    // MdaaSnsTopic enforces KMS encryption (masterKey is required), adds the SSL-enforce resource
+    // policy statement, and emits the standard MDAA SSM params/outputs.
+    const topic = new MdaaSnsTopic(this.scope, 'cluster-events-sns-topic', {
+      naming: this.props.naming,
+      topicName: 'cluster-events',
+      masterKey: warehouseKmsKey,
+    });
+
+    // Allow the Redshift events service principal to publish to the topic, scoped to this account.
     const publishPolicyStatement = new PolicyStatement({
-      sid: 'Publish Policy',
+      sid: 'AllowRedshiftEventsPublish',
       effect: Effect.ALLOW,
-      actions: [
-        'SNS:GetTopicAttributes',
-        'SNS:SetTopicAttributes',
-        'SNS:AddPermission',
-        'SNS:RemovePermission',
-        'SNS:DeleteTopic',
-        'SNS:Subscribe',
-        'SNS:ListSubscriptionsByTopic',
-        'SNS:Publish',
-      ],
+      principals: [new ServicePrincipal('redshift.amazonaws.com')],
+      actions: ['sns:Publish'],
       resources: [topic.topicArn],
       conditions: {
         StringEquals: {
-          'AWS:SourceOwner': this.account,
+          'aws:SourceAccount': this.account,
         },
       },
     });
-    publishPolicyStatement.addAnyPrincipal();
     topic.addToResourcePolicy(publishPolicyStatement);
 
     // subscribe to sns topic if email-ids are present

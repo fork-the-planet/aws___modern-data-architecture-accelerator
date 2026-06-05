@@ -287,6 +287,43 @@ describe('MDAA Compliance Stack Tests', () => {
         SourceType: 'cluster',
       });
     });
+    test('Cluster events SNS topic is KMS encrypted with the warehouse key', () => {
+      template.hasResourceProperties('AWS::SNS::Topic', {
+        KmsMasterKeyId: {
+          'Fn::GetAtt': [Match.stringLikeRegexp('warehousekey'), 'Arn'],
+        },
+      });
+    });
+    test('Warehouse KMS key grants the Redshift events service principal', () => {
+      template.hasResourceProperties('AWS::KMS::Key', {
+        KeyPolicy: {
+          Statement: Match.arrayWith([
+            Match.objectLike({
+              Sid: 'AllowRedshiftEventsToUseKey',
+              Effect: 'Allow',
+              Principal: { Service: 'redshift.amazonaws.com' },
+              Action: ['kms:GenerateDataKey*', 'kms:Decrypt', 'kms:DescribeKey'],
+              Condition: { StringEquals: { 'aws:SourceAccount': 'test-account' } },
+            }),
+          ]),
+        },
+      });
+    });
+    test('Cluster events SNS topic policy scopes publish to the Redshift service principal', () => {
+      template.hasResourceProperties('AWS::SNS::TopicPolicy', {
+        PolicyDocument: {
+          Statement: Match.arrayWith([
+            Match.objectLike({
+              Sid: 'AllowRedshiftEventsPublish',
+              Effect: 'Allow',
+              Principal: { Service: 'redshift.amazonaws.com' },
+              Action: 'sns:Publish',
+              Condition: { StringEquals: { 'aws:SourceAccount': 'test-account' } },
+            }),
+          ]),
+        },
+      });
+    });
     test('Scheduled Action Event Notifications', () => {
       template.hasResourceProperties('AWS::Redshift::EventSubscription', {
         SubscriptionName: {
