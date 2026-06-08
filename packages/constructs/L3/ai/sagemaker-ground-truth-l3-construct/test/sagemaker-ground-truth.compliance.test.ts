@@ -4,6 +4,7 @@
  */
 
 import { MdaaRoleHelper } from '@aws-mdaa/iam-role-helper';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Template } from 'aws-cdk-lib/assertions';
 import {
@@ -51,6 +52,14 @@ describe('SageMaker Ground Truth L3 Construct', () => {
 
     test('Creates State Machine', () => {
       template.resourceCountIs('AWS::StepFunctions::StateMachine', 1);
+    });
+
+    test('StateMachineName uses STEPFUNCTIONS resource type', () => {
+      template.hasResourceProperties('AWS::StepFunctions::StateMachine', {
+        StateMachineName: testApp.naming
+          .withResourceType(MdaaResourceType.STEPFUNCTIONS)
+          .resourceName(`gt-test-labeling-sfn`, 80),
+      });
     });
 
     test('Creates EventBridge Schedule', () => {

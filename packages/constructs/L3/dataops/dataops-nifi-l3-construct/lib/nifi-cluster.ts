@@ -5,7 +5,7 @@
 
 import { MdaaSecurityGroup, MdaaSecurityGroupProps, MdaaSecurityGroupRuleProps } from '@aws-mdaa/ec2-constructs';
 import { KubernetesCmd, KubernetesCmdProps, MdaaEKSCluster } from '@aws-mdaa/eks-constructs';
-import { IMdaaResourceNaming } from '@aws-mdaa/naming';
+import { IMdaaResourceNaming, MdaaResourceType } from '@aws-mdaa/naming';
 import { CfnJson } from 'aws-cdk-lib';
 import { ISecurityGroup, ISubnet, IVpc, Protocol, SecurityGroup } from 'aws-cdk-lib/aws-ec2';
 import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets';
@@ -189,7 +189,7 @@ export class NifiCluster extends Construct {
     const clusterServiceRole = NifiCluster.createServiceRole(
       this,
       'nifi-service-role',
-      props.naming.resourceName('nifi-service-role', 64),
+      props.naming.withResourceType(MdaaResourceType.IAM_ROLE).resourceName('nifi-service-role', 64),
       nifiNamespaceName,
       props.eksCluster,
     );
@@ -409,7 +409,7 @@ export class NifiCluster extends Construct {
     const efsStatements = [describeEFSStatement, describeAzStatement, efsKmsKeyStatement];
 
     const efsManagedPolicy = new ManagedPolicy(scope, `${name}-efs-access`, {
-      managedPolicyName: naming.resourceName(`${name}-efs-access`, 64),
+      managedPolicyName: naming.withResourceType(MdaaResourceType.IAM_POLICY).resourceName(`${name}-efs-access`, 64),
       statements: efsStatements,
     });
 
@@ -424,7 +424,9 @@ export class NifiCluster extends Construct {
 
   public static createEfsPvs(createEfsPvsProps: CreateEfsPvsProps): [FileSystem, AccessPoint][] {
     const efs = new FileSystem(createEfsPvsProps.scope, `efs-${createEfsPvsProps.name}`, {
-      fileSystemName: createEfsPvsProps.naming.resourceName(createEfsPvsProps.name, 256),
+      fileSystemName: createEfsPvsProps.naming
+        .withResourceType(MdaaResourceType.EFS_FILESYSTEM)
+        .resourceName(createEfsPvsProps.name, 256),
       vpc: createEfsPvsProps.vpc,
       vpcSubnets: {
         subnets: createEfsPvsProps.subnets,
@@ -474,7 +476,9 @@ export class NifiCluster extends Construct {
     secretName: string,
     kmsKey: IKey,
   ): ISecret {
-    const secretResourceName = naming.resourceName(secretName, 255);
+    const secretResourceName = naming
+      .withResourceType(MdaaResourceType.SECRETS_MANAGER_SECRET)
+      .resourceName(secretName, 255);
     const nifiSensitivePropSecret = new Secret(scope, id, {
       secretName: secretResourceName,
       encryptionKey: kmsKey,
@@ -506,7 +510,9 @@ export class NifiCluster extends Construct {
     kmsKey: IKey,
     secrets: ISecret[],
   ): IRole {
-    const externalSecretServiceRoleName = naming.resourceName('external-secrets-service-role', 64);
+    const externalSecretServiceRoleName = naming
+      .withResourceType(MdaaResourceType.IAM_ROLE)
+      .resourceName('external-secrets-service-role', 64);
 
     const kmsKeyStatement = new PolicyStatement({
       sid: 'KmsDecrypt',

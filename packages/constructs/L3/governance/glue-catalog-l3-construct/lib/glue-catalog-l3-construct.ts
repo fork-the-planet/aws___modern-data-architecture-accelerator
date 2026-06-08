@@ -7,6 +7,7 @@ import { MdaaNagSuppressions, MdaaStringParameter } from '@aws-mdaa/construct';
 import { MdaaCatalogSettings } from '@aws-mdaa/glue-constructs';
 import { DECRYPT_ACTIONS, ENCRYPT_ACTIONS, MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaLambdaFunction, MdaaLambdaRole } from '@aws-mdaa/lambda-constructs';
 import { CustomResource, Duration } from 'aws-cdk-lib';
 import { CfnDataCatalog } from 'aws-cdk-lib/aws-athena';
@@ -186,7 +187,9 @@ export class GlueCatalogL3Construct extends MdaaL3Construct {
     if (catalogKmsKeyConsumerAccounts.length > 0) {
       // Create RAM share for catalog KMS Key SSM parameters
       const keyParamRamShareProps: CfnResourceShareProps = {
-        name: this.props.naming.resourceName(`glue-catalog-kms-key-param`),
+        name: this.props.naming
+          .withResourceType(MdaaResourceType.RAM_RESOURCE_SHARE)
+          .resourceName(`glue-catalog-kms-key-param`),
         resourceArns: [catalogKmsKeyParam.parameterArn],
         principals: catalogKmsKeyConsumerAccounts,
       };
@@ -435,7 +438,9 @@ export class GlueCatalogL3Construct extends MdaaL3Construct {
       true,
     );
 
-    const catalogCrProviderFunctionName = this.props.naming.resourceName('catalog-cr-prov', 64);
+    const catalogCrProviderFunctionName = this.props.naming
+      .withResourceType(MdaaResourceType.LAMBDA_FUNCTION)
+      .resourceName('catalog-cr-prov', 64);
     const catalogCrProviderRole = new MdaaLambdaRole(this.scope, 'catalog-provider-role', {
       description: 'CR Role',
       roleName: 'catalog-provider-role',

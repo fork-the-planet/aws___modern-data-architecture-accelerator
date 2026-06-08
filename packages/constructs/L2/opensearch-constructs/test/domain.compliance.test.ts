@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { SecurityGroup, Subnet, Vpc, EbsDeviceVolumeType } from 'aws-cdk-lib/aws-ec2';
@@ -114,6 +115,14 @@ describe('MDAA Construct Compliance Tests', () => {
   test('DomainName', () => {
     template.hasResourceProperties('AWS::OpenSearchService::Domain', {
       DomainName: testApp.naming.resourceName(testContstructProps.opensearchDomainName, 28),
+    });
+  });
+
+  test('DomainName uses OPENSEARCH_DOMAIN resource type', () => {
+    template.hasResourceProperties('AWS::OpenSearchService::Domain', {
+      DomainName: testApp.naming
+        .withResourceType(MdaaResourceType.OPENSEARCH_DOMAIN)
+        .resourceName(testContstructProps.opensearchDomainName, 28),
     });
   });
 

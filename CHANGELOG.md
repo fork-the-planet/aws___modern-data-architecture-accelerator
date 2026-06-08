@@ -2,6 +2,10 @@
 
 ## [NEXT_RELEASE_VERSION] - NEXT_RELEASE_DATE
 
+### New Features
+
+- **Naming**: Added `MdaaResourceType` enum and `withResourceType()` method to `IMdaaResourceNaming` interface, enabling custom naming modules to inject service-type abbreviations of the implementer's choosing into resource names (the abbreviations themselves are not produced by the enum). The default implementation is unchanged — no impact on existing deployments.
+
 ### Data Science/AI/ML Changes
 
 #### Bedrock AgentCore Runtime Module
@@ -27,8 +31,6 @@
 - Added `kms:GenerateDataKey` permission to the domain config custom resource handler policy, fixing cross-account `ListDomainUnitsForParent`, adapting to SMUS service changes
 
 ## [1.6.0] - 2026-05-22
-
-### New Features
 
 #### Generative AI Accelerator v2 Module
 

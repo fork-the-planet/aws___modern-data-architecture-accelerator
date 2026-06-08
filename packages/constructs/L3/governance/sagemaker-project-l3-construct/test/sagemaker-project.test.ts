@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Template } from 'aws-cdk-lib/assertions';
 import { DomainConfig } from '@aws-mdaa/datazone-constructs';
@@ -256,5 +257,63 @@ describe('SagemakerProjectL3Construct', () => {
 
     const template = Template.fromStack(testApp.testStack);
     template.resourceCountIs('AWS::DataZone::Project', 1);
+  });
+
+  it('creates a cross-account RAM share with RAM_RESOURCE_SHARE resource type when projectProfiles have account', () => {
+    new SagemakerProjectL3Construct(testApp.testStack, 'test-cross-account', {
+      naming: testApp.naming,
+      roleHelper,
+      domainConfig,
+      projectProfiles: {
+        'cross-account-profile': {
+          account: '123456789012',
+          environments: {
+            DefaultDataLake: {},
+          },
+        },
+      },
+    });
+
+    const template = Template.fromStack(testApp.testStack);
+    const expectedRamShareName = testApp.naming
+      .withResourceType(MdaaResourceType.RAM_RESOURCE_SHARE)
+      .resourceName('project-profiles-config-ssm');
+    template.hasResourceProperties('AWS::RAM::ResourceShare', {
+      Name: expectedRamShareName,
+      Principals: ['123456789012'],
+    });
+  });
+
+  it('creates a DataZone DataSource with DATAZONE_DATASOURCE resource type when project has dataSources', () => {
+    new SagemakerProjectL3Construct(testApp.testStack, 'test-datasources', {
+      naming: testApp.naming,
+      roleHelper,
+      domainConfig,
+      projectProfiles: {
+        'ds-profile': {
+          environments: {
+            DefaultDataLake: {},
+          },
+        },
+      },
+      projects: {
+        'ds-project': {
+          profileName: 'ds-profile',
+          dataSources: {
+            'test-source': {
+              databaseName: 'test_db',
+            },
+          },
+        },
+      },
+    });
+
+    const template = Template.fromStack(testApp.testStack);
+    const expectedDataSourceName = testApp.naming
+      .withResourceType(MdaaResourceType.DATAZONE_DATASOURCE)
+      .resourceName('test-source');
+    template.hasResourceProperties('AWS::DataZone::DataSource', {
+      Name: expectedDataSourceName,
+    });
   });
 });

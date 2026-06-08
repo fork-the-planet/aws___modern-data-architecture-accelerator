@@ -47,6 +47,9 @@
       "path": "../../core/l3-construct"
     },
     {
+      "path": "../../../../utilities/mdaa-naming"
+    },
+    {
       "path": "../../../L2/transfer-family-constructs"
     },
     {

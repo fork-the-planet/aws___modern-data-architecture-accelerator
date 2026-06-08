@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaCustomResource, MdaaCustomResourceProps } from '@aws-mdaa/custom-constructs';
 import { Duration } from 'aws-cdk-lib';
 import { CfnProject, CfnProjectMembership, CfnProjectMembershipProps, CfnProjectProps } from 'aws-cdk-lib/aws-datazone';
@@ -68,7 +69,9 @@ export class MdaaDatazoneProject extends Construct {
       'domain-kms-policy',
       this.domainConfig.domainKmsUsagePolicyName,
     );
-    this.generatedProjectName = props.naming.resourceName(props.name, 64);
+    this.generatedProjectName = props.naming
+      .withResourceType(MdaaResourceType.DATAZONE_PROJECT)
+      .resourceName(props.name, 64);
     const projectProps: CfnProjectProps = {
       domainIdentifier: this.domainConfig.domainId,
       name: this.generatedProjectName,

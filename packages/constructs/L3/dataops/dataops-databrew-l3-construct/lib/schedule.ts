@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { CfnSchedule, CfnScheduleProps } from 'aws-cdk-lib/aws-databrew';
 import { Construct } from 'constructs';
 
@@ -22,7 +23,7 @@ export interface MdaaDataBrewScheduleProps extends MdaaConstructProps {
 export class MdaaDataBrewSchedule extends CfnSchedule {
   private static setProps(props: MdaaDataBrewScheduleProps): CfnScheduleProps {
     const overrideProps = {
-      name: props.naming.resourceName(props.name, 80),
+      name: props.naming.withResourceType(MdaaResourceType.DATABREW_SCHEDULE).resourceName(props.name, 80),
     };
     return { ...props, ...overrideProps };
   }

@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Duration } from 'aws-cdk-lib';
 import { ISecurityGroup, ISubnet } from 'aws-cdk-lib/aws-ec2';
 import {
@@ -60,8 +61,9 @@ export interface MdaaECSFargateServiceProps extends MdaaConstructProps {
  */
 export class MdaaECSFargateService extends FargateService {
   private static setProps(props: MdaaECSFargateServiceProps): FargateServiceProps {
+    const serviceNaming = props.naming.withResourceType(MdaaResourceType.ECS_FARGATE);
     const overrideProps = {
-      serviceName: props.naming.resourceName(props.serviceName, 255),
+      serviceName: serviceNaming.resourceName(props.serviceName, 255),
       assignPublicIp: false,
       platformVersion: FargatePlatformVersion.LATEST,
       vpcSubnets: {

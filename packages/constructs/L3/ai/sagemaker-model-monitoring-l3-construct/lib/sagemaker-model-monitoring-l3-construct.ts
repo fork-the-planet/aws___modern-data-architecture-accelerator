@@ -6,6 +6,7 @@
 import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { Key, IKey } from 'aws-cdk-lib/aws-kms';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Construct } from 'constructs';
 import { MdaaRole } from '@aws-mdaa/iam-constructs';
 import { MdaaBucket } from '@aws-mdaa/s3-constructs';
@@ -302,7 +303,9 @@ export class SageMakerModelMonitoringL3Construct extends MdaaL3Construct {
     stoppingCondition: MonitorStoppingCondition,
   ): CfnResource {
     return new CfnDataQualityJobDefinition(this, 'data-quality-job-def', {
-      jobDefinitionName: this.props.naming.resourceName(`dq-${endpointName}`, 63),
+      jobDefinitionName: this.props.naming
+        .withResourceType(MdaaResourceType.SAGEMAKER_DATA_QUALITY_JOB_DEF)
+        .resourceName(`dq-${endpointName}`, 63),
       roleArn: this.monitoringRole.roleArn,
       dataQualityAppSpecification: {
         imageUri,
@@ -351,7 +354,9 @@ export class SageMakerModelMonitoringL3Construct extends MdaaL3Construct {
     }
 
     return new CfnModelQualityJobDefinition(this, 'model-quality-job-def', {
-      jobDefinitionName: this.props.naming.resourceName(`mq-${endpointName}`, 63),
+      jobDefinitionName: this.props.naming
+        .withResourceType(MdaaResourceType.SAGEMAKER_MODEL_QUALITY_JOB_DEF)
+        .resourceName(`mq-${endpointName}`, 63),
       roleArn: this.monitoringRole.roleArn,
       modelQualityAppSpecification: {
         imageUri,
@@ -393,7 +398,9 @@ export class SageMakerModelMonitoringL3Construct extends MdaaL3Construct {
     stoppingCondition: MonitorStoppingCondition,
   ): CfnResource {
     return new CfnModelBiasJobDefinition(this, 'model-bias-job-def', {
-      jobDefinitionName: this.props.naming.resourceName(`mb-${endpointName}`, 63),
+      jobDefinitionName: this.props.naming
+        .withResourceType(MdaaResourceType.SAGEMAKER_MODEL_BIAS_JOB_DEF)
+        .resourceName(`mb-${endpointName}`, 63),
       roleArn: this.monitoringRole.roleArn,
       modelBiasAppSpecification: {
         imageUri,
@@ -436,7 +443,9 @@ export class SageMakerModelMonitoringL3Construct extends MdaaL3Construct {
     stoppingCondition: MonitorStoppingCondition,
   ): CfnResource {
     return new CfnModelExplainabilityJobDefinition(this, 'model-explainability-job-def', {
-      jobDefinitionName: this.props.naming.resourceName(`me-${endpointName}`, 63),
+      jobDefinitionName: this.props.naming
+        .withResourceType(MdaaResourceType.SAGEMAKER_MODEL_EXPLAINABILITY_JOB_DEF)
+        .resourceName(`me-${endpointName}`, 63),
       roleArn: this.monitoringRole.roleArn,
       modelExplainabilityAppSpecification: {
         imageUri,
@@ -503,14 +512,32 @@ export class SageMakerModelMonitoringL3Construct extends MdaaL3Construct {
     const endpointName = props.endpointName;
     const scheduleArns: string[] = [];
 
-    const monitorEntries: [string, string, string, MonitorConfig | undefined][] = [
-      ['data-quality', 'dq', 'DataQuality', props.monitors.dataQuality],
-      ['model-quality', 'mq', 'ModelQuality', props.monitors.modelQuality],
-      ['model-bias', 'mb', 'ModelBias', props.monitors.modelBias],
-      ['model-explainability', 'me', 'ModelExplainability', props.monitors.modelExplainability],
+    const monitorEntries: [string, string, string, MonitorConfig | undefined, MdaaResourceType][] = [
+      [
+        'data-quality',
+        'dq',
+        'DataQuality',
+        props.monitors.dataQuality,
+        MdaaResourceType.SAGEMAKER_DATA_QUALITY_JOB_DEF,
+      ],
+      [
+        'model-quality',
+        'mq',
+        'ModelQuality',
+        props.monitors.modelQuality,
+        MdaaResourceType.SAGEMAKER_MODEL_QUALITY_JOB_DEF,
+      ],
+      ['model-bias', 'mb', 'ModelBias', props.monitors.modelBias, MdaaResourceType.SAGEMAKER_MODEL_BIAS_JOB_DEF],
+      [
+        'model-explainability',
+        'me',
+        'ModelExplainability',
+        props.monitors.modelExplainability,
+        MdaaResourceType.SAGEMAKER_MODEL_EXPLAINABILITY_JOB_DEF,
+      ],
     ];
 
-    for (const [monitorType, jobDefPrefix, sageMakerType, config] of monitorEntries) {
+    for (const [monitorType, jobDefPrefix, sageMakerType, config, jobDefResourceType] of monitorEntries) {
       if (!config?.enabled) continue;
 
       if (!config.imageUri) {
@@ -549,9 +576,13 @@ export class SageMakerModelMonitoringL3Construct extends MdaaL3Construct {
       );
 
       const monSchedule = new CfnMonitoringSchedule(this, `${monitorType}-schedule`, {
-        monitoringScheduleName: props.naming.resourceName(`${monitorType}-${endpointName}`, 63),
+        monitoringScheduleName: props.naming
+          .withResourceType(MdaaResourceType.SAGEMAKER_MODEL_MONITOR_SCHEDULE)
+          .resourceName(`${monitorType}-${endpointName}`, 63),
         monitoringScheduleConfig: {
-          monitoringJobDefinitionName: props.naming.resourceName(`${jobDefPrefix}-${endpointName}`, 63),
+          monitoringJobDefinitionName: props.naming
+            .withResourceType(jobDefResourceType)
+            .resourceName(`${jobDefPrefix}-${endpointName}`, 63),
           monitoringType: sageMakerType,
           scheduleConfig: {
             scheduleExpression: schedule,
@@ -653,13 +684,19 @@ export class SageMakerModelMonitoringL3Construct extends MdaaL3Construct {
     });
 
     const baselineLogGroup = new LogGroup(this, 'baseline-log-group', {
-      logGroupName: '/aws/states/' + props.naming.resourceName('baseline-' + endpointName, 480),
+      logGroupName:
+        '/aws/states/' +
+        props.naming
+          .withResourceType(MdaaResourceType.CLOUDWATCH_LOG_GROUP)
+          .resourceName('baseline-' + endpointName, 480),
       retention: RetentionDays.ONE_MONTH,
       encryptionKey: this.kmsKey,
     });
 
     const baselineStateMachine = new StateMachine(this, 'baseline-state-machine', {
-      stateMachineName: props.naming.resourceName(`baseline-${endpointName}`, 80),
+      stateMachineName: props.naming
+        .withResourceType(MdaaResourceType.STEPFUNCTIONS)
+        .resourceName(`baseline-${endpointName}`, 80),
       definitionBody: DefinitionBody.fromChainable(baselineTask),
       timeout: Duration.hours(2),
       logs: {
@@ -682,7 +719,9 @@ export class SageMakerModelMonitoringL3Construct extends MdaaL3Construct {
     const baselineScheduleExpr = props.baselineSchedule ?? 'cron(0 2 * * ? *)';
     validateScheduleExpression(baselineScheduleExpr, 'baselineSchedule');
     new Rule(this, 'baseline-schedule', {
-      ruleName: props.naming.resourceName(`baseline-${endpointName}`, 64),
+      ruleName: props.naming
+        .withResourceType(MdaaResourceType.EVENTBRIDGE_RULE)
+        .resourceName(`baseline-${endpointName}`, 64),
       description: `Periodic baselining for ${endpointName} monitors (${enabledMonitors.join(', ')})`,
       schedule: Schedule.expression(baselineScheduleExpr),
       targets: [

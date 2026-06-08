@@ -4,8 +4,9 @@
  */
 
 import { MdaaRoleHelper } from '@aws-mdaa/iam-role-helper';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
-import { Template } from 'aws-cdk-lib/assertions';
+import { Match, Template } from 'aws-cdk-lib/assertions';
 import { Stack } from 'aws-cdk-lib';
 import { DataZoneL3Construct, DataZoneL3ConstructProps } from '../lib';
 
@@ -918,6 +919,44 @@ describe('DataZone L3 Construct Tests', () => {
       template.resourceCountIs('AWS::DataZone::Owner', 2);
       // Verify RAM share is created for associated accounts
       template.resourceCountIs('AWS::RAM::ResourceShare', 2); // domain + config
+
+      // Verify RAM share Name uses RAM_RESOURCE_SHARE resource type
+      const ramResourceName = testApp.naming.withResourceType(MdaaResourceType.RAM_RESOURCE_SHARE).resourceName();
+      const ramConfigResourceName = testApp.naming
+        .withResourceType(MdaaResourceType.RAM_RESOURCE_SHARE)
+        .resourceName('domain-config-ssm-test-domain');
+      // Domain RAM share Name is a Fn::Join because it embeds the domain.attrId token
+      template.hasResourceProperties('AWS::RAM::ResourceShare', {
+        Name: {
+          'Fn::Join': ['', Match.arrayWith([`DataZone-${ramResourceName}-`])],
+        },
+      });
+      // Config RAM share Name is a resolved literal
+      template.hasResourceProperties('AWS::RAM::ResourceShare', {
+        Name: ramConfigResourceName,
+      });
+
+      // Verify IAM managed policies use IAM_POLICY resource type in their names
+      const kmsUsePolicyName = testApp.naming
+        .withResourceType(MdaaResourceType.IAM_POLICY)
+        .resourceName('domain-kms-use-test-domain');
+      const kmsAdminPolicyName = testApp.naming
+        .withResourceType(MdaaResourceType.IAM_POLICY)
+        .resourceName('domain-kms-admin-test-domain');
+      template.hasResourceProperties('AWS::IAM::ManagedPolicy', {
+        ManagedPolicyName: kmsUsePolicyName,
+      });
+      template.hasResourceProperties('AWS::IAM::ManagedPolicy', {
+        ManagedPolicyName: kmsAdminPolicyName,
+      });
+
+      // Verify custom resource role uses IAM_ROLE resource type
+      const customResourceRoleName = testApp.naming
+        .withResourceType(MdaaResourceType.IAM_ROLE)
+        .resourceName('test-domain-custom-resource', 64);
+      template.hasResourceProperties('AWS::IAM::Role', {
+        RoleName: customResourceRoleName,
+      });
     });
 
     test('should create domain unit owners for associated accounts', () => {
@@ -2447,6 +2486,44 @@ describe('DataZone L3 Construct Tests', () => {
       template.resourceCountIs('AWS::DataZone::Owner', 2);
       // Verify RAM share is created for associated accounts
       template.resourceCountIs('AWS::RAM::ResourceShare', 2); // domain + config
+
+      // Verify RAM share Name uses RAM_RESOURCE_SHARE resource type
+      const ramResourceName = testApp.naming.withResourceType(MdaaResourceType.RAM_RESOURCE_SHARE).resourceName();
+      const ramConfigResourceName = testApp.naming
+        .withResourceType(MdaaResourceType.RAM_RESOURCE_SHARE)
+        .resourceName('domain-config-ssm-test-domain');
+      // Domain RAM share Name is a Fn::Join because it embeds the domain.attrId token
+      template.hasResourceProperties('AWS::RAM::ResourceShare', {
+        Name: {
+          'Fn::Join': ['', Match.arrayWith([`DataZone-${ramResourceName}-`])],
+        },
+      });
+      // Config RAM share Name is a resolved literal
+      template.hasResourceProperties('AWS::RAM::ResourceShare', {
+        Name: ramConfigResourceName,
+      });
+
+      // Verify IAM managed policies use IAM_POLICY resource type in their names
+      const kmsUsePolicyName = testApp.naming
+        .withResourceType(MdaaResourceType.IAM_POLICY)
+        .resourceName('domain-kms-use-test-domain');
+      const kmsAdminPolicyName = testApp.naming
+        .withResourceType(MdaaResourceType.IAM_POLICY)
+        .resourceName('domain-kms-admin-test-domain');
+      template.hasResourceProperties('AWS::IAM::ManagedPolicy', {
+        ManagedPolicyName: kmsUsePolicyName,
+      });
+      template.hasResourceProperties('AWS::IAM::ManagedPolicy', {
+        ManagedPolicyName: kmsAdminPolicyName,
+      });
+
+      // Verify custom resource role uses IAM_ROLE resource type
+      const customResourceRoleName = testApp.naming
+        .withResourceType(MdaaResourceType.IAM_ROLE)
+        .resourceName('test-domain-custom-resource', 64);
+      template.hasResourceProperties('AWS::IAM::Role', {
+        RoleName: customResourceRoleName,
+      });
     });
 
     test('should create domain unit owners for associated accounts', () => {

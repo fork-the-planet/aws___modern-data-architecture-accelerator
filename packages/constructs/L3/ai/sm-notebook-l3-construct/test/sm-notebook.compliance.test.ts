@@ -5,6 +5,7 @@
 
 import { MdaaSecurityGroupRuleProps } from '@aws-mdaa/ec2-constructs';
 import { MdaaRoleHelper, MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Match, Template } from 'aws-cdk-lib/assertions';
 import {
@@ -151,6 +152,15 @@ describe('MDAA Notebook Tests', () => {
     test('Root Access', () => {
       template.hasResourceProperties('AWS::SageMaker::NotebookInstance', {
         RootAccess: 'Enabled',
+      });
+    });
+
+    test('Lifecycle config name uses SAGEMAKER_LIFECYCLE_CONFIG resource type', () => {
+      const expectedLifecycleConfigName = testApp.naming
+        .withResourceType(MdaaResourceType.SAGEMAKER_LIFECYCLE_CONFIG)
+        .resourceName('test_config');
+      template.hasResourceProperties('AWS::SageMaker::NotebookInstanceLifecycleConfig', {
+        NotebookInstanceLifecycleConfigName: expectedLifecycleConfigName,
       });
     });
   });

@@ -7,6 +7,7 @@ import { MdaaManagedPolicy } from '@aws-mdaa/iam-constructs';
 import { MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 import { USER_ACTIONS } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { aws_bedrock as bedrock, aws_kms as kms, CfnResource } from 'aws-cdk-lib';
 import { CfnGuardrail, CfnKnowledgeBase } from 'aws-cdk-lib/aws-bedrock';
 import { Effect, ManagedPolicy, PolicyStatement } from 'aws-cdk-lib/aws-iam';
@@ -162,7 +163,7 @@ export class BedrockAgentL3Construct extends MdaaL3Construct {
 
     // Create Bedrock Agent
     const agent = new bedrock.CfnAgent(this, `mdaa-bedrock-agent-${agentName}`, {
-      agentName: this.props.naming.resourceName(agentName),
+      agentName: this.props.naming.withResourceType(MdaaResourceType.BEDROCK_AGENT).resourceName(agentName),
       autoPrepare: agentConfig.autoPrepare ?? false,
       customerEncryptionKeyArn: kmsKey.keyArn,
       description: agentConfig.description,

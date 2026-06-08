@@ -8,6 +8,7 @@ import { Construct } from 'constructs';
 import { NagSuppressions } from 'cdk-nag';
 import { INLINE_POLICY_SUPPRESSIONS, LAMBDA_SUPPRESSIONS } from './nag-constants';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaParamAndOutput, MdaaNagSuppressions } from '@aws-mdaa/construct'; //NOSONAR
 import { MdaaBucket } from '@aws-mdaa/s3-constructs';
 import { HttpMethods } from 'aws-cdk-lib/aws-s3';
@@ -331,7 +332,7 @@ export class SageMakerGroundTruthL3Construct extends MdaaL3Construct {
     });
 
     const dlq = new sqs.Queue(this, 'upload-dlq', {
-      queueName: props.naming.resourceName(`gt-${jobName}-dlq`, 80),
+      queueName: props.naming.withResourceType(MdaaResourceType.SQS_QUEUE).resourceName(`gt-${jobName}-dlq`, 80),
       retentionPeriod: Duration.minutes(sqsConfig.dlqRetentionPeriodMinutes ?? 20160),
       visibilityTimeout: Duration.minutes(sqsConfig.dlqVisibilityTimeoutMinutes ?? 720),
       enforceSSL: true,
@@ -345,7 +346,7 @@ export class SageMakerGroundTruthL3Construct extends MdaaL3Construct {
     });
 
     const uploadQueue = new sqs.Queue(this, 'upload-queue', {
-      queueName: props.naming.resourceName(`gt-${jobName}-queue`, 80),
+      queueName: props.naming.withResourceType(MdaaResourceType.SQS_QUEUE).resourceName(`gt-${jobName}-queue`, 80),
       deadLetterQueue: {
         maxReceiveCount: sqsConfig.maxReceiveCount ?? 3,
         queue: dlq,
@@ -378,7 +379,9 @@ export class SageMakerGroundTruthL3Construct extends MdaaL3Construct {
       ]);
 
       const relayLambda = new LambdaFunction(this, 'txt-relay-lambda', {
-        functionName: props.naming.resourceName(`gt-${jobName}-relay`, 64),
+        functionName: props.naming
+          .withResourceType(MdaaResourceType.LAMBDA_FUNCTION)
+          .resourceName(`gt-${jobName}-relay`, 64),
         runtime: Runtime.PYTHON_3_12,
         code: LambdaCode.fromAsset(path.join(__dirname, '..', 'src', 'lambda', 'notification')),
         handler: 'txt_file_s3_to_sqs_relay.handler',
@@ -412,7 +415,9 @@ export class SageMakerGroundTruthL3Construct extends MdaaL3Construct {
 
     // --- Feature Group ---
     const sourceKey = mediaType === 'image' ? 'source_ref' : 'source';
-    this.featureGroupName = props.naming.resourceName(`gt-${jobName}-fg`, 64);
+    this.featureGroupName = props.naming
+      .withResourceType(MdaaResourceType.SAGEMAKER_FEATURE_GROUP)
+      .resourceName(`gt-${jobName}-fg`, 64);
 
     const featureGroupRole = new MdaaRole(this, 'feature-group-role', {
       naming: props.naming,
@@ -606,7 +611,9 @@ export class SageMakerGroundTruthL3Construct extends MdaaL3Construct {
     const labelingAttributeName = taskType === 'image_semantic_segmentation' ? 'label-ref' : 'label';
 
     const runLabelingLambda = new LambdaFunction(this, 'labeling-lambda', {
-      functionName: props.naming.resourceName(`gt-${jobName}-label`, 64),
+      functionName: props.naming
+        .withResourceType(MdaaResourceType.LAMBDA_FUNCTION)
+        .resourceName(`gt-${jobName}-label`, 64),
       runtime: Runtime.PYTHON_3_12,
       code: LambdaCode.fromAsset(lambdaAssetPath),
       handler: 'run_labeling_job.handler',
@@ -650,7 +657,9 @@ export class SageMakerGroundTruthL3Construct extends MdaaL3Construct {
       });
 
       runVerificationLambda = new LambdaFunction(this, 'verification-lambda', {
-        functionName: props.naming.resourceName(`gt-${jobName}-verify`, 64),
+        functionName: props.naming
+          .withResourceType(MdaaResourceType.LAMBDA_FUNCTION)
+          .resourceName(`gt-${jobName}-verify`, 64),
         runtime: Runtime.PYTHON_3_12,
         code: LambdaCode.fromAsset(lambdaAssetPath),
         handler: 'run_verification_job.handler',
@@ -902,7 +911,9 @@ export class SageMakerGroundTruthL3Construct extends MdaaL3Construct {
   ): LambdaFunction {
     const role = this.createLambdaRole(`${lambdaId}-role`, jobName, props, additionalPolicies);
     const fn = new LambdaFunction(this, `${lambdaId}-lambda`, {
-      functionName: props.naming.resourceName(`gt-${jobName}-${lambdaId}`, 64),
+      functionName: props.naming
+        .withResourceType(MdaaResourceType.LAMBDA_FUNCTION)
+        .resourceName(`gt-${jobName}-${lambdaId}`, 64),
       runtime: Runtime.PYTHON_3_12,
       code: LambdaCode.fromAsset(assetPath),
       handler,
@@ -1017,15 +1028,20 @@ export class SageMakerGroundTruthL3Construct extends MdaaL3Construct {
         .otherwise(runLabeling.next(this.createJobWaiter(labelingJobName, returnOnFailure, postLabelingStep))),
     );
 
+    const logGroupResourceName = props.naming
+      .withResourceType(MdaaResourceType.CLOUDWATCH_LOG_GROUP)
+      .resourceName(`gt-${jobName}`, 64);
     const logGroup = new logs.LogGroup(this, 'sfn-log-group', {
-      logGroupName: `/aws/vendedlogs/states/${props.naming.resourceName(`gt-${jobName}`, 64)}`,
+      logGroupName: `/aws/vendedlogs/states/${logGroupResourceName}`,
       retention: logs.RetentionDays.ONE_MONTH,
       removalPolicy: RemovalPolicy.DESTROY,
       encryptionKey: kmsKey,
     });
 
     return new sfn.StateMachine(this, 'labeling-state-machine', {
-      stateMachineName: props.naming.resourceName(`gt-${jobName}-sfn`, 80),
+      stateMachineName: props.naming
+        .withResourceType(MdaaResourceType.STEPFUNCTIONS)
+        .resourceName(`gt-${jobName}-sfn`, 80),
       definitionBody: sfn.DefinitionBody.fromChainable(definition),
       logs: { destination: logGroup, level: sfn.LogLevel.ALL },
       tracingEnabled: true,

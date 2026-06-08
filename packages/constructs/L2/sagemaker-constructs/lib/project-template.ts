@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { CfnTag } from 'aws-cdk-lib';
 import { CfnProject } from 'aws-cdk-lib/aws-sagemaker';
 import { CfnCloudFormationProduct } from 'aws-cdk-lib/aws-servicecatalog';
@@ -57,7 +58,8 @@ export class MdaaSageMakerProjectTemplate extends Construct {
   constructor(scope: Construct, id: string, props: MdaaSageMakerProjectTemplateProps) {
     super(scope, id);
 
-    const productName = props.naming.resourceName(
+    const projectNaming = props.naming.withResourceType(MdaaResourceType.SAGEMAKER_PROJECT);
+    const productName = projectNaming.resourceName(
       props.serviceCatalogProductName,
       MAX_SERVICE_CATALOG_PRODUCT_NAME_LENGTH,
     );
@@ -78,7 +80,7 @@ export class MdaaSageMakerProjectTemplate extends Construct {
       tags: props.tags,
     });
 
-    const projectName = props.naming.resourceName(props.projectName, MAX_SAGEMAKER_PROJECT_NAME_LENGTH);
+    const projectName = projectNaming.resourceName(props.projectName, MAX_SAGEMAKER_PROJECT_NAME_LENGTH);
 
     this.project = new CfnProject(this, 'project', {
       projectName,

@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Match, Template } from 'aws-cdk-lib/assertions';
 import { MdaaRoleHelper } from '@aws-mdaa/iam-role-helper';
@@ -54,6 +55,30 @@ describe('MDAA Compliance Stack Tests', () => {
 
   test('Validate resource counts', () => {
     template.resourceCountIs('AWS::CloudFormation::CustomResource', 1);
+  });
+
+  test('IAM ManagedPolicies use IAM_POLICY resource type', () => {
+    template.hasResourceProperties('AWS::IAM::ManagedPolicy', {
+      ManagedPolicyName: testApp.naming.withResourceType(MdaaResourceType.IAM_POLICY).resourceName('ns-user-lambda'),
+    });
+    template.hasResourceProperties('AWS::IAM::ManagedPolicy', {
+      ManagedPolicyName: testApp.naming.withResourceType(MdaaResourceType.IAM_POLICY).resourceName('ns-cr-lambda'),
+    });
+    template.hasResourceProperties('AWS::IAM::ManagedPolicy', {
+      ManagedPolicyName: testApp.naming.withResourceType(MdaaResourceType.IAM_POLICY).resourceName('reader-policy'),
+    });
+    template.hasResourceProperties('AWS::IAM::ManagedPolicy', {
+      ManagedPolicyName: testApp.naming.withResourceType(MdaaResourceType.IAM_POLICY).resourceName('author-policy'),
+    });
+  });
+
+  test('EventBridge rule name uses EVENTBRIDGE_RULE resource type', () => {
+    const eventBridgeRules = template.findResources('AWS::Events::Rule');
+    const ruleNames = Object.values(eventBridgeRules).map(r => r.Properties.Name);
+    expect(ruleNames.length).toBeGreaterThan(0);
+    // each rule name should have been generated using EVENTBRIDGE_RULE
+    const expectedPrefix = testApp.naming.withResourceType(MdaaResourceType.EVENTBRIDGE_RULE).resourceName('');
+    ruleNames.forEach(name => expect(name).toContain(expectedPrefix.replace(/-$/, '')));
   });
 
   test('Check qsUserType Reader', () => {

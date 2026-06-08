@@ -4,6 +4,7 @@
  */
 
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { aws_bedrock as bedrock } from 'aws-cdk-lib';
 import { IKey } from 'aws-cdk-lib/aws-kms';
 import { Construct } from 'constructs';
@@ -114,7 +115,7 @@ export class BedrockGuardrailL3Construct extends MdaaL3Construct {
     const sensitiveInformationPolicyConfig = this.createSensitiveInformationConfig(config.sensitiveInformationFilters);
 
     const guardrailProps: bedrock.CfnGuardrailProps = {
-      name: this.props.naming.resourceName(guardrailName, 50),
+      name: this.props.naming.withResourceType(MdaaResourceType.BEDROCK_GUARDRAIL).resourceName(guardrailName, 50),
       description: config.description,
       kmsKeyArn: kmsKey.keyArn,
       blockedInputMessaging: config.blockedInputMessaging || 'Your input contains content that is not allowed.',

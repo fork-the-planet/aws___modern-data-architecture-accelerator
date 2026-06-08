@@ -4,6 +4,7 @@
  */
 
 import { Node } from 'constructs';
+import { MdaaResourceType } from './resource-type';
 
 export interface MdaaResourceNamingConfig {
   /** CDK construct node providing access to context values for custom naming implementations */
@@ -31,6 +32,13 @@ export interface IMdaaResourceNaming {
   withModuleName(moduleName: string): IMdaaResourceNaming;
 
   withSuffix(suffix: string): IMdaaResourceNaming;
+
+  /**
+   * Returns a new naming instance associated with the given resource type.
+   * Custom naming implementations can use this to inject service-type abbreviations.
+   * The default implementation returns itself unchanged.
+   */
+  withResourceType(resourceType: MdaaResourceType): IMdaaResourceNaming;
 
   resourceName(resourceNameSuffix?: string, maxLength?: number): string;
 

@@ -11,6 +11,7 @@ import {
 } from '@aws-mdaa/datazone-constructs';
 
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { CfnDataSource, CfnDataSourceProps, CfnProjectProfile } from 'aws-cdk-lib/aws-datazone';
 
 import { Construct } from 'constructs';
@@ -369,7 +370,9 @@ export class SagemakerProjectL3Construct extends MdaaL3Construct {
       // This will allow project profile Ids to be resolved from profile names in
       // associated accounts.
       const configParamRamShareProps: CfnResourceShareProps = {
-        name: this.props.naming.resourceName(`project-profiles-config-ssm`),
+        name: this.props.naming
+          .withResourceType(MdaaResourceType.RAM_RESOURCE_SHARE)
+          .resourceName(`project-profiles-config-ssm`),
         resourceArns: projectProfilesConfigParams,
         principals: projectProfileAccounts,
       };
@@ -454,7 +457,7 @@ export class SagemakerProjectL3Construct extends MdaaL3Construct {
     const datasourceProps: CfnDataSourceProps = {
       domainIdentifier: project.project.attrDomainId,
       connectionIdentifier: project.glueConnectionId, //Need to pass glue connection id for SMUS projects
-      name: this.props.naming.resourceName(dataSourceName),
+      name: this.props.naming.withResourceType(MdaaResourceType.DATAZONE_DATASOURCE).resourceName(dataSourceName),
       projectIdentifier: project.project.attrId,
       type: 'glue',
       configuration: {

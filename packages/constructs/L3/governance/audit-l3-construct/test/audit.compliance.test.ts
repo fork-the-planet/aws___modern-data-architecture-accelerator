@@ -4,6 +4,7 @@
  */
 
 import { MdaaRoleHelper } from '@aws-mdaa/iam-role-helper';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Match, Template } from 'aws-cdk-lib/assertions';
 import { AuditL3Construct, AuditL3ConstructProps } from '../lib';
@@ -35,6 +36,18 @@ describe('MDAA Compliance Stack Tests', () => {
 
   test('Glue database created', () => {
     template.resourceCountIs('AWS::Glue::Database', 1);
+  });
+
+  test('Glue database name uses GLUE_DATABASE resource type', () => {
+    const expectedName = testApp.naming
+      .withResourceType(MdaaResourceType.GLUE_DATABASE)
+      .resourceName()
+      .replace(/-/gi, '_');
+    template.hasResourceProperties('AWS::Glue::Database', {
+      DatabaseInput: {
+        Name: expectedName,
+      },
+    });
   });
 
   test('Glue audit table created without bucket inventories', () => {

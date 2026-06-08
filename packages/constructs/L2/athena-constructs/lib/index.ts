@@ -5,6 +5,7 @@
 
 import { MdaaParamAndOutput, MdaaConstructProps } from '@aws-mdaa/construct'; //NOSONAR
 import { IMdaaKmsKey } from '@aws-mdaa/kms-constructs';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { IMdaaBucket } from '@aws-mdaa/s3-constructs';
 import { IResolvable, CfnTag } from 'aws-cdk-lib';
 import { CfnWorkGroup, CfnWorkGroupProps } from 'aws-cdk-lib/aws-athena';
@@ -52,9 +53,10 @@ export interface MdaaAthenaEncryptionConfigurationProps {
 export class MdaaAthenaWorkgroup extends CfnWorkGroup {
   /** Overrides specific compliance-related properties. */
   private static setProps(props: MdaaAthenaWorkgroupProps): CfnWorkGroupProps {
+    const athenaNaming = props.naming.withResourceType(MdaaResourceType.ATHENA_WORKGROUP);
     const overrideProps = {
       // Add a workgroup name using the MDAA naming implementation.
-      name: props.naming.resourceName(props.name),
+      name: athenaNaming.resourceName(props.name),
       // Enforce the workgroup results configuration using the provided KMS key and S3 Bucket.
       workGroupConfiguration: {
         enforceWorkGroupConfiguration: true,

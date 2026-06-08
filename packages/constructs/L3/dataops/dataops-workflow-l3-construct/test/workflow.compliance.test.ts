@@ -4,6 +4,7 @@
  */
 
 import { MdaaRoleHelper } from '@aws-mdaa/iam-role-helper';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Match, Template } from 'aws-cdk-lib/assertions';
 import { GlueWorkflowL3Construct, GlueWorkflowL3ConstructProps, WorkflowProps } from '../lib';
@@ -164,6 +165,9 @@ describe('MDAA Compliance Stack Tests', () => {
 
   test('EventBridge Trigger Policy', () => {
     template.hasResourceProperties('AWS::IAM::ManagedPolicy', {
+      ManagedPolicyName: testApp.naming
+        .withResourceType(MdaaResourceType.IAM_POLICY)
+        .resourceName('event-bridge-policy'),
       PolicyDocument: {
         Statement: [
           {

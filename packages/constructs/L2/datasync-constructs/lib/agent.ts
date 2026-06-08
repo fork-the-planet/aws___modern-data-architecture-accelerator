@@ -4,6 +4,7 @@
  */
 
 import { MdaaParamAndOutput, MdaaConstructProps } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { CfnAgent, CfnAgentProps } from 'aws-cdk-lib/aws-datasync';
 import { Construct } from 'constructs';
 
@@ -24,8 +25,9 @@ export interface MdaaDataSyncAgentProps extends MdaaConstructProps {
 export class MdaaDataSyncAgent extends CfnAgent {
   /** Overrides specific compliance-related properties. */
   private static setProps(props: MdaaDataSyncAgentProps): CfnAgentProps {
+    const agentNaming = props.naming.withResourceType(MdaaResourceType.DATASYNC_AGENT);
     const overrideProps = {
-      agentName: props.naming.resourceName(props.agentName, 256),
+      agentName: agentNaming.resourceName(props.agentName, 256),
     };
     const allProps = { ...props, ...overrideProps };
     return allProps;

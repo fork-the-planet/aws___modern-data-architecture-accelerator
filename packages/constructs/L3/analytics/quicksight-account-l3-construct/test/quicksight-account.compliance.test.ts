@@ -5,6 +5,7 @@
 
 import { MdaaSecurityGroupRuleProps } from '@aws-mdaa/ec2-constructs';
 import { MdaaRoleHelper } from '@aws-mdaa/iam-role-helper';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Match, Template } from 'aws-cdk-lib/assertions';
 import { Protocol } from 'aws-cdk-lib/aws-ec2';
@@ -154,6 +155,38 @@ describe('QS Account Mandatory Tests', () => {
       DestinationPrefixListId: 'pl-abc123',
       FromPort: 1000,
       ToPort: 2000,
+    });
+  });
+
+  test('VPC Connection name and ID use QUICKSIGHT_VPC_CONNECTION resource type', () => {
+    template.hasResourceProperties('AWS::QuickSight::VPCConnection', {
+      Name: testApp.naming
+        .withResourceType(MdaaResourceType.QUICKSIGHT_VPC_CONNECTION)
+        .resourceName('vpc-connection', 128),
+      VPCConnectionId: testApp.naming
+        .withResourceType(MdaaResourceType.QUICKSIGHT_VPC_CONNECTION)
+        .resourceName('vpc-', 128),
+    });
+  });
+
+  test('CR ManagedPolicies use IAM_POLICY resource type', () => {
+    template.hasResourceProperties('AWS::IAM::ManagedPolicy', {
+      ManagedPolicyName: testApp.naming
+        .withResourceType(MdaaResourceType.IAM_POLICY)
+        .resourceName('qsAccount-cr-lambda'),
+    });
+    template.hasResourceProperties('AWS::IAM::ManagedPolicy', {
+      ManagedPolicyName: testApp.naming
+        .withResourceType(MdaaResourceType.IAM_POLICY)
+        .resourceName('quicksight-service-access'),
+    });
+  });
+
+  test('CR provider Lambda function uses LAMBDA_FUNCTION resource type', () => {
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      FunctionName: testApp.naming
+        .withResourceType(MdaaResourceType.LAMBDA_FUNCTION)
+        .resourceName('qsAccount-cr-prov', 64),
     });
   });
 });

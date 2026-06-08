@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaNagSuppressions, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { IMdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import {
   Cluster,
@@ -91,7 +92,9 @@ export class MdaaRedshiftCluster extends Cluster {
     }
 
     const overrideProps = {
-      clusterName: sanitizeClusterName(props.naming.resourceName(props.clusterName, 63)),
+      clusterName: sanitizeClusterName(
+        props.naming.withResourceType(MdaaResourceType.REDSHIFT_CLUSTER).resourceName(props.clusterName, 63),
+      ),
       publiclyAccessible: false,
       encrypted: true,
       removalPolicy: RemovalPolicy.RETAIN,

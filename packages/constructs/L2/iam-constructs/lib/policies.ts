@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Arn, Stack } from 'aws-cdk-lib';
 import {
   IGroup,
@@ -45,10 +46,11 @@ export type IMdaaManagedPolicy = IManagedPolicy;
  */
 export class MdaaManagedPolicy extends ManagedPolicy {
   private static setProps(props: MdaaManagedPolicyProps): ManagedPolicyProps {
+    const iamNaming = props.naming.withResourceType(MdaaResourceType.IAM_POLICY);
     const overrideProps = {
       managedPolicyName: props.verbatimPolicyName
         ? props.managedPolicyName
-        : props.naming.resourceName(props.managedPolicyName, 64),
+        : iamNaming.resourceName(props.managedPolicyName, 64),
     };
     return { ...props, ...overrideProps };
   }

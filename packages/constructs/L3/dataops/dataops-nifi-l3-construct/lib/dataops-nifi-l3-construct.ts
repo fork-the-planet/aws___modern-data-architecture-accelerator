@@ -14,6 +14,7 @@ import {
 import { MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { ISecurityGroup, ISubnet, IVpc, Port, Protocol, SecurityGroup, Subnet, Vpc } from 'aws-cdk-lib/aws-ec2';
 import { CoreDnsComputeType, FargateProfile, KubernetesManifest, KubernetesVersion } from 'aws-cdk-lib/aws-eks';
 import { Effect, IRole, PolicyStatement, Role } from 'aws-cdk-lib/aws-iam';
@@ -492,7 +493,9 @@ export class NifiL3Construct extends MdaaL3Construct {
     const externalSecretsServiceRole = NifiCluster.createServiceRole(
       this,
       'registry-external-secrets',
-      this.props.naming.resourceName('registry-external-secrets-service-role', 64),
+      this.props.naming
+        .withResourceType(MdaaResourceType.IAM_ROLE)
+        .resourceName('registry-external-secrets-service-role', 64),
       NifiL3Construct.REGISTRY_NAMESPACE,
       addRegistryProps.eksCluster,
       [kmsKeyStatement, secretsManagerStatement],
@@ -535,7 +538,7 @@ export class NifiL3Construct extends MdaaL3Construct {
     const clusterServiceRole = NifiCluster.createServiceRole(
       this,
       'registry-service-role',
-      this.props.naming.resourceName('registry-service-role', 64),
+      this.props.naming.withResourceType(MdaaResourceType.IAM_ROLE).resourceName('registry-service-role', 64),
       NifiL3Construct.REGISTRY_NAMESPACE,
       addRegistryProps.eksCluster,
     );
@@ -762,7 +765,9 @@ export class NifiL3Construct extends MdaaL3Construct {
     const externalSecretsServiceRole = NifiCluster.createServiceRole(
       this,
       'zk-external-secrets',
-      this.props.naming.resourceName('zk-external-secrets-service-role', 64),
+      this.props.naming
+        .withResourceType(MdaaResourceType.IAM_ROLE)
+        .resourceName('zk-external-secrets-service-role', 64),
       NifiL3Construct.ZOOKEEPER_NAMESPACE,
       eksCluster,
       [kmsKeyStatement, secretsManagerStatement],
@@ -835,7 +840,7 @@ export class NifiL3Construct extends MdaaL3Construct {
   private createHostedZone(vpc: IVpc): HostedZone {
     return new PrivateHostedZone(this, 'hosted-zone', {
       vpc: vpc,
-      zoneName: `${this.props.naming.resourceName()}.internal`,
+      zoneName: `${this.props.naming.withResourceType(MdaaResourceType.ROUTE53_HOSTED_ZONE).resourceName()}.internal`,
     });
   }
 
@@ -1050,7 +1055,7 @@ export class NifiL3Construct extends MdaaL3Construct {
     const serviceRole = NifiCluster.createServiceRole(
       this,
       'private-ca-service-role',
-      this.props.naming.resourceName('private-ca-svc', 64),
+      this.props.naming.withResourceType(MdaaResourceType.IAM_ROLE).resourceName('private-ca-svc', 64),
       NifiL3Construct.CERT_MANAGER_NAMESPACE,
       eksCluster,
       [acmPcaStatement],
@@ -1226,7 +1231,7 @@ export class NifiL3Construct extends MdaaL3Construct {
     return NifiCluster.createServiceRole(
       this,
       'external-dns',
-      this.props.naming.resourceName('external-dns-service-role', 64),
+      this.props.naming.withResourceType(MdaaResourceType.IAM_ROLE).resourceName('external-dns-service-role', 64),
       namespaceName,
       eksCluster,
       [route53UpdateStatement, route53ListStatement],

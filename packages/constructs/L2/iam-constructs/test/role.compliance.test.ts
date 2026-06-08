@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { MdaaRole, MdaaRoleProps } from '../lib';
@@ -27,6 +28,12 @@ describe('MDAA Construct Compliance Tests', () => {
   test('RoleName', () => {
     template.hasResourceProperties('AWS::IAM::Role', {
       RoleName: testApp.naming.resourceName('test-role'),
+    });
+  });
+
+  test('RoleName uses IAM_ROLE resource type', () => {
+    template.hasResourceProperties('AWS::IAM::Role', {
+      RoleName: testApp.naming.withResourceType(MdaaResourceType.IAM_ROLE).resourceName('test-role', 64),
     });
   });
 

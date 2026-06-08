@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { Role } from 'aws-cdk-lib/aws-iam';
 import { Key } from 'aws-cdk-lib/aws-kms';
@@ -103,6 +104,13 @@ describe('MdaaGroundTruth Compliance Tests', () => {
   test('JobName is set via naming', () => {
     const gt = new MdaaGroundTruth(testApp.testStack, 'test-construct-2', testProps);
     expect(gt.jobName).toBe(testApp.naming.resourceName('test-labeling-job', 63));
+  });
+
+  test('JobName uses SAGEMAKER_GROUND_TRUTH resource type', () => {
+    const gt = new MdaaGroundTruth(testApp.testStack, 'test-construct-3', testProps);
+    expect(gt.jobName).toBe(
+      testApp.naming.withResourceType(MdaaResourceType.SAGEMAKER_GROUND_TRUTH).resourceName('test-labeling-job', 63),
+    );
   });
 
   test('Stores roleArn as SSM parameter', () => {

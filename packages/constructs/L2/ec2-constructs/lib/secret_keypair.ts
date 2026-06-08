@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaCustomResourceProps, MdaaCustomResource } from '@aws-mdaa/custom-constructs';
 import { Duration, RemovalPolicy, SecretValue, Stack } from 'aws-cdk-lib';
 import { Effect, PolicyStatement, PrincipalBase } from 'aws-cdk-lib/aws-iam';
@@ -32,7 +33,7 @@ export class MdaaEC2SecretKeyPair extends Construct {
   public readonly name: string;
   constructor(scope: Construct, id: string, props: MdaaEC2SecretKeyPairProps) {
     super(scope, id);
-    this.name = props.naming.resourceName(props.name, 255);
+    this.name = props.naming.withResourceType(MdaaResourceType.EC2_KEY_PAIR).resourceName(props.name, 255);
     const statement = new PolicyStatement({
       effect: Effect.ALLOW,
       actions: ['ec2:CreateKeyPair'],

@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { MdaaCfnCrawler, MdaaCfnCrawlerProps } from '../lib';
 
@@ -28,6 +29,12 @@ describe('MDAA Construct Compliance Tests', () => {
   test('Name', () => {
     template.hasResourceProperties('AWS::Glue::Crawler', {
       Name: testApp.naming.resourceName('test-crawler'),
+    });
+  });
+
+  test('Name uses GLUE_CRAWLER resource type', () => {
+    template.hasResourceProperties('AWS::Glue::Crawler', {
+      Name: testApp.naming.withResourceType(MdaaResourceType.GLUE_CRAWLER).resourceName('test-crawler'),
     });
   });
 

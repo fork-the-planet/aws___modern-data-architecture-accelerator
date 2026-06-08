@@ -8,6 +8,7 @@ import { MdaaManagedPolicy, MdaaRole } from '@aws-mdaa/iam-constructs';
 import { MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 import { ENCRYPT_ACTIONS, IMdaaKmsKey, MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { RestrictBucketToRoles, RestrictObjectPrefixToRoles } from '@aws-mdaa/s3-bucketpolicy-helper';
 import { IMdaaBucket, MdaaBucket } from '@aws-mdaa/s3-constructs';
 
@@ -123,7 +124,9 @@ export class AthenaWorkgroupL3Construct extends MdaaL3Construct {
         'athena:StopQueryExecution',
       ],
       resources: [
-        `arn:${this.partition}:athena:${this.region}:${this.account}:workgroup/${this.props.naming.resourceName()}`,
+        `arn:${this.partition}:athena:${this.region}:${this.account}:workgroup/${this.props.naming
+          .withResourceType(MdaaResourceType.ATHENA_WORKGROUP)
+          .resourceName()}`,
       ],
     });
     athenaWgPolicy.addStatements(accessWorkgroupStatement);

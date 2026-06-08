@@ -5,6 +5,7 @@
 
 import { MdaaKmsKey, DECRYPT_ACTIONS, ENCRYPT_ACTIONS } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Construct } from 'constructs';
 import { MdaaBucket } from '@aws-mdaa/s3-constructs';
 import { MdaaRole } from '@aws-mdaa/iam-constructs';
@@ -136,10 +137,9 @@ export class SageMakerModelTrainingL3Construct extends MdaaL3Construct {
     this.pipelineKmsKeyArn = this.kmsKey.keyArn;
 
     const mpg = this.createModelPackageGroup();
-    this.modelPackageGroupName = this.props.naming.resourceName(
-      `${props.projectName}-mpg`,
-      MAX_MODEL_PACKAGE_GROUP_NAME_LENGTH,
-    );
+    this.modelPackageGroupName = this.props.naming
+      .withResourceType(MdaaResourceType.SAGEMAKER_MODEL_PACKAGE_GROUP)
+      .resourceName(`${props.projectName}-mpg`, MAX_MODEL_PACKAGE_GROUP_NAME_LENGTH);
 
     this.deployTrainingData();
     this.createSageMakerExecutionRole();
@@ -275,7 +275,9 @@ export class SageMakerModelTrainingL3Construct extends MdaaL3Construct {
   private createModelPackageGroup(): CfnModelPackageGroup {
     const props = this.props;
     const projectName = props.projectName;
-    const modelPackageGroupName = props.naming.resourceName(`${projectName}-mpg`, MAX_MODEL_PACKAGE_GROUP_NAME_LENGTH);
+    const modelPackageGroupName = props.naming
+      .withResourceType(MdaaResourceType.SAGEMAKER_MODEL_PACKAGE_GROUP)
+      .resourceName(`${projectName}-mpg`, MAX_MODEL_PACKAGE_GROUP_NAME_LENGTH);
 
     const mpg = new CfnModelPackageGroup(this, 'model-package-group', {
       modelPackageGroupName,
@@ -315,7 +317,9 @@ export class SageMakerModelTrainingL3Construct extends MdaaL3Construct {
     const props = this.props;
     const projectName = props.projectName;
     const baseJobPrefix = props.baseJobPrefix ?? projectName;
-    const modelPackageGroupName = props.naming.resourceName(`${projectName}-mpg`, MAX_MODEL_PACKAGE_GROUP_NAME_LENGTH);
+    const modelPackageGroupName = props.naming
+      .withResourceType(MdaaResourceType.SAGEMAKER_MODEL_PACKAGE_GROUP)
+      .resourceName(`${projectName}-mpg`, MAX_MODEL_PACKAGE_GROUP_NAME_LENGTH);
 
     this.sagemakerExecutionRole = new MdaaRole(this, 'sagemaker-execution-role', {
       naming: props.naming,
@@ -401,7 +405,9 @@ export class SageMakerModelTrainingL3Construct extends MdaaL3Construct {
   private createCodeBuildRole(): void {
     const props = this.props;
     const projectName = props.projectName;
-    const modelPackageGroupName = props.naming.resourceName(`${projectName}-mpg`, MAX_MODEL_PACKAGE_GROUP_NAME_LENGTH);
+    const modelPackageGroupName = props.naming
+      .withResourceType(MdaaResourceType.SAGEMAKER_MODEL_PACKAGE_GROUP)
+      .resourceName(`${projectName}-mpg`, MAX_MODEL_PACKAGE_GROUP_NAME_LENGTH);
 
     this.codeBuildRole = new MdaaRole(this, 'codebuild-role', {
       naming: props.naming,
@@ -500,12 +506,16 @@ export class SageMakerModelTrainingL3Construct extends MdaaL3Construct {
     const props = this.props;
     const projectName = props.projectName;
     const sourceType = props.sourceType ?? SourceType.CODECOMMIT;
-    const modelPackageGroupName = props.naming.resourceName(`${projectName}-mpg`, MAX_MODEL_PACKAGE_GROUP_NAME_LENGTH);
+    const modelPackageGroupName = props.naming
+      .withResourceType(MdaaResourceType.SAGEMAKER_MODEL_PACKAGE_GROUP)
+      .resourceName(`${projectName}-mpg`, MAX_MODEL_PACKAGE_GROUP_NAME_LENGTH);
     const sagemakerPipelineName = props.naming.resourceName(`${projectName}-pipeline`, MAX_PIPELINE_NAME_LENGTH);
     const sagemakerPipelineDescription = `${projectName} Model Build Pipeline`;
 
     const buildProject = new PipelineProject(this, 'build-project', {
-      projectName: props.naming.resourceName(`build-${projectName}`, MAX_CODEBUILD_PROJECT_NAME_LENGTH),
+      projectName: props.naming
+        .withResourceType(MdaaResourceType.CODEBUILD_PROJECT)
+        .resourceName(`build-${projectName}`, MAX_CODEBUILD_PROJECT_NAME_LENGTH),
       role: this.codeBuildRole,
       buildSpec: BuildSpec.fromSourceFilename('buildspec.yml'),
       environment: {
@@ -535,7 +545,9 @@ export class SageMakerModelTrainingL3Construct extends MdaaL3Construct {
 
     const sourceArtifact = new Artifact('SourceOutput');
     const pipeline = new Pipeline(this, 'pipeline', {
-      pipelineName: props.naming.resourceName(`${projectName}-build`, MAX_REPO_AND_PIPELINE_NAME_LENGTH),
+      pipelineName: props.naming
+        .withResourceType(MdaaResourceType.CODEPIPELINE)
+        .resourceName(`${projectName}-build`, MAX_REPO_AND_PIPELINE_NAME_LENGTH),
       artifactBucket: this.pipelineBucket,
     });
 
@@ -545,7 +557,9 @@ export class SageMakerModelTrainingL3Construct extends MdaaL3Construct {
       sourceArtifact,
       sourceType,
       repoConstructId: 'source-repo',
-      repoName: props.naming.resourceName(`${projectName}-build`, MAX_REPO_AND_PIPELINE_NAME_LENGTH),
+      repoName: props.naming
+        .withResourceType(MdaaResourceType.CODECOMMIT_REPO)
+        .resourceName(`${projectName}-build`, MAX_REPO_AND_PIPELINE_NAME_LENGTH),
       repoDescription: `Model training build pipeline for ${projectName}`,
       seedCodePath: props.seedCodePath,
       codeStarConnection: props.codeStarConnection,

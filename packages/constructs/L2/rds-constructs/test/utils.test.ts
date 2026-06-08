@@ -5,12 +5,14 @@
 
 import { getSanitizeClusterIdentifier } from '../lib/utils';
 import { MdaaRdsServerlessClusterProps } from '../lib';
-import { IMdaaResourceNaming } from '@aws-mdaa/naming';
+import { IMdaaResourceNaming, MdaaResourceType } from '@aws-mdaa/naming';
 
 describe('Utils', () => {
   const mockNaming = {
     resourceName: jest.fn(),
+    withResourceType: jest.fn(),
   } as unknown as IMdaaResourceNaming;
+  (mockNaming.withResourceType as jest.Mock).mockReturnValue(mockNaming);
 
   const baseMockProps = {
     naming: mockNaming,
@@ -30,6 +32,14 @@ describe('Utils', () => {
 
       expect(mockNaming.resourceName).toHaveBeenCalledWith('test-cluster', 63);
       expect(result).toBe(validName);
+    });
+
+    it('should scope naming with RDS_CLUSTER resource type', () => {
+      (mockNaming.resourceName as jest.Mock).mockReturnValue('test-cluster-name');
+
+      getSanitizeClusterIdentifier(baseMockProps);
+
+      expect(mockNaming.withResourceType).toHaveBeenCalledWith(MdaaResourceType.RDS_CLUSTER);
     });
 
     it('should handle multiple consecutive dashes', () => {

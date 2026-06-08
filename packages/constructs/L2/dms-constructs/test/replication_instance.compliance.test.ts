@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { MdaaReplicationInstance, MdaaReplicationInstanceProps } from '../lib';
 import { CfnReplicationSubnetGroup } from 'aws-cdk-lib/aws-dms';
@@ -38,6 +39,14 @@ describe('Replication Instance Compliance Tests', () => {
   test('Replication Instance ID', () => {
     template.hasResourceProperties('AWS::DMS::ReplicationInstance', {
       ReplicationInstanceIdentifier: 'test-org-test-env-test-domain-test-module',
+    });
+  });
+
+  test('ReplicationInstanceIdentifier uses DMS_REPLICATION_INSTANCE resource type', () => {
+    template.hasResourceProperties('AWS::DMS::ReplicationInstance', {
+      ReplicationInstanceIdentifier: testApp.naming
+        .withResourceType(MdaaResourceType.DMS_REPLICATION_INSTANCE)
+        .resourceName(undefined, 63),
     });
   });
 

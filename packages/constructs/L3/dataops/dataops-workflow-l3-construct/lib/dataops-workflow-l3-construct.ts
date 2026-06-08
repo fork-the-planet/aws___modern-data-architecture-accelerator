@@ -8,6 +8,7 @@ import { EventBridgeHelper, EventBridgeProps } from '@aws-mdaa/eventbridge-helpe
 import { MdaaRole } from '@aws-mdaa/iam-constructs';
 import { IMdaaKmsKey, MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Duration, IResolvable } from 'aws-cdk-lib';
 import { IRule, IRuleTarget, RuleTargetConfig, RuleTargetInput } from 'aws-cdk-lib/aws-events';
 import { TargetBaseProps } from 'aws-cdk-lib/aws-events-targets';
@@ -157,7 +158,9 @@ export class GlueWorkflowL3Construct extends MdaaL3Construct {
   private getEventBridgePolicy(): ManagedPolicy {
     if (!this.eventBridgePolicy) {
       this.eventBridgePolicy = new ManagedPolicy(this.scope, 'event-bridge-policy', {
-        managedPolicyName: this.props.naming.resourceName('event-bridge-policy'),
+        managedPolicyName: this.props.naming
+          .withResourceType(MdaaResourceType.IAM_POLICY)
+          .resourceName('event-bridge-policy'),
         roles: [this.getEventBridgeRole()],
       });
     }
@@ -169,7 +172,7 @@ export class GlueWorkflowL3Construct extends MdaaL3Construct {
     const workflow = new CfnWorkflow(this.scope, `workflow-${workflowName}`, {
       defaultRunProperties: (workflowProps.rawWorkflowDef.Workflow as PropsNode).DefaultRunProperties,
       description: (workflowProps.rawWorkflowDef.Workflow as PropsNode).Description as string,
-      name: this.props.naming.resourceName(workflowName),
+      name: this.props.naming.withResourceType(MdaaResourceType.GLUE_WORKFLOW).resourceName(workflowName),
     });
 
     const graphNodes = ((workflowProps.rawWorkflowDef.Workflow as PropsNode).Graph as PropsNode).Nodes as PropsNode[];
@@ -187,7 +190,9 @@ export class GlueWorkflowL3Construct extends MdaaL3Construct {
       const predicateProps = triggerDetails.Predicate as PropsNode;
 
       const trigger = new CfnTrigger(this.scope, `trigger-${workflowName}-${triggerName}`, {
-        name: this.props.naming.resourceName(`${workflowName}-${triggerName}`),
+        name: this.props.naming
+          .withResourceType(MdaaResourceType.GLUE_TRIGGER)
+          .resourceName(`${workflowName}-${triggerName}`),
         workflowName: workflow.name,
         actions: actions,
         type: triggerDetails.Type as string,
@@ -219,7 +224,9 @@ export class GlueWorkflowL3Construct extends MdaaL3Construct {
   }
 
   private createWorkflowEventBridgeRules(eventBridgeProps: EventBridgeProps, workflowName: string) {
-    const workflowResourceName = this.props.naming.resourceName(workflowName);
+    const workflowResourceName = this.props.naming
+      .withResourceType(MdaaResourceType.GLUE_WORKFLOW)
+      .resourceName(workflowName);
     const workflowArn = `arn:${this.partition}:glue:${this.region}:${this.account}:workflow/${workflowResourceName}`;
     const triggerFunctionStatement = new PolicyStatement({
       effect: Effect.ALLOW,

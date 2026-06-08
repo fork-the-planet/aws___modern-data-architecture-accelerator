@@ -4,8 +4,9 @@
  */
 
 import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
-import { Template } from 'aws-cdk-lib/assertions';
+import { Match, Template } from 'aws-cdk-lib/assertions';
 import { MdaaRole } from '@aws-mdaa/iam-constructs';
 import { MdaaEC2Instance, MdaaEC2InstanceProps, BlockDeviceProps } from '../lib/instance';
 import {
@@ -112,6 +113,16 @@ describe('MDAA Construct Compliance Tests', () => {
   test('DeletionPolicy', () => {
     template.hasResource('AWS::EC2::Instance', {
       DeletionPolicy: 'Retain',
+    });
+  });
+
+  test('LaunchTemplateName uses EC2_INSTANCE resource type', () => {
+    const expectedName = testApp.naming.withResourceType(MdaaResourceType.EC2_INSTANCE).resourceName(undefined);
+    template.hasResourceProperties('AWS::EC2::LaunchTemplate', {
+      LaunchTemplateName: expectedName,
+    });
+    template.hasResourceProperties('AWS::EC2::Instance', {
+      LaunchTemplate: Match.objectLike({ LaunchTemplateName: expectedName }),
     });
   });
 });

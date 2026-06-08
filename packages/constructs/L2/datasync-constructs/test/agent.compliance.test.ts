@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { MdaaDataSyncAgent, MdaaDataSyncAgentProps } from '../lib';
 
@@ -56,6 +57,12 @@ describe('Agent Compliance Tests', () => {
   test('VpcEndpointId', () => {
     template.hasResourceProperties('AWS::DataSync::Agent', {
       VpcEndpointId: 'vpce-0abcd1234e567890f',
+    });
+  });
+
+  test('AgentName uses DATASYNC_AGENT resource type', () => {
+    template.hasResourceProperties('AWS::DataSync::Agent', {
+      AgentName: testApp.naming.withResourceType(MdaaResourceType.DATASYNC_AGENT).resourceName(undefined, 256),
     });
   });
 });

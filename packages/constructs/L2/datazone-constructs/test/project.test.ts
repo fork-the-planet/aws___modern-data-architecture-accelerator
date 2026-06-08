@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { DomainConfig, MdaaDatazoneProject, MdaaDatazoneProjectProps, MdaaSageMakerProject } from '../lib';
 
@@ -30,6 +31,19 @@ describe('MdaaDatazoneProject', () => {
 
     const template = Template.fromStack(testApp.testStack);
     template.resourceCountIs('AWS::DataZone::Project', 1);
+  });
+
+  it('project Name uses DATAZONE_PROJECT resource type', () => {
+    new MdaaDatazoneProject(testApp.testStack, 'test-construct', {
+      naming: testApp.naming,
+      name: 'test-project',
+      domainConfig: testDomainConfig,
+    });
+
+    const template = Template.fromStack(testApp.testStack);
+    template.hasResourceProperties('AWS::DataZone::Project', {
+      Name: testApp.naming.withResourceType(MdaaResourceType.DATAZONE_PROJECT).resourceName('test-project', 64),
+    });
   });
 
   it('should create project with domain unit', () => {

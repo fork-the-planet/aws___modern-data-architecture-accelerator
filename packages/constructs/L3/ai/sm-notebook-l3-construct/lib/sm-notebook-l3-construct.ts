@@ -8,6 +8,7 @@ import { MdaaSecurityGroup, MdaaSecurityGroupProps, MdaaSecurityGroupRuleProps }
 import { MdaaResolvableRole, MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 import { MdaaKmsKey, DECRYPT_ACTIONS, ENCRYPT_ACTIONS } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaNoteBook, MdaaNoteBookProps } from '@aws-mdaa/sagemaker-constructs';
 import { AssetDeploymentProps, AssetProps, LifeCycleConfigHelper, LifecycleScriptProps } from '@aws-mdaa/sm-shared';
 import { Stack } from 'aws-cdk-lib';
@@ -273,7 +274,9 @@ export class SagemakerNotebookL3Construct extends MdaaL3Construct {
       : undefined;
 
     const cfnLifecycleConfigProps: CfnNotebookInstanceLifecycleConfigProps = {
-      notebookInstanceLifecycleConfigName: this.props.naming.resourceName(lifecycleName),
+      notebookInstanceLifecycleConfigName: this.props.naming
+        .withResourceType(MdaaResourceType.SAGEMAKER_LIFECYCLE_CONFIG)
+        .resourceName(lifecycleName),
       onStart: onStartContent ? [{ content: onStartContent }] : undefined,
       onCreate: onCreateContent ? [{ content: onCreateContent }] : undefined,
     };

@@ -50,6 +50,9 @@
       "path": "../../../L2/lambda-constructs"
     },
     {
+      "path": "../../../../utilities/mdaa-naming"
+    },
+    {
       "path": "../../../L2/quicksight-constructs"
     },
     {

@@ -5,6 +5,7 @@
 
 import * as mdaa_construct from '@aws-mdaa/construct'; //NOSONAR
 import { IMdaaKmsKey } from '@aws-mdaa/kms-constructs';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Fn, RemovalPolicy, Stack } from 'aws-cdk-lib';
 import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import {
@@ -94,6 +95,7 @@ export class MdaaBucket extends Bucket implements IMdaaBucket {
       props.uniqueBucketName?.valueOf() ||
       (uniqueBucketNamePrefixContext ? Boolean(uniqueBucketNamePrefixContext) : false);
 
+    const s3Naming = props.naming.withResourceType(MdaaResourceType.S3_BUCKET);
     const publicAccessBlockManagedExternallyContext = scope.node.tryGetContext(
       MdaaBucket.PUBLIC_ACCESS_BLOCK_MANAGED_EXTERNALLY_CONTEXT_KEY,
     );
@@ -103,9 +105,9 @@ export class MdaaBucket extends Bucket implements IMdaaBucket {
 
     const stackId = Fn.select(0, Fn.split('-', Fn.select(2, Fn.split('/', Stack.of(scope).stackId))));
     const prefix = props.bucketName
-      ? stackId + '-' + props.naming.resourceName(props.bucketName, 62 - stackId.length)
+      ? stackId + '-' + s3Naming.resourceName(props.bucketName, 62 - stackId.length)
       : stackId;
-    const bucketName = uniqueBucketNamePrefix ? prefix : props.naming.resourceName(props.bucketName, 63);
+    const bucketName = uniqueBucketNamePrefix ? prefix : s3Naming.resourceName(props.bucketName, 63);
 
     const overrideProps: Record<string, unknown> = {
       bucketName: bucketName,

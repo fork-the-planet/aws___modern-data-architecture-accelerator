@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { CfnTag, IResolvable } from 'aws-cdk-lib';
 import { CfnReplicationInstance, CfnReplicationInstanceProps } from 'aws-cdk-lib/aws-dms';
 import { IKey } from 'aws-cdk-lib/aws-kms';
@@ -37,8 +38,9 @@ export interface MdaaReplicationInstanceProps extends MdaaConstructProps {
 export class MdaaReplicationInstance extends CfnReplicationInstance {
   /** Overrides specific compliance-related properties. */
   private static setProps(props: MdaaReplicationInstanceProps): CfnReplicationInstanceProps {
+    const replNaming = props.naming.withResourceType(MdaaResourceType.DMS_REPLICATION_INSTANCE);
     const replicationInstanceIdentifier = sanitizeReplicationInstanceIdentifier(
-      props.naming.resourceName(props.replicationInstanceIdentifier, 63),
+      replNaming.resourceName(props.replicationInstanceIdentifier, 63),
     );
     const overrideProps = {
       replicationInstanceIdentifier,

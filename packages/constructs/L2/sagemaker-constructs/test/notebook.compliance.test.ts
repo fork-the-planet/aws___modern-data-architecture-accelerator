@@ -4,8 +4,10 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { MdaaNoteBook, MdaaNoteBookProps } from '../lib';
+import { MAX_NOTEBOOK_NAME_LENGTH, sanitizeNotebookName } from '../lib/utils';
 
 describe('MDAA Construct Compliance Tests', () => {
   const testApp = new MdaaTestApp();
@@ -29,6 +31,14 @@ describe('MDAA Construct Compliance Tests', () => {
   test('NotebookInstanceName', () => {
     template.hasResourceProperties('AWS::SageMaker::NotebookInstance', {
       NotebookInstanceName: 'test-org-test-env-test-domain-test-module-test-notebook',
+    });
+  });
+
+  test('NotebookInstanceName uses SAGEMAKER_NOTEBOOK resource type', () => {
+    template.hasResourceProperties('AWS::SageMaker::NotebookInstance', {
+      NotebookInstanceName: testApp.naming
+        .withResourceType(MdaaResourceType.SAGEMAKER_NOTEBOOK)
+        .resourceName('test-notebook', MAX_NOTEBOOK_NAME_LENGTH),
     });
   });
 
@@ -98,6 +108,16 @@ describe('MDAA Notebook Name Tests', () => {
     expect(expectedInstanceName.length).toBeLessThan(64);
     template.hasResourceProperties('AWS::SageMaker::NotebookInstance', {
       NotebookInstanceName: expectedInstanceName,
+    });
+  });
+
+  test('NotebookInstanceName uses SAGEMAKER_NOTEBOOK resource type when truncated', () => {
+    template.hasResourceProperties('AWS::SageMaker::NotebookInstance', {
+      NotebookInstanceName: sanitizeNotebookName(
+        testApp.naming
+          .withResourceType(MdaaResourceType.SAGEMAKER_NOTEBOOK)
+          .resourceName('test-notebook'.repeat(5), MAX_NOTEBOOK_NAME_LENGTH),
+      ),
     });
   });
 });

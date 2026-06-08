@@ -3,6 +3,7 @@ import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { RemovalPolicy } from 'aws-cdk-lib';
 import { MdaaLogGroupProps } from '../lib';
 import { updateProps } from '../lib/loggroup-utils';
+import { IMdaaResourceNaming, MdaaResourceType } from '@aws-mdaa/naming';
 
 describe('updateProps', () => {
   // Mock IKey for encryptionKey
@@ -14,7 +15,10 @@ describe('updateProps', () => {
   // Mock IMdaaResourceNaming for naming
   const mockNaming = {
     resourceName: (name: string) => `${name ?? 'default'}-mocked`,
-  };
+    withResourceType: function () {
+      return this;
+    },
+  } as unknown as IMdaaResourceNaming;
 
   // Required props in MdaaLogGroupProps and MdaaConstructProps
   const baseProps = {
@@ -33,6 +37,23 @@ describe('updateProps', () => {
     expect(result.logGroupName).toBe('/my/logs/app-logs-mocked');
     expect(result.removalPolicy).toBe(RemovalPolicy.RETAIN);
     expect(result.retention).toBe(RetentionDays.ONE_MONTH);
+  });
+
+  test('invokes withResourceType with CLOUDWATCH_LOG_GROUP', () => {
+    const withResourceTypeSpy = jest.fn();
+    const spyNaming = {
+      resourceName: (name: string) => `${name ?? 'default'}-mocked`,
+      withResourceType: function (this: IMdaaResourceNaming, resourceType: MdaaResourceType) {
+        withResourceTypeSpy(resourceType);
+        return this;
+      },
+    } as unknown as IMdaaResourceNaming;
+    updateProps({
+      ...baseProps,
+      naming: spyNaming,
+      logGroupName: 'app-logs',
+    } as MdaaLogGroupProps);
+    expect(withResourceTypeSpy).toHaveBeenCalledWith(MdaaResourceType.CLOUDWATCH_LOG_GROUP);
   });
 
   test('adds trailing slash if missing in path prefix and uses naming resourceName', () => {

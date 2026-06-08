@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { CfnEndpoint, CfnEndpointProps } from 'aws-cdk-lib/aws-dms';
 import { IKey } from 'aws-cdk-lib/aws-kms';
 import { Construct } from 'constructs';
@@ -708,7 +709,9 @@ export class MdaaEndpoint extends CfnEndpoint {
   private static setProps(props: MdaaEndpointProps): CfnEndpointProps {
     return {
       ...props,
-      endpointIdentifier: props.naming.resourceName(props.endpointIdentifier),
+      endpointIdentifier: props.naming
+        .withResourceType(MdaaResourceType.DMS_ENDPOINT)
+        .resourceName(props.endpointIdentifier),
       kmsKeyId: props.kmsKey.keyId,
       s3Settings: props.engineName == 's3' ? this.setS3Settings(props.s3Settings) : undefined,
       redshiftSettings: props.engineName == 'redshift' ? this.setRedshiftSettings(props.redshiftSettings) : undefined,

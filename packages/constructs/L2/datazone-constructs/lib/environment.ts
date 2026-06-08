@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaNagSuppressions } from '@aws-mdaa/construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import {
   CfnEnvironment,
   CfnEnvironmentActions,
@@ -59,7 +60,7 @@ export class MdaaDatazoneEnvironment extends Construct {
     const cfnEnvProps: CfnEnvironmentProps = {
       domainIdentifier: props.project.domainConfig.domainId,
       environmentProfileIdentifier: '',
-      name: this.props.naming.resourceName(undefined, 64),
+      name: this.props.naming.withResourceType(MdaaResourceType.DATAZONE_ENV).resourceName(undefined, 64),
       projectIdentifier: props.project.project.attrId,
     };
 

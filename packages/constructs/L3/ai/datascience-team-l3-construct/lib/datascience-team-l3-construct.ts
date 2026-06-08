@@ -14,6 +14,7 @@ import {
 import { MdaaManagedPolicy, MdaaRole } from '@aws-mdaa/iam-constructs';
 import { MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaLambdaRole } from '@aws-mdaa/lambda-constructs';
 import {
   DomainProps,
@@ -1220,7 +1221,9 @@ export class DataScienceTeamL3Construct extends MdaaL3Construct {
       );
     }
 
-    const serverName = mlflowConfig.serverName || this.props.naming.resourceName('mlflow-tracking', 256);
+    const serverName =
+      mlflowConfig.serverName ||
+      this.props.naming.withResourceType(MdaaResourceType.MLFLOW_TRACKING_SERVER).resourceName('mlflow-tracking', 256);
     const artifactPrefix = mlflowConfig.artifactStorePrefix ?? 'mlflow-artifacts/';
     // Ensure artifact prefix ends with '/' for proper S3 prefix scoping
     const normalizedArtifactPrefix = artifactPrefix.endsWith('/') ? artifactPrefix : `${artifactPrefix}/`;

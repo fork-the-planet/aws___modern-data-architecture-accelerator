@@ -4,6 +4,7 @@
  */
 
 import { MdaaParamAndOutput, MdaaConstructProps } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { RemovalPolicy, Size } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { IMdaaKmsKey } from '@aws-mdaa/kms-constructs';
@@ -36,8 +37,9 @@ export interface MdaaEC2VolumeProps extends MdaaConstructProps {
  */
 export class MdaaEC2Volume extends Volume {
   private static setProps(props: MdaaEC2VolumeProps): VolumeProps {
+    const volumeNaming = props.naming.withResourceType(MdaaResourceType.EC2_VOLUME);
     const overrideProps = {
-      volumeName: props.naming.resourceName(props.volumeName),
+      volumeName: volumeNaming.resourceName(props.volumeName),
       removalPolicy: RemovalPolicy.RETAIN,
       encrypted: true,
     };

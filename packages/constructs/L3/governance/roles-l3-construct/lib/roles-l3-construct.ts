@@ -6,6 +6,7 @@
 import { MdaaNagSuppressions, MdaaStringParameter } from '@aws-mdaa/construct';
 import { MdaaManagedPolicy, MdaaRole } from '@aws-mdaa/iam-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import {
   AccountPrincipal,
   ArnPrincipal,
@@ -347,7 +348,7 @@ export class RolesL3Construct extends MdaaL3Construct {
           throw new Error("Exactly one of 'providerArn' or 'samlDoc' should be specified in a Federation Config");
         }
         federations[fedConfigName] = new SamlProvider(this.scope, `saml-provider-${fedConfigName}`, {
-          name: this.props.naming.resourceName(fedConfigName),
+          name: this.props.naming.withResourceType(MdaaResourceType.IAM_SAML_PROVIDER).resourceName(fedConfigName),
           metadataDocument: SamlMetadataDocument.fromFile(fedConfig.samlDoc),
         });
       } else {

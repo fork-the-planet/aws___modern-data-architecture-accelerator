@@ -26,6 +26,7 @@
     "@aws-mdaa/ec2-constructs": "1.6.0",
     "@aws-mdaa/iam-role-helper": "1.6.0",
     "@aws-mdaa/l3-construct": "1.6.0",
+    "@aws-mdaa/naming": "1.6.0",
     "@aws-mdaa/testing": "1.6.0",
     "@types/jest": "29.5.14",
     "@types/node": "22.9.0",
@@ -49,6 +50,7 @@
     "@aws-mdaa/ec2-constructs": "1.6.0",
     "@aws-mdaa/iam-role-helper": "1.6.0",
     "@aws-mdaa/l3-construct": "1.6.0",
+    "@aws-mdaa/naming": "1.6.0",
     "aws-cdk-lib": "2.220.0",
     "constructs": "10.0.96"
   },
@@ -61,6 +63,7 @@
     "@aws-mdaa/iam-role-helper": "1.6.0",
     "@aws-mdaa/kms-constructs": "1.6.0",
     "@aws-mdaa/l3-construct": "1.6.0",
+    "@aws-mdaa/naming": "1.6.0",
     "@aws-mdaa/redshift-constructs": "1.6.0",
     "@aws-mdaa/s3-bucketpolicy-helper": "1.6.0",
     "@aws-mdaa/s3-constructs": "1.6.0",

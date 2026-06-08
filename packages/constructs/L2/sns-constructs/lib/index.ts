@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { IMdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { Topic, TopicProps } from 'aws-cdk-lib/aws-sns';
@@ -27,8 +28,9 @@ export interface MdaaSnsTopicProps extends MdaaConstructProps {
  */
 export class MdaaSnsTopic extends Topic {
   private static setProps(props: MdaaSnsTopicProps): TopicProps {
+    const snsNaming = props.naming.withResourceType(MdaaResourceType.SNS_TOPIC);
     const overrideProps = {
-      topicName: props.naming.resourceName(props.topicName, 80),
+      topicName: snsNaming.resourceName(props.topicName, 80),
     };
     return { ...props, ...overrideProps };
   }

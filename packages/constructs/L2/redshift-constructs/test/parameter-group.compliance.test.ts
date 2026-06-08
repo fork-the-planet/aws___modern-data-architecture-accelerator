@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { Match } from 'aws-cdk-lib/assertions';
 import { MdaaRedshiftClusterParameterGroup, MdaaRedshiftClusterParameterGroupProps } from '../lib';
@@ -25,6 +26,14 @@ describe('MDAA Construct Compliance Tests', () => {
   test('Description', () => {
     template.hasResourceProperties('AWS::Redshift::ClusterParameterGroup', {
       Description: testApp.naming.resourceName('test-param-group'),
+    });
+  });
+
+  test('Description uses REDSHIFT_PARAMETER_GROUP resource type', () => {
+    template.hasResourceProperties('AWS::Redshift::ClusterParameterGroup', {
+      Description: testApp.naming
+        .withResourceType(MdaaResourceType.REDSHIFT_PARAMETER_GROUP)
+        .resourceName('test-param-group'),
     });
   });
 

@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Duration } from 'aws-cdk-lib';
 import {
   ContainerDefinition,
@@ -207,8 +208,9 @@ export interface MdaaECSContainerDefinitionProps extends MdaaConstructProps {
  */
 export class MdaaECSContainerDefinition extends ContainerDefinition {
   private static setProps(props: MdaaECSContainerDefinitionProps): ContainerDefinitionProps {
+    const containerNaming = props.naming.withResourceType(MdaaResourceType.ECS_CONTAINER);
     const overrideProps = {
-      containerName: props.naming.resourceName(props.containerName, 255),
+      containerName: containerNaming.resourceName(props.containerName, 255),
       logging: LogDriver.awsLogs({
         logGroup: props.logGroup,
         streamPrefix: props.streamPrefix,

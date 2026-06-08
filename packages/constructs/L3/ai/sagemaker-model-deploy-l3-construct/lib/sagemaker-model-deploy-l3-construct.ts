@@ -5,6 +5,7 @@
 
 import { MdaaKmsKey, DECRYPT_ACTIONS, ENCRYPT_ACTIONS } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Construct } from 'constructs';
 import { MdaaRole, MdaaManagedPolicy } from '@aws-mdaa/iam-constructs';
 import { MdaaBucket } from '@aws-mdaa/s3-constructs';
@@ -505,7 +506,9 @@ export class SageMakerModelDeployL3Construct extends MdaaL3Construct {
       repoName = `${conn.owner}/${conn.repo}`;
     } else {
       codeCommitRepo = new Repository(this, 'deploy-source-repo', {
-        repositoryName: props.naming.resourceName(`${projectName}-deploy`, MAX_REPO_NAME_LENGTH),
+        repositoryName: props.naming
+          .withResourceType(MdaaResourceType.CODECOMMIT_REPO)
+          .resourceName(`${projectName}-deploy`, MAX_REPO_NAME_LENGTH),
         description: `Model deployment pipeline for ${projectName}`,
         code: Code.fromZipFile(SeedCodeHelper.resolveSeedCodeZip(props.seedCodePath!), 'main'),
       });
@@ -532,7 +535,9 @@ export class SageMakerModelDeployL3Construct extends MdaaL3Construct {
       };
       const stageRole = this.stageRoles.get(stage)!;
       return new PipelineProject(this, `deploy-${stage}-project`, {
-        projectName: props.naming.resourceName(`deploy-${stage}-${projectName}`, MAX_CODEBUILD_PROJECT_NAME_LENGTH),
+        projectName: props.naming
+          .withResourceType(MdaaResourceType.CODEBUILD_PROJECT)
+          .resourceName(`deploy-${stage}-${projectName}`, MAX_CODEBUILD_PROJECT_NAME_LENGTH),
         role: stageRole,
         buildSpec: BuildSpec.fromSourceFilename('buildspec.yml'),
         environment: {
@@ -545,7 +550,9 @@ export class SageMakerModelDeployL3Construct extends MdaaL3Construct {
 
     const sourceArtifact = new Artifact('SourceOutput');
     const deployPipeline = new Pipeline(this, 'deploy-pipeline', {
-      pipelineName: props.naming.resourceName(`${projectName}-deploy`, MAX_REPO_NAME_LENGTH),
+      pipelineName: props.naming
+        .withResourceType(MdaaResourceType.CODEPIPELINE)
+        .resourceName(`${projectName}-deploy`, MAX_REPO_NAME_LENGTH),
       artifactBucket: this.pipelineBucket,
     });
 
@@ -660,7 +667,9 @@ export class SageMakerModelDeployL3Construct extends MdaaL3Construct {
     const props = this.props;
     if (props.enableEventBridgeTrigger !== false) {
       new Rule(this, 'model-approval-trigger', {
-        ruleName: props.naming.resourceName(`${props.projectName}-model-approved`, MAX_RULE_NAME_LENGTH),
+        ruleName: props.naming
+          .withResourceType(MdaaResourceType.EVENTBRIDGE_RULE)
+          .resourceName(`${props.projectName}-model-approved`, MAX_RULE_NAME_LENGTH),
         description: `Trigger deploy when a model in ${props.modelPackageGroupName} is approved`,
         eventPattern: {
           source: ['aws.sagemaker'],

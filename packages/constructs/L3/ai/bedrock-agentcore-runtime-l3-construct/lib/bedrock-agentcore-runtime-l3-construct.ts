@@ -8,6 +8,7 @@ import { MdaaRole } from '@aws-mdaa/iam-constructs';
 import { MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 import { aws_xray as xray, CfnResource, Stack } from 'aws-cdk-lib';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { createAgentCoreResourcePolicy } from '@aws-mdaa/agentcore-shared';
 import { DockerImageAsset, Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import { Effect, ManagedPolicy, PolicyDocument, PolicyStatement, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
@@ -640,7 +641,11 @@ export class BedrockAgentcoreRuntimeL3Construct extends MdaaL3Construct {
 
     // Build runtime properties for CloudFormation
     const runtimeProps: Record<string, unknown> = {
-      AgentRuntimeName: sanitizeBedrockAgentcoreName(this.props.naming.resourceName(props.agentRuntimeName, 48)),
+      AgentRuntimeName: sanitizeBedrockAgentcoreName(
+        this.props.naming
+          .withResourceType(MdaaResourceType.BEDROCK_AGENTCORE_RUNTIME)
+          .resourceName(props.agentRuntimeName, 48),
+      ),
       AgentRuntimeArtifact: artifactProperty,
       RoleArn: roleArn,
       NetworkConfiguration: buildNetworkConfiguration(props.networkConfiguration),
@@ -927,7 +932,9 @@ export class BedrockAgentcoreRuntimeL3Construct extends MdaaL3Construct {
 
     // Create managed policy document instead of inline policy for compliance
     const runtimeManagedPolicy = new ManagedPolicy(this, 'RuntimeManagedPolicy', {
-      managedPolicyName: this.props.naming.resourceName(`bedrock-agentcore-runtime-${props.agentRuntimeName}`, 128),
+      managedPolicyName: this.props.naming
+        .withResourceType(MdaaResourceType.IAM_POLICY)
+        .resourceName(`bedrock-agentcore-runtime-${props.agentRuntimeName}`, 128),
       description: `Managed policy for Bedrock AgentCore Runtime: ${props.agentRuntimeName}`,
       document: new PolicyDocument({
         statements: policyStatements,
@@ -1022,7 +1029,9 @@ export class BedrockAgentcoreRuntimeL3Construct extends MdaaL3Construct {
     const endpointProps: Record<string, unknown> = {
       AgentRuntimeId: this.runtime.getAtt('AgentRuntimeId').toString(),
       Name: sanitizeBedrockAgentcoreName(
-        this.props.naming.resourceName(endpointConfig.name || `${runtimeName}_endpoint`, 48),
+        this.props.naming
+          .withResourceType(MdaaResourceType.BEDROCK_AGENTCORE_ENDPOINT)
+          .resourceName(endpointConfig.name || `${runtimeName}_endpoint`, 48),
         'endpoint_',
       ),
     };

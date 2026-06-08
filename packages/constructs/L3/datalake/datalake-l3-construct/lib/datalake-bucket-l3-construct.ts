@@ -8,7 +8,7 @@ import { MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 import { ENCRYPT_ACTIONS, IMdaaKmsKey, MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
 import { MdaaLambdaFunction, MdaaLambdaRole } from '@aws-mdaa/lambda-constructs';
-import { IMdaaResourceNaming } from '@aws-mdaa/naming';
+import { IMdaaResourceNaming, MdaaResourceType } from '@aws-mdaa/naming';
 import { RestrictBucketToRoles, RestrictObjectPrefixToRoles } from '@aws-mdaa/s3-bucketpolicy-helper';
 import { MdaaBucket } from '@aws-mdaa/s3-constructs';
 import { BucketInventory, InventoryHelper } from '@aws-mdaa/s3-inventory-helper';
@@ -181,7 +181,10 @@ export class S3DatalakeBucketL3Construct extends MdaaL3Construct {
 
     //Create a Glue Database to contain bucket utility tables such as inventory
     const glueUtilDatabase = new Database(this.scope, 'util-database', {
-      databaseName: props.naming.resourceName('util').replace(/-/gi, '_'),
+      databaseName: props.naming
+        .withResourceType(MdaaResourceType.GLUE_DATABASE)
+        .resourceName('util')
+        .replace(/-/gi, '_'),
     });
 
     const dataLakeFolderFunctionRole = new MdaaLambdaRole(this.scope, 'folder-function-role', {
@@ -252,7 +255,9 @@ export class S3DatalakeBucketL3Construct extends MdaaL3Construct {
       return;
     }
 
-    const configId = this.props.naming.resourceName('storage-lens', 64);
+    const configId = this.props.naming
+      .withResourceType(MdaaResourceType.S3_STORAGE_LENS)
+      .resourceName('storage-lens', 64);
     const bucketArns = Object.values(this.buckets).map(bucket => bucket.bucketArn);
 
     const storageLens = new CfnStorageLens(this.scope, 'storage-lens', {
@@ -514,7 +519,7 @@ export class S3DatalakeBucketL3Construct extends MdaaL3Construct {
           this.account,
           bucketDefinition.bucketZone,
           glueUtilDatabase,
-          this.props.naming.resourceName(bucketDefinition.bucketZone),
+          this.props.naming.withResourceType(MdaaResourceType.S3_BUCKET).resourceName(bucketDefinition.bucketZone),
           bucketInventories,
           'inventory/',
         );
@@ -578,7 +583,7 @@ export class S3DatalakeBucketL3Construct extends MdaaL3Construct {
       if (inventoryDefinition.destinationPrefix) {
         throw new Error('destinationPrefix should be set only if destinationBucket is set');
       }
-      destinationBucketName = this.props.naming.resourceName(bucketZone);
+      destinationBucketName = this.props.naming.withResourceType(MdaaResourceType.S3_BUCKET).resourceName(bucketZone);
       destinationPrefix = 'inventory/';
       bucketInventories.push({ bucketName: destinationBucketName, inventoryName: invName });
     }
@@ -662,7 +667,9 @@ export class S3DatalakeBucketL3Construct extends MdaaL3Construct {
       true,
     );
 
-    const folderCrProviderFunctionName = this.props.naming.resourceName('folder-cr-prov', 64);
+    const folderCrProviderFunctionName = this.props.naming
+      .withResourceType(MdaaResourceType.LAMBDA_FUNCTION)
+      .resourceName('folder-cr-prov', 64);
     const folderCrProviderRole = new MdaaLambdaRole(this.scope, 'folder-provider-role', {
       description: 'CR Role',
       roleName: 'folder-provider-role',

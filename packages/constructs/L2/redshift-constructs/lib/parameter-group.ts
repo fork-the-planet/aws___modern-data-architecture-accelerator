@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { ClusterParameterGroup, ClusterParameterGroupProps } from '@aws-cdk/aws-redshift-alpha';
 import { Construct } from 'constructs';
 
@@ -27,8 +28,9 @@ export interface MdaaRedshiftClusterParameterGroupProps extends MdaaConstructPro
  */
 export class MdaaRedshiftClusterParameterGroup extends ClusterParameterGroup {
   private static setProps(props: MdaaRedshiftClusterParameterGroupProps): ClusterParameterGroupProps {
+    const paramGroupNaming = props.naming.withResourceType(MdaaResourceType.REDSHIFT_PARAMETER_GROUP);
     const overrideProps = {
-      description: props.naming.resourceName(props.description),
+      description: paramGroupNaming.resourceName(props.description),
       parameters: {
         ...props.parameters,
         ...{

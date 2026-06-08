@@ -5,6 +5,7 @@
 
 import { MdaaKmsKey, DECRYPT_ACTIONS, ENCRYPT_ACTIONS } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Construct } from 'constructs';
 import { MdaaBucket } from '@aws-mdaa/s3-constructs';
 import { Bucket, IBucket } from 'aws-cdk-lib/aws-s3';
@@ -212,7 +213,9 @@ export class SageMakerPipelineL3Construct extends MdaaL3Construct {
     const mpgName =
       props.createModelPackageGroup === false
         ? props.modelPackageGroupName
-        : props.naming.resourceName(props.modelPackageGroupName, MAX_MODEL_PACKAGE_GROUP_NAME_LENGTH);
+        : props.naming
+            .withResourceType(MdaaResourceType.SAGEMAKER_MODEL_PACKAGE_GROUP)
+            .resourceName(props.modelPackageGroupName, MAX_MODEL_PACKAGE_GROUP_NAME_LENGTH);
     (this as Mutable<this>).modelPackageGroupName = mpgName;
 
     if (props.createModelPackageGroup !== false) {
@@ -387,7 +390,10 @@ export class SageMakerPipelineL3Construct extends MdaaL3Construct {
     });
 
     (this as Mutable<this>).pipelineName =
-      props.pipelineName ?? props.naming.resourceName(`${projectName}-sm-pipeline`, MAX_PIPELINE_NAME_LENGTH);
+      props.pipelineName ??
+      props.naming
+        .withResourceType(MdaaResourceType.SAGEMAKER_PIPELINE)
+        .resourceName(`${projectName}-sm-pipeline`, MAX_PIPELINE_NAME_LENGTH);
 
     const rawJson = pipelineDefinition.toJSON();
     const templateJson = rawJson

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MdaaDefaultResourceNaming, MdaaResourceNamingConfig } from '../lib';
+import { MdaaDefaultResourceNaming, MdaaResourceNamingConfig, MdaaResourceType } from '../lib';
 import { App } from 'aws-cdk-lib';
 
 describe('MdaaDefaultResourceNaming', () => {
@@ -69,6 +69,13 @@ describe('MdaaDefaultResourceNaming', () => {
   test('withSuffix', () => {
     const newNaming = naming.withSuffix('suffix');
     expect(newNaming.resourceName()).toBe('test-org-test-env-test-domain-test-module-suffix');
+  });
+
+  test('withResourceType (default impl is a no-op)', () => {
+    expect(naming.withResourceType(MdaaResourceType.S3_BUCKET).resourceName('bronze')).toBe(
+      naming.resourceName('bronze'),
+    );
+    expect(naming.withResourceType(MdaaResourceType.LAMBDA_FUNCTION).resourceName()).toBe(naming.resourceName());
   });
 
   test('ssmOrgPath', () => {

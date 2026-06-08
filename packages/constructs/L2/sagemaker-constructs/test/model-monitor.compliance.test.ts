@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { SecurityGroup, Subnet } from 'aws-cdk-lib/aws-ec2';
 import { Role } from 'aws-cdk-lib/aws-iam';
@@ -75,6 +76,19 @@ describe('MdaaModelMonitor Data Quality Tests', () => {
           ScheduleExpression: 'cron(0 * ? * * *)',
         },
       },
+    });
+  });
+
+  test('Schedule and JobDefinition names use distinct resource types', () => {
+    template.hasResourceProperties('AWS::SageMaker::MonitoringSchedule', {
+      MonitoringScheduleName: testApp.naming
+        .withResourceType(MdaaResourceType.SAGEMAKER_MODEL_MONITOR_SCHEDULE)
+        .resourceName('test-dq-monitor-schedule', 63),
+    });
+    template.hasResourceProperties('AWS::SageMaker::DataQualityJobDefinition', {
+      JobDefinitionName: testApp.naming
+        .withResourceType(MdaaResourceType.SAGEMAKER_DATA_QUALITY_JOB_DEF)
+        .resourceName('test-dq-monitor-job-def', 63),
     });
   });
 

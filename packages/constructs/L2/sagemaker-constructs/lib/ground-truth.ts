@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { IRole } from 'aws-cdk-lib/aws-iam';
 import { IKey } from 'aws-cdk-lib/aws-kms';
 import { IFunction } from 'aws-cdk-lib/aws-lambda';
@@ -124,7 +125,9 @@ export class MdaaGroundTruth extends Construct {
   constructor(scope: Construct, id: string, props: MdaaGroundTruthProps) {
     super(scope, id);
 
-    this.jobName = props.naming.resourceName(props.jobName, 63);
+    this.jobName = props.naming
+      .withResourceType(MdaaResourceType.SAGEMAKER_GROUND_TRUTH)
+      .resourceName(props.jobName, 63);
     this.labelingAttributeName = props.taskType === 'image_semantic_segmentation' ? 'label-ref' : 'label';
 
     const param = (name: string, value: string) =>

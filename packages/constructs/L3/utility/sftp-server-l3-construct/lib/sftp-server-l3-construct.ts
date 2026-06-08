@@ -5,6 +5,7 @@
 
 import { MdaaRole } from '@aws-mdaa/iam-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaSFTPServer } from '@aws-mdaa/transfer-family-constructs';
 
 import { CfnSecurityGroup, CfnEIP } from 'aws-cdk-lib/aws-ec2';
@@ -101,7 +102,7 @@ export class SftpServerL3Construct extends MdaaL3Construct {
       };
     });
     const securityGroup = new CfnSecurityGroup(this, 'SFTPSecurityGroup', {
-      groupName: props.naming.resourceName('security-group'),
+      groupName: props.naming.withResourceType(MdaaResourceType.EC2_SECURITY_GROUP).resourceName('security-group'),
       groupDescription: `SFTP Transfer Service port 22`,
       vpcId: this.props.server.vpcId,
       securityGroupIngress: ingressRules,

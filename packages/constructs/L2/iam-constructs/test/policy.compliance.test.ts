@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Match, Template } from 'aws-cdk-lib/assertions';
 import { PolicyDocument, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { MdaaManagedPolicy, MdaaManagedPolicyProps } from '../lib';
@@ -57,6 +58,15 @@ describe('MDAA Construct Compliance Tests', () => {
             ],
           },
           ManagedPolicyName: 'test-org-test-env-test-domain-test-module-testing',
+        }),
+      );
+    });
+
+    test('ManagedPolicyName uses IAM_POLICY resource type', () => {
+      template.hasResourceProperties(
+        'AWS::IAM::ManagedPolicy',
+        Match.objectLike({
+          ManagedPolicyName: testApp.naming.withResourceType(MdaaResourceType.IAM_POLICY).resourceName('testing', 64),
         }),
       );
     });

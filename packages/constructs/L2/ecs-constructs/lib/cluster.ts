@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { IVpc } from 'aws-cdk-lib/aws-ec2';
 import {
   AddCapacityOptions,
@@ -36,8 +37,9 @@ export interface MdaaECSClusterProps extends MdaaConstructProps {
  */
 export class MdaaECSCluster extends Cluster {
   private static setProps(props: MdaaECSClusterProps): ClusterProps {
+    const clusterNaming = props.naming.withResourceType(MdaaResourceType.ECS_CLUSTER);
     const overrideProps = {
-      clusterName: props.naming.resourceName(props.clusterName, 255),
+      clusterName: clusterNaming.resourceName(props.clusterName, 255),
       containerInsights: true,
       executeCommandConfiguration: {
         kmsKey: props.kmsKey,

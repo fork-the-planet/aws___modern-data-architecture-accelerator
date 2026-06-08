@@ -4,6 +4,7 @@
  */
 
 import { IMdaaResourceNaming, MdaaResourceNamingConfig } from './resource-naming';
+import { MdaaResourceType } from './resource-type';
 import { validateResourceName } from './utils';
 
 /**
@@ -38,6 +39,15 @@ export class MdaaDefaultResourceNaming implements IMdaaResourceNaming {
    */
   public withModuleName(moduleName: string): IMdaaResourceNaming {
     return this.createNewNaming({ moduleName });
+  }
+
+  /**
+   * Returns this naming instance unchanged. Custom naming implementations
+   * can override this to return a resource-type-aware naming instance.
+   * @param _resourceType The resource type (ignored by default implementation)
+   */
+  public withResourceType(_resourceType: MdaaResourceType): IMdaaResourceNaming {
+    return this;
   }
 
   /**

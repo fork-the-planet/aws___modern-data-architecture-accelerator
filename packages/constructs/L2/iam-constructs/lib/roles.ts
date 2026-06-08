@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Duration } from 'aws-cdk-lib';
 import { IManagedPolicy, IPrincipal, IRole, PolicyDocument, Role, RoleProps } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
@@ -38,8 +39,9 @@ export type IMdaaRole = IRole;
  */
 export class MdaaRole extends Role {
   private static setProps(props: MdaaRoleProps): RoleProps {
+    const iamNaming = props.naming.withResourceType(MdaaResourceType.IAM_ROLE);
     const overrideProps = {
-      roleName: props.verbatimRoleName ? props.roleName : props.naming.resourceName(props.roleName, 64),
+      roleName: props.verbatimRoleName ? props.roleName : iamNaming.resourceName(props.roleName, 64),
     };
     return { ...props, ...overrideProps };
   }

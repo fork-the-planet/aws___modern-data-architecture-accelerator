@@ -9,6 +9,7 @@ import { MdaaManagedPolicy, MdaaRole } from '@aws-mdaa/iam-constructs';
 import { MdaaResolvableRole, MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 import { MdaaKmsKey, DECRYPT_ACTIONS, ENCRYPT_ACTIONS } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaLambdaFunction, MdaaLambdaRole } from '@aws-mdaa/lambda-constructs';
 import { Duration } from 'aws-cdk-lib';
 import {
@@ -266,7 +267,7 @@ export class M2MApiL3Construct extends MdaaL3Construct {
   private setupCognitoM2M(apiScope: ResourceServerScope): UserPool {
     const userPool = new UserPool(this, 'user-pool', {
       enableSmsRole: false,
-      userPoolName: this.props.naming.resourceName(),
+      userPoolName: this.props.naming.withResourceType(MdaaResourceType.COGNITO_USER_POOL).resourceName(),
       selfSignUpEnabled: false,
       accountRecovery: AccountRecovery.NONE,
     });
@@ -289,12 +290,16 @@ export class M2MApiL3Construct extends MdaaL3Construct {
 
     const domainName = userPool.addDomain('DomainName', {
       cognitoDomain: {
-        domainPrefix: this.props.naming.resourceName(undefined, 64),
+        domainPrefix: this.props.naming
+          .withResourceType(MdaaResourceType.COGNITO_USER_POOL_DOMAIN)
+          .resourceName(undefined, 64),
       },
     });
 
     const resourceServer = userPool.addResourceServer('resource-server', {
-      userPoolResourceServerName: this.props.naming.resourceName(undefined, 64),
+      userPoolResourceServerName: this.props.naming
+        .withResourceType(MdaaResourceType.COGNITO_RESOURCE_SERVER)
+        .resourceName(undefined, 64),
       identifier: M2MApiL3Construct.identifier,
       scopes: [apiScope],
     });
@@ -306,7 +311,9 @@ export class M2MApiL3Construct extends MdaaL3Construct {
       const appClientProps = appClientEntry[1];
 
       userPool.addClient(`oauth-client-${appClientName}`, {
-        userPoolClientName: this.props.naming.resourceName(appClientName, 64),
+        userPoolClientName: this.props.naming
+          .withResourceType(MdaaResourceType.COGNITO_USER_POOL_CLIENT)
+          .resourceName(appClientName, 64),
         idTokenValidity: appClientProps.idTokenValidityMinutes
           ? Duration.minutes(appClientProps.idTokenValidityMinutes)
           : undefined,
@@ -518,7 +525,9 @@ export class M2MApiL3Construct extends MdaaL3Construct {
     const accessLogGroup = new MdaaLogGroup(this, 'access-log-group', accessLogGroupProps);
 
     const restApi = new RestApi(this, 'rest-api', {
-      restApiName: this.props.naming.resourceName(undefined, 128),
+      restApiName: this.props.naming
+        .withResourceType(MdaaResourceType.APIGATEWAY_REST_API)
+        .resourceName(undefined, 128),
       description: 'REST API to endpoint to proxy an S3 Signed URL generation Lambda',
       policy: apiResourcePolicy,
       cloudWatchRole: false, //Will be created below
@@ -593,7 +602,7 @@ export class M2MApiL3Construct extends MdaaL3Construct {
       addresses: this.props.m2mApiProps.allowedCidrs,
       ipAddressVersion: 'IPV4',
       scope: 'REGIONAL',
-      name: this.props.naming.resourceName('ip-allow-set', 255),
+      name: this.props.naming.withResourceType(MdaaResourceType.WAF_IP_SET).resourceName('ip-allow-set', 255),
     });
 
     const ipAllowRuleProps: CfnWebACL.RuleProperty = {
@@ -615,7 +624,7 @@ export class M2MApiL3Construct extends MdaaL3Construct {
     };
 
     const defaultWafProps: CfnWebACLProps = {
-      name: this.props.naming.resourceName('default-waf', 128),
+      name: this.props.naming.withResourceType(MdaaResourceType.WAF_WEB_ACL).resourceName('default-waf', 128),
       defaultAction: {
         block: {},
       },
@@ -663,7 +672,7 @@ export class M2MApiL3Construct extends MdaaL3Construct {
     });
 
     const cognitoAuthorizer = new CognitoUserPoolsAuthorizer(this, 'cognito-authorizer', {
-      authorizerName: this.props.naming.resourceName(),
+      authorizerName: this.props.naming.withResourceType(MdaaResourceType.APIGATEWAY_AUTHORIZER).resourceName(),
       resultsCacheTtl: Duration.seconds(0),
       cognitoUserPools: [m2mUserPool],
     });

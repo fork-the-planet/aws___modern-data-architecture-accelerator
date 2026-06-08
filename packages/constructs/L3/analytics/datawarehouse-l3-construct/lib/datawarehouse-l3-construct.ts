@@ -18,6 +18,7 @@ import { IMdaaRole, MdaaRole } from '@aws-mdaa/iam-constructs';
 import { MdaaResolvableRole, MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 import { DECRYPT_ACTIONS, MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaRedshiftCluster, MdaaRedshiftClusterParameterGroup } from '@aws-mdaa/redshift-constructs';
 import { MultiAzValidationError } from '@aws-mdaa/redshift-constructs/lib/utils';
 import { RestrictBucketToRoles, RestrictObjectPrefixToRoles } from '@aws-mdaa/s3-bucketpolicy-helper';
@@ -414,6 +415,52 @@ export class DataWarehouseL3Construct extends MdaaL3Construct {
       topicName: 'cluster-events',
       masterKey: warehouseKmsKey,
     });
+    const enforceSslStatement = new PolicyStatement({
+      sid: 'EnforceSSL',
+      effect: Effect.DENY,
+      actions: [
+        'sns:Publish',
+        'sns:RemovePermission',
+        'sns:SetTopicAttributes',
+        'sns:DeleteTopic',
+        'sns:ListSubscriptionsByTopic',
+        'sns:GetTopicAttributes',
+        'sns:Receive',
+        'sns:AddPermission',
+        'sns:Subscribe',
+      ],
+      resources: ['*'],
+      conditions: {
+        Bool: {
+          'aws:SecureTransport': 'false',
+        },
+      },
+    });
+    enforceSslStatement.addAnyPrincipal();
+    topic.addToResourcePolicy(enforceSslStatement);
+
+    MdaaNagSuppressions.addCodeResourceSuppressions(
+      topic,
+      [
+        {
+          id: 'AwsSolutions-SNS2',
+          reason: 'Redshift event subscriptions do not currently support an encrypted SNS topic.',
+        },
+        {
+          id: 'NIST.800.53.R5-SNSEncryptedKMS',
+          reason: 'Redshift event subscriptions do not currently support an encrypted SNS topic.',
+        },
+        {
+          id: 'HIPAA.Security-SNSEncryptedKMS',
+          reason: 'Redshift event subscriptions do not currently support an encrypted SNS topic.',
+        },
+        {
+          id: 'PCI.DSS.321-SNSEncryptedKMS',
+          reason: 'Redshift event subscriptions do not currently support an encrypted SNS topic.',
+        },
+      ],
+      true,
+    );
 
     // Allow the Redshift events service principal to publish to the topic, scoped to this account.
     const publishPolicyStatement = new PolicyStatement({
@@ -711,7 +758,9 @@ export class DataWarehouseL3Construct extends MdaaL3Construct {
       naming: this.props.naming,
     });
     const redshiftPolicy = new ManagedPolicy(this.scope, `federation-pol-${federation.federationName}`, {
-      managedPolicyName: this.props.naming.resourceName(`federation-${federation.federationName}`),
+      managedPolicyName: this.props.naming
+        .withResourceType(MdaaResourceType.IAM_POLICY)
+        .resourceName(`federation-${federation.federationName}`),
       roles: [role],
     });
     //Allow to describe this cluster
@@ -820,8 +869,8 @@ export class DataWarehouseL3Construct extends MdaaL3Construct {
     const prefix = Fn.select(0, Fn.split('-', Fn.select(2, Fn.split('/', Stack.of(this).stackId))));
 
     const bucketName = uniqueBucketNamePrefix
-      ? prefix + '-' + this.props.naming.resourceName('logging', 63)
-      : this.props.naming.resourceName('logging', 63);
+      ? prefix + '-' + this.props.naming.withResourceType(MdaaResourceType.S3_BUCKET).resourceName('logging', 63)
+      : this.props.naming.withResourceType(MdaaResourceType.S3_BUCKET).resourceName('logging', 63);
     // Backwards compat for existing deployments, but construct ID should not use the name if the name contains tokens
     const loggingBucketName = bucketName.includes('Token') ? 'logging-bucket' : bucketName;
     // prettier-ignore
@@ -887,7 +936,7 @@ export class DataWarehouseL3Construct extends MdaaL3Construct {
         StringEquals: {
           'aws:SourceArn': `arn:${this.partition}:redshift:${this.region}:${
             this.account
-          }:cluster:${this.props.naming.resourceName()}`,
+          }:cluster:${this.props.naming.withResourceType(MdaaResourceType.REDSHIFT_CLUSTER).resourceName()}`,
         },
       },
     });
@@ -944,7 +993,11 @@ export class DataWarehouseL3Construct extends MdaaL3Construct {
         const targetAction = action.targetAction == 'pauseCluster' ? pauseClusterAction : resumeClusterAction;
         // Create Redshift Scheduled Action
         return new CfnScheduledAction(this.scope, `scheduled-action-${action.name}`, {
-          scheduledActionName: sanitizeScheduledActionName(this.props.naming.resourceName(action.name, 55)),
+          scheduledActionName: sanitizeScheduledActionName(
+            this.props.naming
+              .withResourceType(MdaaResourceType.REDSHIFT_SCHEDULED_ACTION)
+              .resourceName(action.name, 55),
+          ),
           enable: action.enable,
           targetAction: targetAction,
           schedule: action.schedule,

@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { MdaaBucket } from '@aws-mdaa/s3-constructs';
@@ -44,6 +45,12 @@ describe('MDAA Construct Compliance Tests', () => {
   test('Name', () => {
     template.hasResourceProperties('AWS::Athena::WorkGroup', {
       Name: testApp.naming.resourceName('test-workgroup'),
+    });
+  });
+
+  test('Name uses ATHENA_WORKGROUP resource type', () => {
+    template.hasResourceProperties('AWS::Athena::WorkGroup', {
+      Name: testApp.naming.withResourceType(MdaaResourceType.ATHENA_WORKGROUP).resourceName('test-workgroup'),
     });
   });
 

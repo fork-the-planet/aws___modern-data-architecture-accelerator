@@ -318,11 +318,13 @@ feature_merge_python_test:
         - packages/**/node_modules/
         - .nx/
       policy: pull
-    - key: feature-merge-python-$CI_COMMIT_REF_SLUG
+    - key: feature-merge-python-v2-$CI_COMMIT_REF_SLUG
       paths:
-        - '**/python-tests/.venv/'
+        - .uv-cache/
         - '**/python-tests/uv.lock'
       policy: pull-push
+  variables:
+    UV_CACHE_DIR: ${CI_PROJECT_DIR}/.uv-cache
   artifacts:
     reports:
       coverage_report:
@@ -901,11 +903,13 @@ feature_python_test:
         - node_modules/
         - packages/**/node_modules/
       policy: pull
-    - key: feature-python-$CI_COMMIT_SHA
+    - key: feature-python-v2-$CI_COMMIT_SHA
       paths:
-        - '**/python-tests/.venv/'
+        - .uv-cache/
         - '**/python-tests/uv.lock'
       policy: pull-push
+  variables:
+    UV_CACHE_DIR: ${CI_PROJECT_DIR}/.uv-cache
   artifacts:
     reports:
       coverage_report:

@@ -5,6 +5,7 @@
 
 import { MdaaKmsKey, DECRYPT_ACTIONS } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Construct } from 'constructs';
 import { MdaaRole, MdaaManagedPolicy } from '@aws-mdaa/iam-constructs';
 import { Aws } from 'aws-cdk-lib';
@@ -284,7 +285,9 @@ export class SageMakerEndpointL3Construct extends MdaaL3Construct {
     this.model.node.addDependency(modelArtifactPolicy);
 
     // CfnEndpoint
-    const endpointName = props.naming.resourceName(`${projectName}-${stageName}-ep`, MAX_NAME_LENGTH);
+    const endpointName = props.naming
+      .withResourceType(MdaaResourceType.SAGEMAKER_ENDPOINT)
+      .resourceName(`${projectName}-${stageName}-ep`, MAX_NAME_LENGTH);
     this.endpoint = new CfnEndpoint(this, 'endpoint', {
       endpointConfigName: this.endpointConfig.attrEndpointConfigName,
       endpointName,

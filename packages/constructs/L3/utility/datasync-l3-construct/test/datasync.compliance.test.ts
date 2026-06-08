@@ -4,8 +4,9 @@
  */
 
 import { MdaaRoleHelper } from '@aws-mdaa/iam-role-helper';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
-import { Template } from 'aws-cdk-lib/assertions';
+import { Match, Template } from 'aws-cdk-lib/assertions';
 import {
   AgentWithNameProps,
   DataSyncL3Construct,
@@ -432,6 +433,95 @@ describe('MDAA Compliance Stack Tests', () => {
         TransferMode: 'ALL',
         VerifyMode: 'ONLY_FILES_TRANSFERRED',
       },
+    });
+  });
+
+  test('KMS key policy condition references log group ARN with CLOUDWATCH_LOG_GROUP resource type', () => {
+    const expectedLogGroupName = testApp.naming.withResourceType(MdaaResourceType.CLOUDWATCH_LOG_GROUP).resourceName();
+    template.hasResourceProperties('AWS::KMS::Key', {
+      KeyPolicy: {
+        Statement: Match.arrayWith([
+          Match.objectLike({
+            Condition: {
+              ArnEquals: {
+                'kms:EncryptionContext:aws:logs:arn': `arn:test-partition:logs:test-region:test-account:log-group:/aws/datasync/task/${expectedLogGroupName}`,
+              },
+            },
+            Principal: {
+              Service: 'logs.test-region.amazonaws.com',
+            },
+          }),
+        ]),
+      },
+    });
+  });
+});
+
+describe('MDAA Compliance Stack Tests — Empty location secret creation', () => {
+  const testApp = new MdaaTestApp();
+
+  const testVpc: VpcProps = {
+    vpcId: 'vpc-0123abcdef4ghi567j8',
+    vpcCidrBlock: '10.0.0.0/8',
+  };
+
+  const testAgentProps: AgentWithNameProps = {
+    agentName: 'agent01',
+    activationKey: 'ABCD-1234-EFGH-5678-IJKL', //gitleaks:allow
+    subnetId: 'subnet-1234abcd',
+    agentIpAddress: '1.1.1.1',
+  };
+
+  // SMB location WITHOUT secretName — triggers createEmptyLocationSecret.
+  // secretName is typed as required but runtime treats it as optional.
+  const smbLocationNoSecret = {
+    locationName: 'smb_no_secret',
+    agentNames: ['agent01'],
+    serverHostname: 'smb-host',
+    subdirectory: '/share',
+    smbVersion: 'SMB2',
+  } as unknown as LocationSmbWithNameProps;
+
+  // Object storage location WITHOUT secretName — triggers createEmptyLocationSecret.
+  const objLocationNoSecret = {
+    locationName: 'obj_no_secret',
+    agentNames: ['agent01'],
+    serverHostname: 'obj-host',
+    serverPort: 443,
+    serverProtocol: 'HTTPS',
+    bucketName: 'datasync-bucket',
+    subdirectory: '/data',
+  } as unknown as LocationObjectStorageWithNameProps;
+
+  const constructProps: DataSyncL3ConstructProps = {
+    naming: testApp.naming,
+    roleHelper: new MdaaRoleHelper(testApp.testStack, testApp.naming),
+    vpc: testVpc,
+    agents: [testAgentProps],
+    locations: {
+      smb: [smbLocationNoSecret],
+      objectStorage: [objLocationNoSecret],
+    },
+    tasks: [],
+  };
+
+  new DataSyncL3Construct(testApp.testStack, 'test-stack', constructProps);
+  testApp.checkCdkNagCompliance(testApp.testStack);
+  const template = Template.fromStack(testApp.testStack);
+
+  test('Two empty-location secrets created with SECRETS_MANAGER_SECRET resource type names', () => {
+    template.resourceCountIs('AWS::SecretsManager::Secret', 2);
+    const expectedSmbSecretName = testApp.naming
+      .withResourceType(MdaaResourceType.SECRETS_MANAGER_SECRET)
+      .resourceName('smb_no_secret');
+    const expectedObjSecretName = testApp.naming
+      .withResourceType(MdaaResourceType.SECRETS_MANAGER_SECRET)
+      .resourceName('obj_no_secret');
+    template.hasResourceProperties('AWS::SecretsManager::Secret', {
+      Name: expectedSmbSecretName,
+    });
+    template.hasResourceProperties('AWS::SecretsManager::Secret', {
+      Name: expectedObjSecretName,
     });
   });
 });

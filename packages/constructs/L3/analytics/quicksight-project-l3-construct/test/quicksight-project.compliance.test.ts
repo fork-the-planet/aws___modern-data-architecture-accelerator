@@ -4,6 +4,7 @@
  */
 
 import { MdaaRoleHelper } from '@aws-mdaa/iam-role-helper';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import {
   SharedFoldersPermissionsProps,
@@ -103,6 +104,22 @@ describe('MDAA Compliance Stack Tests', () => {
   const template = Template.fromStack(testApp.testStack);
   test('Validate if the 2 Lambda functions[CR and QSFolder] are created', () => {
     template.resourceCountIs('AWS::Lambda::Function', 2);
+  });
+
+  test('qsFolders ManagedPolicy uses IAM_POLICY resource type', () => {
+    template.hasResourceProperties('AWS::IAM::ManagedPolicy', {
+      ManagedPolicyName: testApp.naming
+        .withResourceType(MdaaResourceType.IAM_POLICY)
+        .resourceName('qsFolders-cr-lambda'),
+    });
+  });
+
+  test('qsFolders CR provider Lambda function uses LAMBDA_FUNCTION resource type', () => {
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      FunctionName: testApp.naming
+        .withResourceType(MdaaResourceType.LAMBDA_FUNCTION)
+        .resourceName('qsFolders-cr-prov', 64),
+    });
   });
   // Verify QS Permissions provided to qsFolders-cr-func Lambda Function
   test('QS Permissions to Lambda Function', () => {

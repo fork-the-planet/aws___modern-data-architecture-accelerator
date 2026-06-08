@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { MdaaStudioLifecycleConfig, MdaaStudioLifecycleConfigProps } from '../lib';
 
@@ -30,6 +31,14 @@ describe('MDAA Construct Compliance Tests', () => {
       lifecycleConfigName: 'test-org-test-env-test-domain-test-module',
       lifecycleConfigContent: 'testing',
       lifecycleConfigAppType: 'JupyterServer',
+    });
+  });
+
+  test('lifecycleConfigName uses SAGEMAKER_LIFECYCLE_CONFIG resource type', () => {
+    template.hasResourceProperties('Custom::StudioLifecycleConfig', {
+      lifecycleConfigName: testApp.naming
+        .withResourceType(MdaaResourceType.SAGEMAKER_LIFECYCLE_CONFIG)
+        .resourceName(undefined, 50),
     });
   });
 

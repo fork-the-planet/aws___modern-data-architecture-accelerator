@@ -4,6 +4,7 @@
  */
 
 import { MdaaRoleHelper } from '@aws-mdaa/iam-role-helper';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Match, Template } from 'aws-cdk-lib/assertions';
 import {
@@ -89,6 +90,16 @@ describe('SageMaker Model Monitoring L3 Construct', () => {
       template.hasResourceProperties('AWS::SSM::Parameter', {
         Value: '1',
       });
+    });
+
+    test('Data quality job definition uses SAGEMAKER_DATA_QUALITY_JOB_DEF resource type', () => {
+      const dataQualityJobs = template.findResources('AWS::SageMaker::DataQualityJobDefinition');
+      const jobNames = Object.values(dataQualityJobs).map(r => r.Properties.JobDefinitionName);
+      const expectedJobNamePrefix = testApp.naming
+        .withResourceType(MdaaResourceType.SAGEMAKER_DATA_QUALITY_JOB_DEF)
+        .resourceName('');
+      expect(jobNames.length).toBeGreaterThan(0);
+      jobNames.forEach((name: string) => expect(name).toContain(expectedJobNamePrefix.replace(/-$/, '')));
     });
   });
 

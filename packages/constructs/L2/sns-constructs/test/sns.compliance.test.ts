@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { Match } from 'aws-cdk-lib/assertions';
@@ -32,6 +33,12 @@ describe('MDAA Construct Compliance Tests', () => {
   test('TopicName', () => {
     template.hasResourceProperties('AWS::SNS::Topic', {
       TopicName: testApp.naming.resourceName('test-sns-topic'),
+    });
+  });
+
+  test('TopicName uses SNS_TOPIC resource type', () => {
+    template.hasResourceProperties('AWS::SNS::Topic', {
+      TopicName: testApp.naming.withResourceType(MdaaResourceType.SNS_TOPIC).resourceName('test-sns-topic', 80),
     });
   });
 

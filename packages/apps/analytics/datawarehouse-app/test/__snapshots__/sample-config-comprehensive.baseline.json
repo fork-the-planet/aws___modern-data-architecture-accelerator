@@ -3300,6 +3300,28 @@
           }
         ],
         "TopicName": "test-org-test-env-test-domain-test-datawarehouse-main-cluster-events"
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
+              "id": "AwsSolutions-SNS2"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
+              "id": "NIST.800.53.R5-SNSEncryptedKMS"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
+              "id": "HIPAA.Security-SNSEncryptedKMS"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
+              "id": "PCI.DSS.321-SNSEncryptedKMS"
+            }
+          ]
+        }
       }
     },
     "clustereventssnstopicPolicy1D02CA87": {
@@ -3355,6 +3377,28 @@
             "Ref": "clustereventssnstopicB474257E"
           }
         ]
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
+              "id": "AwsSolutions-SNS2"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
+              "id": "NIST.800.53.R5-SNSEncryptedKMS"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
+              "id": "HIPAA.Security-SNSEncryptedKMS"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
+              "id": "PCI.DSS.321-SNSEncryptedKMS"
+            }
+          ]
+        }
       }
     },
     "clustereventssnstopicTopicclustereventsnamessm7E1BC975": {
@@ -3375,6 +3419,28 @@
             "TopicName"
           ]
         }
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
+              "id": "AwsSolutions-SNS2"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
+              "id": "NIST.800.53.R5-SNSEncryptedKMS"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
+              "id": "HIPAA.Security-SNSEncryptedKMS"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
+              "id": "PCI.DSS.321-SNSEncryptedKMS"
+            }
+          ]
+        }
       }
     },
     "clustereventssnstopicTopicclustereventsarnssmA3C8C75E": {
@@ -3391,6 +3457,28 @@
         "Type": "String",
         "Value": {
           "Ref": "clustereventssnstopicB474257E"
+        }
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
+              "id": "AwsSolutions-SNS2"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
+              "id": "NIST.800.53.R5-SNSEncryptedKMS"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
+              "id": "HIPAA.Security-SNSEncryptedKMS"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/datawarehouse-l3-construct/lib/datawarehouse-l3-construct.ts] Redshift event subscriptions do not currently support an encrypted SNS topic.",
+              "id": "PCI.DSS.321-SNSEncryptedKMS"
+            }
+          ]
         }
       }
     },

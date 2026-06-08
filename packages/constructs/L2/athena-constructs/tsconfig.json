@@ -41,6 +41,9 @@
       "path": "../kms-constructs"
     },
     {
+      "path": "../../../utilities/mdaa-naming"
+    },
+    {
       "path": "../s3-constructs"
     },
     {

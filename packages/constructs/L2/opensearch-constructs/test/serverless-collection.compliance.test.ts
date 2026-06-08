@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { Vpc } from 'aws-cdk-lib/aws-ec2';
@@ -94,6 +95,25 @@ describe('MDAA Serverless Collection Compliance Tests', () => {
       Name: testApp.naming.resourceName(`${testConstructProps.name}-data-access-policy`, 32),
       Type: 'data',
       Description: 'Data access policy for OpenSearch Serverless collection',
+    });
+  });
+
+  test('Collection and policy names use OPENSEARCH_SERVERLESS resource type', () => {
+    const serverlessNaming = testApp.naming.withResourceType(MdaaResourceType.OPENSEARCH_SERVERLESS);
+    template.hasResourceProperties('AWS::OpenSearchServerless::Collection', {
+      Name: serverlessNaming.resourceName(testConstructProps.name, 32),
+    });
+    template.hasResourceProperties('AWS::OpenSearchServerless::SecurityPolicy', {
+      Name: serverlessNaming.resourceName(`${testConstructProps.name}-encryption-policy`, 32),
+      Type: 'encryption',
+    });
+    template.hasResourceProperties('AWS::OpenSearchServerless::SecurityPolicy', {
+      Name: serverlessNaming.resourceName(`${testConstructProps.name}-network-policy`, 32),
+      Type: 'network',
+    });
+    template.hasResourceProperties('AWS::OpenSearchServerless::AccessPolicy', {
+      Name: serverlessNaming.resourceName(`${testConstructProps.name}-data-access-policy`, 32),
+      Type: 'data',
     });
   });
 

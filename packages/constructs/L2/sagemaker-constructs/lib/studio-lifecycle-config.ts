@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaCustomResource, MdaaCustomResourceProps } from '@aws-mdaa/custom-constructs';
 import { Duration, Stack } from 'aws-cdk-lib';
 import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
@@ -29,7 +30,8 @@ export class MdaaStudioLifecycleConfig extends Construct {
   constructor(scope: Construct, id: string, props: MdaaStudioLifecycleConfigProps) {
     super(scope, id);
 
-    const lifecycleConfigName = props.naming.resourceName(props.lifecycleConfigName, 50); //Leave room for content hash created by CR
+    const lifecycleNaming = props.naming.withResourceType(MdaaResourceType.SAGEMAKER_LIFECYCLE_CONFIG);
+    const lifecycleConfigName = lifecycleNaming.resourceName(props.lifecycleConfigName, 50); //Leave room for content hash created by CR
 
     const statement = new PolicyStatement({
       effect: Effect.ALLOW,

@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { Match } from 'aws-cdk-lib/assertions';
@@ -40,6 +41,12 @@ describe('MDAA Construct Compliance Tests', () => {
   test('QueueName', () => {
     template.hasResourceProperties('AWS::SQS::Queue', {
       QueueName: testApp.naming.resourceName('test-queue'),
+    });
+  });
+
+  test('QueueName uses SQS_QUEUE resource type', () => {
+    template.hasResourceProperties('AWS::SQS::Queue', {
+      QueueName: testApp.naming.withResourceType(MdaaResourceType.SQS_QUEUE).resourceName('test-queue', 80),
     });
   });
 

@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { CfnDataSource, CfnDataSourceProps } from 'aws-cdk-lib/aws-quicksight';
 import { Construct } from 'constructs';
 import * as cdk from 'aws-cdk-lib';
@@ -39,8 +40,9 @@ export interface MdaaQuickSightDataSourceProps extends MdaaConstructProps {
  */
 export class MdaaQuickSightDataSource extends CfnDataSource {
   private static setProps(props: MdaaQuickSightDataSourceProps): CfnDataSourceProps {
+    const qsNaming = props.naming.withResourceType(MdaaResourceType.QUICKSIGHT_DATASOURCE);
     const overrideProps = {
-      name: props.naming.resourceName(props.name, 80),
+      name: qsNaming.resourceName(props.name, 80),
       /** SSL configuration for secure data source connections */
       sslProperties: {
         disableSsl: false,

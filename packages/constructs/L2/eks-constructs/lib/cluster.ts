@@ -10,7 +10,7 @@ import {
   MdaaEC2SecretKeyPair,
   MdaaEC2SecretKeyPairProps,
 } from '@aws-mdaa/ec2-constructs';
-import { IMdaaResourceNaming } from '@aws-mdaa/naming';
+import { IMdaaResourceNaming, MdaaResourceType } from '@aws-mdaa/naming';
 import { KubectlV31Layer } from '@aws-cdk/lambda-layer-kubectl-v31';
 import { Fn, Size, Stack } from 'aws-cdk-lib';
 import {
@@ -215,10 +215,14 @@ export class MdaaEKSCluster extends Cluster {
     return layer;
   }
 
+  private static eksClusterName(props: MdaaEKSClusterProps): string {
+    return props.naming.withResourceType(MdaaResourceType.EKS_CLUSTER).resourceName(props.clusterName, 255);
+  }
+
   private static setProps(scope: Construct, props: MdaaEKSClusterProps): ClusterProps {
     const kubecLayer = MdaaEKSCluster.getKubectlLayer(scope, props.version);
     const overrideProps = {
-      clusterName: props.naming.resourceName(props.clusterName, 255),
+      clusterName: MdaaEKSCluster.eksClusterName(props),
       endpointAccess: EndpointAccess.PRIVATE, // Force private endpoint access only
       defaultCapacity: 0, // Force specification of a node group to ensure encryption at rest
       secretsEncryptionKey: props.kmsKey,
@@ -257,9 +261,10 @@ export class MdaaEKSCluster extends Cluster {
     super(scope, id, MdaaEKSCluster.setProps(scope, props));
 
     this.props = props;
+    const eksClusterName = MdaaEKSCluster.eksClusterName(props);
     this.clusterFargateProfileArn = `arn:${Stack.of(scope).partition}:eks:${Stack.of(scope).region}:${
       Stack.of(scope).account
-    }:fargateprofile/${props.naming.resourceName(props.clusterName, 255)}/*`;
+    }:fargateprofile/${eksClusterName}/*`;
     this.mdaaKubeCtlProvider = this.defineCompliantKubectlProvider();
 
     props.adminRoles.forEach(adminRole => {
@@ -269,7 +274,7 @@ export class MdaaEKSCluster extends Cluster {
 
     const podLogGroupProps: LogGroupProps = {
       encryptionKey: this.props.kmsKey,
-      logGroupName: `/aws/eks/${props.naming.resourceName(props.clusterName, 255)}/${stackId}/pods`,
+      logGroupName: `/aws/eks/${eksClusterName}/${stackId}/pods`,
       retention: RetentionDays.INFINITE,
     };
     const podLogGroup = new LogGroup(this, 'pod-log-group', podLogGroupProps);

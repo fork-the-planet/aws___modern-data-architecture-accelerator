@@ -7,6 +7,7 @@ import { MdaaLogGroup } from '@aws-mdaa/cloudwatch-constructs';
 import { DataOpsProjectUtils } from '@aws-mdaa/dataops-project-l3-construct';
 import { EventBridgeHelper, EventBridgeProps } from '@aws-mdaa/eventbridge-helper';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { aws_events_targets, Duration } from 'aws-cdk-lib';
 import { RuleTargetInput } from 'aws-cdk-lib/aws-events';
 import { Role } from 'aws-cdk-lib/aws-iam';
@@ -223,7 +224,9 @@ export class StepFunctionL3Construct extends MdaaL3Construct {
     const stepFunctionProps: StateMachineProps = {
       role: role,
       stateMachineType: <StateMachineType>stepfunctionProps.stateMachineType,
-      stateMachineName: this.props.naming.resourceName(stepfunctionName, 80),
+      stateMachineName: this.props.naming
+        .withResourceType(MdaaResourceType.STEPFUNCTIONS)
+        .resourceName(stepfunctionName, 80),
       tracingEnabled: true,
       logs: {
         destination: logGroup,

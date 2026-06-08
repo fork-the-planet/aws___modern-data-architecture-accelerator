@@ -4,6 +4,7 @@
  */
 
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaKmsKey, ENCRYPT_ACTIONS } from '@aws-mdaa/kms-constructs';
 import { MdaaBucket } from '@aws-mdaa/s3-constructs';
 import { AuditHelper } from '@aws-mdaa/s3-audit-helper';
@@ -174,7 +175,10 @@ export class AuditL3Construct extends MdaaL3Construct {
 
     //Create a Glue Database to contain audit tables
     const glueUtilDatabase = new Database(this, 'database', {
-      databaseName: this.props.naming.resourceName().replace(/-/gi, '_'),
+      databaseName: this.props.naming
+        .withResourceType(MdaaResourceType.GLUE_DATABASE)
+        .resourceName()
+        .replace(/-/gi, '_'),
     });
 
     AuditHelper.createGlueAuditTable(

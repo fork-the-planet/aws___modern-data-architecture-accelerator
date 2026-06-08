@@ -8,6 +8,7 @@ import { Ec2L3Construct, Ec2L3ConstructProps } from '@aws-mdaa/ec2-l3-construct'
 import { EventBridgeHelper, EventBridgeProps } from '@aws-mdaa/eventbridge-helper';
 import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import {
   MdaaDockerImageFunction,
   MdaaDockerImageFunctionProps,
@@ -390,7 +391,9 @@ export class LambdaFunctionL3Construct extends MdaaL3Construct {
 
     return new LayerVersion(this.props.overrideScope ? this : this.scope, `layer-${layerProps.layerName}`, {
       code,
-      layerVersionName: this.props.naming.resourceName(layerProps.layerName, 64),
+      layerVersionName: this.props.naming
+        .withResourceType(MdaaResourceType.LAMBDA_LAYER)
+        .resourceName(layerProps.layerName, 64),
       description: layerProps.description,
     });
   }

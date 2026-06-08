@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { ClusterSubnetGroup } from '@aws-cdk/aws-redshift-alpha';
@@ -66,6 +67,14 @@ describe('MDAA Construct Compliance Tests', () => {
   test('ClusterIdentifier', () => {
     template.hasResourceProperties('AWS::Redshift::Cluster', {
       ClusterIdentifier: testApp.naming.resourceName('test-cluster'),
+    });
+  });
+
+  test('ClusterIdentifier uses REDSHIFT_CLUSTER resource type', () => {
+    template.hasResourceProperties('AWS::Redshift::Cluster', {
+      ClusterIdentifier: testApp.naming
+        .withResourceType(MdaaResourceType.REDSHIFT_CLUSTER)
+        .resourceName('test-cluster', 63),
     });
   });
 
@@ -183,6 +192,14 @@ describe('MDAA Construct Compliance Tests 2', () => {
   test('ClusterIdentifier', () => {
     template.hasResourceProperties('AWS::Redshift::Cluster', {
       ClusterIdentifier: testApp.naming.resourceName('test-cluster'),
+    });
+  });
+
+  test('ClusterIdentifier uses REDSHIFT_CLUSTER resource type', () => {
+    template.hasResourceProperties('AWS::Redshift::Cluster', {
+      ClusterIdentifier: testApp.naming
+        .withResourceType(MdaaResourceType.REDSHIFT_CLUSTER)
+        .resourceName('test-cluster', 63),
     });
   });
 

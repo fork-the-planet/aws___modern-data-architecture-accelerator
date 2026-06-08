@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import * as aoss from 'aws-cdk-lib/aws-opensearchserverless';
 import { IVpc } from 'aws-cdk-lib/aws-ec2';
 import { IMdaaKmsKey } from '@aws-mdaa/kms-constructs';
@@ -77,11 +78,12 @@ export class MdaaOpensearchServerlessCollection extends Construct {
   constructor(scope: Construct, id: string, props: MdaaOpensearchServerlessCollectionProps) {
     super(scope, id);
     // Opensearch Serverless collection names can be max 32 char long
-    const collectionName = props.naming.resourceName(props.name, 32);
+    const serverlessNaming = props.naming.withResourceType(MdaaResourceType.OPENSEARCH_SERVERLESS);
+    const collectionName = serverlessNaming.resourceName(props.name, 32);
 
     // Encryption Policy
     const encryptionPolicy = new aoss.CfnSecurityPolicy(this, 'opensearch-serverless-encryption-policy', {
-      name: props.naming.resourceName(`${props.name}-encryption-policy`, 32),
+      name: serverlessNaming.resourceName(`${props.name}-encryption-policy`, 32),
       type: 'encryption',
       description: 'Encryption policy for OpenSearch Serverless collection',
       policy: JSON.stringify({
@@ -98,7 +100,7 @@ export class MdaaOpensearchServerlessCollection extends Construct {
 
     // Network Policy
     const networkPolicy = new aoss.CfnSecurityPolicy(this, 'opensearch-serverless-network-policy', {
-      name: props.naming.resourceName(`${props.name}-network-policy`, 32),
+      name: serverlessNaming.resourceName(`${props.name}-network-policy`, 32),
       type: 'network',
       description: 'Network policy for OpenSearch Serverless collection',
       policy: JSON.stringify([
@@ -170,7 +172,7 @@ export class MdaaOpensearchServerlessCollection extends Construct {
     let dataAccessPolicy: aoss.CfnAccessPolicy | undefined;
     if (policyRules.length > 0) {
       dataAccessPolicy = new aoss.CfnAccessPolicy(this, 'opensearch-serverless-data-access-policy', {
-        name: props.naming.resourceName(`${props.name}-data-access-policy`, 32),
+        name: serverlessNaming.resourceName(`${props.name}-data-access-policy`, 32),
         type: 'data',
         description: 'Data access policy for OpenSearch Serverless collection',
         policy: JSON.stringify(policyRules),

@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Key } from 'aws-cdk-lib/aws-kms';
@@ -38,6 +39,22 @@ describe('DataZoneDomainConstruct', () => {
 
     const template = Template.fromStack(testApp.testStack);
     template.resourceCountIs('AWS::DataZone::Domain', 1);
+  });
+
+  it('domain Name uses DATAZONE_DOMAIN resource type', () => {
+    new DataZoneDomainConstruct(testApp.testStack, 'test-domain', {
+      naming: testApp.naming,
+      domainName: 'test-domain',
+      domainExecutionRole: executionRole,
+      kmsKey,
+      dataAdminRole,
+      domainVersion: 'V2',
+    });
+
+    const template = Template.fromStack(testApp.testStack);
+    template.hasResourceProperties('AWS::DataZone::Domain', {
+      Name: testApp.naming.withResourceType(MdaaResourceType.DATAZONE_DOMAIN).resourceName('test-domain'),
+    });
   });
 
   it('should create domain with description', () => {

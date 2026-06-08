@@ -4,8 +4,9 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Size } from 'aws-cdk-lib';
-import { Template } from 'aws-cdk-lib/assertions';
+import { Match, Template } from 'aws-cdk-lib/assertions';
 import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { MdaaEC2Volume, MdaaEC2VolumeProps } from '../lib/volume';
 
@@ -36,6 +37,13 @@ describe('MDAA Construct Compliance Tests', () => {
     });
     template.hasResource('AWS::EC2::Volume', {
       DeletionPolicy: 'Retain',
+    });
+  });
+
+  test('Volume Name tag uses EC2_VOLUME resource type', () => {
+    const expectedName = testApp.naming.withResourceType(MdaaResourceType.EC2_VOLUME).resourceName(undefined);
+    template.hasResourceProperties('AWS::EC2::Volume', {
+      Tags: Match.arrayWith([{ Key: 'Name', Value: expectedName }]),
     });
   });
 });

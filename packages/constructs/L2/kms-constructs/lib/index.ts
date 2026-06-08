@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Duration, RemovalPolicy } from 'aws-cdk-lib';
 import { Effect, PolicyDocument, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { IKey, Key, KeyProps, KeySpec, KeyUsage } from 'aws-cdk-lib/aws-kms';
@@ -69,10 +70,11 @@ export type IMdaaKmsKey = IKey;
  */
 export class MdaaKmsKey extends Key implements IMdaaKmsKey {
   private static setProps(props: MdaaKmsKeyProps): KeyProps {
+    const kmsNaming = props.naming.withResourceType(MdaaResourceType.KMS_KEY);
     const overrideProps = {
       enableKeyRotation: true,
       enabled: true,
-      alias: props.naming.resourceName(props.alias, 256),
+      alias: kmsNaming.resourceName(props.alias, 256),
       removalPolicy: RemovalPolicy.RETAIN,
     };
     return { ...props, ...overrideProps };
@@ -81,9 +83,11 @@ export class MdaaKmsKey extends Key implements IMdaaKmsKey {
   constructor(scope: Construct, id: string, props: MdaaKmsKeyProps) {
     super(scope, id, MdaaKmsKey.setProps(props));
 
+    const kmsNaming = props.naming.withResourceType(MdaaResourceType.KMS_KEY);
+
     if (props.keyUserRoleIds && props.keyUserRoleIds.length > 0) {
       const KeyUserPolicyStatement = new PolicyStatement({
-        sid: props.naming.resourceName('usage-stmt'),
+        sid: kmsNaming.resourceName('usage-stmt'),
         effect: Effect.ALLOW,
         // Use of * mirrors what is done in the CDK methods for adding policy helpers.
         resources: ['*'],
@@ -96,7 +100,7 @@ export class MdaaKmsKey extends Key implements IMdaaKmsKey {
     }
     if (props.keyAdminRoleIds && props.keyAdminRoleIds.length > 0) {
       const KeyAdminPolicyStatement = new PolicyStatement({
-        sid: props.naming.resourceName('usage-stmt'),
+        sid: kmsNaming.resourceName('usage-stmt'),
         effect: Effect.ALLOW,
         // Use of * mirrors what is done in the CDK methods for adding policy helpers.
         resources: ['*'],

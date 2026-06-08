@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { MdaaDataBrewJob, MdaaDataBrewJobProps } from '../lib';
 
@@ -50,6 +51,12 @@ describe('MDAA Construct Compliance Tests', () => {
   test('TestJobName', () => {
     template.hasResourceProperties('AWS::DataBrew::Job', {
       Name: testApp.naming.resourceName('test-job'),
+    });
+  });
+
+  test('TestJobName uses DATABREW_JOB resource type', () => {
+    template.hasResourceProperties('AWS::DataBrew::Job', {
+      Name: testApp.naming.withResourceType(MdaaResourceType.DATABREW_JOB).resourceName('test-job', 80),
     });
   });
 

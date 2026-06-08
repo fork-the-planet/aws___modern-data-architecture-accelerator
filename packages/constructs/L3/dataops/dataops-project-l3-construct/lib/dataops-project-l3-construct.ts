@@ -28,6 +28,7 @@ import { MdaaManagedPolicy, MdaaRole } from '@aws-mdaa/iam-constructs';
 import { MdaaResolvableRole, MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 import { DECRYPT_ACTIONS, ENCRYPT_ACTIONS, IMdaaKmsKey, MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import {
   GrantProps,
   LakeFormationAccessControlL3Construct,
@@ -947,7 +948,9 @@ export class DataOpsProjectL3Construct extends MdaaL3Construct {
         securityGroupIdList: securityGroupIds,
       };
 
-      const resourceName = this.props.naming.resourceName(connectionName);
+      const resourceName = this.props.naming
+        .withResourceType(MdaaResourceType.GLUE_CONNECTION)
+        .resourceName(connectionName);
       // We'll support SSM imports for our physical connection requirements as needed.
       new CfnConnection(this.scope, `${connectionName}-connection`, {
         catalogId: this.account,
@@ -966,7 +969,9 @@ export class DataOpsProjectL3Construct extends MdaaL3Construct {
     Object.entries(classifiers).forEach(entry => {
       const classifierName = entry[0];
       const classifierProps = entry[1];
-      const resourceName = this.props.naming.resourceName(classifierName);
+      const resourceName = this.props.naming
+        .withResourceType(MdaaResourceType.GLUE_CLASSIFIER)
+        .resourceName(classifierName);
       // We'll need to name our classifiers appropriately over-riding any 'name' values that exist
       for (const classifierType of ['csvClassifier', 'xmlClassifier', 'jsonClassifier', 'grokClassifier']) {
         if (classifierType in classifierProps.configuration) {
@@ -1015,7 +1020,9 @@ export class DataOpsProjectL3Construct extends MdaaL3Construct {
       const databaseName = entry[0];
       const databaseProps = entry[1];
 
-      const dbName = databaseProps.verbatimName ? databaseName : this.props.naming.resourceName(databaseName);
+      const dbName = databaseProps.verbatimName
+        ? databaseName
+        : this.props.naming.withResourceType(MdaaResourceType.GLUE_DATABASE).resourceName(databaseName);
       const dbResourceName = databaseProps.icebergCompliantName ? dbName.replace(/-/g, '_') : dbName;
       const databaseBucket = databaseProps.locationBucketName
         ? MdaaBucket.fromBucketName(this, `database-bucket-${databaseName}`, databaseProps.locationBucketName)
@@ -1098,7 +1105,7 @@ export class DataOpsProjectL3Construct extends MdaaL3Construct {
       domainIdentifier: datazoneResources.datazoneProject.project.attrDomainId,
       environmentIdentifier: datazoneResources.datazoneEnvId, //Not required for SMUS projects
       connectionIdentifier: datazoneResources.glueConnectionId, //Need to pass glue connection id for SMUS projects
-      name: this.props.naming.resourceName(databaseName),
+      name: this.props.naming.withResourceType(MdaaResourceType.DATAZONE_DATASOURCE).resourceName(databaseName),
       projectIdentifier: datazoneResources.datazoneProject.project.attrId,
       type: 'glue',
       configuration: {

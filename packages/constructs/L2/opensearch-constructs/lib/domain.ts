@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { IMdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import {
   Domain,
@@ -88,7 +89,9 @@ export class MdaaOpensearchDomain extends Domain {
           masterUserArn: props.masterUserRoleArn,
         };
     const overrideProps = {
-      domainName: props.naming.resourceName(props.opensearchDomainName, 28),
+      domainName: props.naming
+        .withResourceType(MdaaResourceType.OPENSEARCH_DOMAIN)
+        .resourceName(props.opensearchDomainName, 28),
       useUnsignedBasicAuth: false,
       tlsSecurityPolicy: TLSSecurityPolicy.TLS_1_2,
       removalPolicy: RemovalPolicy.RETAIN,

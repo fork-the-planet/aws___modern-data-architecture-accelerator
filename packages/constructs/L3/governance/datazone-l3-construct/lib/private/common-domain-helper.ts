@@ -27,6 +27,7 @@ import { Annotations, Duration } from 'aws-cdk-lib';
 
 import { MdaaRoleHelper } from '@aws-mdaa/iam-role-helper/lib/rolehelper';
 import { IMdaaResourceNaming } from '@aws-mdaa/naming/lib/resource-naming';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import {
   CfnDomain,
   CfnEnvironmentBlueprintConfiguration,
@@ -718,7 +719,7 @@ export class CommonDomainHelper {
 
       // Create RAM share for domain with associated accounts
       const domainramShareProps: CfnResourceShareProps = {
-        name: `DataZone-${this.props.naming.resourceName()}-${domain.attrId}`,
+        name: `DataZone-${this.props.naming.withResourceType(MdaaResourceType.RAM_RESOURCE_SHARE).resourceName()}-${domain.attrId}`,
         resourceArns: [domain.attrArn],
         principals: Array.from(new Set(Object.entries(domainProps.associatedAccounts).map(x => x[1].account))),
         permissionArns: permissionArns,
@@ -1118,14 +1119,18 @@ export class CommonDomainHelper {
     ];
 
     // Create KMS usage policy with domain and Glue catalog permissions
-    const domainKmsUsagePolicyName = this.props.naming.resourceName(`domain-kms-use-${domainName}`);
+    const domainKmsUsagePolicyName = this.props.naming
+      .withResourceType(MdaaResourceType.IAM_POLICY)
+      .resourceName(`domain-kms-use-${domainName}`);
     const domainKmsUsagePolicy = this.createDomainKmsUsagePolicy(scope, domainName, domainKmsUsagePolicyName, {
       keyAccessAccounts,
       domainKmsKeyArn: kmsKey.keyArn,
       glueCatalogKmsKeyArns: glueCatalogKmsKeyArns,
     });
 
-    const domainKmsAdminPolicyName = this.props.naming.resourceName(`domain-kms-admin-${domainName}`);
+    const domainKmsAdminPolicyName = this.props.naming
+      .withResourceType(MdaaResourceType.IAM_POLICY)
+      .resourceName(`domain-kms-admin-${domainName}`);
     const domainKmsAdminPolicy = this.createDomainKmsAdminPolicy(scope, domainName, domainKmsAdminPolicyName, {
       account: this.props.account,
       region: this.props.region,
@@ -1133,7 +1138,9 @@ export class CommonDomainHelper {
     });
 
     // Create S3 bucket usage policy
-    const domainBucketUsagePolicyName = this.props.naming.resourceName(`domain-bucket-use-${domainName}`);
+    const domainBucketUsagePolicyName = this.props.naming
+      .withResourceType(MdaaResourceType.IAM_POLICY)
+      .resourceName(`domain-bucket-use-${domainName}`);
 
     return {
       glueCatalogKmsKeyArns,
@@ -1282,7 +1289,9 @@ export class CommonDomainHelper {
 
     // Create RAM share for domain config SSM parameters
     const configParamRamShareProps: CfnResourceShareProps = {
-      name: this.props.naming.resourceName(`domain-config-ssm-${domainName}`),
+      name: this.props.naming
+        .withResourceType(MdaaResourceType.RAM_RESOURCE_SHARE)
+        .resourceName(`domain-config-ssm-${domainName}`),
       resourceArns: crossAccountConfig.domainConfig.configParamArns,
       principals: Object.entries(domainProps.associatedAccounts).map(x => x[1].account),
     };
@@ -1423,7 +1432,9 @@ export class CommonDomainHelper {
     domainKmsUsagePolicy: ManagedPolicy,
     domainProps: BaseDomainProps,
   ): { roleName: string; role: IRole } {
-    const customResourceRoleName = this.props.naming.resourceName(`${domainName}-custom-resource`, 64);
+    const customResourceRoleName = this.props.naming
+      .withResourceType(MdaaResourceType.IAM_ROLE)
+      .resourceName(`${domainName}-custom-resource`, 64);
     const customResourceRole = this.createCustomResourceRole(
       scope,
       domainName,

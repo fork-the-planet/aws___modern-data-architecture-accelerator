@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { IResolvable } from 'aws-cdk-lib';
 import { CfnRecipe, CfnRecipeProps } from 'aws-cdk-lib/aws-databrew';
 import { Construct } from 'constructs';
@@ -26,7 +27,7 @@ export interface MdaaDataBrewRecipeProps extends MdaaConstructProps {
 export class MdaaDataBrewRecipe extends CfnRecipe {
   private static setProps(props: MdaaDataBrewRecipeProps): CfnRecipeProps {
     const overrideProps = {
-      name: props.naming.resourceName(props.name, 80),
+      name: props.naming.withResourceType(MdaaResourceType.DATABREW_RECIPE).resourceName(props.name, 80),
     };
     return { ...props, ...overrideProps };
   }

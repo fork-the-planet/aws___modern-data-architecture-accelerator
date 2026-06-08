@@ -49,6 +49,9 @@
       "path": "../lakeformation-access-control-l3-construct"
     },
     {
+      "path": "../../../../utilities/mdaa-naming"
+    },
+    {
       "path": "../../../../utilities/mdaa-testing"
     }
   ],

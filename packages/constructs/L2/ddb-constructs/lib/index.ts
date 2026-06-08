@@ -4,6 +4,7 @@
  */
 
 import * as mdaa_construct from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Duration, RemovalPolicy } from 'aws-cdk-lib';
 import {
   Attribute,
@@ -56,8 +57,9 @@ export interface MdaaDDBTableProps extends mdaa_construct.MdaaConstructProps {
  */
 export class MdaaDDBTable extends Table {
   private static setProps(props: MdaaDDBTableProps): TableProps {
+    const ddbNaming = props.naming.withResourceType(MdaaResourceType.DYNAMODB_TABLE);
     const overrideProps = {
-      tableName: props.naming.resourceName(props.tableName, 254),
+      tableName: ddbNaming.resourceName(props.tableName, 254),
       encryption: TableEncryption.CUSTOMER_MANAGED,
       removalPolicy: RemovalPolicy.RETAIN,
       deletionProtection: true,

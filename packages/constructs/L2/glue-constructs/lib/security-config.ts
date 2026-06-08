@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { IMdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import {
   SecurityConfiguration,
@@ -31,8 +32,9 @@ export interface MdaaSecurityConfigProps extends MdaaConstructProps {
  */
 export class MdaaSecurityConfig extends SecurityConfiguration {
   private static setProps(props: MdaaSecurityConfigProps): SecurityConfigurationProps {
+    const secConfigNaming = props.naming.withResourceType(MdaaResourceType.GLUE_SECURITY_CONFIG);
     const overrideProps = {
-      securityConfigurationName: props.naming.resourceName(props.securityConfigurationName),
+      securityConfigurationName: secConfigNaming.resourceName(props.securityConfigurationName),
       cloudWatchEncryption: {
         mode: CloudWatchEncryptionMode.KMS,
         kmsKey: props.cloudWatchKmsKey,

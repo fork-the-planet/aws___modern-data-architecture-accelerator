@@ -4,6 +4,7 @@
  */
 
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaLambdaFunction, MdaaLambdaRole } from '@aws-mdaa/lambda-constructs';
 import { Effect, ManagedPolicy, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { Code, Runtime } from 'aws-cdk-lib/aws-lambda';
@@ -411,7 +412,9 @@ export class QuickSightProjectL3Construct extends MdaaL3Construct {
     });
 
     const qsFoldersCrManagedPolicy = new ManagedPolicy(this, 'qsFolders-cr-lambda', {
-      managedPolicyName: this.props.naming.resourceName('qsFolders-cr-lambda'),
+      managedPolicyName: this.props.naming
+        .withResourceType(MdaaResourceType.IAM_POLICY)
+        .resourceName('qsFolders-cr-lambda'),
       roles: [qsFoldersCrRole],
     });
 
@@ -509,7 +512,9 @@ export class QuickSightProjectL3Construct extends MdaaL3Construct {
       ],
       true,
     );
-    const qsFoldersCrProviderFunctionName = this.props.naming.resourceName('qsFolders-cr-prov', 64);
+    const qsFoldersCrProviderFunctionName = this.props.naming
+      .withResourceType(MdaaResourceType.LAMBDA_FUNCTION)
+      .resourceName('qsFolders-cr-prov', 64);
     const qsFoldersCrProviderRole = new MdaaLambdaRole(this, 'qsFolders-cr-prov-role', {
       description: 'CR Role',
       roleName: 'qsFolders-cr-prov',
@@ -647,7 +652,9 @@ export class QuickSightProjectL3Construct extends MdaaL3Construct {
           alternateDataSourceParameters: [dataSourceWithIdAndTypeProps.dataSourceSpecificParameters],
           awsAccountId: this.account,
           credentials: dataSourceWithIdAndTypeProps.credentials,
-          dataSourceId: this.props.naming.resourceName(dataSourceWithIdAndTypeProps.dataSourceId),
+          dataSourceId: this.props.naming
+            .withResourceType(MdaaResourceType.QUICKSIGHT_DATASOURCE)
+            .resourceName(dataSourceWithIdAndTypeProps.dataSourceId),
           dataSourceParameters: dataSourceWithIdAndTypeProps.dataSourceSpecificParameters,
           errorInfo: dataSourceWithIdAndTypeProps.errorInfo,
           name: dataSourceWithIdAndTypeProps.displayName,

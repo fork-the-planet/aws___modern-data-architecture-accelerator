@@ -143,6 +143,72 @@ export class ExtendedDefaultNaming extends MdaaDefaultResourceNaming {
 }
 ```
 
+#### Example Resource-Type-Aware Naming Implementation
+
+Organizations with naming conventions that require a service-type abbreviation (mapped from `MdaaResourceType` to whichever short form the organization uses — e.g., `s3`, `lm` for Lambda, `iam` for IAM roles/policies, `kms`) can use `withResourceType()` to produce names like `{cloud}-{env}-{service}-{app}-{suffix}`. The mapping below is illustrative — the abbreviations are chosen by the implementer, not produced by the enum.
+
+```typescript
+import {
+  IMdaaResourceNaming,
+  MdaaResourceNamingConfig,
+  MdaaDefaultResourceNaming,
+  MdaaResourceType,
+} from '@aws-mdaa/naming';
+
+export class ServiceAwareNaming extends MdaaDefaultResourceNaming {
+  private currentResourceType?: MdaaResourceType;
+
+  constructor(props: MdaaResourceNamingConfig, resourceType?: MdaaResourceType) {
+    super(props);
+    this.currentResourceType = resourceType;
+  }
+
+  /**
+   * Returns a new naming instance that carries the resource type context.
+   * L2 constructs can call this before resourceName() to provide type info.
+   */
+  public withResourceType(resourceType: MdaaResourceType): IMdaaResourceNaming {
+    return new ServiceAwareNaming(this.props, resourceType);
+  }
+
+  public resourceName(resourceNameSuffix?: string, maxLength?: number): string {
+    if (this.currentResourceType) {
+      const abbrev = this.getServiceAbbreviation(this.currentResourceType);
+      let name = `aw-${this.props.env}-${abbrev}-dpl-${this.props.domain}-${this.props.moduleName}`;
+      if (resourceNameSuffix) {
+        name = `${name}-${resourceNameSuffix.toLowerCase()}`;
+      }
+      return name;
+    }
+    // Fallback to default MDAA naming when no resource type is set
+    return super.resourceName(resourceNameSuffix, maxLength);
+  }
+
+  private getServiceAbbreviation(resourceType: MdaaResourceType): string {
+    // Map resource types to your organization's abbreviations
+    const abbreviations: Record<string, string> = {
+      [MdaaResourceType.S3_BUCKET]: 's3',
+      [MdaaResourceType.LAMBDA_FUNCTION]: 'lm',
+      [MdaaResourceType.IAM_ROLE]: 'iam',
+      [MdaaResourceType.IAM_POLICY]: 'iam',
+      [MdaaResourceType.KMS_KEY]: 'kms',
+      [MdaaResourceType.DYNAMODB_TABLE]: 'ddb',
+      [MdaaResourceType.STEPFUNCTIONS]: 'sfn',
+      [MdaaResourceType.EC2_SECURITY_GROUP]: 'sg',
+    };
+    return abbreviations[resourceType] ?? resourceType;
+  }
+}
+```
+
+This produces names like:
+| Resource | Default Name | Custom Name |
+|----------|-------------|-------------|
+| S3 Bucket | `myorg-dev-retail-datalake-bronze` | `aw-dev-s3-dpl-retail-datalake-bronze` |
+| Lambda Function | `myorg-dev-retail-datalake-folder-cr` | `aw-dev-lm-dpl-retail-datalake-folder-cr` |
+| IAM Role | `myorg-dev-retail-datalake-role` | `aw-dev-iam-dpl-retail-datalake-role` |
+| KMS Key | `myorg-dev-retail-datalake-key` | `aw-dev-kms-dpl-retail-datalake-key` |
+
 ## Custom Aspects
 
 CDK [Custom Aspects](https://docs.aws.amazon.com/cdk/v2/guide/aspects.html) can be used to customize the stacks and resources MDAA produces before they are deployed. Custom aspects use the visitor pattern to 'visit' each resource, the properties of which can be modified as required. Sample code is available below and also in the ./samples/sample-code/custom-aspects subdirectory of the MDAA repo.

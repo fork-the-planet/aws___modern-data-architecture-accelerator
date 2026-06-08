@@ -6,6 +6,7 @@
 import { existsSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { MdaaRoleHelper } from '@aws-mdaa/iam-role-helper';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Match, Template } from 'aws-cdk-lib/assertions';
 import { SourceType } from '@aws-mdaa/sm-shared';
@@ -46,6 +47,28 @@ describe('SageMaker Model Training L3 Construct', () => {
       template.hasResourceProperties('AWS::SageMaker::ModelPackageGroup', {
         ModelPackageGroupDescription: 'Model Package Group for test-project',
       });
+    });
+
+    test('Resource names use the expected MdaaResourceType', () => {
+      // ModelPackageGroup
+      const expectedMpg = testApp.naming
+        .withResourceType(MdaaResourceType.SAGEMAKER_MODEL_PACKAGE_GROUP)
+        .resourceName('test-project-mpg', 60);
+      template.hasResourceProperties('AWS::SageMaker::ModelPackageGroup', {
+        ModelPackageGroupName: expectedMpg,
+      });
+      // CodeBuild Project — name uses CODEBUILD_PROJECT
+      const codeBuildProjects = template.findResources('AWS::CodeBuild::Project');
+      const cbNames = Object.values(codeBuildProjects).map(r => r.Properties.Name);
+      const expectedCbPrefix = testApp.naming.withResourceType(MdaaResourceType.CODEBUILD_PROJECT).resourceName('');
+      expect(cbNames.length).toBeGreaterThan(0);
+      cbNames.forEach((n: string) => expect(n).toContain(expectedCbPrefix.replace(/-$/, '')));
+      // CodePipeline — name uses CODEPIPELINE
+      const pipelines = template.findResources('AWS::CodePipeline::Pipeline');
+      const pipelineNames = Object.values(pipelines).map(r => r.Properties.Name);
+      const expectedPipelinePrefix = testApp.naming.withResourceType(MdaaResourceType.CODEPIPELINE).resourceName('');
+      expect(pipelineNames.length).toBeGreaterThan(0);
+      pipelineNames.forEach((n: string) => expect(n).toContain(expectedPipelinePrefix.replace(/-$/, '')));
     });
 
     test('Creates KMS Key with rotation enabled', () => {

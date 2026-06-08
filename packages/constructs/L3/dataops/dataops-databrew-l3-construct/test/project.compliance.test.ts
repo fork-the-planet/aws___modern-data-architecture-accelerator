@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Template } from 'aws-cdk-lib/assertions';
 import { MdaaDataBrewProject, MdaaDataBrewProjectProps } from '../lib';
@@ -24,7 +25,7 @@ describe('MDAA Construct Compliance Tests', () => {
 
   test('TestProjectName', () => {
     template.hasResourceProperties('AWS::DataBrew::Project', {
-      Name: testApp.naming.resourceName('test-project'),
+      Name: testApp.naming.withResourceType(MdaaResourceType.DATABREW_PROJECT).resourceName('test-project', 80),
     });
   });
 

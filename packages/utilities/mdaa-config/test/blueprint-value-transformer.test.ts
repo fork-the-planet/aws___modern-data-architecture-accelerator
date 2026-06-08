@@ -25,6 +25,7 @@ describe('MdaaConfigBlueprintRefValueTransformer', () => {
       withOrg: jest.fn().mockReturnThis(),
       withEnv: jest.fn().mockReturnThis(),
       withSuffix: jest.fn().mockReturnThis(),
+      withResourceType: jest.fn().mockReturnThis(),
       ssmDomainPath: jest.fn().mockReturnValue('/test/domain/path'),
       ssmEnvPath: jest.fn().mockReturnValue('/test/env/path'),
       ssmOrgPath: jest.fn().mockReturnValue('/test-org/'),

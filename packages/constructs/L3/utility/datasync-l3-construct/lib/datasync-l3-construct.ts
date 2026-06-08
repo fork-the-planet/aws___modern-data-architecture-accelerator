@@ -18,6 +18,7 @@ import {
 import { MdaaSecurityGroup } from '@aws-mdaa/ec2-constructs';
 import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { IResolvable, SecretValue } from 'aws-cdk-lib';
 import {
   CfnLocationNFS,
@@ -867,7 +868,9 @@ export class DataSyncL3Construct extends MdaaL3Construct {
     initialValue: { [key: string]: SecretValue },
   ): ISecret {
     const secret = new Secret(this, `secret-${locationName}`, {
-      secretName: this.props.naming.resourceName(locationName),
+      secretName: this.props.naming
+        .withResourceType(MdaaResourceType.SECRETS_MANAGER_SECRET)
+        .resourceName(locationName),
       encryptionKey: kmsKey,
       secretObjectValue: initialValue,
     });
@@ -1023,7 +1026,7 @@ export class DataSyncL3Construct extends MdaaL3Construct {
           logLevel: 'TRANSFER',
         },
         cloudWatchLogGroupArn: logGroup.logGroupArn,
-        name: this.props.naming.resourceName(taskProps.name, 256),
+        name: this.props.naming.withResourceType(MdaaResourceType.DATASYNC_TASK).resourceName(taskProps.name, 256),
       };
       new CfnTask(this, `${taskProps.name}-task`, taskCreateProps);
     });
@@ -1039,7 +1042,9 @@ export class DataSyncL3Construct extends MdaaL3Construct {
         ArnEquals: {
           'kms:EncryptionContext:aws:logs:arn': `arn:${this.partition}:logs:${this.region}:${
             this.account
-          }:log-group:/aws/datasync/task/${this.props.naming.resourceName()}`,
+          }:log-group:/aws/datasync/task/${this.props.naming
+            .withResourceType(MdaaResourceType.CLOUDWATCH_LOG_GROUP)
+            .resourceName()}`,
         },
       },
     });

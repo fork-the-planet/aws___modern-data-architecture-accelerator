@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Duration, Stack } from 'aws-cdk-lib';
 import { EventBus, EventBusProps, IEventBus } from 'aws-cdk-lib/aws-events';
 import { Effect, PolicyStatement, PrincipalBase } from 'aws-cdk-lib/aws-iam';
@@ -27,8 +28,9 @@ export type IMdaaEventBus = IEventBus;
  */
 export class MdaaEventBus extends EventBus implements IMdaaEventBus {
   private static setProps(props: MdaaEventBusProps): EventBusProps {
+    const busNaming = props.naming.withResourceType(MdaaResourceType.EVENTBRIDGE_BUS);
     const overrideProps = {
-      eventBusName: props.naming.resourceName(props.eventBusName, 48),
+      eventBusName: busNaming.resourceName(props.eventBusName, 48),
     };
     return { ...props, ...overrideProps };
   }
@@ -38,7 +40,9 @@ export class MdaaEventBus extends EventBus implements IMdaaEventBus {
 
     if (props.archiveRetention) {
       this.archive(`archive`, {
-        archiveName: props.naming.resourceName(`${props.eventBusName}-archive`, 48),
+        archiveName: props.naming
+          .withResourceType(MdaaResourceType.EVENTBRIDGE_BUS)
+          .resourceName(`${props.eventBusName}-archive`, 48),
         description: `Archive for ${this.eventBusName}`,
         eventPattern: {
           account: [Stack.of(this).account],

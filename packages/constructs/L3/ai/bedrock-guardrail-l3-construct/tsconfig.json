@@ -41,6 +41,9 @@
       "path": "../../core/l3-construct"
     },
     {
+      "path": "../../../../utilities/mdaa-naming"
+    },
+    {
       "path": "../../../../utilities/iam-role-helper"
     },
     {

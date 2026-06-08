@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { IResolvable } from 'aws-cdk-lib';
 import { CfnJob, CfnJobProps } from 'aws-cdk-lib/aws-glue';
 import { MdaaNagSuppressions } from '@aws-mdaa/construct'; //NOSONAR
@@ -53,8 +54,9 @@ export interface MdaaCfnJobProps extends MdaaConstructProps {
  */
 export class MdaaCfnJob extends CfnJob {
   private static setProps(props: MdaaCfnJobProps): CfnJobProps {
+    const jobNaming = props.naming.withResourceType(MdaaResourceType.GLUE_JOB);
     const overrideProps = {
-      name: props.naming.resourceName(props.name),
+      name: jobNaming.resourceName(props.name),
     };
     return { ...props, ...overrideProps };
   }

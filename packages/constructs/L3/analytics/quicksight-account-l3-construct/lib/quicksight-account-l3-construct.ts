@@ -7,6 +7,7 @@ import { MdaaCustomResource, MdaaCustomResourceProps } from '@aws-mdaa/custom-co
 import { MdaaSecurityGroup, MdaaSecurityGroupRuleProps } from '@aws-mdaa/ec2-constructs';
 import { MdaaRole } from '@aws-mdaa/iam-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaBoto3LayerVersion, MdaaLambdaFunction, MdaaLambdaRole } from '@aws-mdaa/lambda-constructs';
 import { CustomResource, Duration } from 'aws-cdk-lib';
 import { Protocol, SecurityGroup, Vpc } from 'aws-cdk-lib/aws-ec2';
@@ -231,11 +232,15 @@ export class QuickSightAccountL3Construct extends MdaaL3Construct {
 
     const vpcConnectionProps: CfnVPCConnectionProps = {
       awsAccountId: this.account,
-      name: this.props.naming.resourceName('vpc-connection', 128),
+      name: this.props.naming
+        .withResourceType(MdaaResourceType.QUICKSIGHT_VPC_CONNECTION)
+        .resourceName('vpc-connection', 128),
       securityGroupIds: [sg.securityGroupId],
       roleArn: serviceRole.roleArn,
       subnetIds: this.props.qsAccount.subnetIds,
-      vpcConnectionId: this.props.naming.resourceName('vpc-', 128),
+      vpcConnectionId: this.props.naming
+        .withResourceType(MdaaResourceType.QUICKSIGHT_VPC_CONNECTION)
+        .resourceName('vpc-', 128),
     };
     return new CfnVPCConnection(this, 'vpc-connection', vpcConnectionProps);
   }
@@ -308,7 +313,9 @@ export class QuickSightAccountL3Construct extends MdaaL3Construct {
     });
 
     const accountCrManagedPolicy = new ManagedPolicy(this, 'qsAccount-cr-lambda', {
-      managedPolicyName: this.props.naming.resourceName('qsAccount-cr-lambda'),
+      managedPolicyName: this.props.naming
+        .withResourceType(MdaaResourceType.IAM_POLICY)
+        .resourceName('qsAccount-cr-lambda'),
       roles: [accountCrRole],
     });
     const accountPolicyStatement = new PolicyStatement({
@@ -432,7 +439,9 @@ export class QuickSightAccountL3Construct extends MdaaL3Construct {
       ],
       true,
     );
-    const accountCrProviderFunctionName = this.props.naming.resourceName('qsAccount-cr-prov', 64);
+    const accountCrProviderFunctionName = this.props.naming
+      .withResourceType(MdaaResourceType.LAMBDA_FUNCTION)
+      .resourceName('qsAccount-cr-prov', 64);
     const accountCrProviderRole = new MdaaLambdaRole(this, 'qsAccount-cr-prov-role', {
       description: 'CR Role',
       roleName: 'qsAccount-cr-prov',
@@ -578,7 +587,9 @@ export class QuickSightAccountL3Construct extends MdaaL3Construct {
 
   private createServiceManagedPolicy(role: IRole): IManagedPolicy {
     const quickSightServiceManagedPolicy = new ManagedPolicy(this, 'quicksight-service-policy', {
-      managedPolicyName: this.props.naming.resourceName('quicksight-service-access'),
+      managedPolicyName: this.props.naming
+        .withResourceType(MdaaResourceType.IAM_POLICY)
+        .resourceName('quicksight-service-access'),
       roles: [role],
     });
 

@@ -4,6 +4,7 @@
  */
 
 import { MdaaParamAndOutput, MdaaConstructProps } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { IMdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { Duration, RemovalPolicy } from 'aws-cdk-lib';
 import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
@@ -90,10 +91,11 @@ export interface MdaaSqsQueueProps extends MdaaConstructProps {
  */
 export class MdaaSqsQueue extends Queue {
   private static setProps(props: MdaaSqsQueueProps): QueueProps {
+    const sqsNaming = props.naming.withResourceType(MdaaResourceType.SQS_QUEUE);
     const overrideProps = {
       // KMS mode is already inferred from the required encryptionMasterKey prop, but this is belt and suspenders
       encryption: QueueEncryption.KMS,
-      queueName: props.naming.resourceName(props.queueName, 80),
+      queueName: sqsNaming.resourceName(props.queueName, 80),
     };
     return { ...props, ...overrideProps };
   }

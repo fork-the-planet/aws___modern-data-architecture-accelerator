@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { ISecurityGroup, ISubnet } from 'aws-cdk-lib/aws-ec2';
 import { IRole } from 'aws-cdk-lib/aws-iam';
 import { IKey } from 'aws-cdk-lib/aws-kms';
@@ -156,6 +157,19 @@ type ValidatedMonitorProps =
 const MONITOR_INPUT_LOCAL_PATH = '/opt/ml/processing/input';
 const MONITOR_OUTPUT_LOCAL_PATH = '/opt/ml/processing/output';
 
+function jobDefResourceType(monitorType: MonitorType): MdaaResourceType {
+  switch (monitorType) {
+    case 'data-quality':
+      return MdaaResourceType.SAGEMAKER_DATA_QUALITY_JOB_DEF;
+    case 'model-quality':
+      return MdaaResourceType.SAGEMAKER_MODEL_QUALITY_JOB_DEF;
+    case 'model-bias':
+      return MdaaResourceType.SAGEMAKER_MODEL_BIAS_JOB_DEF;
+    case 'model-explainability':
+      return MdaaResourceType.SAGEMAKER_MODEL_EXPLAINABILITY_JOB_DEF;
+  }
+}
+
 /**
  * A construct for creating compliant SageMaker Model Monitor resources.
  * Supports all 4 monitor types: data quality, model quality, bias, and explainability.
@@ -164,8 +178,12 @@ export class MdaaModelMonitor extends Construct {
   constructor(scope: Construct, id: string, props: MdaaModelMonitorProps) {
     super(scope, id);
 
-    const scheduleName = props.naming.resourceName(`${props.monitorName}-schedule`, 63);
-    const jobDefName = props.naming.resourceName(`${props.monitorName}-job-def`, 63);
+    const scheduleName = props.naming
+      .withResourceType(MdaaResourceType.SAGEMAKER_MODEL_MONITOR_SCHEDULE)
+      .resourceName(`${props.monitorName}-schedule`, 63);
+    const jobDefName = props.naming
+      .withResourceType(jobDefResourceType(props.monitorType))
+      .resourceName(`${props.monitorName}-job-def`, 63);
 
     const validatedProps = this.validateJobDefProps(props);
     const jobDefinition = this.createJobDefinition(jobDefName, validatedProps);

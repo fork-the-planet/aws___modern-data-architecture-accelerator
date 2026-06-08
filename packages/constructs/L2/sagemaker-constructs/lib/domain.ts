@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput, MdaaNagSuppressions } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaCustomResource, MdaaCustomResourceProps } from '@aws-mdaa/custom-constructs';
 import { MdaaBoto3LayerVersion } from '@aws-mdaa/lambda-constructs';
 import { Duration, Stack } from 'aws-cdk-lib';
@@ -63,6 +64,7 @@ export class MdaaStudioDomain extends CfnDomain {
   };
 
   private static setProps(props: MdaaStudioDomainProps): CfnDomainProps {
+    const domainNaming = props.naming.withResourceType(MdaaResourceType.SAGEMAKER_DOMAIN);
     // Only pass immutable (create-only) properties to the CfnDomain resource.
     // All mutable settings (defaultUserSettings, domainSettings) are handled
     // by the custom resource via the SageMaker UpdateDomain API.
@@ -70,7 +72,7 @@ export class MdaaStudioDomain extends CfnDomain {
     // mutable properties change, which would fail with "already exists" due
     // to the fixed DomainName.
     return {
-      domainName: props.naming.resourceName(props.domainName, 63),
+      domainName: domainNaming.resourceName(props.domainName, 63),
       authMode: props.authMode,
       appNetworkAccessType: 'VpcOnly',
       vpcId: props.vpcId,

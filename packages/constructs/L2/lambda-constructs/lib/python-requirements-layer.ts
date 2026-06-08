@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { LayerVersion, LayerVersionProps } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 import { MdaaPythonCodeAsset, PythonVersion } from './code-asset';
@@ -29,7 +30,9 @@ export class MdaaPythonRequirementsLayerVersion extends LayerVersion {
       pythonVersion: props.pythonVersion,
     });
     const overrideProps = {
-      layerVersionName: props.naming.resourceName(props.layerVersionName),
+      layerVersionName: props.naming
+        .withResourceType(MdaaResourceType.LAMBDA_LAYER)
+        .resourceName(props.layerVersionName),
       code: codeAsset.code,
     };
     return { ...props, ...overrideProps };

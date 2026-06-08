@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { MdaaCfnJob, MdaaCfnJobProps } from '../lib';
 
@@ -28,6 +29,12 @@ describe('MDAA Construct Compliance Tests', () => {
   test('Name', () => {
     template.hasResourceProperties('AWS::Glue::Job', {
       Name: testApp.naming.resourceName('test-job'),
+    });
+  });
+
+  test('Name uses GLUE_JOB resource type', () => {
+    template.hasResourceProperties('AWS::Glue::Job', {
+      Name: testApp.naming.withResourceType(MdaaResourceType.GLUE_JOB).resourceName('test-job'),
     });
   });
 

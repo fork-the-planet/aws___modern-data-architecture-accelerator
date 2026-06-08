@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { MdaaSecurityConfig, MdaaSecurityConfigProps } from '../lib';
@@ -35,6 +36,12 @@ describe('MDAA Construct Compliance Tests', () => {
   test('Name', () => {
     template.hasResourceProperties('AWS::Glue::SecurityConfiguration', {
       Name: testApp.naming.resourceName('test'),
+    });
+  });
+
+  test('Name uses GLUE_SECURITY_CONFIG resource type', () => {
+    template.hasResourceProperties('AWS::Glue::SecurityConfiguration', {
+      Name: testApp.naming.withResourceType(MdaaResourceType.GLUE_SECURITY_CONFIG).resourceName('test'),
     });
   });
 

@@ -5,6 +5,7 @@
 
 import { MdaaRole } from '@aws-mdaa/iam-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaLambdaFunction, MdaaLambdaRole } from '@aws-mdaa/lambda-constructs';
 import { aws_events_targets, CustomResource, Duration } from 'aws-cdk-lib';
 import { Rule } from 'aws-cdk-lib/aws-events';
@@ -133,7 +134,9 @@ export class QuickSightNamespaceL3Construct extends MdaaL3Construct {
     const eventRule = new Rule(this, `event-rule-${roleName}`, {
       enabled: true,
       description: `Events to map QuickSight users for ${roleName} to namespace ${namespace}`,
-      ruleName: this.props.naming.resourceName(`event-rule-${roleName}`, 64),
+      ruleName: this.props.naming
+        .withResourceType(MdaaResourceType.EVENTBRIDGE_RULE)
+        .resourceName(`event-rule-${roleName}`, 64),
       eventPattern: {
         source: ['aws.quicksight'],
         detail: {
@@ -167,7 +170,7 @@ export class QuickSightNamespaceL3Construct extends MdaaL3Construct {
     });
 
     const managedPolicy: ManagedPolicy = new ManagedPolicy(this, 'ns-user-lambda', {
-      managedPolicyName: this.props.naming.resourceName('ns-user-lambda'),
+      managedPolicyName: this.props.naming.withResourceType(MdaaResourceType.IAM_POLICY).resourceName('ns-user-lambda'),
       roles: [namespaceUserRole],
     });
 
@@ -289,7 +292,7 @@ export class QuickSightNamespaceL3Construct extends MdaaL3Construct {
     });
 
     const namespaceCrManagedPolicy: ManagedPolicy = new ManagedPolicy(this, 'ns-cr-lambda', {
-      managedPolicyName: this.props.naming.resourceName('ns-cr-lambda'),
+      managedPolicyName: this.props.naming.withResourceType(MdaaResourceType.IAM_POLICY).resourceName('ns-cr-lambda'),
       roles: [namespaceCrRole],
     });
 
@@ -401,7 +404,9 @@ export class QuickSightNamespaceL3Construct extends MdaaL3Construct {
       ],
       true,
     );
-    const namespaceCrProviderFunctionName: string = this.props.naming.resourceName('ns-cr-prov', 64);
+    const namespaceCrProviderFunctionName: string = this.props.naming
+      .withResourceType(MdaaResourceType.LAMBDA_FUNCTION)
+      .resourceName('ns-cr-prov', 64);
     const namespaceCrProviderRole: MdaaLambdaRole = new MdaaLambdaRole(this, 'namespace-cr-prov-role', {
       description: 'CR Role',
       roleName: 'namespace-cr-prov',
@@ -495,7 +500,7 @@ export class QuickSightNamespaceL3Construct extends MdaaL3Construct {
 
   private createReaderManagedPolicy(): ManagedPolicy {
     const managedPolicy: ManagedPolicy = new ManagedPolicy(this, 'reader-policy', {
-      managedPolicyName: this.props.naming.resourceName('reader-policy'),
+      managedPolicyName: this.props.naming.withResourceType(MdaaResourceType.IAM_POLICY).resourceName('reader-policy'),
     });
     const accessQuickSightCreateReaderStatement: PolicyStatement = new PolicyStatement({
       sid: 'CreateReader',
@@ -596,7 +601,7 @@ export class QuickSightNamespaceL3Construct extends MdaaL3Construct {
 
   private createAuthorManagedPolicy(): ManagedPolicy {
     const managedPolicy: ManagedPolicy = new ManagedPolicy(this, 'author-policy', {
-      managedPolicyName: this.props.naming.resourceName('author-policy'),
+      managedPolicyName: this.props.naming.withResourceType(MdaaResourceType.IAM_POLICY).resourceName('author-policy'),
     });
 
     const accessRedShiftDescribeStatement: PolicyStatement = new PolicyStatement({
@@ -730,7 +735,9 @@ export class QuickSightNamespaceL3Construct extends MdaaL3Construct {
 
     //Allow to access the glue catalog resources
     const gluePolicy: ManagedPolicy = new ManagedPolicy(this, 'glue-access-policy', {
-      managedPolicyName: this.props.naming.resourceName('glue-access-policy'),
+      managedPolicyName: this.props.naming
+        .withResourceType(MdaaResourceType.IAM_POLICY)
+        .resourceName('glue-access-policy'),
     });
     const accessGlueStatement: PolicyStatement = new PolicyStatement({
       effect: Effect.ALLOW,

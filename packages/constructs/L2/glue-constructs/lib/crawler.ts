@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { IResolvable } from 'aws-cdk-lib';
 import { CfnCrawler, CfnCrawlerProps } from 'aws-cdk-lib/aws-glue';
 import { MdaaNagSuppressions } from '@aws-mdaa/construct'; //NOSONAR
@@ -43,8 +44,9 @@ export interface MdaaCfnCrawlerProps extends MdaaConstructProps {
  */
 export class MdaaCfnCrawler extends CfnCrawler {
   private static setProps(props: MdaaCfnCrawlerProps): CfnCrawlerProps {
+    const crawlerNaming = props.naming.withResourceType(MdaaResourceType.GLUE_CRAWLER);
     const overrideProps = {
-      name: props.naming.resourceName(props.name),
+      name: crawlerNaming.resourceName(props.name),
     };
     return { ...props, ...overrideProps };
   }

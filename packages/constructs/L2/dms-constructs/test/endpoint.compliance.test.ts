@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { Key } from 'aws-cdk-lib/aws-kms';
 import { MdaaEndpoint, MdaaEndpointProps } from '../lib';
@@ -33,6 +34,14 @@ describe('Endpoint Compliance Tests', () => {
     test('Endpoint ID', () => {
       template.hasResourceProperties('AWS::DMS::Endpoint', {
         EndpointIdentifier: 'test-org-test-env-test-domain-test-module-test-endpoint',
+      });
+    });
+
+    test('EndpointIdentifier uses DMS_ENDPOINT resource type', () => {
+      template.hasResourceProperties('AWS::DMS::Endpoint', {
+        EndpointIdentifier: testApp.naming
+          .withResourceType(MdaaResourceType.DMS_ENDPOINT)
+          .resourceName('test-endpoint'),
       });
     });
 

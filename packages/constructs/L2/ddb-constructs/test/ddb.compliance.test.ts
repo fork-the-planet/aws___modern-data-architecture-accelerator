@@ -4,6 +4,7 @@
  */
 
 import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Template } from 'aws-cdk-lib/assertions';
 import { AttributeType, StreamViewType } from 'aws-cdk-lib/aws-dynamodb';
@@ -43,6 +44,12 @@ describe('MDAA Construct Mandatory Prop Compliance Tests', () => {
   test('TableName', () => {
     template.hasResourceProperties('AWS::DynamoDB::Table', {
       TableName: testApp.naming.resourceName('test-table'),
+    });
+  });
+
+  test('TableName uses DYNAMODB_TABLE resource type', () => {
+    template.hasResourceProperties('AWS::DynamoDB::Table', {
+      TableName: testApp.naming.withResourceType(MdaaResourceType.DYNAMODB_TABLE).resourceName('test-table', 254),
     });
   });
 });

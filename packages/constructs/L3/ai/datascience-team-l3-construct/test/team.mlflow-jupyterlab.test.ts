@@ -4,6 +4,7 @@
  */
 
 import { MdaaRoleHelper, MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { DomainProps } from '@aws-mdaa/sm-studio-domain-l3-construct';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Match, Template } from 'aws-cdk-lib/assertions';
@@ -71,6 +72,15 @@ describe('MLflow Tracking Server', () => {
       template.hasResourceProperties('AWS::SageMaker::MlflowTrackingServer', {
         TrackingServerSize: 'Small',
         AutomaticModelRegistration: false,
+      });
+    });
+
+    test('Default MLflow TrackingServerName uses MLFLOW_TRACKING_SERVER resource type', () => {
+      const expectedServerName = testApp.naming
+        .withResourceType(MdaaResourceType.MLFLOW_TRACKING_SERVER)
+        .resourceName('mlflow-tracking', 256);
+      template.hasResourceProperties('AWS::SageMaker::MlflowTrackingServer', {
+        TrackingServerName: expectedServerName,
       });
     });
 

@@ -5,6 +5,7 @@
 
 import { FunctionProps, LayerProps } from '@aws-mdaa/dataops-lambda-l3-construct';
 import { MdaaRoleHelper, MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Template } from 'aws-cdk-lib/assertions';
 import { BedrockBuilderL3Construct, BedrockBuilderL3ConstructProps, LambdaFunctionProps } from '../lib';
@@ -1672,6 +1673,15 @@ describe('Bedrock Builder Compliance Stack Tests', () => {
       const vpcEndpoints = template.findResources('AWS::OpenSearchServerless::VpcEndpoint');
       const vpcEndpointCount = Object.keys(vpcEndpoints).length;
       expect(vpcEndpointCount).toBe(1);
+    });
+
+    test('VPC Endpoint name uses OPENSEARCH_SERVERLESS resource type', () => {
+      const expectedName = testApp.naming
+        .withResourceType(MdaaResourceType.OPENSEARCH_SERVERLESS)
+        .resourceName('bedrock-kb-vpce-test-vpc-id', 32);
+      template.hasResourceProperties('AWS::OpenSearchServerless::VpcEndpoint', {
+        Name: expectedName,
+      });
     });
 
     test('Both Collections Created', () => {

@@ -49,6 +49,7 @@ describe('CompliantKubectlProvider Unit Tests', () => {
       withDomain: jest.fn().mockReturnThis(),
       withEnv: jest.fn().mockReturnThis(),
       withSuffix: jest.fn().mockReturnThis(),
+      withResourceType: jest.fn().mockReturnThis(),
       ssmDomainPath: jest.fn().mockReturnValue('/test/path'),
       ssmEnvPath: jest.fn().mockReturnValue('/test/path'),
       ssmOrgPath: jest.fn().mockReturnValue('/test/path'),

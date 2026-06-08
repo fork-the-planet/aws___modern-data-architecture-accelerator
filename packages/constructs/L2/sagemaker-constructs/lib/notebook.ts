@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { CfnNotebookInstance, CfnNotebookInstanceProps } from 'aws-cdk-lib/aws-sagemaker';
 import { Construct } from 'constructs';
 import { IResolvable } from 'aws-cdk-lib';
@@ -44,9 +45,10 @@ export interface MdaaNoteBookProps extends MdaaConstructProps {
  */
 export class MdaaNoteBook extends CfnNotebookInstance {
   private static setProps(props: MdaaNoteBookProps): CfnNotebookInstanceProps {
+    const notebookNaming = props.naming.withResourceType(MdaaResourceType.SAGEMAKER_NOTEBOOK);
     const overrideProps = {
       notebookInstanceName: sanitizeNotebookName(
-        props.naming.resourceName(props.notebookInstanceName, MAX_NOTEBOOK_NAME_LENGTH),
+        notebookNaming.resourceName(props.notebookInstanceName, MAX_NOTEBOOK_NAME_LENGTH),
       ),
       rootAccess: props.rootAccess == 'Enabled' ? 'Enabled' : 'Disabled',
       directInternetAccess: 'Disabled',

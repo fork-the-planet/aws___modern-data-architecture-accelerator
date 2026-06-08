@@ -17,6 +17,7 @@ import { MdaaManagedPolicy } from '@aws-mdaa/iam-constructs';
 import { MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 import { USER_ACTIONS } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaAuroraPgVector, MdaaAuroraPgVectorProps, MdaaRdsDataResource } from '@aws-mdaa/rds-constructs';
 import {
   MdaaOpensearchServerlessCollection,
@@ -592,7 +593,9 @@ export class BedrockKnowledgeBaseL3Construct extends MdaaL3Construct {
   private prepareOpensearchVectorStoreParams() {
     const indexConfig = this.prepareOpenSearchIndexConfiguration();
     const roleName = `${indexConfig.resourceType}-handler`;
-    const createIndexLambdaRoleName = this.props.naming.resourceName(roleName, 64);
+    const createIndexLambdaRoleName = this.props.naming
+      .withResourceType(MdaaResourceType.IAM_ROLE)
+      .resourceName(roleName, 64);
     const readWriteArns = [this.kbRole.roleArn, `arn:aws:iam::${this.account}:role/${createIndexLambdaRoleName}`];
 
     return { vectorIndexName: indexConfig.vectorIndexName, readWriteArns };
@@ -1108,13 +1111,13 @@ export class BedrockKnowledgeBaseL3Construct extends MdaaL3Construct {
     });
 
     const kbLogSource = new CfnDeliverySource(this, `kb-logsource-${kbName}`, {
-      name: this.props.naming.resourceName(kbName, 60),
+      name: this.props.naming.withResourceType(MdaaResourceType.LOGS_DELIVERY_SOURCE).resourceName(kbName, 60),
       logType: 'APPLICATION_LOGS',
       resourceArn: knowledgeBase.attrKnowledgeBaseArn,
     });
 
     const kbLogDestination = new CfnDeliveryDestination(this, `kb-logdestination-${kbName}`, {
-      name: this.props.naming.resourceName(kbName, 60),
+      name: this.props.naming.withResourceType(MdaaResourceType.LOGS_DELIVERY_DESTINATION).resourceName(kbName, 60),
       destinationResourceArn: kbLogGroup.logGroupArn,
     });
 
@@ -1309,7 +1312,7 @@ export class BedrockKnowledgeBaseL3Construct extends MdaaL3Construct {
     },
   ): bedrock.CfnKnowledgeBase {
     return new bedrock.CfnKnowledgeBase(this, `${kbName}-KnowledgeBase`, {
-      name: this.props.naming.resourceName(kbName),
+      name: this.props.naming.withResourceType(MdaaResourceType.BEDROCK_KNOWLEDGE_BASE).resourceName(kbName),
       roleArn: this.kbRole.roleArn,
       knowledgeBaseConfiguration: this.createVectorKnowledgeBaseConfiguration(kbConfig, embeddingModelArn),
       storageConfiguration: {
@@ -1339,7 +1342,7 @@ export class BedrockKnowledgeBaseL3Construct extends MdaaL3Construct {
     indexConfig: { vectorIndexName: string; fieldNames: typeof BedrockKnowledgeBaseL3Construct.OPENSEARCH_FIELD_NAMES },
   ): bedrock.CfnKnowledgeBase {
     return new bedrock.CfnKnowledgeBase(this, `${kbName}-KnowledgeBase`, {
-      name: this.props.naming.resourceName(kbName),
+      name: this.props.naming.withResourceType(MdaaResourceType.BEDROCK_KNOWLEDGE_BASE).resourceName(kbName),
       roleArn: this.kbRole.roleArn,
       knowledgeBaseConfiguration: this.createVectorKnowledgeBaseConfiguration(kbConfig, embeddingModelArn),
       storageConfiguration: {

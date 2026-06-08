@@ -8,6 +8,7 @@ import { FunctionProps, LambdaFunctionL3Construct, LayerProps } from '@aws-mdaa/
 import { MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 import { DECRYPT_ACTIONS, ENCRYPT_ACTIONS, MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaNagSuppressions } from '@aws-mdaa/construct';
 import { MdaaManagedPolicy } from '@aws-mdaa/iam-constructs';
 import { MdaaAuroraPgVector } from '@aws-mdaa/rds-constructs';
@@ -367,7 +368,9 @@ export class BedrockBuilderL3Construct extends MdaaL3Construct {
 
         // Create VPC endpoint
         const vpcEndpoint = new aoss.CfnVpcEndpoint(this, `opensearch-serverless-vpc-endpoint-${vpcId}`, {
-          name: this.props.naming.resourceName(`bedrock-kb-vpce-${vpcId}`, 32),
+          name: this.props.naming
+            .withResourceType(MdaaResourceType.OPENSEARCH_SERVERLESS)
+            .resourceName(`bedrock-kb-vpce-${vpcId}`, 32),
           vpcId: vpcId,
           subnetIds: config.subnetIds,
           securityGroupIds: [vpcEndpointSg.securityGroupId],

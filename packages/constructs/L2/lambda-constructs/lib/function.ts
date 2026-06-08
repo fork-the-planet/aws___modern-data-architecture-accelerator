@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaNagSuppressions, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Duration, Size } from 'aws-cdk-lib';
 import { IProfilingGroup } from 'aws-cdk-lib/aws-codeguruprofiler';
 import { ISecurityGroup, IVpc, SubnetSelection } from 'aws-cdk-lib/aws-ec2';
@@ -155,8 +156,9 @@ export interface MdaaLambdaFunctionOptions extends MdaaConstructProps {
  */
 export class MdaaLambdaFunction extends Function {
   private static setProps(props: MdaaLambdaFunctionProps): FunctionProps {
+    const lambdaNaming = props.naming.withResourceType(MdaaResourceType.LAMBDA_FUNCTION);
     const overrideProps = {
-      functionName: props.naming.resourceName(props.functionName, 64),
+      functionName: lambdaNaming.resourceName(props.functionName, 64),
       environment: {
         ...props.environment,
         USER_AGENT_STRING: `AWSSOLUTION/${pjson.solution_id}/v${pjson.version}`,

@@ -4,6 +4,7 @@
  */
 
 import { MdaaRoleHelper, MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Match } from 'aws-cdk-lib/assertions';
 import { Template } from 'aws-cdk-lib/assertions';
@@ -125,6 +126,21 @@ describe('MDAA Compliance Stack Tests', () => {
             ],
           },
         },
+      },
+    });
+  });
+
+  test('workgroup access policy resource ARN uses ATHENA_WORKGROUP resource type', () => {
+    const expectedWorkgroupName = testApp.naming.withResourceType(MdaaResourceType.ATHENA_WORKGROUP).resourceName();
+    template.hasResourceProperties('AWS::IAM::ManagedPolicy', {
+      PolicyDocument: {
+        Statement: Match.arrayWith([
+          Match.objectLike({
+            Effect: 'Allow',
+            Action: Match.arrayWith(['athena:StartQueryExecution']),
+            Resource: `arn:test-partition:athena:test-region:test-account:workgroup/${expectedWorkgroupName}`,
+          }),
+        ]),
       },
     });
   });

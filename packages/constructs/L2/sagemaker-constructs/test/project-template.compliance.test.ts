@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Match, Template } from 'aws-cdk-lib/assertions';
 import {
   MAX_SAGEMAKER_PROJECT_NAME_LENGTH,
@@ -48,6 +49,16 @@ describe('MdaaSageMakerProjectTemplate Compliance Tests', () => {
     template.hasResourceProperties('AWS::SageMaker::Project', {
       ProjectName: testApp.naming.resourceName('test-training-project', MAX_SAGEMAKER_PROJECT_NAME_LENGTH),
       ProjectDescription: 'Test model training project',
+    });
+  });
+
+  test('ServiceCatalogProduct and SageMakerProject names use SAGEMAKER_PROJECT resource type', () => {
+    const projectNaming = testApp.naming.withResourceType(MdaaResourceType.SAGEMAKER_PROJECT);
+    template.hasResourceProperties('AWS::ServiceCatalog::CloudFormationProduct', {
+      Name: projectNaming.resourceName('test-sc-product', MAX_SERVICE_CATALOG_PRODUCT_NAME_LENGTH),
+    });
+    template.hasResourceProperties('AWS::SageMaker::Project', {
+      ProjectName: projectNaming.resourceName('test-training-project', MAX_SAGEMAKER_PROJECT_NAME_LENGTH),
     });
   });
 

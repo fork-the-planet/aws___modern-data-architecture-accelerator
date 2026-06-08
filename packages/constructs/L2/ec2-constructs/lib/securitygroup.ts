@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Token } from 'aws-cdk-lib';
 import {
   CfnSecurityGroupEgress,
@@ -112,10 +113,11 @@ export interface MdaaSecurityGroupProps extends MdaaConstructProps {
  */
 export class MdaaSecurityGroup extends SecurityGroup {
   private static setProps(props: MdaaSecurityGroupProps): SecurityGroupProps {
+    const sgNaming = props.naming.withResourceType(MdaaResourceType.EC2_SECURITY_GROUP);
     const overrideProps = {
       //Invert the default for allowAllOutbound
       allowAllOutbound: props.allowAllOutbound ?? false,
-      securityGroupName: props.naming.resourceName(props.securityGroupName),
+      securityGroupName: sgNaming.resourceName(props.securityGroupName),
     };
     return { ...props, ...overrideProps };
   }

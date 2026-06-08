@@ -4,6 +4,7 @@
  */
 
 import { Template } from 'aws-cdk-lib/assertions';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { MdaaRoleHelper } from '@aws-mdaa/iam-role-helper';
 import {
@@ -53,6 +54,24 @@ describe('MDAA Compliance Stack Tests', () => {
           },
         },
       },
+    });
+  });
+
+  test('Catalog KMS key RAM share Name uses RAM_RESOURCE_SHARE resource type', () => {
+    const expectedName = testApp.naming
+      .withResourceType(MdaaResourceType.RAM_RESOURCE_SHARE)
+      .resourceName('glue-catalog-kms-key-param');
+    template.hasResourceProperties('AWS::RAM::ResourceShare', {
+      Name: expectedName,
+    });
+  });
+
+  test('Catalog CR provider Lambda function name uses LAMBDA_FUNCTION resource type', () => {
+    const expectedName = testApp.naming
+      .withResourceType(MdaaResourceType.LAMBDA_FUNCTION)
+      .resourceName('catalog-cr-prov', 64);
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      FunctionName: expectedName,
     });
   });
 });

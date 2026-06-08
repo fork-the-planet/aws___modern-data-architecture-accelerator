@@ -4,6 +4,7 @@
  */
 
 import { MdaaParamAndOutput, MdaaConstructProps } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { IMdaaRole } from '@aws-mdaa/iam-constructs';
 import { Duration, RemovalPolicy } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
@@ -120,11 +121,15 @@ export class MdaaEC2Instance extends Instance {
     });
   }
 
+  private static ec2InstanceName(props: MdaaEC2InstanceProps): string {
+    return props.naming.withResourceType(MdaaResourceType.EC2_INSTANCE).resourceName(props.instanceName);
+  }
+
   private static setProps(props: MdaaEC2InstanceProps): InstanceProps {
     const listofBlockDevices: BlockDevice[] = this.getBlockDeviceProps(props.blockDeviceProps, props.kmsKey);
 
     const overrideProps = {
-      instanceName: props.naming.resourceName(props.instanceName),
+      instanceName: MdaaEC2Instance.ec2InstanceName(props),
       propagateTagsToVolumeOnCreation: true,
       vpcSubnets: {
         subnets: [props.instanceSubnet],
@@ -142,16 +147,17 @@ export class MdaaEC2Instance extends Instance {
 
     this.applyRemovalPolicy(RemovalPolicy.RETAIN);
 
+    const ec2InstanceName = MdaaEC2Instance.ec2InstanceName(props);
     const launchTemplate = new LaunchTemplate(this, 'launch-template', {
       blockDevices: MdaaEC2Instance.getBlockDeviceProps(props.blockDeviceProps, props.kmsKey),
-      launchTemplateName: props.naming.resourceName(props.instanceName),
+      launchTemplateName: ec2InstanceName,
       requireImdsv2: true,
     });
 
     const cfnInstance = this.node.defaultChild as CfnInstance;
     cfnInstance.addPropertyOverride('DisableApiTermination', true);
     cfnInstance.addPropertyOverride('LaunchTemplate', {
-      LaunchTemplateName: props.naming.resourceName(props.instanceName),
+      LaunchTemplateName: ec2InstanceName,
       Version: launchTemplate.latestVersionNumber,
     });
 
@@ -209,7 +215,7 @@ export class MdaaEC2Instance extends Instance {
       {
         ...{
           resourceType: 'instance',
-          name: 'id-' + props.naming.resourceName(props.instanceName),
+          name: 'id-' + ec2InstanceName,
           value: this.instanceId,
         },
         ...props,

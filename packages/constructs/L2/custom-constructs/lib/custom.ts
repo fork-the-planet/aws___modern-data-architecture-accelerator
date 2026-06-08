@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaNagSuppressions } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaLambdaFunction, MdaaLambdaRole } from '@aws-mdaa/lambda-constructs';
 import { CustomResource, CustomResourceProps, Duration, Stack } from 'aws-cdk-lib';
 import { IManagedPolicy, IRole, Policy, PolicyDocument, PolicyStatement, Role } from 'aws-cdk-lib/aws-iam';
@@ -52,7 +53,8 @@ export class MdaaCustomResource extends CustomResource {
   private static setProps(scope: Construct, props: MdaaCustomResourceProps) {
     const stack = Stack.of(scope);
 
-    const handlerFunctionName = props.naming.resourceName(`${props.resourceType}-handler`, 64);
+    const customNaming = props.naming.withResourceType(MdaaResourceType.CUSTOM_RESOURCE);
+    const handlerFunctionName = customNaming.resourceName(`${props.resourceType}-handler`, 64);
 
     if (props.handlerRole && props.handlerRolePolicyStatements) {
       throw new Error('Cannot specify both handlerRole and handlerRolePolicyStatements');
@@ -158,7 +160,7 @@ export class MdaaCustomResource extends CustomResource {
       true,
     );
 
-    const providerFunctionName = props.naming.resourceName(`${props.resourceType}-provider`, 64);
+    const providerFunctionName = customNaming.resourceName(`${props.resourceType}-provider`, 64);
     const providerRoleResourceId = `custom-${props.resourceType}-provider-role`;
     const existingProviderRole = stack.node.tryFindChild(providerRoleResourceId) as Role;
     const providerRole = existingProviderRole

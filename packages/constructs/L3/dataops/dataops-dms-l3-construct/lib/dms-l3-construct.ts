@@ -28,6 +28,7 @@ import {
 import { MdaaSecurityGroup, MdaaSecurityGroupProps, MdaaSecurityGroupRuleProps } from '@aws-mdaa/ec2-constructs';
 import { MdaaManagedPolicy, MdaaRole } from '@aws-mdaa/iam-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import {
   CfnEndpoint,
   CfnReplicationInstance,
@@ -407,7 +408,9 @@ export class DMSL3Construct extends MdaaL3Construct {
         replicationInstanceArn: replicationInstanceArn,
         sourceEndpointArn: sourceEndpointArn,
         targetEndpointArn: targetEndpointArn,
-        replicationTaskIdentifier: this.props.naming.resourceName(taskName),
+        replicationTaskIdentifier: this.props.naming
+          .withResourceType(MdaaResourceType.DMS_REPLICATION_TASK)
+          .resourceName(taskName),
         taskData: taskProps.taskData ? JSON.stringify(taskProps.taskData) : undefined,
         tableMappings: JSON.stringify(taskProps.tableMappings),
         replicationTaskSettings: taskProps.replicationTaskSettings
@@ -556,9 +559,10 @@ export class DMSL3Construct extends MdaaL3Construct {
   private createReplicationInstances(vpcDmsRole: CfnResource | undefined): { [name: string]: CfnReplicationInstance } {
     return Object.fromEntries(
       Object.entries(this.props.dms.replicationInstances || {}).map(([instanceName, instanceProps]) => {
+        const subnetGroupNaming = this.props.naming.withResourceType(MdaaResourceType.DMS_SUBNET_GROUP);
         const subnetGroupProps: CfnReplicationSubnetGroupProps = {
-          replicationSubnetGroupIdentifier: this.props.naming.resourceName(instanceName),
-          replicationSubnetGroupDescription: this.props.naming.resourceName(instanceName),
+          replicationSubnetGroupIdentifier: subnetGroupNaming.resourceName(instanceName),
+          replicationSubnetGroupDescription: subnetGroupNaming.resourceName(instanceName),
           subnetIds: instanceProps.subnetIds,
         };
         const subnetGroup = new CfnReplicationSubnetGroup(
@@ -597,7 +601,7 @@ export class DMSL3Construct extends MdaaL3Construct {
           replicationInstanceIdentifier: instanceName,
           replicationInstanceClass: instanceProps.instanceClass,
           kmsKey: this.projectKms,
-          replicationSubnetGroupIdentifier: this.props.naming.resourceName(instanceName),
+          replicationSubnetGroupIdentifier: subnetGroupNaming.resourceName(instanceName),
           naming: this.props.naming,
           vpcSecurityGroupIds: [securityGroup.securityGroupId],
         };

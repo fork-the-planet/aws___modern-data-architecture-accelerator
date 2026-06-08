@@ -4,6 +4,7 @@
  */
 
 import { MdaaRoleHelper } from '@aws-mdaa/iam-role-helper';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Match } from 'aws-cdk-lib/assertions';
 import { Template } from 'aws-cdk-lib/assertions';
@@ -75,6 +76,15 @@ describe('MDAA Compliance Stack Tests', () => {
         }),
       ]),
       VpcId: 'testvpc',
+    });
+  });
+
+  test('SecurityGroup name uses EC2_SECURITY_GROUP resource type', () => {
+    const expectedGroupName = testApp.naming
+      .withResourceType(MdaaResourceType.EC2_SECURITY_GROUP)
+      .resourceName('security-group');
+    template.hasResourceProperties('AWS::EC2::SecurityGroup', {
+      GroupName: expectedGroupName,
     });
   });
 });

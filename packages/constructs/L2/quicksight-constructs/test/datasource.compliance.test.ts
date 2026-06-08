@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { MdaaQuickSightDataSource, MdaaQuickSightDataSourceProps } from '../lib';
 
@@ -61,6 +62,14 @@ describe('MDAA Construct Compliance Tests', () => {
   test('Data Source Name', () => {
     template.hasResourceProperties('AWS::QuickSight::DataSource', {
       Name: testApp.naming.resourceName(testRedshiftContstructProps.name),
+    });
+  });
+
+  test('Data Source Name uses QUICKSIGHT_DATASOURCE resource type', () => {
+    template.hasResourceProperties('AWS::QuickSight::DataSource', {
+      Name: testApp.naming
+        .withResourceType(MdaaResourceType.QUICKSIGHT_DATASOURCE)
+        .resourceName(testRedshiftContstructProps.name, 80),
     });
   });
   test('Data Source Reader Permissions', () => {

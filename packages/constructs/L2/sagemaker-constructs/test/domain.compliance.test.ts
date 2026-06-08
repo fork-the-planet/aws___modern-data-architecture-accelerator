@@ -4,6 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Template } from 'aws-cdk-lib/assertions';
 import { MdaaStudioDomain } from '../lib';
 
@@ -43,6 +44,12 @@ describe('MDAA Construct Compliance Tests', () => {
   test('DomainName', () => {
     template.hasResourceProperties('AWS::SageMaker::Domain', {
       DomainName: testApp.naming.resourceName('test-domain', 63),
+    });
+  });
+
+  test('DomainName uses SAGEMAKER_DOMAIN resource type', () => {
+    template.hasResourceProperties('AWS::SageMaker::Domain', {
+      DomainName: testApp.naming.withResourceType(MdaaResourceType.SAGEMAKER_DOMAIN).resourceName('test-domain', 63),
     });
   });
 

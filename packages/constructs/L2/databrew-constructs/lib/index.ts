@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { IResolvable } from 'aws-cdk-lib';
 import { CfnJob, CfnJobProps } from 'aws-cdk-lib/aws-databrew';
 import { Construct } from 'constructs';
@@ -67,8 +68,9 @@ export interface MdaaDataBrewJobProps extends MdaaConstructProps {
  */
 export class MdaaDataBrewJob extends CfnJob {
   private static setProps(props: MdaaDataBrewJobProps): CfnJobProps {
+    const brewNaming = props.naming.withResourceType(MdaaResourceType.DATABREW_JOB);
     const overrideProps = {
-      name: props.naming.resourceName(props.name, 80),
+      name: brewNaming.resourceName(props.name, 80),
       encryptionMode: 'SSE-KMS',
     };
     return { ...props, ...overrideProps };

@@ -4,6 +4,7 @@
  */
 
 import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Match, Template } from 'aws-cdk-lib/assertions';
 import { SecurityGroup, Subnet, Vpc } from 'aws-cdk-lib/aws-ec2';
@@ -99,6 +100,28 @@ describe('MDAA Construct Compliance Tests', () => {
         },
       }),
     });
+  });
+
+  test('Pod log group and fargate profile ARN use EKS_CLUSTER resource type', () => {
+    const eksClusterName = testApp.naming.withResourceType(MdaaResourceType.EKS_CLUSTER).resourceName(undefined, 255);
+
+    // Pod log group: /aws/eks/<cluster>/<stackId>/pods. The stackId segment is a CFN
+    // intrinsic, so the rendered LogGroupName is an Fn::Join. Verify the static prefix
+    // (`/aws/eks/<cluster>/`) and suffix (`/pods`) appear in the join array.
+    const logGroups = template.findResources('AWS::Logs::LogGroup');
+    const podLogGroup = Object.values(logGroups).find(r => {
+      const lgn = r.Properties?.LogGroupName;
+      const parts = lgn?.['Fn::Join']?.[1];
+      return (
+        Array.isArray(parts) &&
+        parts.some((p: unknown) => p === `/aws/eks/${eksClusterName}/`) &&
+        parts.some((p: unknown) => p === '/pods')
+      );
+    });
+    expect(podLogGroup).toBeDefined();
+
+    // Fargate profile ARN published as a stack output / SSM param
+    expect(eksCluster.clusterFargateProfileArn).toContain(`:fargateprofile/${eksClusterName}/*`);
   });
   describe('MDAA KubeCtlProvider Tests', () => {
     const importedEksCluster = MdaaEKSCluster.fromClusterAttributes(testApp.testStack, 'imported=cluster', {

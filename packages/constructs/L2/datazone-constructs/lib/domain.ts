@@ -4,6 +4,7 @@
  */
 
 import { MdaaConstructProps } from '@aws-mdaa/construct';
+import { MdaaResourceType } from '@aws-mdaa/naming';
 import {
   CfnDomain,
   CfnDomainProps,
@@ -46,7 +47,7 @@ export class DataZoneDomainConstruct extends Construct {
 
     const cfnDomainProps: CfnDomainProps = {
       domainExecutionRole: props.domainExecutionRole.roleArn,
-      name: props.naming.resourceName(props.domainName),
+      name: props.naming.withResourceType(MdaaResourceType.DATAZONE_DOMAIN).resourceName(props.domainName),
       kmsKeyIdentifier: props.kmsKey.keyArn,
       description: props.description,
       singleSignOn: singleSignOn,
