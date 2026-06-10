@@ -22,12 +22,18 @@ Review code changes for alignment with the MDAA construct hierarchy, dependency 
 - **L3 constructs** compose L2 constructs and CDK resources into module-specific patterns. They implement the module's architecture.
 - **App modules** translate user YAML configuration into L3 construct props. They must NOT contain significant construct logic — if the app class is doing more than parsing config and calling the L3 constructor, the logic belongs in the L3.
 
+### Construct Usage
+
+- Prefer the MDAA wrapper construct over the raw CDK construct it wraps (e.g., `MdaaRole` over `Role`, `MdaaBucket` over `Bucket`). The wrappers apply MDAA compliance defaults; using the raw CDK construct bypasses them.
+- If no MDAA wrapper exists for a required CDK construct, flag it as a potential enhancement but do not block.
+
 ### Dependency Direction
 
 - Apps depend on L3 constructs: `packages/apps/` → `packages/constructs/L3/`
 - L3 constructs depend on L2 constructs: `packages/constructs/L3/` → `packages/constructs/L2/`
 - **Never reverse:** L2 must not import from L3. L3 must not import from apps.
 - Utilities (`packages/utilities/`) can be used by any layer.
+- **No cross-app imports:** app modules must not import from one another. Logic shared between modules belongs in a shared L3 package (`packages/constructs/L3/{category}/{name}-shared/`), not imported across app boundaries.
 
 ### Construct ID Stability
 
@@ -40,6 +46,12 @@ Review code changes for alignment with the MDAA construct hierarchy, dependency 
 - L3 constructs must extend `MdaaL3Construct` from `@aws-mdaa/l3-construct`
 - L2 constructs use `MdaaConstructProps` from `@aws-mdaa/construct`
 - App modules extend `MdaaCdkApp` from `@aws-mdaa/app`
+
+### Naming
+
+- Module directory names use kebab-case.
+- Construct class names use PascalCase, with the `Mdaa` prefix for MDAA wrapper constructs (e.g., `MdaaBucket`).
+- App config interfaces end with `ConfigContents`; nested config interfaces use a descriptive `Property` suffix.
 
 ### Dependency Management
 
@@ -95,7 +107,7 @@ Each category has a strict scope. Do NOT stretch categories to cover concerns ha
 | `dependency_direction` | Import direction violations: L2→L3, L3→app, circular dependencies | Missing test imports, test file organization |
 | `construct_id_stability` | Construct IDs derived from user config values that would change logical IDs on config changes | Logical ID changes from refactoring (that's baseline review) |
 | `separation_of_concerns` | Mixed responsibilities within a single file/class: a construct doing both resource creation AND config parsing, or an app class containing resource creation logic | Missing documentation, JSDoc quality, config usability |
-| `reusability` | L2 constructs used by only one module, duplicated compliance logic across L3 constructs | Sample config coverage, README quality |
+| `reusability` | L2 constructs used by only one module, duplicated compliance logic across L3 constructs, using a raw CDK construct where an MDAA wrapper exists (e.g., `Role` instead of `MdaaRole`) and thereby bypassing its compliance defaults | Sample config coverage, README quality |
 | `dependency_declaration` | Imports in `lib/` without corresponding `dependencies` entry in package.json | Test dependencies, devDependency organization |
 | `version_consistency` | `@aws-mdaa/*` packages at different versions within the monorepo | External dependency version choices |
 

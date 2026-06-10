@@ -12,10 +12,40 @@ import {
   RequestHeaderConfigurationProperty,
   PolicyProperty,
   RuntimeEndpointProperty,
+  DataProtectionProperty,
 } from '@aws-mdaa/bedrock-agentcore-runtime-l3-construct';
 import { Schema } from 'ajv';
 import { Stack } from 'aws-cdk-lib';
 import * as configSchema from './config-schema.json';
+
+/**
+ * Valid CloudWatch Logs retention periods in days, as accepted by the
+ * RetentionDays enum. Constraining the config type to these literals makes
+ * invalid values fail at schema validation rather than at deploy time.
+ */
+export type LogRetentionDays =
+  | 1
+  | 3
+  | 5
+  | 7
+  | 14
+  | 30
+  | 60
+  | 90
+  | 120
+  | 150
+  | 180
+  | 365
+  | 400
+  | 545
+  | 731
+  | 1096
+  | 1827
+  | 2192
+  | 2557
+  | 2922
+  | 3288
+  | 3653;
 
 export interface BedrockAgentcoreRuntimeConfigContents extends MdaaBaseConfigContents {
   /**
@@ -185,6 +215,34 @@ export interface BedrockAgentcoreRuntimeConfigContents extends MdaaBaseConfigCon
    * @default true
    **/
   readonly enableTransactionSearch?: boolean;
+  /**
+   * CloudWatch Logs retention period for the runtime log group in days.
+   *
+   * Use cases: Log retention policy, cost management, compliance retention requirements
+   *
+   * AWS: CloudWatch Logs log group retention
+   *
+   * Validation: Optional; Number; must be a valid RetentionDays value (1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1096, 1827, 2192, 2557, 2922, 3288, 3653)
+   * @default 30
+   **/
+  readonly logRetentionDays?: LogRetentionDays;
+  /**
+   * CloudWatch Data Protection configuration for the runtime log groups.
+   *
+   * PII masking and customer-managed KMS encryption are always-on, built-in behavior
+   * for this module and cannot be disabled — sensitive data (emails, SSNs, credit card
+   * numbers, etc.) is automatically masked in log events on ingestion. Users with
+   * logs:Unmask permission can still access unmasked data. This optional configuration
+   * only allows tightening the posture (adding identifiers); it can never reduce the
+   * built-in compliance baseline.
+   *
+   * Use cases: extending PII masking with additional identifiers
+   *
+   * AWS: CloudWatch Logs Data Protection Policy
+   *
+   * Validation: Optional; DataProtectionProperty; additive only
+   **/
+  readonly dataProtection?: DataProtectionProperty;
 }
 
 export class BedrockAgentcoreRuntimeConfigParser extends MdaaAppConfigParser<BedrockAgentcoreRuntimeConfigContents> {
@@ -203,6 +261,8 @@ export class BedrockAgentcoreRuntimeConfigParser extends MdaaAppConfigParser<Bed
   public readonly runtimeEndpoint?: RuntimeEndpointProperty;
   public readonly enforceVpcOnly?: boolean;
   public readonly enableTransactionSearch?: boolean;
+  public readonly logRetentionDays?: LogRetentionDays;
+  public readonly dataProtection?: DataProtectionProperty;
 
   constructor(stack: Stack, props: MdaaAppConfigParserProps) {
     super(stack, props, configSchema as Schema);
@@ -222,5 +282,7 @@ export class BedrockAgentcoreRuntimeConfigParser extends MdaaAppConfigParser<Bed
     this.runtimeEndpoint = this.configContents.runtimeEndpoint;
     this.enforceVpcOnly = this.configContents.enforceVpcOnly;
     this.enableTransactionSearch = this.configContents.enableTransactionSearch;
+    this.logRetentionDays = this.configContents.logRetentionDays;
+    this.dataProtection = this.configContents.dataProtection;
   }
 }

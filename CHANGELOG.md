@@ -14,6 +14,9 @@
 - Added optional `networkConfiguration.vpcId` field (required when `enforceVpcOnly` is true) to identify the VPC for the resource policy condition
 - Added new `@aws-mdaa/agentcore-shared` package for shared AgentCore construct utilities (reusable by future Gateway module)
 - Added optional `allowedModelArns` configuration parameter to scope execution role Bedrock model invocation permissions to specific model ARNs for least-privilege access
+- **Built-in log data protection**: customer-managed KMS encryption and CloudWatch Data Protection PII masking are now always applied to the service-created runtime log groups on every deployment. A built-in comprehensive set of PII identifiers (email addresses, credit card numbers, SSNs, names, addresses, US phone numbers, IP addresses) is always masked. **Upgrade impact**: existing deployments will gain a new KMS key, a Data Protection policy, and a log-protection custom resource on next deploy.
+- Added optional `dataProtection.additionalIdentifiers` configuration to mask **additional** AWS-managed data identifiers on top of the built-in set. This field is additive only and cannot reduce the built-in masking baseline. (Replaces the previous `dataProtection.enabled`/`dataProtection.identifiers` configuration — protection is no longer opt-in and the identifier list can no longer be narrowed.)
+- Added optional `logRetentionDays` configuration to set CloudWatch Logs retention on the runtime log groups (defaults to 30 days)
 
 ### Bug Fixes
 

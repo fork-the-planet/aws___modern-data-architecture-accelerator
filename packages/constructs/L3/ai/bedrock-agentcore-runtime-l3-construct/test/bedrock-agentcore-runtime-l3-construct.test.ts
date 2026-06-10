@@ -669,8 +669,10 @@ describe('BedrockAgentcoreRuntimeL3Construct Unit Tests', () => {
         RoleArn: existingRoleArn,
       });
 
-      // Should not create a new role
-      template.resourceCountIs('AWS::IAM::Role', 0);
+      // Should not create a new execution role. The two roles present belong to the
+      // always-on log-protection custom resource (its Lambda handler + CR provider),
+      // not the runtime execution role.
+      template.resourceCountIs('AWS::IAM::Role', 2);
     });
 
     test('should attach custom policies to role', () => {
@@ -850,8 +852,9 @@ describe('BedrockAgentcoreRuntimeL3Construct Unit Tests', () => {
         RoleArn: existingRoleArn,
       });
 
-      // Should not create a new role - allowedModelArns only applies to created roles
-      template.resourceCountIs('AWS::IAM::Role', 0);
+      // Should not create a new execution role - allowedModelArns only applies to created
+      // roles. The two roles present belong to the always-on log-protection custom resource.
+      template.resourceCountIs('AWS::IAM::Role', 2);
     });
   });
 
@@ -875,8 +878,9 @@ describe('BedrockAgentcoreRuntimeL3Construct Unit Tests', () => {
       new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'ssm-runtime-construct', constructProps);
       const template = Template.fromStack(testApp.testStack);
 
-      // Should create SSM parameters for runtime (3) + role (3)
-      template.resourceCountIs('AWS::SSM::Parameter', 6);
+      // Should create SSM parameters for runtime (3) + role (3) + always-on log
+      // protection: KMS key (2) + custom-resource Lambda handler (3)
+      template.resourceCountIs('AWS::SSM::Parameter', 11);
     });
 
     test('should create SSM parameters for endpoint when configured', () => {
@@ -901,8 +905,9 @@ describe('BedrockAgentcoreRuntimeL3Construct Unit Tests', () => {
       new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'ssm-endpoint-runtime-construct', constructProps);
       const template = Template.fromStack(testApp.testStack);
 
-      // Should create SSM parameters for runtime (3) + endpoint (2) + role (3)
-      template.resourceCountIs('AWS::SSM::Parameter', 8);
+      // Should create SSM parameters for runtime (3) + endpoint (2) + role (3) + always-on
+      // log protection: KMS key (2) + custom-resource Lambda handler (3)
+      template.resourceCountIs('AWS::SSM::Parameter', 13);
     });
   });
 
@@ -1174,6 +1179,193 @@ describe('BedrockAgentcoreRuntimeL3Construct Unit Tests', () => {
       expect(() => {
         new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'no-vpcid-runtime-construct', constructProps);
       }).toThrow('networkConfiguration.vpcId is required when enforceVpcOnly is true');
+    });
+  });
+
+  describe('Log Encryption', () => {
+    test('should always create KMS key and log protection custom resource', () => {
+      const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
+        agentRuntimeName: 'encrypted-log-runtime',
+        agentRuntimeArtifact: {
+          containerConfiguration: {
+            containerUri: '123456789012.dkr.ecr.us-east-1.amazonaws.com/my-runtime:latest',
+          },
+        },
+        networkConfiguration: {
+          securityGroups: ['sg-12345678'],
+          subnets: ['subnet-12345678'],
+        },
+        naming: testApp.naming,
+        roleHelper,
+      };
+
+      new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'encrypted-log-runtime-construct', constructProps);
+      const template = Template.fromStack(testApp.testStack);
+
+      template.resourceCountIs('AWS::KMS::Key', 1);
+      template.resourceCountIs('Custom::AgentCoreLogProtection', 1);
+
+      template.hasResourceProperties('Custom::AgentCoreLogProtection', {
+        runtimeId: Match.anyValue(),
+        kmsKeyArn: Match.anyValue(),
+      });
+    });
+
+    test('should pass retention days to custom resource', () => {
+      const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
+        agentRuntimeName: 'retention-runtime',
+        agentRuntimeArtifact: {
+          containerConfiguration: {
+            containerUri: '123456789012.dkr.ecr.us-east-1.amazonaws.com/my-runtime:latest',
+          },
+        },
+        networkConfiguration: {
+          securityGroups: ['sg-12345678'],
+          subnets: ['subnet-12345678'],
+        },
+        logRetentionDays: 90,
+        naming: testApp.naming,
+        roleHelper,
+      };
+
+      new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'retention-runtime-construct', constructProps);
+      const template = Template.fromStack(testApp.testStack);
+
+      template.hasResourceProperties('Custom::AgentCoreLogProtection', {
+        retentionDays: '90',
+      });
+    });
+
+    test('should add KMS key policy for CloudWatch Logs service', () => {
+      const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
+        agentRuntimeName: 'kms-policy-runtime',
+        agentRuntimeArtifact: {
+          containerConfiguration: {
+            containerUri: '123456789012.dkr.ecr.us-east-1.amazonaws.com/my-runtime:latest',
+          },
+        },
+        networkConfiguration: {
+          securityGroups: ['sg-12345678'],
+          subnets: ['subnet-12345678'],
+        },
+        naming: testApp.naming,
+        roleHelper,
+      };
+
+      new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'kms-policy-runtime-construct', constructProps);
+      const template = Template.fromStack(testApp.testStack);
+
+      template.hasResourceProperties('AWS::KMS::Key', {
+        KeyPolicy: {
+          Statement: Match.arrayWith([
+            Match.objectLike({
+              Sid: 'AllowCloudWatchLogsEncryption',
+              Effect: 'Allow',
+              Action: ['kms:Encrypt*', 'kms:Decrypt*', 'kms:ReEncrypt*', 'kms:GenerateDataKey*', 'kms:Describe*'],
+              Principal: {
+                Service: Match.stringLikeRegexp('logs\\..*\\.amazonaws\\.com'),
+              },
+            }),
+          ]),
+        },
+      });
+    });
+  });
+
+  describe('Data Protection', () => {
+    test('should always mask the built-in identifier floor even with no dataProtection config', () => {
+      const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
+        agentRuntimeName: 'dp-default-runtime',
+        agentRuntimeArtifact: {
+          containerConfiguration: {
+            containerUri: '123456789012.dkr.ecr.us-east-1.amazonaws.com/my-runtime:latest',
+          },
+        },
+        networkConfiguration: {
+          securityGroups: ['sg-12345678'],
+          subnets: ['subnet-12345678'],
+        },
+        naming: testApp.naming,
+        roleHelper,
+      };
+
+      new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'dp-default-runtime-construct', constructProps);
+      const template = Template.fromStack(testApp.testStack);
+
+      template.resourceCountIs('Custom::AgentCoreLogProtection', 1);
+      template.hasResourceProperties('Custom::AgentCoreLogProtection', {
+        dataProtectionPolicy: Match.stringLikeRegexp(
+          '.*EmailAddress.*CreditCardNumber.*Ssn-US.*Name.*Address.*PhoneNumber-US.*IpAddress.*',
+        ),
+        runtimeId: Match.anyValue(),
+      });
+    });
+
+    test('should add additionalIdentifiers on top of the built-in floor', () => {
+      const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
+        agentRuntimeName: 'dp-custom-runtime',
+        agentRuntimeArtifact: {
+          containerConfiguration: {
+            containerUri: '123456789012.dkr.ecr.us-east-1.amazonaws.com/my-runtime:latest',
+          },
+        },
+        networkConfiguration: {
+          securityGroups: ['sg-12345678'],
+          subnets: ['subnet-12345678'],
+        },
+        dataProtection: {
+          additionalIdentifiers: ['DriversLicense-US', 'PassportNumber-US'],
+        },
+        naming: testApp.naming,
+        roleHelper,
+      };
+
+      new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'dp-custom-runtime-construct', constructProps);
+      const template = Template.fromStack(testApp.testStack);
+
+      // The built-in floor is still present...
+      template.hasResourceProperties('Custom::AgentCoreLogProtection', {
+        dataProtectionPolicy: Match.stringLikeRegexp(
+          '.*EmailAddress.*CreditCardNumber.*Ssn-US.*Name.*Address.*PhoneNumber-US.*IpAddress.*',
+        ),
+      });
+      // ...and the additional identifiers are layered on top.
+      template.hasResourceProperties('Custom::AgentCoreLogProtection', {
+        dataProtectionPolicy: Match.stringLikeRegexp('.*DriversLicense-US.*'),
+      });
+      template.hasResourceProperties('Custom::AgentCoreLogProtection', {
+        dataProtectionPolicy: Match.stringLikeRegexp('.*PassportNumber-US.*'),
+      });
+    });
+
+    test('should not duplicate an additionalIdentifier that is already in the built-in floor', () => {
+      const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
+        agentRuntimeName: 'dp-dedupe-runtime',
+        agentRuntimeArtifact: {
+          containerConfiguration: {
+            containerUri: '123456789012.dkr.ecr.us-east-1.amazonaws.com/my-runtime:latest',
+          },
+        },
+        networkConfiguration: {
+          securityGroups: ['sg-12345678'],
+          subnets: ['subnet-12345678'],
+        },
+        dataProtection: {
+          additionalIdentifiers: ['EmailAddress'],
+        },
+        naming: testApp.naming,
+        roleHelper,
+      };
+
+      new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'dp-dedupe-runtime-construct', constructProps);
+      const template = Template.fromStack(testApp.testStack);
+
+      const resources = template.findResources('Custom::AgentCoreLogProtection');
+      const policy = Object.values(resources)[0].Properties.dataProtectionPolicy as string;
+      const emailMatches = policy.match(/EmailAddress/g) ?? [];
+      // EmailAddress appears once per statement (audit + redact) = 2 occurrences,
+      // not duplicated by the redundant additionalIdentifier.
+      expect(emailMatches).toHaveLength(2);
     });
   });
 

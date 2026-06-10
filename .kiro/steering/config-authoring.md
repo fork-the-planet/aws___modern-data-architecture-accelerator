@@ -81,3 +81,15 @@ glue-catalog:
 ```
 
 If multiple domains share an account, deploy the account-level module in one domain only.
+
+## 5. Creating minimal configs for testing/reproduction
+
+When building a barebone MDAA config (e.g., to reproduce a user-reported issue), follow these rules:
+
+- **Always include a `roles` module** — generate roles via `generateRoles` so no pre-existing IAM roles are needed. Reference them in other modules with `generated-role-id:<name>` or `generated-role-arn:<name>`.
+- **`trustedPrincipal` values** — must be exactly `this_account`, or start with `service:`, `account:`, or `federation:`. Bare `account` is invalid.
+- **Include `glue-catalog` before `dataops-project`** — the project construct reads SSM param `/glue-catalog-settings/catalog-kms-key` when `glueCatalogKmsKeyArn` is not set. Either deploy the `@aws-mdaa/glue-catalog` module first or provide the ARN explicitly.
+- **Script files must exist** — `scriptLocation` paths (e.g., `./src/glue/python/job.py`) must resolve to real files; CDK asset packaging fails at synth without them.
+- **`dataEngineerRoles` is required** — `dataops-project` requires this field even if empty (`dataEngineerRoles: []`).
+- **Module ordering** — modules deploy in the order listed in `mdaa.yaml`. Typical DataOps order: `glue-catalog` → `roles` → `project` → `jobs`.
+- **Glue catalog is per-account-per-region** — safe to deploy in a fresh region without conflicting with existing deployments elsewhere in the same account.

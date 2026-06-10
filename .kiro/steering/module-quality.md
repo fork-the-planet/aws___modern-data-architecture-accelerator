@@ -258,6 +258,10 @@ Minimize use of `any`, `unknown`, `object` without properties, or `additionalPro
 
 Config errors should be caught at schema validation time (JSON Schema `required`, `enum`, `pattern`, `minLength`, `additionalProperties: false` where appropriate) rather than failing silently in construct code or at CloudFormation deployment time. If a property combination is invalid, express that constraint in the schema (`if`/`then`, `oneOf`, `dependencies`) rather than relying on runtime checks.
 
+**6. Safe defaults for optional booleans**
+
+An optional boolean config property should default (when omitted) to the safer, more restrictive behavior — secure-by-default. A flag that weakens a security or isolation control when left unset is a usability and compliance hazard; either default it to the protective value or make the protective behavior unconditional.
+
 ### Severity Classification for CI Agent
 
 - **HIGH:** Missing README, missing comprehensive sample config, required README section missing (Deployed Resources, Security/Compliance, MDAA Config), required config property with no JSDoc (users can't configure without reading source), required property that should have a default, use of `any`/`unknown`/untyped `object` in a config-exposed interface where a specific type is feasible
@@ -272,6 +276,7 @@ Config errors should be caught at schema validation time (JSON Schema `required`
 - Only flag issues related to code that was CHANGED in this MR. Do not flag pre-existing quality gaps.
 - For README structure findings (`readme_structure` category), flag missing or non-conforming sections. Do NOT flag spelling, grammar, or prose quality — those are handled by the Documentation Quality agent.
 - For schema design findings (`schema_design` category), flag new or modified interfaces that violate the Config Schema Usability Conventions (arrays-with-name instead of maps, untyped properties, missing schema-level validation). Pre-existing patterns in unchanged code are not flagged.
+- For sample config findings (`sample_config` category), flag a separate `sample-config-{variant}.yaml` whose distinguishing settings are NOT mutually exclusive with the comprehensive config (no `oneOf`/`anyOf`/`if`-`then`/`not` branch and no inline mutual-exclusion comment separates them). Such a variant duplicates coverage and should be folded into the comprehensive config and removed — see the "Separate configs for non-exclusive properties" anti-pattern. Classify as MEDIUM.
 - For L3 construct changes that affect the app module, check if the README's Deployed Resources and Security/Compliance sections still list the correct resources.
 - Order findings: HIGH first, then MEDIUM, then LOW.
 - Use only ASCII characters in all string values.

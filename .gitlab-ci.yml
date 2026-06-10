@@ -790,6 +790,11 @@ feature_merge_sonarqube:
         exit 1
       fi
       echo "MERGE_PIPELINE_RUN_ALL is not set — merge is allowed."
+  artifacts:
+    paths:
+      - coverage/merged_lcov.info
+    expire_in: 7 days
+    when: always
 
 # =============================================================================
 # Pipeline 2: Feature Branch Pipeline (non-merge feature branches)

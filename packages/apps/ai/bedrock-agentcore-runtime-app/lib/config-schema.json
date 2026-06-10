@@ -532,6 +532,20 @@
             ],
             "type": "object"
         },
+        "DataProtectionProperty": {
+            "additionalProperties": false,
+            "description": "CloudWatch Data Protection configuration for the runtime log groups.\n\nData Protection (PII masking) and customer-managed KMS encryption are always-on,\nbuilt-in behavior for this module and cannot be disabled — sensitive data (emails,\nSSNs, credit card numbers, etc.) is automatically masked in log events on ingestion.\nThis optional configuration only allows tightening the posture (adding identifiers);\nit can never reduce the built-in compliance baseline.\n\nUse cases: extending PII masking with additional identifiers, future protection options\n\nAWS: CloudWatch Logs Data Protection Policy\n\nValidation: Optional; additionalIdentifiers only adds to the built-in identifier set",
+            "properties": {
+                "additionalIdentifiers": {
+                    "description": "Additional AWS-managed data identifiers to mask, on top of the built-in\ncomprehensive set (EmailAddress, CreditCardNumber, Ssn-US, Name, Address,\nPhoneNumber-US, IpAddress). Each entry is a name matching an AWS-managed data\nidentifier (e.g., \"DriversLicense-US\", \"PassportNumber-US\").\n\nThis field is additive only — it cannot remove or override the built-in\nidentifiers, so it can never reduce the masking baseline.\n\nUse cases: stricter PII masking, organization-specific identifier requirements\n\nAWS: CloudWatch Logs managed data identifiers\n\nValidation: Optional; String[]; must be valid AWS data identifier names",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                }
+            },
+            "type": "object"
+        },
         "DockerImage": {
             "additionalProperties": false,
             "description": "A Docker image",
@@ -3046,6 +3060,10 @@
             "$ref": "#/definitions/AuthorizerConfigurationProperty",
             "description": "Authentication configuration with support for custom JWT authorizers via OIDC.\n\nUse cases: Access control, JWT authentication, OIDC integration\n\nAWS: Bedrock AgentCore Runtime authorizer\n\nValidation: Optional; AuthorizerConfigurationProperty"
         },
+        "dataProtection": {
+            "$ref": "#/definitions/DataProtectionProperty",
+            "description": "CloudWatch Data Protection configuration for the runtime log groups.\n\nPII masking and customer-managed KMS encryption are always-on, built-in behavior\nfor this module and cannot be disabled — sensitive data (emails, SSNs, credit card\nnumbers, etc.) is automatically masked in log events on ingestion. Users with\nlogs:Unmask permission can still access unmasked data. This optional configuration\nonly allows tightening the posture (adding identifiers); it can never reduce the\nbuilt-in compliance baseline.\n\nUse cases: extending PII masking with additional identifiers\n\nAWS: CloudWatch Logs Data Protection Policy\n\nValidation: Optional; DataProtectionProperty; additive only"
+        },
         "description": {
             "description": "Description of the agent runtime's purpose and functionality.\n\nUse cases: Runtime documentation, operational clarity\n\nAWS: Bedrock AgentCore Runtime description\n\nValidation: Optional; String",
             "type": "string"
@@ -3069,6 +3087,35 @@
         "lifecycleConfiguration": {
             "$ref": "#/definitions/LifecycleConfigurationProperty",
             "description": "Session timeout and maximum lifetime settings for runtime instances.\n\nUse cases: Session management, resource control, timeout configuration\n\nAWS: Bedrock AgentCore Runtime lifecycle configuration\n\nValidation: Optional; LifecycleConfigurationProperty; values 60-28800 seconds"
+        },
+        "logRetentionDays": {
+            "default": 30,
+            "description": "CloudWatch Logs retention period for the runtime log group in days.\n\nUse cases: Log retention policy, cost management, compliance retention requirements\n\nAWS: CloudWatch Logs log group retention\n\nValidation: Optional; Number; must be a valid RetentionDays value (1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1096, 1827, 2192, 2557, 2922, 3288, 3653)",
+            "enum": [
+                1,
+                1096,
+                120,
+                14,
+                150,
+                180,
+                1827,
+                2192,
+                2557,
+                2922,
+                3,
+                30,
+                3288,
+                365,
+                3653,
+                400,
+                5,
+                545,
+                60,
+                7,
+                731,
+                90
+            ],
+            "type": "number"
         },
         "nag_suppressions": {
             "$ref": "#/definitions/MdaaNagSuppressionConfigs",

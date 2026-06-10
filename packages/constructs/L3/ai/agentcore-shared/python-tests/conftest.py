@@ -12,6 +12,7 @@ os.environ['AWS_SESSION_TOKEN'] = 'testing'
 os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
 
 lambda_dirs = [
+    'log_protection',
     'resource_policy',
 ]
 
@@ -36,7 +37,7 @@ def lambda_context():
     """Mock Lambda context for testing."""
     class MockContext:
         def __init__(self):
-            self.function_name = "agentcore-resource-policy"
+            self.function_name = "agentcore-log-protection"
             self.function_version = "$LATEST"
             self.remaining_time_in_millis = lambda: 30000
             self.aws_request_id = "test-request-id"

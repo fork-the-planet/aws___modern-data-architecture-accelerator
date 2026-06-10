@@ -6,13 +6,14 @@
 import { MdaaNagSuppressions, MdaaParamAndOutput } from '@aws-mdaa/construct';
 import { MdaaRole } from '@aws-mdaa/iam-constructs';
 import { MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
+import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { aws_xray as xray, CfnResource, Stack } from 'aws-cdk-lib';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
 import { MdaaResourceType } from '@aws-mdaa/naming';
-import { createAgentCoreResourcePolicy } from '@aws-mdaa/agentcore-shared';
+import { createAgentCoreLogProtection, createAgentCoreResourcePolicy } from '@aws-mdaa/agentcore-shared';
 import { DockerImageAsset, Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import { Effect, ManagedPolicy, PolicyDocument, PolicyStatement, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
-import { ResourcePolicy } from 'aws-cdk-lib/aws-logs';
+import { DataIdentifier, ResourcePolicy } from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 import {
   buildAuthorizerConfiguration,
@@ -430,6 +431,55 @@ export interface RuntimeEndpointProperty {
 }
 
 /**
+ * Built-in set of AWS-managed data identifiers that are always masked on the runtime
+ * log groups. This is the mandatory compliance floor — it is applied to every deployment
+ * and cannot be reduced. Configuration may only add identifiers on top of this set.
+ */
+const BUILTIN_DATA_IDENTIFIERS: DataIdentifier[] = [
+  DataIdentifier.EMAILADDRESS,
+  DataIdentifier.CREDITCARDNUMBER,
+  DataIdentifier.SSN_US,
+  DataIdentifier.NAME,
+  DataIdentifier.ADDRESS,
+  DataIdentifier.PHONENUMBER_US,
+  DataIdentifier.IPADDRESS,
+];
+
+/**
+ * CloudWatch Data Protection configuration for the runtime log groups.
+ *
+ * Data Protection (PII masking) and customer-managed KMS encryption are always-on,
+ * built-in behavior for this module and cannot be disabled — sensitive data (emails,
+ * SSNs, credit card numbers, etc.) is automatically masked in log events on ingestion.
+ * This optional configuration only allows tightening the posture (adding identifiers);
+ * it can never reduce the built-in compliance baseline.
+ *
+ * Use cases: extending PII masking with additional identifiers, future protection options
+ *
+ * AWS: CloudWatch Logs Data Protection Policy
+ *
+ * Validation: Optional; additionalIdentifiers only adds to the built-in identifier set
+ */
+export interface DataProtectionProperty {
+  /**
+   * Additional AWS-managed data identifiers to mask, on top of the built-in
+   * comprehensive set (EmailAddress, CreditCardNumber, Ssn-US, Name, Address,
+   * PhoneNumber-US, IpAddress). Each entry is a name matching an AWS-managed data
+   * identifier (e.g., "DriversLicense-US", "PassportNumber-US").
+   *
+   * This field is additive only — it cannot remove or override the built-in
+   * identifiers, so it can never reduce the masking baseline.
+   *
+   * Use cases: stricter PII masking, organization-specific identifier requirements
+   *
+   * AWS: CloudWatch Logs managed data identifiers
+   *
+   * Validation: Optional; String[]; must be valid AWS data identifier names
+   **/
+  readonly additionalIdentifiers?: string[];
+}
+
+/**
  * Complete configuration for deploying a custom agent runtime in Bedrock AgentCore.
  * Defines container deployment, VPC networking, lifecycle, auth, and endpoint settings.
  *
@@ -605,6 +655,31 @@ export interface BedrockAgentcoreRuntimeProps {
    * Validation: Optional; Boolean; requires networkConfiguration.vpcId when true
    **/
   readonly enforceVpcOnly?: boolean;
+  /**
+   * CloudWatch Logs retention period for the runtime log group in days.
+   *
+   * Use cases: Log retention policy, cost management, compliance retention requirements
+   *
+   * AWS: CloudWatch Logs log group retention
+   *
+   * Validation: Optional; Number; must be a valid RetentionDays value
+   * @default RetentionDays.ONE_MONTH (30 days)
+   **/
+  readonly logRetentionDays?: number;
+  /**
+   * CloudWatch Data Protection configuration for the runtime log groups.
+   *
+   * PII masking and customer-managed KMS encryption are always-on, built-in behavior
+   * and cannot be disabled. This optional configuration only allows tightening the
+   * posture (adding identifiers) and can never reduce the built-in compliance baseline.
+   *
+   * Use cases: extending PII masking with additional identifiers
+   *
+   * AWS: CloudWatch Logs Data Protection Policy
+   *
+   * Validation: Optional; DataProtectionProperty; additive only
+   **/
+  readonly dataProtection?: DataProtectionProperty;
 }
 
 /** L3 construct props combining runtime config with MDAA infrastructure properties. */
@@ -715,10 +790,16 @@ export class BedrockAgentcoreRuntimeL3Construct extends MdaaL3Construct {
       transactionSearchConfig.node.addDependency(xrayResourcePolicy);
     }
 
-    // Create runtime endpoint if specified
+    // Create runtime endpoint if specified.
+    // Created before log protection so the log protection Custom Resource can depend
+    // on the endpoint resource (the service creates a per-endpoint log group).
     if (props.runtimeEndpoint) {
       this.runtimeEndpoint = this.createRuntimeEndpoint(props.runtimeEndpoint, props.agentRuntimeName);
     }
+
+    // Apply CMK encryption, retention, and data protection to service-created log groups.
+    // This is always-on, built-in compliance behavior — it cannot be disabled by config.
+    this.createLogProtection(props);
 
     // Create resource-based policy restricting invocations to VPC-only traffic
     if (props.enforceVpcOnly) {
@@ -1052,6 +1133,99 @@ export class BedrockAgentcoreRuntimeL3Construct extends MdaaL3Construct {
     endpoint.node.addDependency(this.runtime);
 
     return endpoint;
+  }
+
+  private createLogProtection(props: BedrockAgentcoreRuntimeL3ConstructProps): void {
+    const stack = Stack.of(this);
+
+    // Always create KMS key — data protection implies encryption
+    const kmsKey = new MdaaKmsKey(this, 'LogGroupKmsKey', {
+      alias: `agentcore-runtime-logs-${props.agentRuntimeName}`,
+      description: `KMS key for AgentCore Runtime log group encryption: ${props.agentRuntimeName}`,
+      naming: this.props.naming,
+    });
+
+    // Grant CloudWatch Logs service permission to use the key
+    kmsKey.addToResourcePolicy(
+      new PolicyStatement({
+        sid: 'AllowCloudWatchLogsEncryption',
+        effect: Effect.ALLOW,
+        resources: ['*'],
+        actions: ['kms:Encrypt*', 'kms:Decrypt*', 'kms:ReEncrypt*', 'kms:GenerateDataKey*', 'kms:Describe*'],
+        principals: [new ServicePrincipal(`logs.${stack.region}.amazonaws.com`)],
+        conditions: {
+          ArnLike: {
+            'kms:EncryptionContext:aws:logs:arn': `arn:${stack.partition}:logs:${stack.region}:${stack.account}:*`,
+          },
+        },
+      }),
+    );
+
+    // Build the always-on data protection policy (built-in identifier floor plus any additions)
+    const dataProtectionPolicy = this.buildDataProtectionPolicy(props.dataProtection);
+
+    // Create Custom Resource that discovers the service-created log groups
+    // and applies CMK encryption, retention, and data protection after the runtime exists
+    const runtimeId = this.runtime.getAtt('AgentRuntimeId').toString();
+    const logProtection = createAgentCoreLogProtection(this, 'LogProtection', {
+      runtimeId: runtimeId,
+      kmsKey: kmsKey,
+      retentionDays: props.logRetentionDays,
+      dataProtectionPolicy: dataProtectionPolicy,
+      naming: this.props.naming,
+    });
+
+    // Ensure the Custom Resource runs after the runtime is created
+    logProtection.node.addDependency(this.runtime);
+
+    // Also depend on the runtime endpoint when one is configured. The service creates
+    // a per-endpoint log group; depending on the endpoint resource narrows the window
+    // in which the Custom Resource could run before that log group exists.
+    if (this.runtimeEndpoint) {
+      logProtection.node.addDependency(this.runtimeEndpoint);
+    }
+  }
+
+  /**
+   * Builds the always-on data protection policy. The built-in identifier floor
+   * ({@link BUILTIN_DATA_IDENTIFIERS}) is always masked; any additionalIdentifiers
+   * supplied via config are added on top (deduplicated). This is additive only —
+   * the floor can never be reduced.
+   */
+  private buildDataProtectionPolicy(dataProtection?: DataProtectionProperty): Record<string, unknown> {
+    const identifierNames = new Set<string>(BUILTIN_DATA_IDENTIFIERS.map(id => id.name));
+    for (const name of dataProtection?.additionalIdentifiers ?? []) {
+      identifierNames.add(new DataIdentifier(name).name);
+    }
+
+    const dataIdentifierArns = Array.from(identifierNames).map(
+      name => `arn:aws:dataprotection::aws:data-identifier/${name}`,
+    );
+
+    return {
+      Name: 'agentcore-runtime-data-protection',
+      Version: '2021-06-01',
+      Statement: [
+        {
+          Sid: 'audit-policy',
+          DataIdentifier: dataIdentifierArns,
+          Operation: {
+            Audit: {
+              FindingsDestination: {},
+            },
+          },
+        },
+        {
+          Sid: 'redact-policy',
+          DataIdentifier: dataIdentifierArns,
+          Operation: {
+            Deidentify: {
+              MaskConfig: {},
+            },
+          },
+        },
+      ],
+    };
   }
 
   private storeSSMParameters(runtimeName: string): void {

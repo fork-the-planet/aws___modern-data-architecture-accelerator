@@ -142,3 +142,15 @@ enableTransactionSearch: true
 # (Optional) Enforce VPC-only invocation via resource-based policy.
 # Requires networkConfiguration.vpcId when true.
 enforceVpcOnly: true
+# (Optional) CloudWatch Logs retention period in days for the runtime log group.
+logRetentionDays: 90
+# CMK encryption and CloudWatch Data Protection (PII masking) are always-on,
+# built-in behavior for this module and cannot be disabled. The built-in set
+# (EmailAddress, CreditCardNumber, Ssn-US, Name, Address, PhoneNumber-US,
+# IpAddress) is always masked; users with logs:Unmask can still access unmasked data.
+# (Optional) Add extra data identifiers on top of the built-in set. This is
+# additive only — it cannot remove or weaken the built-in masking.
+dataProtection:
+  additionalIdentifiers:
+    - 'DriversLicense-US'
+    - 'PassportNumber-US'

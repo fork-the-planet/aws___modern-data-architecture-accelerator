@@ -18,6 +18,8 @@ This module deploys and integrates the following resources:
 - **ECR Docker Image Asset** — Container image built and pushed to ECR at deploy time (when using `codePath`).
 - **IAM Execution Role + Managed Policy** — Runtime execution role with permissions for ECR image access, CloudWatch Logs, X-Ray tracing, CloudWatch Metrics, Bedrock AgentCore workload identity tokens, and Bedrock model invocation. Can use an existing role via `roleArn` or auto-create one.
 - **CloudWatch Log Group** — Log group for runtime execution logs.
+- **KMS Key** — Customer-managed encryption key for the CloudWatch log groups.
+- **CloudWatch Data Protection Policy** — PII masking policy applied to the log groups on ingestion. Extendable via `dataProtection.additionalIdentifiers`.
 - **SSM Parameters** — Runtime ARN, Runtime ID, Runtime Name, and optionally Endpoint ARN/ID stored in Parameter Store for cross-module reference.
 
 ---
@@ -35,7 +37,8 @@ This module deploys and integrates the following resources:
 This module is designed in alignment with MDAA security/compliance principles and CDK nag rulesets. Additional review is recommended prior to production deployment, ensuring organization-specific compliance requirements are met.
 
 - **Encryption at Rest**:
-  - CloudWatch log groups encrypted per account settings
+  - CloudWatch log groups are always encrypted with a module-created customer-managed KMS key (built-in, cannot be disabled)
+  - CloudWatch Data Protection always masks a built-in comprehensive set of PII identifiers on log ingestion (built-in, cannot be disabled; extendable via `dataProtection.additionalIdentifiers`)
   - Container images stored in ECR with default encryption
 - **Encryption in Transit**:
   - All runtime API communications use TLS
