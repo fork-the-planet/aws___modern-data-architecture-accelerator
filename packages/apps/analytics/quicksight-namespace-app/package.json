@@ -39,7 +39,7 @@
     "cdk-nag": "2.37.55",
     "constructs": "10.0.96",
     "source-map-support": "0.5.21",
-    "yaml": "1.10.2"
+    "yaml": "1.10.3"
   },
   "repository": {
     "type": "git",

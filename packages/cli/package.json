@@ -39,7 +39,7 @@
     "ajv": "8.18.0",
     "command-exists": "1.2.9",
     "command-line-args": "5.2.1",
-    "yaml": "1.10.2"
+    "yaml": "1.10.3"
   },
   "gitHead": "8b49a2b371014baec046605ffdbfe38951099c31"
 }

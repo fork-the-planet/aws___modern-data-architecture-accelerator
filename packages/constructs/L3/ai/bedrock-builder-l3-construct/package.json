@@ -67,7 +67,7 @@
     "cdk-nag": "2.37.55",
     "constructs": "10.0.96",
     "lodash": "4.18.1",
-    "yaml": "1.10.2"
+    "yaml": "1.10.3"
   },
   "gitHead": "8b49a2b371014baec046605ffdbfe38951099c31",
   "stability": "experimental",
