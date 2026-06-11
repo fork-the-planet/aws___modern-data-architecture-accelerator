@@ -29,18 +29,19 @@ if [ "${CI_PIPELINE_SOURCE}" != "merge_request_event" ] && [ -z "${CI_MERGE_REQU
   exit 0
 fi
 
-BASE_PROJECT_KEY=${SONAR_PROJECT_KEY:-${CI_PROJECT_PATH_SLUG}}
-SANITIZED_BRANCH=$(echo "${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME}" | sed 's/[^a-zA-Z0-9._:-]/_/g')
-SANITIZED_TARGET=$(echo "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME:-main}" | sed 's/[^a-zA-Z0-9._:-]/_/g')
-PROJECT_KEY="${BASE_PROJECT_KEY}-mr-${SANITIZED_BRANCH}-to-${SANITIZED_TARGET}"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "${SCRIPT_DIR}/sonar-project-key.sh"
+PROJECT_KEY="${SONAR_PROJECT_KEY}"
 
 echo "=== SonarQube Target Baseline ==="
 echo "Project key:   ${PROJECT_KEY}"
 echo "MR branch:     ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME}"
+echo "Target branch: ${SONAR_TARGET_REF} (${SONAR_TARGET_SHA})"
 
-# Skip if the MR project already exists — baseline only needs to run once.
+# Skip if the MR project already exists — baseline only needs to run once
+# per (source, target, target-HEAD) key. When the target branch moves, the
+# key changes, this lookup misses, and a fresh baseline is established.
 echo "Checking if project already exists on SonarQube server..."
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJECT_EXISTS=$(python3 "${SCRIPT_DIR}/sonar_project_exists.py" "${PROJECT_KEY}")
 
 if [ "${PROJECT_EXISTS}" = "true" ]; then
@@ -57,14 +58,9 @@ fi
 
 echo "Project does not exist — running baseline scan."
 
-# Resolve the MR target branch.
-if [ -n "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME:-}" ]; then
-  TARGET_REF="origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}"
-else
-  TARGET_REF="origin/main"
-fi
-TARGET_SHA=$(git rev-parse "${TARGET_REF}")
-echo "Target branch: ${TARGET_REF} (${TARGET_SHA})"
+# Target ref/SHA already resolved by sonar-project-key.sh.
+TARGET_REF="${SONAR_TARGET_REF}"
+TARGET_SHA="${SONAR_TARGET_SHA}"
 
 # Check if the MR contains any TypeScript changes. If not, skip both
 # the baseline and MR scan — there's nothing for SonarQube to gate on.

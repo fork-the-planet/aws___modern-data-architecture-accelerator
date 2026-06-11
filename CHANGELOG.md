@@ -29,6 +29,10 @@
 - **Breaking:** WAF rate-based rules are now evaluated **before** the IP allowlist rule so abusive allowlisted traffic is still throttled. This moves the built-in `ipAllow` rule from priority 0 to priority 2 and reserves priorities 0 (per-IP rate), 1 (per-user rate), and 2 (IP allowlist). Any `waf.wafRules` configured with priorities 0–2 must be renumbered to 3 or higher (10+ recommended); a synth-time error is raised on collision. The GAIA v2 sample configs renumber their managed rules to 10–15.
 - Made REST API pagination tokens (`next_token`) opaque and versioned. The admin sessions, admin feedback, and user feedback-history endpoints previously returned the raw DynamoDB pagination key (base64-encoded or plain), exposing internal table structure and allowing client-side tampering. Tokens are now KMS-encrypted, integrity-protected, and bound to their issuing endpoint (and user, where applicable); tampered or mismatched tokens are rejected with `400 Invalid next_token`
 
+#### DataOps Project Module
+
+- Fixed cross-account Lake Formation resource links: when `lakeFormation.createCrossAccountResourceLinkAccounts` listed multiple accounts, only the last account received a resource link and DESCRIBE grant. Each account now receives its own link. Resource-link database logical IDs are unchanged, so existing single-account deployments are unaffected and adding an account no longer deletes prior accounts' links.
+
 #### DataZone/SMUS Modules
 
 - Added `kms:GenerateDataKey` permission to the domain config custom resource handler policy, fixing cross-account `ListDomainUnitsForParent`, adapting to SMUS service changes

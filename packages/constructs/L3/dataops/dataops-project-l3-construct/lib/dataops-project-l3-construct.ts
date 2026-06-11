@@ -35,7 +35,6 @@ import {
   LakeFormationAccessControlL3ConstructProps,
   NamedGrantProps,
   NamedPrincipalProps,
-  NamedResourceLinkProps,
   PermissionsConfig,
   PrincipalProps,
   ResourceLinkProps,
@@ -1269,7 +1268,9 @@ export class DataOpsProjectL3Construct extends MdaaL3Construct {
       ) || {};
 
     const resourceLinkName = databaseLakeFormationProps.createCrossAccountResourceLinkName || dbResourceName;
-    const resourceLinkProps: NamedResourceLinkProps = Object.fromEntries(
+    // One resource link per consuming account. Each is a distinct list entry, so
+    // accounts sharing the same resourceLinkName no longer collide.
+    const resourceLinkProps: ResourceLinkProps[] =
       databaseLakeFormationProps?.createCrossAccountResourceLinkAccounts?.map(account => {
         const accountPrincipalEntries = Object.entries(lfGrantProps).flatMap(lfGrantEntry => {
           const lfGrantProps = lfGrantEntry[1];
@@ -1282,15 +1283,15 @@ export class DataOpsProjectL3Construct extends MdaaL3Construct {
         });
         const namedAccountPrincipals: NamedPrincipalProps = Object.fromEntries(accountPrincipalEntries);
         const props: ResourceLinkProps = {
+          resourceLinkName: resourceLinkName,
           targetDatabase: dbResourceName,
           targetAccount: this.account,
           targetRegion: this.region,
           fromAccount: account,
           grantPrincipals: namedAccountPrincipals,
         };
-        return [resourceLinkName, props];
-      }) || [],
-    );
+        return props;
+      }) || [];
 
     const lakeFormationProps: LakeFormationAccessControlL3ConstructProps = {
       grants: { ...projectRoleGrantProps, ...lfGrantProps },

@@ -12,7 +12,7 @@ import {
   LakeFormationAccessControlL3ConstructProps,
   NamedGrantProps,
   NamedPrincipalProps,
-  NamedResourceLinkProps,
+  ResourceLinkProps,
 } from '../lib';
 
 describe('MDAA Compliance Stack Tests', () => {
@@ -117,17 +117,25 @@ describe('MDAA Compliance Stack Tests', () => {
     },
   };
 
-  const resourceLinkProps: NamedResourceLinkProps = {
-    'test-local-resource-link': {
+  const resourceLinkProps: ResourceLinkProps[] = [
+    {
+      resourceLinkName: 'test-local-resource-link',
       targetDatabase: 'testing-database-target',
       grantPrincipals: readPrincipalProps,
     },
-    'test-database': {
-      targetDatabase: 'test-database',
+    {
+      resourceLinkName: 'test-database',
       fromAccount: 'test-cross-account',
+      targetDatabase: 'test-database',
       grantPrincipals: readPrincipalCrossAccountProps,
     },
-  };
+    // A resourceLinkName that no longer matches any logical map key: the created
+    // Glue database must use resourceLinkName. No grantPrincipals so GrantCount is unaffected.
+    {
+      resourceLinkName: 'explicit-resource-link-name',
+      targetDatabase: 'testing-database-target',
+    },
+  ];
 
   const crossAccountStack = new Stack(testApp, 'test-cross-account-stack');
   const constructProps: LakeFormationAccessControlL3ConstructProps = {
@@ -163,6 +171,21 @@ describe('MDAA Compliance Stack Tests', () => {
         CatalogId: 'test-account',
         DatabaseInput: {
           Name: 'test-local-resource-link',
+          TargetDatabase: {
+            CatalogId: 'test-account',
+            DatabaseName: 'testing-database-target',
+          },
+        },
+      });
+    });
+
+    test('Resource Link Uses Explicit resourceLinkName Over Map Key', () => {
+      // The map key is 'rl-key-distinct-from-name' but the created Glue database
+      // must take its name from the explicit resourceLinkName property.
+      template.hasResourceProperties('AWS::Glue::Database', {
+        CatalogId: 'test-account',
+        DatabaseInput: {
+          Name: 'explicit-resource-link-name',
           TargetDatabase: {
             CatalogId: 'test-account',
             DatabaseName: 'testing-database-target',

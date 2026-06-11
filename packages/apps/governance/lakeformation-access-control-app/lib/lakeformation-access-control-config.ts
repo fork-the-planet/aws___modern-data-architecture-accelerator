@@ -9,7 +9,6 @@ import {
   LakeFormationAccessControlL3Construct,
   NamedGrantProps,
   NamedPrincipalProps,
-  NamedResourceLinkProps,
   PermissionsConfig,
   ResourceLinkProps,
 } from '@aws-mdaa/lakeformation-access-control-l3-construct';
@@ -269,28 +268,27 @@ export interface LakeFormationAccessControlConfigContents extends MdaaBaseConfig
 
 export class LakeFormationAccessControlConfigParser extends MdaaAppConfigParser<LakeFormationAccessControlConfigContents> {
   public readonly grants: NamedGrantProps;
-  public readonly resourceLinks?: NamedResourceLinkProps;
+  public readonly resourceLinks?: ResourceLinkProps[];
 
   constructor(stack: Stack, props: MdaaAppConfigParserProps) {
     super(stack, props, configSchema as Schema);
 
-    const resourceLinkPropsEntries = Object.entries(this.configContents.resourceLinks || {}).map(resourceLinkEntry => {
+    this.resourceLinks = Object.entries(this.configContents.resourceLinks || {}).map(resourceLinkEntry => {
       const configResourceLinkName = resourceLinkEntry[0];
       const configResourceLink = resourceLinkEntry[1];
 
       const principals: NamedPrincipalProps = this.resolvePrincipals(configResourceLink.grantPrincipals || []);
 
       const resourceLinkProps: ResourceLinkProps = {
+        resourceLinkName: configResourceLinkName,
         targetDatabase: configResourceLink.targetDatabase,
         targetAccount: configResourceLink.targetAccount,
         grantPrincipals: principals,
         fromAccount: configResourceLink.fromAccount,
       };
 
-      return [configResourceLinkName, resourceLinkProps];
+      return resourceLinkProps;
     });
-
-    this.resourceLinks = Object.fromEntries(resourceLinkPropsEntries);
 
     this.grants = Object.fromEntries(
       Object.entries(this.configContents.grants).map(configGrantEntry => {

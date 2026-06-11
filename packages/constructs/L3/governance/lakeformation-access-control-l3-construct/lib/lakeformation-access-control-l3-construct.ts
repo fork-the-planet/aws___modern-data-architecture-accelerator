@@ -14,11 +14,13 @@ import { Construct } from 'constructs';
  *  Permissions to grant. 'read' resolves to SELECT + DESCRIBE.  'write' resolves to SELECT + DESCRIBE + INSERT + DELETE.
  */
 export type PermissionsConfig = 'read' | 'write' | 'super';
-export interface NamedResourceLinkProps {
-  /** @jsii ignore */
-  [name: string]: ResourceLinkProps;
-}
 export interface ResourceLinkProps {
+  /**
+   * Name of the resource-link database to create in the fromAccount.
+   * Multiple resource links (e.g. one per consuming account) may share the
+   * same database name; each is a distinct entry in the resourceLinks list.
+   */
+  readonly resourceLinkName: string;
   /**
    * Name of the target database
    */
@@ -189,7 +191,7 @@ export interface LakeFormationAccessControlL3ConstructProps extends MdaaL3Constr
   // Named grant definitions for Lake Formation access control
   readonly grants: NamedGrantProps;
   // Optional resource links for cross-account database sharing
-  readonly resourceLinks?: NamedResourceLinkProps;
+  readonly resourceLinks?: ResourceLinkProps[];
   readonly externalDatabaseDependency?: CfnDatabase;
 }
 
@@ -234,7 +236,7 @@ export class LakeFormationAccessControlL3Construct extends MdaaL3Construct {
     super(scope, id, props);
     this.props = props;
 
-    this.createResourceLinks(this.props.resourceLinks || {}, this.props.externalDatabaseDependency);
+    this.createResourceLinks(this.props.resourceLinks || [], this.props.externalDatabaseDependency);
 
     Object.entries(this.props.grants).forEach(grantEntry => {
       const grantName = grantEntry[0];
@@ -263,10 +265,9 @@ export class LakeFormationAccessControlL3Construct extends MdaaL3Construct {
     });
   }
 
-  private createResourceLinks(resourceLinks: NamedResourceLinkProps, externalDependency?: CfnDatabase) {
-    Object.entries(resourceLinks).forEach(resourceLinkEntry => {
-      const resourceLinkName = resourceLinkEntry[0];
-      const resourceLinkProps = resourceLinkEntry[1];
+  private createResourceLinks(resourceLinks: ResourceLinkProps[], externalDependency?: CfnDatabase) {
+    resourceLinks.forEach(resourceLinkProps => {
+      const resourceLinkName = resourceLinkProps.resourceLinkName;
       const fromAccount = resourceLinkProps.fromAccount || this.account;
       const createScope =
         fromAccount === this.account
