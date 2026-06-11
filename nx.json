@@ -26,7 +26,10 @@
         "{workspaceRoot}/scripts/build/build_package_code.sh",
         "{workspaceRoot}/scripts/generate_docs/jsfh-conf.yaml",
         "{workspaceRoot}/requirements-dev.txt",
-        { "dependencies": true, "input": "build-source" }
+        {
+          "dependencies": true,
+          "input": "build-source"
+        }
       ],
       "outputs": [
         "{projectRoot}/.jsii",
@@ -54,7 +57,10 @@
         "{projectRoot}/test/**/*.yaml",
         "{projectRoot}/test/**/*.json",
         "{projectRoot}/sample_configs/**/*.yaml",
-        { "dependencies": true, "input": "build-source" }
+        {
+          "dependencies": true,
+          "input": "build-source"
+        }
       ],
       "outputs": ["{projectRoot}/coverage"],
       "options": {
@@ -81,9 +87,13 @@
         "{projectRoot}/test/*.ts",
         "{projectRoot}/test/**/*.json",
         "{projectRoot}/sample_configs/**/*.yaml",
-        { "dependencies": true, "input": "build-source" }
+        {
+          "dependencies": true,
+          "input": "build-source"
+        }
       ],
       "cache": false
     }
-  }
+  },
+  "analytics": true
 }

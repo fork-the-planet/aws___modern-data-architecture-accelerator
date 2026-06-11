@@ -51,21 +51,21 @@
     "typedoc": "0.28.17"
   },
   "optionalDependencies": {
-    "@nx/nx-darwin-arm64": "22.5.4",
-    "@nx/nx-darwin-x64": "22.5.4",
-    "@nx/nx-freebsd-x64": "22.5.4",
-    "@nx/nx-linux-arm-gnueabihf": "22.5.4",
-    "@nx/nx-linux-arm64-gnu": "22.5.4",
-    "@nx/nx-linux-arm64-musl": "22.5.4",
-    "@nx/nx-linux-x64-gnu": "22.5.4",
-    "@nx/nx-linux-x64-musl": "22.5.4",
-    "@nx/nx-win32-arm64-msvc": "22.5.4",
-    "@nx/nx-win32-x64-msvc": "22.5.4"
+    "@nx/nx-darwin-arm64": "22.7.5",
+    "@nx/nx-darwin-x64": "22.7.5",
+    "@nx/nx-freebsd-x64": "22.7.5",
+    "@nx/nx-linux-arm-gnueabihf": "22.7.5",
+    "@nx/nx-linux-arm64-gnu": "22.7.5",
+    "@nx/nx-linux-arm64-musl": "22.7.5",
+    "@nx/nx-linux-x64-gnu": "22.7.5",
+    "@nx/nx-linux-x64-musl": "22.7.5",
+    "@nx/nx-win32-arm64-msvc": "22.7.5",
+    "@nx/nx-win32-x64-msvc": "22.7.5"
   },
   "dependencies": {
     "aws-cdk": "2.1034.0",
     "lerna": "9.0.7",
-    "nx": "22.5.4",
+    "nx": "^22.7.5",
     "typescript": "5.9.3"
   },
   "workspaces": [
