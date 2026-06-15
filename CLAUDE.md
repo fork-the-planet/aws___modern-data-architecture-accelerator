@@ -9,6 +9,10 @@ Refer to the steering files in `.kiro/steering/` for project-wide standards:
 - `config-authoring.md` — Config interface and sample config conventions; **read this before creating or editing MDAA YAML configs** (includes minimal test config pitfalls)
 - `iterative-development.md` — Build/test cycle for modifying existing packages, common pitfalls, dependency ordering
 
+## Commits
+
+Keep commit messages short: a single-line subject (a short half-sentence, e.g. `feat(agentcore): migrate VPC-only resource policy to native CFN resource`). Do not add a body. Detailed explanation belongs in the MR description, not the commit.
+
 ## Issues
 
 When creating or writing down issues/tickets:

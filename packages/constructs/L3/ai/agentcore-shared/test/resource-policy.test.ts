@@ -5,10 +5,7 @@
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Match, Template } from 'aws-cdk-lib/assertions';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { createAgentCoreResourcePolicy } from '../lib';
-
-jest.spyOn(lambda.Code, 'fromAsset').mockReturnValue(lambda.Code.fromInline('# mock') as unknown as lambda.AssetCode);
 
 const TEST_RESOURCE_ARN = `arn:aws:bedrock-agentcore:test-region:test-account:runtime/my-runtime`;
 const TEST_VPC_ID = 'vpc-0123456789abcdef0';
@@ -20,28 +17,38 @@ describe('createAgentCoreResourcePolicy', () => {
     testApp = new MdaaTestApp();
   });
 
-  test('should create custom resource for resource policy', () => {
+  test('should create native AWS::BedrockAgentCore::ResourcePolicy resource', () => {
     createAgentCoreResourcePolicy(testApp.testStack, 'TestPolicy', {
       resourceArn: TEST_RESOURCE_ARN,
       vpcId: TEST_VPC_ID,
-      naming: testApp.naming,
     });
 
     const template = Template.fromStack(testApp.testStack);
-    template.resourceCountIs('Custom::AgentCoreResourcePolicy', 1);
+    template.resourceCountIs('AWS::BedrockAgentCore::ResourcePolicy', 1);
+  });
+
+  test('should not create a Lambda-backed custom resource, Lambda, or role', () => {
+    createAgentCoreResourcePolicy(testApp.testStack, 'TestPolicy', {
+      resourceArn: TEST_RESOURCE_ARN,
+      vpcId: TEST_VPC_ID,
+    });
+
+    const template = Template.fromStack(testApp.testStack);
+    template.resourceCountIs('Custom::AgentCoreResourcePolicy', 0);
+    template.resourceCountIs('AWS::Lambda::Function', 0);
+    template.resourceCountIs('AWS::IAM::Role', 0);
   });
 
   test('should pass policy document with VPC-only restriction', () => {
     createAgentCoreResourcePolicy(testApp.testStack, 'TestPolicy', {
       resourceArn: TEST_RESOURCE_ARN,
       vpcId: TEST_VPC_ID,
-      naming: testApp.naming,
     });
 
     const template = Template.fromStack(testApp.testStack);
-    template.hasResourceProperties('Custom::AgentCoreResourcePolicy', {
-      resourceArn: TEST_RESOURCE_ARN,
-      policy: Match.serializedJson(
+    template.hasResourceProperties('AWS::BedrockAgentCore::ResourcePolicy', {
+      ResourceArn: TEST_RESOURCE_ARN,
+      Policy: Match.serializedJson(
         Match.objectLike({
           Version: '2012-10-17',
           Statement: [
@@ -63,44 +70,19 @@ describe('createAgentCoreResourcePolicy', () => {
     });
   });
 
-  test('should create Lambda handler with correct IAM permissions', () => {
-    createAgentCoreResourcePolicy(testApp.testStack, 'TestPolicy', {
-      resourceArn: TEST_RESOURCE_ARN,
-      vpcId: TEST_VPC_ID,
-      naming: testApp.naming,
-    });
-
-    const template = Template.fromStack(testApp.testStack);
-    template.hasResourceProperties('AWS::IAM::Policy', {
-      PolicyDocument: {
-        Statement: Match.arrayWith([
-          Match.objectLike({
-            Action: [
-              'bedrock-agentcore:PutResourcePolicy',
-              'bedrock-agentcore:DeleteResourcePolicy',
-              'bedrock-agentcore:GetResourcePolicy',
-            ],
-            Resource: TEST_RESOURCE_ARN,
-          }),
-        ]),
-      },
-    });
-  });
-
   test('should use custom actions in policy document when specified', () => {
     const gatewayArn = 'arn:aws:bedrock-agentcore:test-region:test-account:gateway/my-gateway';
     createAgentCoreResourcePolicy(testApp.testStack, 'TestPolicy', {
       resourceArn: gatewayArn,
       vpcId: TEST_VPC_ID,
-      naming: testApp.naming,
       actions: ['bedrock-agentcore:InvokeGateway'],
     });
 
     const template = Template.fromStack(testApp.testStack);
-    template.resourceCountIs('Custom::AgentCoreResourcePolicy', 1);
-    template.hasResourceProperties('Custom::AgentCoreResourcePolicy', {
-      resourceArn: gatewayArn,
-      policy: Match.serializedJson(
+    template.resourceCountIs('AWS::BedrockAgentCore::ResourcePolicy', 1);
+    template.hasResourceProperties('AWS::BedrockAgentCore::ResourcePolicy', {
+      ResourceArn: gatewayArn,
+      Policy: Match.serializedJson(
         Match.objectLike({
           Statement: [
             Match.objectLike({

@@ -812,9 +812,8 @@ export class BedrockAgentcoreRuntimeL3Construct extends MdaaL3Construct {
       const resourcePolicy = createAgentCoreResourcePolicy(this, 'ResourcePolicy', {
         resourceArn: runtimeArn,
         vpcId: props.networkConfiguration.vpcId,
-        naming: this.props.naming,
       });
-      resourcePolicy.node.addDependency(this.runtime);
+      resourcePolicy.addDependency(this.runtime);
     }
 
     // Store runtime information in SSM Parameter Store

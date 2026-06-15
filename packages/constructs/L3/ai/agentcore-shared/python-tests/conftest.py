@@ -13,7 +13,6 @@ os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
 
 lambda_dirs = [
     'log_protection',
-    'resource_policy',
 ]
 
 for lambda_dir in lambda_dirs:

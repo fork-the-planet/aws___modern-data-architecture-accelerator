@@ -6,28 +6,9 @@
 import { MdaaRoleHelper } from '@aws-mdaa/iam-role-helper';
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { Annotations, Match } from 'aws-cdk-lib/assertions';
-import { Aspects, CustomResource } from 'aws-cdk-lib';
+import { Aspects } from 'aws-cdk-lib';
 import { AwsSolutionsChecks } from 'cdk-nag';
 import { BedrockAgentcoreRuntimeL3Construct, BedrockAgentcoreRuntimeL3ConstructProps } from '../lib';
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-jest.mock('@aws-mdaa/agentcore-shared', () => {
-  const original = jest.requireActual('@aws-mdaa/agentcore-shared');
-  return {
-    ...original,
-    createAgentCoreResourcePolicy: (scope: any, id: string, props: any) => {
-      return new CustomResource(scope, id, {
-        serviceToken: 'arn:aws:lambda:us-east-1:123456789012:function:mock',
-        resourceType: 'Custom::AgentCoreResourcePolicy',
-        properties: {
-          resourceArn: props.resourceArn,
-          policy: JSON.stringify({ mock: true }),
-        },
-      });
-    },
-  };
-});
-/* eslint-enable @typescript-eslint/no-explicit-any */
 
 describe('BedrockAgentcoreRuntimeL3Construct Compliance Tests', () => {
   let testApp: MdaaTestApp;

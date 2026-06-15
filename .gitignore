@@ -86,3 +86,5 @@ temp_configs
 .gitlab/issues
 .gitlab/merge_requests
 .gitlab/test_evidence
+
+CLAUDE.local.md

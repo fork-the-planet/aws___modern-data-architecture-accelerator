@@ -5,32 +5,12 @@
 
 import { MdaaRoleHelper } from '@aws-mdaa/iam-role-helper';
 import { MdaaTestApp } from '@aws-mdaa/testing';
-import { CustomResource } from 'aws-cdk-lib';
 import { Match, Template } from 'aws-cdk-lib/assertions';
 import {
   BedrockAgentcoreRuntimeL3Construct,
   BedrockAgentcoreRuntimeL3ConstructProps,
   NetworkConfigurationProperty,
 } from '../lib';
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-jest.mock('@aws-mdaa/agentcore-shared', () => {
-  const original = jest.requireActual('@aws-mdaa/agentcore-shared');
-  return {
-    ...original,
-    createAgentCoreResourcePolicy: (scope: any, id: string, props: any) => {
-      return new CustomResource(scope, id, {
-        serviceToken: 'arn:aws:lambda:us-east-1:123456789012:function:mock',
-        resourceType: 'Custom::AgentCoreResourcePolicy',
-        properties: {
-          resourceArn: props.resourceArn,
-          policy: JSON.stringify({ mock: true }),
-        },
-      });
-    },
-  };
-});
-/* eslint-enable @typescript-eslint/no-explicit-any */
 
 describe('BedrockAgentcoreRuntimeL3Construct Unit Tests', () => {
   let testApp: MdaaTestApp;
@@ -1088,11 +1068,11 @@ describe('BedrockAgentcoreRuntimeL3Construct Unit Tests', () => {
       new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'vpc-enforced-runtime-construct', constructProps);
       const template = Template.fromStack(testApp.testStack);
 
-      template.resourceCountIs('Custom::AgentCoreResourcePolicy', 1);
+      template.resourceCountIs('AWS::BedrockAgentCore::ResourcePolicy', 1);
 
       // Verify the resource policy references the runtime ARN
-      template.hasResourceProperties('Custom::AgentCoreResourcePolicy', {
-        resourceArn: Match.objectLike({
+      template.hasResourceProperties('AWS::BedrockAgentCore::ResourcePolicy', {
+        ResourceArn: Match.objectLike({
           'Fn::GetAtt': Match.arrayWith([Match.stringLikeRegexp('.*Runtime.*'), 'AgentRuntimeArn']),
         }),
       });
@@ -1100,7 +1080,7 @@ describe('BedrockAgentcoreRuntimeL3Construct Unit Tests', () => {
       // Verify the resource policy depends on the runtime resource
       const resources = template.toJSON().Resources;
       const policyLogicalId = Object.keys(resources).find(
-        key => resources[key].Type === 'Custom::AgentCoreResourcePolicy',
+        key => resources[key].Type === 'AWS::BedrockAgentCore::ResourcePolicy',
       );
       expect(policyLogicalId).toBeDefined();
       const policyResource = resources[policyLogicalId!];
@@ -1132,7 +1112,7 @@ describe('BedrockAgentcoreRuntimeL3Construct Unit Tests', () => {
       new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'no-enforce-runtime-construct', constructProps);
       const template = Template.fromStack(testApp.testStack);
 
-      template.resourceCountIs('Custom::AgentCoreResourcePolicy', 0);
+      template.resourceCountIs('AWS::BedrockAgentCore::ResourcePolicy', 0);
     });
 
     test('should not create resource policy when enforceVpcOnly is false', () => {
@@ -1156,7 +1136,7 @@ describe('BedrockAgentcoreRuntimeL3Construct Unit Tests', () => {
       new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'enforce-false-runtime-construct', constructProps);
       const template = Template.fromStack(testApp.testStack);
 
-      template.resourceCountIs('Custom::AgentCoreResourcePolicy', 0);
+      template.resourceCountIs('AWS::BedrockAgentCore::ResourcePolicy', 0);
     });
 
     test('should throw error when enforceVpcOnly is true but vpcId is missing', () => {
