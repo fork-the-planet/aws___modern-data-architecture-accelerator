@@ -251,7 +251,7 @@ describe('Bedrock Settings L3 Construct Compliance Tests', () => {
 
     // Verify Lambda function has proper runtime and configuration
     template.hasResourceProperties('AWS::Lambda::Function', {
-      Runtime: 'python3.13',
+      Runtime: 'python3.14',
       Handler: 'bedrock_settings.lambda_handler',
       Environment: {
         Variables: {

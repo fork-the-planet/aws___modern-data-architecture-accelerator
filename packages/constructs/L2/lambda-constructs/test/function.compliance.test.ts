@@ -22,7 +22,7 @@ describe('MDAA Construct Compliance Tests', () => {
     naming: testApp.naming,
     functionName: 'test-function',
     role: testLambdaRole,
-    runtime: Runtime.NODEJS_22_X,
+    runtime: Runtime.NODEJS_24_X,
     code: Code.fromInline('exports.handler = function(event, ctx, cb) { return cb(null, "hi"); }'),
     handler: 'index.handler',
   };

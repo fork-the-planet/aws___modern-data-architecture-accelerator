@@ -32,7 +32,29 @@
       "Type": "AWS::CloudWatch::Dashboard",
       "Properties": {
         "DashboardBody": "{\"widgets\":[{\"type\":\"text\",\"width\":24,\"height\":2,\"x\":0,\"y\":0,\"properties\":{\"markdown\":\"# Test Dashboard\\nThis is a test dashboard with text widgets\\n\"}},{\"type\":\"text\",\"width\":12,\"height\":2,\"x\":0,\"y\":2,\"properties\":{\"markdown\":\"## Section 1\"}},{\"type\":\"text\",\"width\":12,\"height\":2,\"x\":12,\"y\":2,\"properties\":{\"markdown\":\"## Section 2\"}}]}",
-        "DashboardName": "test-text-dashboard"
+        "DashboardName": "test-text-dashboard",
+        "Tags": [
+          {
+            "Key": "mdaa_cdk_app",
+            "Value": "dataops-dashboard"
+          },
+          {
+            "Key": "mdaa_domain",
+            "Value": "test-domain"
+          },
+          {
+            "Key": "mdaa_env",
+            "Value": "test-env"
+          },
+          {
+            "Key": "mdaa_module_name",
+            "Value": "test-dashboard-noproject"
+          },
+          {
+            "Key": "mdaa_org",
+            "Value": "test-org"
+          }
+        ]
       }
     },
     "dashboard0dashboardtesttextdashboardnamessmF1823515": {
@@ -79,7 +101,29 @@
             ]
           ]
         },
-        "DashboardName": "test-metric-dashboard"
+        "DashboardName": "test-metric-dashboard",
+        "Tags": [
+          {
+            "Key": "mdaa_cdk_app",
+            "Value": "dataops-dashboard"
+          },
+          {
+            "Key": "mdaa_domain",
+            "Value": "test-domain"
+          },
+          {
+            "Key": "mdaa_env",
+            "Value": "test-env"
+          },
+          {
+            "Key": "mdaa_module_name",
+            "Value": "test-dashboard-noproject"
+          },
+          {
+            "Key": "mdaa_org",
+            "Value": "test-org"
+          }
+        ]
       }
     },
     "dashboard1dashboardtestmetricdashboardnamessm87BA5CC1": {
@@ -122,7 +166,29 @@
             ]
           ]
         },
-        "DashboardName": "test-log-insights-dashboard"
+        "DashboardName": "test-log-insights-dashboard",
+        "Tags": [
+          {
+            "Key": "mdaa_cdk_app",
+            "Value": "dataops-dashboard"
+          },
+          {
+            "Key": "mdaa_domain",
+            "Value": "test-domain"
+          },
+          {
+            "Key": "mdaa_env",
+            "Value": "test-env"
+          },
+          {
+            "Key": "mdaa_module_name",
+            "Value": "test-dashboard-noproject"
+          },
+          {
+            "Key": "mdaa_org",
+            "Value": "test-org"
+          }
+        ]
       }
     },
     "dashboard2dashboardtestloginsightsdashboardnamessmC3B9E24E": {
@@ -177,7 +243,29 @@
             ]
           ]
         },
-        "DashboardName": "test-mixed-dashboard"
+        "DashboardName": "test-mixed-dashboard",
+        "Tags": [
+          {
+            "Key": "mdaa_cdk_app",
+            "Value": "dataops-dashboard"
+          },
+          {
+            "Key": "mdaa_domain",
+            "Value": "test-domain"
+          },
+          {
+            "Key": "mdaa_env",
+            "Value": "test-env"
+          },
+          {
+            "Key": "mdaa_module_name",
+            "Value": "test-dashboard-noproject"
+          },
+          {
+            "Key": "mdaa_org",
+            "Value": "test-org"
+          }
+        ]
       }
     },
     "dashboard3dashboardtestmixeddashboardnamessm07931A06": {
@@ -228,7 +316,29 @@
             ]
           ]
         },
-        "DashboardName": "test-advanced-dashboard"
+        "DashboardName": "test-advanced-dashboard",
+        "Tags": [
+          {
+            "Key": "mdaa_cdk_app",
+            "Value": "dataops-dashboard"
+          },
+          {
+            "Key": "mdaa_domain",
+            "Value": "test-domain"
+          },
+          {
+            "Key": "mdaa_env",
+            "Value": "test-env"
+          },
+          {
+            "Key": "mdaa_module_name",
+            "Value": "test-dashboard-noproject"
+          },
+          {
+            "Key": "mdaa_org",
+            "Value": "test-org"
+          }
+        ]
       }
     },
     "dashboard4dashboardtestadvanceddashboardnamessm61D41DC1": {

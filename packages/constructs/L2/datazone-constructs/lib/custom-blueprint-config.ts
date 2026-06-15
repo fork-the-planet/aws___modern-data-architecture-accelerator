@@ -50,7 +50,7 @@ export class MdaaSageMakerCustomBlueprintConfigConstruct extends Construct {
     const configProps: MdaaCustomResourceProps = {
       resourceType: 'EnvironmentBluePrintConfiguration',
       code: Code.fromAsset(`${__dirname}/../src/lambda/environment_blueprint_config`),
-      runtime: Runtime.PYTHON_3_13,
+      runtime: Runtime.PYTHON_3_14,
       handler: 'lambda.lambda_handler',
       handlerRoleManagedPolicies: [domainKmsUsagePolicy],
       handlerRolePolicyStatements: policyStatements,

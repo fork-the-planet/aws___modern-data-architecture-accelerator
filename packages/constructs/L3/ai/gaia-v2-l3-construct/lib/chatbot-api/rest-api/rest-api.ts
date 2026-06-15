@@ -140,7 +140,7 @@ export interface RestApiProps {
   readonly lambdaArchitecture?: 'ARM_64' | 'X86_64';
   /** Enable PowerTools development logging */
   readonly powertoolsDevLogging?: 'true' | 'false';
-  /** Python runtime version. If undefined, Runtime.PYTHON_3_13 is used. */
+  /** Python runtime version. If undefined, Runtime.PYTHON_3_14 is used. */
   readonly pythonRuntime?: string;
   /** WAF ARN for API protection */
   readonly wafArn?: string;
@@ -592,7 +592,7 @@ export class RestApi extends MdaaL3Construct {
       handler: 'index.handler',
       runtime: this.props.pythonRuntime
         ? new Runtime(this.props.pythonRuntime, RuntimeFamily.PYTHON)
-        : Runtime.PYTHON_3_13,
+        : Runtime.PYTHON_3_14,
       architecture: this.props.lambdaArchitecture === 'ARM_64' ? Architecture.ARM_64 : Architecture.X86_64,
       timeout: cdk.Duration.seconds(this.props.restApiHandlerLambdaTimeoutInSeconds ?? DEFAULT_LAMBDA_TIMEOUT_SECONDS),
       memorySize: this.props.restApiHandlerLambdaMemorySize ?? DEFAULT_LAMBDA_MEMORY_SIZE_MB,

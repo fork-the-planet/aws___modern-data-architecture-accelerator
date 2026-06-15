@@ -32,7 +32,29 @@
       "Type": "AWS::CloudWatch::Dashboard",
       "Properties": {
         "DashboardBody": "{\"widgets\":[{\"type\":\"text\",\"width\":24,\"height\":2,\"x\":0,\"y\":0,\"properties\":{\"markdown\":\"# My Dashboard\"}}]}",
-        "DashboardName": "my-dashboard"
+        "DashboardName": "my-dashboard",
+        "Tags": [
+          {
+            "Key": "mdaa_cdk_app",
+            "Value": "dataops-dashboard"
+          },
+          {
+            "Key": "mdaa_domain",
+            "Value": "test-domain"
+          },
+          {
+            "Key": "mdaa_env",
+            "Value": "test-env"
+          },
+          {
+            "Key": "mdaa_module_name",
+            "Value": "test-dashboard-minimal"
+          },
+          {
+            "Key": "mdaa_org",
+            "Value": "test-org"
+          }
+        ]
       }
     },
     "dashboard0dashboardmydashboardnamessmC073A713": {

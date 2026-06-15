@@ -13,7 +13,7 @@ describe('MDAA Construct Compliance Tests', () => {
   const policyDocument = {
     Statement: [
       {
-        Sid: 'test-statement',
+        Sid: 'testStatement',
         Action: 's3:GetObject',
         Resource: 'arn:test-partition:s3:::test-bucket/test-obj',
         Effect: 'Allow',
@@ -53,7 +53,7 @@ describe('MDAA Construct Compliance Tests', () => {
                 Action: 's3:GetObject',
                 Effect: 'Allow',
                 Resource: 'arn:test-partition:s3:::test-bucket/test-obj',
-                Sid: 'test-statement',
+                Sid: 'testStatement',
               },
             ],
           },

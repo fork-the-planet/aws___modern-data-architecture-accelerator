@@ -164,7 +164,7 @@ Note: Knowledge Base ID is configured at the `bedrock.knowledgeBaseId` level.
 | Property | Description |
 |----------|-------------|
 | `lambdaArchitecture` | `ARM_64` or `X86_64` (default: X86_64) |
-| `pythonRuntime` | Python runtime version (default: Python 3.13) |
+| `pythonRuntime` | Python runtime version (default: Python 3.14) |
 | `lambdaTimeoutInSeconds` | Lambda timeout (default: 600 seconds) |
 | `lambdaMemorySize` | Lambda memory in MB (default: 1024) |
 | `provisionedConcurrentExecutions` | Pre-warmed Lambda instances for lower latency |
@@ -190,7 +190,7 @@ Use this data source for direct access to Bedrock foundation models without RAG.
 | Property | Description |
 |----------|-------------|
 | `lambdaArchitecture` | `ARM_64` or `X86_64` (default: X86_64) |
-| `pythonRuntime` | Python runtime version (default: Python 3.13) |
+| `pythonRuntime` | Python runtime version (default: Python 3.14) |
 | `lambdaTimeoutInSeconds` | Lambda timeout (default: 600 seconds) |
 | `lambdaMemorySize` | Lambda memory in MB (default: 1024) |
 | `provisionedConcurrentExecutions` | Pre-warmed Lambda instances for lower latency |

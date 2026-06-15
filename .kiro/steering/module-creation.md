@@ -62,7 +62,7 @@ packages/apps/{category}/{module}-app/
 {
   "name": "@aws-mdaa/{module}",
   "description": "MDAA {Module Display Name} module",
-  "version": "1.6.0",
+  "version": "<match root package.json version>",
   "license": "Apache-2.0",
   "author": {
     "name": "Amazon Web Services",
@@ -86,33 +86,20 @@ packages/apps/{category}/{module}-app/
     "test:update-baselines": "UPDATE_BASELINES=true jest --passWithNoTests --testPathPattern='.*\\.diff\\.test\\.ts'"
   },
   "dependencies": {
-    "@aws-mdaa/app": "1.6.0",
-    "@aws-mdaa/config": "1.6.0",
-    "@aws-mdaa/iam-role-helper": "1.6.0",
-    "@aws-mdaa/l3-construct": "1.6.0",
-    "@aws-mdaa/naming": "1.6.0",
-    "ajv": "8.18.0",
-    "aws-cdk-lib": "2.220.0",
-    "cdk-nag": "2.37.55",
-    "constructs": "10.0.96",
-    "source-map-support": "0.5.21",
-    "yaml": "1.10.2"
+    "<look at an existing app module in the same category for the correct dependencies and versions>"
   },
   "devDependencies": {
-    "@aws-mdaa/testing": "1.6.0",
-    "@types/jest": "29.5.14",
-    "@types/node": "22.9.0",
-    "@types/prettier": "2.6.0",
-    "jest": "29.7.0",
-    "ts-jest": "29.4.9",
-    "ts-node": "10.9.2",
-    "typescript": "5.9.3",
-    "typescript-json-schema": "0.67.1"
+    "<look at an existing app module in the same category for the correct devDependencies and versions>"
   }
 }
 ```
 
-**Note:** Add the L3 construct dependency once it exists. Match version numbers to the current repo version in the root `package.json`.
+**Note:** Dependencies vary by module. To determine the correct dependencies and versions:
+1. Look at an existing app module in the same category (e.g., `packages/apps/{category}/`)
+2. Copy the common baseline dependencies (`@aws-mdaa/app`, `aws-cdk-lib`, `constructs`, etc.)
+3. Add any module-specific dependencies needed for the resources being deployed
+4. Match `@aws-mdaa/*` package versions to the root `package.json` version
+5. Add the L3 construct dependency once it exists
 
 #### cdk.json
 

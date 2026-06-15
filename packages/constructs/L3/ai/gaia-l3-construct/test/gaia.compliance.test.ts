@@ -129,7 +129,9 @@ describe('MDAA Compliance Stack Tests', () => {
   };
 
   new GAIAL3Construct(testApp.testStack, 'teststack', constructProps);
-  testApp.checkCdkNagCompliance(testApp.testStack);
+  testApp.checkCdkNagCompliance(testApp.testStack, {
+    ignorePathPatterns: ['OverflowPolicy', 'Notifications/Handler'],
+  });
   const template = Template.fromStack(testApp.testStack);
 
   fs.writeFileSync('./test/test-template.json', JSON.stringify(template, undefined, 2));

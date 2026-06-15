@@ -319,7 +319,7 @@ export class GAIAL3Construct extends MdaaL3Construct {
     const crProps: MdaaCustomResourceProps = {
       resourceType: 'UpdateUserPoolClient',
       code: Code.fromAsset(`${__dirname}/./function`),
-      runtime: Runtime.PYTHON_3_13,
+      runtime: Runtime.PYTHON_3_14,
       handler: 'update_user_pool_client.lambda_handler',
       handlerRolePolicyStatements: [
         new PolicyStatement({

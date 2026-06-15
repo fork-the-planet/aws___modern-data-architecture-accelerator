@@ -33,7 +33,7 @@ const naming = getIntegNaming(app, 'cr');
 new MdaaCustomResource(stack, 'CustomResource', {
   naming,
   resourceType: 'IntegTest',
-  runtime: Runtime.PYTHON_3_13,
+  runtime: Runtime.PYTHON_3_14,
   handler: 'index.handler',
   code: Code.fromInline(`
 def handler(event, context):

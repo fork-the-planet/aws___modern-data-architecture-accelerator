@@ -44,7 +44,7 @@ describe('BedrockSettingsL3Construct Unit Tests', () => {
       // Verify custom resource creation
       template.hasResourceProperties('AWS::Lambda::Function', {
         Handler: 'bedrock_settings.lambda_handler',
-        Runtime: 'python3.13',
+        Runtime: 'python3.14',
       });
     });
 
@@ -277,7 +277,7 @@ describe('BedrockSettingsL3Construct Unit Tests', () => {
       // Verify Lambda function for custom resource
       template.hasResourceProperties('AWS::Lambda::Function', {
         Handler: 'bedrock_settings.lambda_handler',
-        Runtime: 'python3.13',
+        Runtime: 'python3.14',
         Environment: {
           Variables: {
             LOG_LEVEL: 'INFO',

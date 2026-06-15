@@ -175,7 +175,7 @@ export class MdaaEC2Instance extends Instance {
     const crProps: MdaaCustomResourceProps = {
       resourceType: 'Ec2VolumeEncryptionCheck',
       code: Code.fromAsset(`${__dirname}/../src/lambda/volume_check`),
-      runtime: Runtime.PYTHON_3_13,
+      runtime: Runtime.PYTHON_3_14,
       handler: 'volume_check.lambda_handler',
       handlerRolePolicyStatements: [statement],
       handlerProps: handlerProps,

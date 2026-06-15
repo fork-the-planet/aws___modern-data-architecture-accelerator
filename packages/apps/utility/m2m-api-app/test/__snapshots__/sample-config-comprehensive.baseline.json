@@ -310,7 +310,7 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs22.x",
+        "Runtime": "nodejs24.x",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -637,7 +637,7 @@
         "Handler": "s3_url.handler",
         "ReservedConcurrentExecutions": 10,
         "Role": "arn:test-partition:iam::test-account:role/some-lambda-role-arn",
-        "Runtime": "python3.13",
+        "Runtime": "python3.14",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",

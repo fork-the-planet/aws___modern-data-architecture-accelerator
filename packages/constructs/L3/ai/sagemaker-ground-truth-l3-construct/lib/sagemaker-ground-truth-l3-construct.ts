@@ -5,7 +5,6 @@
 
 import { Aws, Duration, RemovalPolicy, Stack } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { NagSuppressions } from 'cdk-nag';
 import { INLINE_POLICY_SUPPRESSIONS, LAMBDA_SUPPRESSIONS } from './nag-constants';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
 import { MdaaResourceType } from '@aws-mdaa/naming';
@@ -837,17 +836,15 @@ export class SageMakerGroundTruthL3Construct extends MdaaL3Construct {
     MdaaNagSuppressions.addCodeResourceSuppressions(this, allSuppressions, true);
     // Also suppress on stateMachine (Step Functions auto-created role)
     MdaaNagSuppressions.addCodeResourceSuppressions(stateMachine, allSuppressions, true);
-    // CDK auto-creates a BucketNotificationsHandler Lambda at the stack level
-    // (outside our construct tree) when eventBridgeEnabled is set on MdaaBucket.
-    // This handler can't be referenced as a construct, so we suppress by path.
-    NagSuppressions.addResourceSuppressionsByPath(
-      Stack.of(this),
-      [
-        `/${Stack.of(this).stackName}/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource`,
-        `/${Stack.of(this).stackName}/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy/Resource`,
-      ],
-      allSuppressions,
-    );
+    // CDK auto-creates a BucketNotificationsHandler Lambda when eventBridgeEnabled is set on MdaaBucket.
+    // In CDK 2.258.0+ it may be nested inside the construct tree rather than at the stack root.
+    // Search stack-level children (for hoisted handlers) and this construct's subtree.
+    const allNodes = [...Stack.of(this).node.children, ...this.node.findAll()];
+    for (const child of allNodes) {
+      if (child.node.id.includes('BucketNotificationsHandler')) {
+        MdaaNagSuppressions.addCodeResourceSuppressions(child, allSuppressions, true);
+      }
+    }
 
     // --- SSM Outputs ---
     const param = (name: string, value: string) =>

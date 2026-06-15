@@ -985,7 +985,7 @@ export class BedrockKnowledgeBaseL3Construct extends MdaaL3Construct {
       description: `Batch sync data source ${dsName} for knowledge base ${kbName}`,
       srcDir: join(__dirname, 'lambda-functions/datasource'),
       handler: 'datasource_batch_sync.lambda_handler',
-      runtime: 'python3.13',
+      runtime: 'python3.14',
       roleArn: roleArn,
       timeoutSeconds: BedrockKnowledgeBaseL3Construct.LAMBDA_TIMEOUT.BATCH_SYNC, // 15 minutes
       environment: {
@@ -1055,7 +1055,7 @@ export class BedrockKnowledgeBaseL3Construct extends MdaaL3Construct {
       description: `Auto-sync data source ${dsName} for knowledge base ${kbName}`,
       srcDir: join(__dirname, 'lambda-functions/datasource'),
       handler: 'datasource_sync.lambda_handler',
-      runtime: 'python3.13',
+      runtime: 'python3.14',
       roleArn: roleArn,
       timeoutSeconds: BedrockKnowledgeBaseL3Construct.LAMBDA_TIMEOUT.DEFAULT,
       environment: {
@@ -1475,7 +1475,7 @@ export class BedrockKnowledgeBaseL3Construct extends MdaaL3Construct {
       resourceType: indexConfig.resourceType,
       naming: this.props.naming,
       code: Code.fromAsset(join(__dirname, '..', 'src', 'python', 'create-index-aoss')),
-      runtime: Runtime.PYTHON_3_13,
+      runtime: Runtime.PYTHON_3_14,
       handler: 'create_index_aoss.lambda_handler',
       handlerLayers: [layers.boto3, layers.opensearchPy, layers.awsauth],
       handlerTimeout: Duration.seconds(BedrockKnowledgeBaseL3Construct.LAMBDA_TIMEOUT.MAX),

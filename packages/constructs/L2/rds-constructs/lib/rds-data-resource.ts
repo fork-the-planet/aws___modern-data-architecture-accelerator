@@ -58,7 +58,7 @@ export class MdaaRdsDataResource extends MdaaCustomResource {
     return {
       resourceType: 'RDS-Data',
       naming: props.naming,
-      runtime: Runtime.PYTHON_3_13,
+      runtime: Runtime.PYTHON_3_14,
       handler: 'index.lambda_handler',
       handlerTimeout: props.timeout ? props.timeout : Duration.minutes(11),
       code: Code.fromAsset(`${__dirname}/functions/rds-data/`),

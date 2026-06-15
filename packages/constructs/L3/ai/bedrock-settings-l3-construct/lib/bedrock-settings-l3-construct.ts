@@ -23,7 +23,7 @@ import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
 import { MdaaBucket } from '@aws-mdaa/s3-constructs';
 
 // Lambda configuration constants for the custom resource
-const LAMBDA_RUNTIME = Runtime.PYTHON_3_13;
+const LAMBDA_RUNTIME = Runtime.PYTHON_3_14;
 const LAMBDA_HANDLER = 'bedrock_settings.lambda_handler';
 const LAMBDA_SRC_DIR = '../src/python/bedrock-settings';
 

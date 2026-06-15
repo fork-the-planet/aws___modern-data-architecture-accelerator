@@ -1129,17 +1129,21 @@ Validation: Must be non-empty string suitable for SageMaker blueprint naming
 | **Additional properties** | Not allowed                      |
 | **Defined in**            | #/definitions/MdaaCustomResource |
 
-| Property                                                                                            | Pattern | Type   | Deprecated | Definition                                                                                                                | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| --------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| + [_allowCrossEnvironment](#sagemakerBlueprint_domainConfig_domainConfigCr__allowCrossEnvironment ) | No      | object | No         | -                                                                                                                         | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| + [_physicalName](#sagemakerBlueprint_domainConfig_domainConfigCr__physicalName )                   | No      | object | No         | -                                                                                                                         | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                       | No      | object | No         | In #/definitions/ResourceEnvironment                                                                                      | The environment this resource belongs to.<br />For resources that are created and managed by the CDK<br />(generally, those created by creating new class instances like Role, Bucket, etc.),<br />this is always the same as the environment of the stack they belong to;<br />however, for imported resources<br />(those obtained from static methods like fromRoleArn, fromBucketName, etc.),<br />that might be different than the stack they were imported into. |
-| + [handlerFunction](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction )               | No      | object | No         | In #/definitions/MdaaLambdaFunction                                                                                       | Construct for creating a compliant Lambda Function                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_node )                                     | No      | object | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [physicalName](#sagemakerBlueprint_domainConfig_domainConfigCr_physicalName )                     | No      | string | No         | -                                                                                                                         | Returns a string-encoded token that resolves to the physical name that<br />should be passed to the CloudFormation resource.<br /><br />This value will resolve to one of the following:<br />- a concrete value (e.g. \`"my-awesome-bucket"\`)<br />- \`undefined\`, when a name should be generated by CloudFormation<br />- a concrete name generated automatically during synthesis, in<br />  cross-environment scenarios.                                        |
-| + [ref](#sagemakerBlueprint_domainConfig_domainConfigCr_ref )                                       | No      | string | No         | -                                                                                                                         | The physical name of this custom resource.                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| + [resource](#sagemakerBlueprint_domainConfig_domainConfigCr_resource )                             | No      | object | No         | -                                                                                                                         | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_stack )                                   | No      | object | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Property                                                                                            | Pattern | Type   | Deprecated | Definition                                                                                                                | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| --------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| + [_allowCrossEnvironment](#sagemakerBlueprint_domainConfig_domainConfigCr__allowCrossEnvironment ) | No      | object | No         | -                                                                                                                         | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| + [_customAccount](#sagemakerBlueprint_domainConfig_domainConfigCr__customAccount )                 | No      | object | No         | -                                                                                                                         | Account given in the constructor, if any. Will be same as Stack if not supplied.                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [_customRegion](#sagemakerBlueprint_domainConfig_domainConfigCr__customRegion )                   | No      | object | No         | -                                                                                                                         | Account given in the constructor, if any. Will be same as Stack if not supplied.                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [_generatedPhysicalName](#sagemakerBlueprint_domainConfig_domainConfigCr__generatedPhysicalName ) | No      | object | No         | -                                                                                                                         | The generated physical name, in case of cross-env access                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| + [_givenPhysicalName](#sagemakerBlueprint_domainConfig_domainConfigCr__givenPhysicalName )         | No      | object | No         | -                                                                                                                         | The physicalName supplied into the constructor                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| + [_physicalNameMode](#sagemakerBlueprint_domainConfig_domainConfigCr__physicalNameMode )           | No      | object | No         | -                                                                                                                         | What we are doing for the physical name                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                       | No      | object | No         | In #/definitions/ResourceEnvironment                                                                                      | The environment this resource belongs to.<br /><br />For resources that are created and managed in a Stack (those created by<br />creating new class instances like \`new Role()\`, \`new Bucket()\`, etc.), this<br />is always the same as the environment of the stack they belong to.<br /><br />For referenced resources (those obtained from referencing methods like<br />\`Role.fromRoleArn()\`, \`Bucket.fromBucketName()\`, etc.), they might be<br />different than the stack they were imported into. |
+| + [handlerFunction](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction )               | No      | object | No         | In #/definitions/MdaaLambdaFunction                                                                                       | Construct for creating a compliant Lambda Function                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_node )                                     | No      | object | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| + [physicalName](#sagemakerBlueprint_domainConfig_domainConfigCr_physicalName )                     | No      | string | No         | -                                                                                                                         | Returns a string-encoded token that resolves to the physical name that<br />should be passed to the CloudFormation resource.<br /><br />This value will resolve to one of the following:<br />- a concrete value (e.g. \`"my-awesome-bucket"\`)<br />- \`undefined\`, when a name should be generated by CloudFormation<br />- a concrete name generated automatically during synthesis, in<br />  cross-environment scenarios.                                                                                   |
+| + [ref](#sagemakerBlueprint_domainConfig_domainConfigCr_ref )                                       | No      | string | No         | -                                                                                                                         | The physical name of this custom resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| + [resource](#sagemakerBlueprint_domainConfig_domainConfigCr_resource )                             | No      | object | No         | -                                                                                                                         | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_stack )                                   | No      | object | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
 ##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr__allowCrossEnvironment"></a>3.6.7.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > _allowCrossEnvironment`
 
@@ -1149,7 +1153,7 @@ Validation: Must be non-empty string suitable for SageMaker blueprint naming
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr__physicalName"></a>3.6.7.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > _physicalName`
+##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr__customAccount"></a>3.6.7.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > _customAccount`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -1157,7 +1161,49 @@ Validation: Must be non-empty string suitable for SageMaker blueprint naming
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_env"></a>3.6.7.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > env`
+**Description:** Account given in the constructor, if any. Will be same as Stack if not supplied.
+
+##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr__customRegion"></a>3.6.7.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > _customRegion`
+
+|                           |                  |
+| ------------------------- | ---------------- |
+| **Type**                  | `object`         |
+| **Required**              | Yes              |
+| **Additional properties** | Any type allowed |
+
+**Description:** Account given in the constructor, if any. Will be same as Stack if not supplied.
+
+##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr__generatedPhysicalName"></a>3.6.7.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > _generatedPhysicalName`
+
+|                           |                  |
+| ------------------------- | ---------------- |
+| **Type**                  | `object`         |
+| **Required**              | Yes              |
+| **Additional properties** | Any type allowed |
+
+**Description:** The generated physical name, in case of cross-env access
+
+##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr__givenPhysicalName"></a>3.6.7.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > _givenPhysicalName`
+
+|                           |                  |
+| ------------------------- | ---------------- |
+| **Type**                  | `object`         |
+| **Required**              | Yes              |
+| **Additional properties** | Any type allowed |
+
+**Description:** The physicalName supplied into the constructor
+
+##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr__physicalNameMode"></a>3.6.7.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > _physicalNameMode`
+
+|                           |                  |
+| ------------------------- | ---------------- |
+| **Type**                  | `object`         |
+| **Required**              | Yes              |
+| **Additional properties** | Any type allowed |
+
+**Description:** What we are doing for the physical name
+
+##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_env"></a>3.6.7.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > env`
 
 |                           |                                   |
 | ------------------------- | --------------------------------- |
@@ -1167,45 +1213,48 @@ Validation: Must be non-empty string suitable for SageMaker blueprint naming
 | **Defined in**            | #/definitions/ResourceEnvironment |
 
 **Description:** The environment this resource belongs to.
-For resources that are created and managed by the CDK
-(generally, those created by creating new class instances like Role, Bucket, etc.),
-this is always the same as the environment of the stack they belong to;
-however, for imported resources
-(those obtained from static methods like fromRoleArn, fromBucketName, etc.),
-that might be different than the stack they were imported into.
 
-| Property                                                                  | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                        |
-| ------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| + [account](#sagemakerBlueprint_domainConfig_domainConfigCr_env_account ) | No      | string | No         | -          | The AWS account ID that this resource belongs to.<br />Since this can be a Token<br />(for example, when the account is CloudFormation's AWS::AccountId intrinsic),<br />make sure to use Token.compareStrings()<br />instead of just comparing the values for equality. |
-| + [region](#sagemakerBlueprint_domainConfig_domainConfigCr_env_region )   | No      | string | No         | -          | The AWS region that this resource belongs to.<br />Since this can be a Token<br />(for example, when the region is CloudFormation's AWS::Region intrinsic),<br />make sure to use Token.compareStrings()<br />instead of just comparing the values for equality.         |
+For resources that are created and managed in a Stack (those created by
+creating new class instances like `new Role()`, `new Bucket()`, etc.), this
+is always the same as the environment of the stack they belong to.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_env_account"></a>3.6.7.3.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > env > account`
+For referenced resources (those obtained from referencing methods like
+`Role.fromRoleArn()`, `Bucket.fromBucketName()`, etc.), they might be
+different than the stack they were imported into.
 
-|              |          |
-| ------------ | -------- |
-| **Type**     | `string` |
-| **Required** | Yes      |
+| Property                                                                  | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                |
+| ------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| + [account](#sagemakerBlueprint_domainConfig_domainConfigCr_env_account ) | No      | string | No         | -          | The AWS Account ID that this resource belongs to.<br /><br />Since this can be a Token (for example, when the account is<br />CloudFormation's \`AWS::AccountId\` intrinsic), make sure to use<br />\`Token.compareStrings()\` instead of comparing the values with direct<br />string equality. |
+| + [region](#sagemakerBlueprint_domainConfig_domainConfigCr_env_region )   | No      | string | No         | -          | The AWS Region that this resource belongs to.<br /><br />Since this can be a Token (for example, when the region is CloudFormation's<br />\`AWS::Region\` intrinsic), make sure to use \`Token.compareStrings()\` instead<br />of comparing the values with direct string equality.              |
 
-**Description:** The AWS account ID that this resource belongs to.
-Since this can be a Token
-(for example, when the account is CloudFormation's AWS::AccountId intrinsic),
-make sure to use Token.compareStrings()
-instead of just comparing the values for equality.
-
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_env_region"></a>3.6.7.3.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > env > region`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_env_account"></a>3.6.7.7.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > env > account`
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | Yes      |
 
-**Description:** The AWS region that this resource belongs to.
-Since this can be a Token
-(for example, when the region is CloudFormation's AWS::Region intrinsic),
-make sure to use Token.compareStrings()
-instead of just comparing the values for equality.
+**Description:** The AWS Account ID that this resource belongs to.
 
-##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction"></a>3.6.7.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction`
+Since this can be a Token (for example, when the account is
+CloudFormation's `AWS::AccountId` intrinsic), make sure to use
+`Token.compareStrings()` instead of comparing the values with direct
+string equality.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_env_region"></a>3.6.7.7.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > env > region`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `string` |
+| **Required** | Yes      |
+
+**Description:** The AWS Region that this resource belongs to.
+
+Since this can be a Token (for example, when the region is CloudFormation's
+`AWS::Region` intrinsic), make sure to use `Token.compareStrings()` instead
+of comparing the values with direct string equality.
+
+##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction"></a>3.6.7.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction`
 
 |                           |                                  |
 | ------------------------- | -------------------------------- |
@@ -1216,70 +1265,77 @@ instead of just comparing the values for equality.
 
 **Description:** Construct for creating a compliant Lambda Function
 
-| Property                                                                                                                                    | Pattern | Type            | Deprecated | Definition                                                                                                                                                                                                               | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| ------------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| + [_allowCrossEnvironment](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__allowCrossEnvironment )                         | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| - [_architecture](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__architecture )                                           | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| - [_connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections )                                             | No      | object          | No         | In #/definitions/Connections                                                                                                                                                                                             | Actual connections object for this Lambda<br /><br />May be unset, in which case this Lambda is not configured use in a VPC.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| - [_currentVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__currentVersion )                                       | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [_functionUrlInvocationGrants](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__functionUrlInvocationGrants )             | No      | object          | No         | In #/definitions/Record%3Cstring%2CGrant%3E                                                                                                                                                                              | Mapping of function URL invocation principals to grants. Used to de-dupe \`grantInvokeUrl()\` calls.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| + [_hasAddedArrayTokenStatements](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__hasAddedArrayTokenStatements )           | No      | object          | No         | -                                                                                                                                                                                                                        | Track whether we've added statements with array token resources to the role's default policy                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| + [_hasAddedLiteralStatements](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__hasAddedLiteralStatements )                 | No      | object          | No         | -                                                                                                                                                                                                                        | Track whether we've added statements with literal resources to the role's default policy                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| + [_invocationGrants](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__invocationGrants )                                   | No      | object          | No         | Same as [_functionUrlInvocationGrants](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__functionUrlInvocationGrants )                                                                                    | Mapping of invocation principals to grants. Used to de-dupe \`grantInvoke()\` calls.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| - [_latestVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__latestVersion )                                         | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [_layers](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers )                                                       | No      | array           | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| - [_logGroup](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__logGroup )                                                   | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| - [_logRetention](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__logRetention )                                           | No      | object          | No         | In #/definitions/LogRetention                                                                                                                                                                                            | Creates a custom resource to control the retention policy of a CloudWatch Logs<br />log group. The log group is created if it doesn't already exist. The policy<br />is removed when \`retentionDays\` is \`undefined\` or equal to \`Infinity\`.<br />Log group can be created in the region that is different from stack region by<br />specifying \`logGroupRegion\`                                                                                                                                                                                                                                            |
-| + [_physicalName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__physicalName )                                           | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [_policyCounter](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__policyCounter )                                         | No      | object          | No         | -                                                                                                                                                                                                                        | The number of permissions added to this function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| - [_skipPermissions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__skipPermissions )                                     | No      | boolean         | No         | -                                                                                                                                                                                                                        | Whether the user decides to skip adding permissions.<br />The only use case is for cross-account, imported lambdas<br />where the user commits to modifying the permisssions<br />on the imported lambda outside CDK.                                                                                                                                                                                                                                                                                                                                                                                              |
-| + [_warnIfCurrentVersionCalled](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__warnIfCurrentVersionCalled )               | No      | boolean         | No         | -                                                                                                                                                                                                                        | Flag to delay adding a warning message until current version is invoked.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| + [architecture](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_architecture )                                             | No      | object          | No         | In #/definitions/Architecture                                                                                                                                                                                            | The architecture of this Lambda Function (this is an optional attribute and defaults to X86_64).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| + [buildDeadLetterConfig](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_buildDeadLetterConfig )                           | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [buildDeadLetterQueue](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_buildDeadLetterQueue )                             | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [buildTracingConfig](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_buildTracingConfig )                                 | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [canCreatePermissions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_canCreatePermissions )                             | No      | const           | No         | -                                                                                                                                                                                                                        | Whether the addPermission() call adds any permissions<br /><br />True for new Lambdas, false for version $LATEST and imported Lambdas<br />from different accounts.                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| + [configureAdotInstrumentation](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureAdotInstrumentation )             | No      | object          | No         | -                                                                                                                                                                                                                        | Add an AWS Distro for OpenTelemetry Lambda layer.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [configureLambdaInsights](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureLambdaInsights )                       | No      | object          | No         | -                                                                                                                                                                                                                        | Configured lambda insights on the function if specified. This is achieved by adding an imported layer which is added to the<br />list of lambda layers on synthesis.<br /><br />https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-extension-versions.html                                                                                                                                                                                                                                                                                                                             |
-| + [configureParamsAndSecretsExtension](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureParamsAndSecretsExtension ) | No      | object          | No         | -                                                                                                                                                                                                                        | Add a Parameters and Secrets Extension Lambda layer.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| + [configureSnapStart](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureSnapStart )                                 | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [configureVpc](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureVpc )                                             | No      | object          | No         | -                                                                                                                                                                                                                        | If configured, set up the VPC-related properties<br /><br />Returns the VpcConfig that should be added to the<br />Lambda creation properties.                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| + [connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_connections )                                               | No      | object          | No         | Same as [_connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections )                                                                                                                    | Access the Connections object<br /><br />Will fail if not a VPC-enabled Lambda Function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| + [currentVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion )                                         | No      | object          | No         | In #/definitions/Version                                                                                                                                                                                                 | Returns a \`lambda.Version\` which represents the current version of this<br />Lambda function. A new version will be created every time the function's<br />configuration changes.<br /><br />You can specify options for this version using the \`currentVersionOptions\`<br />prop when initializing the \`lambda.Function\`.                                                                                                                                                                                                                                                                                   |
-| - [currentVersionOptions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersionOptions )                           | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| - [deadLetterQueue](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue )                                       | No      | object          | No         | In #/definitions/IQueue                                                                                                                                                                                                  | The DLQ (as queue) associated with this Lambda Function (this is an optional attribute).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| - [deadLetterTopic](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic )                                       | No      | object          | No         | In #/definitions/ITopic                                                                                                                                                                                                  | The DLQ (as topic) associated with this Lambda Function (this is an optional attribute).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_env )                                                               | No      | object          | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                                                                                                                      | The environment this resource belongs to.<br />For resources that are created and managed by the CDK<br />(generally, those created by creating new class instances like Role, Bucket, etc.),<br />this is always the same as the environment of the stack they belong to;<br />however, for imported resources<br />(those obtained from static methods like fromRoleArn, fromBucketName, etc.),<br />that might be different than the stack they were imported into.                                                                                                                                             |
-| + [environment](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_environment )                                               | No      | object          | No         | -                                                                                                                                                                                                                        | Environment variables for this function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| + [functionArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_functionArn )                                               | No      | string          | No         | -                                                                                                                                                                                                                        | ARN of this function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| + [functionName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_functionName )                                             | No      | string          | No         | -                                                                                                                                                                                                                        | Name of this function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| + [functionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_functionRef )                                               | No      | object          | No         | Same as [functionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionRef )                                                                                                       | A reference to a Function resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| + [getLoggingConfig](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_getLoggingConfig )                                     | No      | object          | No         | -                                                                                                                                                                                                                        | Get Logging Config property for the function.<br />This method returns the function LoggingConfig Property if the property is set on the<br />function and undefined if not.                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| + [grant](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_grant )                                                           | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [grantPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_grantPrincipal )                                         | No      | object          | No         | Same as [grantPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal )                                                                                                 | The principal this Lambda Function is running as                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| + [hashMixins](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_hashMixins )                                                 | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [isBoundToVpc](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_isBoundToVpc )                                             | No      | boolean         | No         | -                                                                                                                                                                                                                        | Whether or not this Lambda function was bound to a VPC<br /><br />If this is is \`false\`, trying to access the \`connections\` object will fail.                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [isPrincipalWithConditions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_isPrincipalWithConditions )                   | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [isQueue](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_isQueue )                                                       | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [latestVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_latestVersion )                                           | No      | object          | No         | Same as [latestVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion )                                                                                            | The \`$LATEST\` version of this function.<br /><br />Note that this is reference to a non-specific AWS Lambda version, which<br />means the function this version refers to can return different results in<br />different invocations.<br /><br />To obtain a reference to an explicit version which references the current<br />function configuration, use \`lambdaFunction.currentVersion\` instead.                                                                                                                                                                                                           |
-| + [logGroup](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup )                                                     | No      | object          | No         | In #/definitions/ILogGroup                                                                                                                                                                                               | The LogGroup where the Lambda function's logs are made available.<br /><br />If either \`logRetention\` is set or this property is called, a CloudFormation custom resource is added to the stack that<br />pre-creates the log group as part of the stack deployment, if it already doesn't exist, and sets the correct log retention<br />period (never expire, by default).<br /><br />Further, if the log group already exists and the \`logRetention\` is not set, the custom resource will reset the log retention<br />to never expire even if it was configured with a different value.                    |
-| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_node )                                                             | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )                                                                                                  | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| + [parsePermissionPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_parsePermissionPrincipal )                     | No      | object          | No         | -                                                                                                                                                                                                                        | Translate IPrincipal to something we can pass to AWS::Lambda::Permissions<br /><br />Do some nasty things because \`Permission\` supports a subset of what the<br />full IAM principal language supports, and we may not be able to parse strings<br />outright because they may be tokens.<br /><br />Try to recognize some specific Principal classes first, then try a generic<br />fallback.                                                                                                                                                                                                                   |
-| + [permissionsNode](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_permissionsNode )                                       | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )                                                                                                  | The construct node where permissions are attached.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| + [physicalName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_physicalName )                                             | No      | string          | No         | -                                                                                                                                                                                                                        | Returns a string-encoded token that resolves to the physical name that<br />should be passed to the CloudFormation resource.<br /><br />This value will resolve to one of the following:<br />- a concrete value (e.g. \`"my-awesome-bucket"\`)<br />- \`undefined\`, when a name should be generated by CloudFormation<br />- a concrete name generated automatically during synthesis, in<br />  cross-environment scenarios.                                                                                                                                                                                    |
-| + [renderEnvironment](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_renderEnvironment )                                   | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [renderLayers](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_renderLayers )                                             | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [resourceArnsForGrantInvoke](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_resourceArnsForGrantInvoke )                 | No      | array of string | No         | -                                                                                                                                                                                                                        | The ARN(s) to put into the resource field of the generated IAM policy for grantInvoke()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| - [role](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_role )                                                             | No      | object          | No         | Same as [role](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role )                                                                                                | Execution role associated with this function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| + [runtime](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime )                                                       | No      | object          | No         | Same as [sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items ) | The runtime configured for this lambda.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_stack )                                                           | No      | object          | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack )                                                                                                | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| + [statementHasArrayTokens](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_statementHasArrayTokens )                       | No      | object          | No         | -                                                                                                                                                                                                                        | Check if a policy statement contains array tokens that would cause CloudFormation<br />resolution conflicts when mixed with literal arrays in the same policy document.<br /><br />Array tokens are created by CloudFormation intrinsic functions that return arrays,<br />such as Fn::Split, Fn::GetAZs, etc. These cannot be safely merged with literal<br />resource arrays due to CloudFormation's token resolution limitations.<br /><br />Individual string tokens within literal arrays (e.g., \`["arn:${token}:..."]\`) are<br />safe and do not cause conflicts, so they are not detected by this method. |
-| - [timeout](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_timeout )                                                       | No      | object          | No         | In #/definitions/Duration                                                                                                                                                                                                | The timeout configured for this lambda.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| + [validateConditionCombinations](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_validateConditionCombinations )           | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [validateConditions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_validateConditions )                                 | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [validateProfiling](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_validateProfiling )                                   | No      | object          | No         | -                                                                                                                                                                                                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Property                                                                                                                                    | Pattern | Type            | Deprecated | Definition                                                                                                                                  | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| + [_allowCrossEnvironment](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__allowCrossEnvironment )                         | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| - [_architecture](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__architecture )                                           | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| - [_connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections )                                             | No      | object          | No         | In #/definitions/Connections                                                                                                                | Actual connections object for this Lambda<br /><br />May be unset, in which case this Lambda is not configured use in a VPC.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| - [_currentVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__currentVersion )                                       | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [_customAccount](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__customAccount )                                         | No      | object          | No         | -                                                                                                                                           | Account given in the constructor, if any. Will be same as Stack if not supplied.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| + [_customRegion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__customRegion )                                           | No      | object          | No         | -                                                                                                                                           | Account given in the constructor, if any. Will be same as Stack if not supplied.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| + [_functionUrlInvocationGrants](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__functionUrlInvocationGrants )             | No      | object          | No         | In #/definitions/Record%3Cstring%2CGrant%3E                                                                                                 | Mapping of function URL invocation principals to grants. Used to de-dupe \`grantInvokeUrl()\` calls.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| + [_generatedPhysicalName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__generatedPhysicalName )                         | No      | object          | No         | -                                                                                                                                           | The generated physical name, in case of cross-env access                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| + [_givenPhysicalName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__givenPhysicalName )                                 | No      | object          | No         | -                                                                                                                                           | The physicalName supplied into the constructor                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| + [_hasAddedArrayTokenStatements](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__hasAddedArrayTokenStatements )           | No      | object          | No         | -                                                                                                                                           | Track whether we've added statements with array token resources to the role's default policy                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| + [_hasAddedLiteralStatements](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__hasAddedLiteralStatements )                 | No      | object          | No         | -                                                                                                                                           | Track whether we've added statements with literal resources to the role's default policy                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| + [_invocationGrants](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__invocationGrants )                                   | No      | object          | No         | Same as [_functionUrlInvocationGrants](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__functionUrlInvocationGrants )       | Mapping of invocation principals to grants. Used to de-dupe \`grantInvoke()\` calls.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| - [_latestVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__latestVersion )                                         | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [_layers](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers )                                                       | No      | object          | No         | In #/definitions/IArrayBox%3CILayerVersion%3E                                                                                               | A mutable box specialized for arrays, extending \`Box<Array<A>>\` with \`push\`.<br /><br />Unlike \`set\` (which replaces all stack traces), \`push\` *appends* a new stack<br />trace to the existing list. This means that each element addition is tracked<br />individually, and the resulting metadata will contain one entry per \`push\` call<br />(plus one for the initial construction or last \`set\`, if any).                                                                                                                                                                                        |
+| - [_logGroup](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__logGroup )                                                   | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| - [_logRetention](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__logRetention )                                           | No      | object          | No         | In #/definitions/LogRetention                                                                                                               | Creates a custom resource to control the retention policy of a CloudWatch Logs<br />log group. The log group is created if it doesn't already exist. The policy<br />is removed when \`retentionDays\` is \`undefined\` or equal to \`Infinity\`.<br />Log group can be created in the region that is different from stack region by<br />specifying \`logGroupRegion\`                                                                                                                                                                                                                                            |
+| + [_physicalNameMode](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__physicalNameMode )                                   | No      | object          | No         | -                                                                                                                                           | What we are doing for the physical name                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| + [_policyCounter](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__policyCounter )                                         | No      | object          | No         | -                                                                                                                                           | The number of permissions added to this function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| - [_skipPermissions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__skipPermissions )                                     | No      | boolean         | No         | -                                                                                                                                           | Whether the user decides to skip adding permissions.<br />The only use case is for cross-account, imported lambdas<br />where the user commits to modifying the permisssions<br />on the imported lambda outside CDK.                                                                                                                                                                                                                                                                                                                                                                                              |
+| + [_warnIfCurrentVersionCalled](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__warnIfCurrentVersionCalled )               | No      | boolean         | No         | -                                                                                                                                           | Flag to delay adding a warning message until current version is invoked.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| + [architecture](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_architecture )                                             | No      | object          | No         | In #/definitions/Architecture                                                                                                               | The architecture of this Lambda Function (this is an optional attribute and defaults to X86_64).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| + [buildDeadLetterConfig](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_buildDeadLetterConfig )                           | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [buildDeadLetterQueue](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_buildDeadLetterQueue )                             | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [buildTracingConfig](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_buildTracingConfig )                                 | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [canCreatePermissions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_canCreatePermissions )                             | No      | const           | No         | -                                                                                                                                           | Whether the addPermission() call adds any permissions<br /><br />True for new Lambdas, false for version $LATEST and imported Lambdas<br />from different accounts.                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| + [configureAdotInstrumentation](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureAdotInstrumentation )             | No      | object          | No         | -                                                                                                                                           | Add an AWS Distro for OpenTelemetry Lambda layer.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [configureLambdaInsights](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureLambdaInsights )                       | No      | object          | No         | -                                                                                                                                           | Configured lambda insights on the function if specified. This is achieved by adding an imported layer which is added to the<br />list of lambda layers on synthesis.<br /><br />https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-extension-versions.html                                                                                                                                                                                                                                                                                                                             |
+| + [configureParamsAndSecretsExtension](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureParamsAndSecretsExtension ) | No      | object          | No         | -                                                                                                                                           | Add a Parameters and Secrets Extension Lambda layer.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| + [configureSnapStart](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureSnapStart )                                 | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [configureVpc](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureVpc )                                             | No      | object          | No         | -                                                                                                                                           | If configured, set up the VPC-related properties<br /><br />Returns the VpcConfig that should be added to the<br />Lambda creation properties.                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| + [connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_connections )                                               | No      | object          | No         | Same as [_connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections )                                       | Access the Connections object<br /><br />Will fail if not a VPC-enabled Lambda Function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| + [currentVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion )                                         | No      | object          | No         | In #/definitions/Version                                                                                                                    | Returns a \`lambda.Version\` which represents the current version of this<br />Lambda function. A new version will be created every time the function's<br />configuration changes.<br /><br />You can specify options for this version using the \`currentVersionOptions\`<br />prop when initializing the \`lambda.Function\`.                                                                                                                                                                                                                                                                                   |
+| - [currentVersionOptions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersionOptions )                           | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| - [deadLetterQueue](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue )                                       | No      | object          | No         | In #/definitions/IQueue                                                                                                                     | The DLQ (as queue) associated with this Lambda Function (this is an optional attribute).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| - [deadLetterTopic](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic )                                       | No      | object          | No         | In #/definitions/ITopic                                                                                                                     | The DLQ (as topic) associated with this Lambda Function (this is an optional attribute).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_env )                                                               | No      | object          | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                                         | The environment this resource belongs to.<br /><br />For resources that are created and managed in a Stack (those created by<br />creating new class instances like \`new Role()\`, \`new Bucket()\`, etc.), this<br />is always the same as the environment of the stack they belong to.<br /><br />For referenced resources (those obtained from referencing methods like<br />\`Role.fromRoleArn()\`, \`Bucket.fromBucketName()\`, etc.), they might be<br />different than the stack they were imported into.                                                                                                  |
+| + [environment](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_environment )                                               | No      | object          | No         | -                                                                                                                                           | Environment variables for this function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| + [functionArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_functionArn )                                               | No      | string          | No         | -                                                                                                                                           | ARN of this function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| + [functionName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_functionName )                                             | No      | string          | No         | -                                                                                                                                           | Name of this function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| + [functionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_functionRef )                                               | No      | object          | No         | Same as [functionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionRef )                          | A reference to a Function resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| + [getLoggingConfig](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_getLoggingConfig )                                     | No      | object          | No         | -                                                                                                                                           | Get Logging Config property for the function.<br />This method returns the function LoggingConfig Property if the property is set on the<br />function and undefined if not.                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| + [grant](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_grant )                                                           | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [grantPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_grantPrincipal )                                         | No      | object          | No         | Same as [grantPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal )                    | The principal this Lambda Function is running as                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| + [hashMixins](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_hashMixins )                                                 | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [isBoundToVpc](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_isBoundToVpc )                                             | No      | boolean         | No         | -                                                                                                                                           | Whether or not this Lambda function was bound to a VPC<br /><br />If this is is \`false\`, trying to access the \`connections\` object will fail.                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [isPrincipalWithConditions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_isPrincipalWithConditions )                   | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [isQueue](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_isQueue )                                                       | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [latestVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_latestVersion )                                           | No      | object          | No         | Same as [latestVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion )               | The \`$LATEST\` version of this function.<br /><br />Note that this is reference to a non-specific AWS Lambda version, which<br />means the function this version refers to can return different results in<br />different invocations.<br /><br />To obtain a reference to an explicit version which references the current<br />function configuration, use \`lambdaFunction.currentVersion\` instead.                                                                                                                                                                                                           |
+| + [logGroup](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup )                                                     | No      | object          | No         | In #/definitions/ILogGroup                                                                                                                  | The LogGroup where the Lambda function's logs are made available.<br /><br />If either \`logRetention\` is set or this property is called, a CloudFormation custom resource is added to the stack that<br />pre-creates the log group as part of the stack deployment, if it already doesn't exist, and sets the correct log retention<br />period (never expire, by default).<br /><br />Further, if the log group already exists and the \`logRetention\` is not set, the custom resource will reset the log retention<br />to never expire even if it was configured with a different value.                    |
+| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_node )                                                             | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )                     | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| + [parsePermissionPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_parsePermissionPrincipal )                     | No      | object          | No         | -                                                                                                                                           | Translate IPrincipal to something we can pass to AWS::Lambda::Permissions<br /><br />Do some nasty things because \`Permission\` supports a subset of what the<br />full IAM principal language supports, and we may not be able to parse strings<br />outright because they may be tokens.<br /><br />Try to recognize some specific Principal classes first, then try a generic<br />fallback.                                                                                                                                                                                                                   |
+| + [permissionsNode](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_permissionsNode )                                       | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )                     | The construct node where permissions are attached.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| + [physicalName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_physicalName )                                             | No      | string          | No         | -                                                                                                                                           | Returns a string-encoded token that resolves to the physical name that<br />should be passed to the CloudFormation resource.<br /><br />This value will resolve to one of the following:<br />- a concrete value (e.g. \`"my-awesome-bucket"\`)<br />- \`undefined\`, when a name should be generated by CloudFormation<br />- a concrete name generated automatically during synthesis, in<br />  cross-environment scenarios.                                                                                                                                                                                    |
+| + [renderDurableConfig](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_renderDurableConfig )                               | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [renderEnvironment](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_renderEnvironment )                                   | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [renderLayers](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_renderLayers )                                             | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [resource](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_resource )                                                     | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [resourceArnsForGrantInvoke](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_resourceArnsForGrantInvoke )                 | No      | array of string | No         | -                                                                                                                                           | The ARN(s) to put into the resource field of the generated IAM policy for grantInvoke()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| - [role](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_role )                                                             | No      | object          | No         | Same as [role](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role )                   | Execution role associated with this function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| + [runtime](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime )                                                       | No      | object          | No         | In #/definitions/Runtime                                                                                                                    | The runtime configured for this lambda.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_stack )                                                           | No      | object          | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack )                   | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| + [statementHasArrayTokens](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_statementHasArrayTokens )                       | No      | object          | No         | -                                                                                                                                           | Check if a policy statement contains array tokens that would cause CloudFormation<br />resolution conflicts when mixed with literal arrays in the same policy document.<br /><br />Array tokens are created by CloudFormation intrinsic functions that return arrays,<br />such as Fn::Split, Fn::GetAZs, etc. These cannot be safely merged with literal<br />resource arrays due to CloudFormation's token resolution limitations.<br /><br />Individual string tokens within literal arrays (e.g., \`["arn:${token}:..."]\`) are<br />safe and do not cause conflicts, so they are not detected by this method. |
+| - [tenancyConfig](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_tenancyConfig )                                           | No      | object          | No         | Same as [tenancyConfig](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_tenancyConfig ) | The tenancy configuration for this function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| - [timeout](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_timeout )                                                       | No      | object          | No         | In #/definitions/Duration                                                                                                                   | The timeout configured for this lambda.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| + [validateConditionCombinations](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_validateConditionCombinations )           | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [validateConditions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_validateConditions )                                 | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [validateProfiling](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_validateProfiling )                                   | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__allowCrossEnvironment"></a>3.6.7.4.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _allowCrossEnvironment`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__allowCrossEnvironment"></a>3.6.7.8.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _allowCrossEnvironment`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -1287,7 +1343,7 @@ instead of just comparing the values for equality.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__architecture"></a>3.6.7.4.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _architecture`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__architecture"></a>3.6.7.8.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _architecture`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -1295,7 +1351,7 @@ instead of just comparing the values for equality.
 | **Required**              | No               |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections"></a>3.6.7.4.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections"></a>3.6.7.8.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections`
 
 |                           |                           |
 | ------------------------- | ------------------------- |
@@ -1318,7 +1374,7 @@ May be unset, in which case this Lambda is not configured use in a VPC.
 | + [securityGroups](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups )           | No      | array  | No         | -                                                                                                     | -                                                                                                                                                                                                     |
 | + [skip](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_skip )                               | No      | object | No         | -                                                                                                     | When doing bidirectional grants between Connections, make sure we don't recursive infinitely                                                                                                          |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections__securityGroupRules"></a>3.6.7.4.3.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > _securityGroupRules`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections__securityGroupRules"></a>3.6.7.8.3.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > _securityGroupRules`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -1328,7 +1384,7 @@ May be unset, in which case this Lambda is not configured use in a VPC.
 
 **Description:** The rule that defines how to represent this peer in a security group
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections__securityGroups"></a>3.6.7.4.3.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > _securityGroups`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections__securityGroups"></a>3.6.7.8.3.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > _securityGroups`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -1341,7 +1397,7 @@ May be unset, in which case this Lambda is not configured use in a VPC.
 May be empty if this Connections object is not managing a SecurityGroup,
 but simply representing a Connectable peer.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_connections"></a>3.6.7.4.3.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > connections`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_connections"></a>3.6.7.8.3.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > connections`
 
 |                           |                                                                                              |
 | ------------------------- | -------------------------------------------------------------------------------------------- |
@@ -1352,7 +1408,7 @@ but simply representing a Connectable peer.
 
 **Description:** The network connections associated with this resource.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_defaultPort"></a>3.6.7.4.3.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > defaultPort`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_defaultPort"></a>3.6.7.8.3.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > defaultPort`
 
 |                           |                    |
 | ------------------------- | ------------------ |
@@ -1368,7 +1424,7 @@ but simply representing a Connectable peer.
 | + [canInlineRule](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_defaultPort_canInlineRule ) | No      | boolean | No         | -          | Whether the rule containing this port range can be inlined into a securitygroup or not. |
 | + [props](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_defaultPort_props )                 | No      | object  | No         | -          | -                                                                                       |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_defaultPort_canInlineRule"></a>3.6.7.4.3.4.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > defaultPort > canInlineRule`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_defaultPort_canInlineRule"></a>3.6.7.8.3.4.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > defaultPort > canInlineRule`
 
 |              |           |
 | ------------ | --------- |
@@ -1377,7 +1433,7 @@ but simply representing a Connectable peer.
 
 **Description:** Whether the rule containing this port range can be inlined into a securitygroup or not.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_defaultPort_props"></a>3.6.7.4.3.4.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > defaultPort > props`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_defaultPort_props"></a>3.6.7.8.3.4.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > defaultPort > props`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -1385,7 +1441,7 @@ but simply representing a Connectable peer.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_remoteRule"></a>3.6.7.4.3.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > remoteRule`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_remoteRule"></a>3.6.7.8.3.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > remoteRule`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -1395,7 +1451,7 @@ but simply representing a Connectable peer.
 
 **Description:** When doing bidirectional grants between Security Groups in different stacks, put the rule on the other SG
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups"></a>3.6.7.4.3.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups"></a>3.6.7.8.3.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups`
 
 |              |         |
 | ------------ | ------- |
@@ -1414,7 +1470,7 @@ but simply representing a Connectable peer.
 | ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
 | [ISecurityGroup](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items) | Interface for security group-like objects |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items"></a>3.6.7.4.3.6.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > ISecurityGroup
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items"></a>3.6.7.8.3.6.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > ISecurityGroup
 
 |                           |                              |
 | ------------------------- | ---------------------------- |
@@ -1425,19 +1481,19 @@ but simply representing a Connectable peer.
 
 **Description:** Interface for security group-like objects
 
-| Property                                                                                                                                  | Pattern | Type    | Deprecated | Definition                                                                                            | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| ----------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------- | ---------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| + [allowAllOutbound](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_allowAllOutbound ) | No      | boolean | No         | -                                                                                                     | Whether the SecurityGroup has been configured to allow all outbound traffic                                                                                                                                                                                                                                                                                                                                                                                            |
-| + [canInlineRule](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_canInlineRule )       | No      | boolean | No         | -                                                                                                     | Whether the rule can be inlined into a SecurityGroup or not                                                                                                                                                                                                                                                                                                                                                                                                            |
-| + [connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_connections )           | No      | object  | No         | Same as [_connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections ) | The network connections associated with this resource.                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_env )                           | No      | object  | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                   | The environment this resource belongs to.<br />For resources that are created and managed by the CDK<br />(generally, those created by creating new class instances like Role, Bucket, etc.),<br />this is always the same as the environment of the stack they belong to;<br />however, for imported resources<br />(those obtained from static methods like fromRoleArn, fromBucketName, etc.),<br />that might be different than the stack they were imported into. |
-| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )                         | No      | object  | No         | In #/definitions/Node                                                                                 | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [securityGroupId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_securityGroupId )   | No      | string  | No         | -                                                                                                     | ID for the current security group                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| + [securityGroupRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_securityGroupRef ) | No      | object  | No         | In #/definitions/SecurityGroupReference                                                               | A reference to a SecurityGroup resource.                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack )                       | No      | object  | No         | In #/definitions/Stack                                                                                | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| + [uniqueId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_uniqueId )                 | No      | string  | No         | -                                                                                                     | A unique identifier for this connection peer                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Property                                                                                                                                  | Pattern | Type    | Deprecated | Definition                                                                                            | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ----------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------- | ---------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| + [allowAllOutbound](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_allowAllOutbound ) | No      | boolean | No         | -                                                                                                     | Whether the SecurityGroup has been configured to allow all outbound traffic                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| + [canInlineRule](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_canInlineRule )       | No      | boolean | No         | -                                                                                                     | Whether the rule can be inlined into a SecurityGroup or not                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| + [connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_connections )           | No      | object  | No         | Same as [_connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections ) | The network connections associated with this resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_env )                           | No      | object  | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                   | The environment this resource belongs to.<br /><br />For resources that are created and managed in a Stack (those created by<br />creating new class instances like \`new Role()\`, \`new Bucket()\`, etc.), this<br />is always the same as the environment of the stack they belong to.<br /><br />For referenced resources (those obtained from referencing methods like<br />\`Role.fromRoleArn()\`, \`Bucket.fromBucketName()\`, etc.), they might be<br />different than the stack they were imported into. |
+| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )                         | No      | object  | No         | In #/definitions/Node                                                                                 | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| + [securityGroupId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_securityGroupId )   | No      | string  | No         | -                                                                                                     | ID for the current security group                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| + [securityGroupRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_securityGroupRef ) | No      | object  | No         | In #/definitions/SecurityGroupReference                                                               | A reference to a SecurityGroup resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack )                       | No      | object  | No         | In #/definitions/Stack                                                                                | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| + [uniqueId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_uniqueId )                 | No      | string  | No         | -                                                                                                     | A unique identifier for this connection peer                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_allowAllOutbound"></a>3.6.7.4.3.6.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > allowAllOutbound`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_allowAllOutbound"></a>3.6.7.8.3.6.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > allowAllOutbound`
 
 |              |           |
 | ------------ | --------- |
@@ -1446,7 +1502,7 @@ but simply representing a Connectable peer.
 
 **Description:** Whether the SecurityGroup has been configured to allow all outbound traffic
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_canInlineRule"></a>3.6.7.4.3.6.1.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > canInlineRule`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_canInlineRule"></a>3.6.7.8.3.6.1.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > canInlineRule`
 
 |              |           |
 | ------------ | --------- |
@@ -1455,7 +1511,7 @@ but simply representing a Connectable peer.
 
 **Description:** Whether the rule can be inlined into a SecurityGroup or not
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_connections"></a>3.6.7.4.3.6.1.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > connections`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_connections"></a>3.6.7.8.3.6.1.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > connections`
 
 |                           |                                                                                              |
 | ------------------------- | -------------------------------------------------------------------------------------------- |
@@ -1466,7 +1522,7 @@ but simply representing a Connectable peer.
 
 **Description:** The network connections associated with this resource.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_env"></a>3.6.7.4.3.6.1.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > env`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_env"></a>3.6.7.8.3.6.1.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > env`
 
 |                           |                                                            |
 | ------------------------- | ---------------------------------------------------------- |
@@ -1476,14 +1532,16 @@ but simply representing a Connectable peer.
 | **Same definition as**    | [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env) |
 
 **Description:** The environment this resource belongs to.
-For resources that are created and managed by the CDK
-(generally, those created by creating new class instances like Role, Bucket, etc.),
-this is always the same as the environment of the stack they belong to;
-however, for imported resources
-(those obtained from static methods like fromRoleArn, fromBucketName, etc.),
-that might be different than the stack they were imported into.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node"></a>3.6.7.4.3.6.1.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node`
+For resources that are created and managed in a Stack (those created by
+creating new class instances like `new Role()`, `new Bucket()`, etc.), this
+is always the same as the environment of the stack they belong to.
+
+For referenced resources (those obtained from referencing methods like
+`Role.fromRoleArn()`, `Bucket.fromBucketName()`, etc.), they might be
+different than the stack they were imported into.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node"></a>3.6.7.8.3.6.1.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node`
 
 |                           |                    |
 | ------------------------- | ------------------ |
@@ -1494,31 +1552,31 @@ that might be different than the stack they were imported into.
 
 **Description:** The tree node.
 
-| Property                                                                                                                                 | Pattern | Type    | Deprecated | Definition                                                                                                                                                                                                                                             | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| ---------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| - [_addr](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__addr )                 | No      | object  | No         | -                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [_children](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__children )         | No      | object  | No         | -                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [_context](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__context )           | No      | object  | No         | -                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [_defaultChild](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__defaultChild ) | No      | object  | No         | -                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [_dependencies](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__dependencies ) | No      | object  | No         | -                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [_locked](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__locked )             | No      | object  | No         | -                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [_metadata](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__metadata )         | No      | object  | No         | -                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [_validations](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__validations )   | No      | object  | No         | -                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [addChild](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_addChild )           | No      | object  | No         | -                                                                                                                                                                                                                                                      | Adds a child construct to this node.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| + [addr](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_addr )                   | No      | string  | No         | -                                                                                                                                                                                                                                                      | Returns an opaque tree-unique address for this construct.<br /><br />Addresses are 42 characters hexadecimal strings. They begin with "c8"<br />followed by 40 lowercase hexadecimal characters (0-9a-f).<br /><br />Addresses are calculated using a SHA-1 of the components of the construct<br />path.<br /><br />To enable refactorings of construct trees, constructs with the ID \`Default\`<br />will be excluded from the calculation. In those cases constructs in the<br />same tree may have the same addreess.                                                                                |
-| + [children](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children )           | No      | array   | No         | -                                                                                                                                                                                                                                                      | All direct children of this construct.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| - [defaultChild](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_defaultChild )   | No      | object  | No         | Same as [sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items ) | Returns the child construct that has the id \`Default\` or \`Resource"\`.<br />This is usually the construct that provides the bulk of the underlying functionality.<br />Useful for modifications of the underlying construct that are not available at the higher levels.<br />Override the defaultChild property.<br /><br />This should only be used in the cases where the correct<br />default child is not named 'Resource' or 'Default' as it<br />should be.<br /><br />If you set this to undefined, the default behavior of finding<br />the child named 'Resource' or 'Default' will be used. |
-| + [dependencies](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_dependencies )   | No      | array   | No         | -                                                                                                                                                                                                                                                      | Return all dependencies registered on this node (non-recursive).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| + [host](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_host )                   | No      | object  | No         | -                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [id](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_id )                       | No      | string  | No         | -                                                                                                                                                                                                                                                      | The id of this construct within the current scope.<br /><br />This is a a scope-unique id. To obtain an app-unique id for this construct, use \`addr\`.                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| + [locked](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_locked )               | No      | boolean | No         | -                                                                                                                                                                                                                                                      | Returns true if this construct or the scopes in which it is defined are<br />locked.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| + [metadata](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_metadata )           | No      | array   | No         | -                                                                                                                                                                                                                                                      | An immutable array of metadata objects associated with this construct.<br />This can be used, for example, to implement support for deprecation notices, source mapping, etc.                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| + [path](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_path )                   | No      | string  | No         | -                                                                                                                                                                                                                                                      | The full, absolute path of this construct in the tree.<br /><br />Components are separated by '/'.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| + [root](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_root )                   | No      | object  | No         | Same as [sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items ) | Returns the root of the construct tree.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| - [scope](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_scope )                 | No      | object  | No         | Same as [sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items ) | Returns the scope in which this construct is defined.<br /><br />The value is \`undefined\` at the root of the construct scope tree.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| + [scopes](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_scopes )               | No      | array   | No         | -                                                                                                                                                                                                                                                      | All parent scopes of this construct.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| Property                                                                                                                                 | Pattern | Type    | Deprecated | Definition                                                                                                                                                                                                                                             | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [_addr](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__addr )                 | No      | object  | No         | -                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| + [_children](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__children )         | No      | object  | No         | -                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| + [_context](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__context )           | No      | object  | No         | -                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| + [_defaultChild](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__defaultChild ) | No      | object  | No         | -                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| + [_dependencies](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__dependencies ) | No      | object  | No         | -                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| + [_locked](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__locked )             | No      | object  | No         | -                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| + [_metadata](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__metadata )         | No      | object  | No         | -                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| + [_validations](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__validations )   | No      | object  | No         | -                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| + [addChild](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_addChild )           | No      | object  | No         | -                                                                                                                                                                                                                                                      | Adds a child construct to this node.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| + [addr](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_addr )                   | No      | string  | No         | -                                                                                                                                                                                                                                                      | Returns an opaque tree-unique address for this construct.<br /><br />Addresses are 42 characters hexadecimal strings. They begin with "c8"<br />followed by 40 lowercase hexadecimal characters (0-9a-f).<br /><br />Addresses are calculated using a SHA-1 of the components of the construct<br />path.<br /><br />To enable refactoring of construct trees, constructs with the ID \`Default\`<br />will be excluded from the calculation. In those cases constructs in the<br />same tree may have the same address.                                                                                 |
+| + [children](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children )           | No      | array   | No         | -                                                                                                                                                                                                                                                      | All direct children of this construct.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| - [defaultChild](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_defaultChild )   | No      | object  | No         | Same as [sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items ) | Returns the child construct that has the id \`Default\` or \`Resource\`.<br />This is usually the construct that provides the bulk of the underlying functionality.<br />Useful for modifications of the underlying construct that are not available at the higher levels.<br />Override the defaultChild property.<br /><br />This should only be used in the cases where the correct<br />default child is not named 'Resource' or 'Default' as it<br />should be.<br /><br />If you set this to undefined, the default behavior of finding<br />the child named 'Resource' or 'Default' will be used. |
+| + [dependencies](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_dependencies )   | No      | array   | No         | -                                                                                                                                                                                                                                                      | Return all dependencies registered on this node (non-recursive).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| + [host](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_host )                   | No      | object  | No         | -                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| + [id](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_id )                       | No      | string  | No         | -                                                                                                                                                                                                                                                      | The id of this construct within the current scope.<br /><br />This is a scope-unique id. To obtain an app-unique id for this construct, use \`addr\`.                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| + [locked](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_locked )               | No      | boolean | No         | -                                                                                                                                                                                                                                                      | Returns true if this construct or the scopes in which it is defined are<br />locked.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| + [metadata](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_metadata )           | No      | array   | No         | -                                                                                                                                                                                                                                                      | An immutable array of metadata objects associated with this construct.<br />This can be used, for example, to implement support for deprecation notices, source mapping, etc.                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| + [path](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_path )                   | No      | string  | No         | -                                                                                                                                                                                                                                                      | The full, absolute path of this construct in the tree.<br /><br />Components are separated by '/'.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| + [root](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_root )                   | No      | object  | No         | Same as [sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items ) | Returns the root of the construct tree.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| - [scope](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_scope )                 | No      | object  | No         | Same as [sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items ) | Returns the scope in which this construct is defined.<br /><br />The value is \`undefined\` at the root of the construct scope tree.                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| + [scopes](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_scopes )               | No      | array   | No         | -                                                                                                                                                                                                                                                      | All parent scopes of this construct.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__addr"></a>3.6.7.4.3.6.1.5.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > _addr`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__addr"></a>3.6.7.8.3.6.1.5.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > _addr`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -1526,7 +1584,7 @@ that might be different than the stack they were imported into.
 | **Required**              | No               |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__children"></a>3.6.7.4.3.6.1.5.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > _children`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__children"></a>3.6.7.8.3.6.1.5.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > _children`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -1534,7 +1592,7 @@ that might be different than the stack they were imported into.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__context"></a>3.6.7.4.3.6.1.5.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > _context`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__context"></a>3.6.7.8.3.6.1.5.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > _context`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -1542,7 +1600,7 @@ that might be different than the stack they were imported into.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__defaultChild"></a>3.6.7.4.3.6.1.5.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > _defaultChild`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__defaultChild"></a>3.6.7.8.3.6.1.5.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > _defaultChild`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -1550,7 +1608,7 @@ that might be different than the stack they were imported into.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__dependencies"></a>3.6.7.4.3.6.1.5.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > _dependencies`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__dependencies"></a>3.6.7.8.3.6.1.5.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > _dependencies`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -1558,7 +1616,7 @@ that might be different than the stack they were imported into.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__locked"></a>3.6.7.4.3.6.1.5.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > _locked`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__locked"></a>3.6.7.8.3.6.1.5.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > _locked`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -1566,7 +1624,7 @@ that might be different than the stack they were imported into.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__metadata"></a>3.6.7.4.3.6.1.5.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > _metadata`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__metadata"></a>3.6.7.8.3.6.1.5.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > _metadata`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -1574,7 +1632,7 @@ that might be different than the stack they were imported into.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__validations"></a>3.6.7.4.3.6.1.5.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > _validations`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node__validations"></a>3.6.7.8.3.6.1.5.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > _validations`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -1582,7 +1640,7 @@ that might be different than the stack they were imported into.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_addChild"></a>3.6.7.4.3.6.1.5.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > addChild`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_addChild"></a>3.6.7.8.3.6.1.5.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > addChild`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -1592,7 +1650,7 @@ that might be different than the stack they were imported into.
 
 **Description:** Adds a child construct to this node.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_addr"></a>3.6.7.4.3.6.1.5.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > addr`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_addr"></a>3.6.7.8.3.6.1.5.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > addr`
 
 |              |          |
 | ------------ | -------- |
@@ -1607,11 +1665,11 @@ followed by 40 lowercase hexadecimal characters (0-9a-f).
 Addresses are calculated using a SHA-1 of the components of the construct
 path.
 
-To enable refactorings of construct trees, constructs with the ID `Default`
+To enable refactoring of construct trees, constructs with the ID `Default`
 will be excluded from the calculation. In those cases constructs in the
-same tree may have the same addreess.
+same tree may have the same address.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children"></a>3.6.7.4.3.6.1.5.11. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > children`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children"></a>3.6.7.8.3.6.1.5.11. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > children`
 
 |              |         |
 | ------------ | ------- |
@@ -1632,7 +1690,7 @@ same tree may have the same addreess.
 | ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
 | [IConstruct](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items) | Represents a construct. |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items"></a>3.6.7.4.3.6.1.5.11.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > children > IConstruct
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items"></a>3.6.7.8.3.6.1.5.11.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > children > IConstruct
 
 |                           |                          |
 | ------------------------- | ------------------------ |
@@ -1647,7 +1705,7 @@ same tree may have the same addreess.
 | ------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ----------------------------------------------------------------------------------------------------------------------- | ----------------- |
 | + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items_node ) | No      | object | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node ) | The tree node.    |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items_node"></a>3.6.7.4.3.6.1.5.11.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > children > children items > node`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items_node"></a>3.6.7.8.3.6.1.5.11.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > children > children items > node`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -1658,7 +1716,7 @@ same tree may have the same addreess.
 
 **Description:** The tree node.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_defaultChild"></a>3.6.7.4.3.6.1.5.12. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > defaultChild`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_defaultChild"></a>3.6.7.8.3.6.1.5.12. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > defaultChild`
 
 |                           |                                                                                                                                                                                                                                               |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1667,7 +1725,7 @@ same tree may have the same addreess.
 | **Additional properties** | Not allowed                                                                                                                                                                                                                                   |
 | **Same definition as**    | [sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_children_items) |
 
-**Description:** Returns the child construct that has the id `Default` or `Resource"`.
+**Description:** Returns the child construct that has the id `Default` or `Resource`.
 This is usually the construct that provides the bulk of the underlying functionality.
 Useful for modifications of the underlying construct that are not available at the higher levels.
 Override the defaultChild property.
@@ -1679,7 +1737,7 @@ should be.
 If you set this to undefined, the default behavior of finding
 the child named 'Resource' or 'Default' will be used.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_dependencies"></a>3.6.7.4.3.6.1.5.13. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > dependencies`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_dependencies"></a>3.6.7.8.3.6.1.5.13. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > dependencies`
 
 |              |         |
 | ------------ | ------- |
@@ -1700,7 +1758,7 @@ the child named 'Resource' or 'Default' will be used.
 | --------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
 | [IConstruct](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_dependencies_items) | Represents a construct. |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_dependencies_items"></a>3.6.7.4.3.6.1.5.13.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > dependencies > IConstruct
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_dependencies_items"></a>3.6.7.8.3.6.1.5.13.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > dependencies > IConstruct
 
 |                           |                                                                                                                                                                                                                                               |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1711,7 +1769,7 @@ the child named 'Resource' or 'Default' will be used.
 
 **Description:** Represents a construct.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_host"></a>3.6.7.4.3.6.1.5.14. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > host`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_host"></a>3.6.7.8.3.6.1.5.14. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > host`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -1719,7 +1777,7 @@ the child named 'Resource' or 'Default' will be used.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_id"></a>3.6.7.4.3.6.1.5.15. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > id`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_id"></a>3.6.7.8.3.6.1.5.15. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > id`
 
 |              |          |
 | ------------ | -------- |
@@ -1728,9 +1786,9 @@ the child named 'Resource' or 'Default' will be used.
 
 **Description:** The id of this construct within the current scope.
 
-This is a a scope-unique id. To obtain an app-unique id for this construct, use `addr`.
+This is a scope-unique id. To obtain an app-unique id for this construct, use `addr`.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_locked"></a>3.6.7.4.3.6.1.5.16. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > locked`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_locked"></a>3.6.7.8.3.6.1.5.16. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > locked`
 
 |              |           |
 | ------------ | --------- |
@@ -1740,7 +1798,7 @@ This is a a scope-unique id. To obtain an app-unique id for this construct, use 
 **Description:** Returns true if this construct or the scopes in which it is defined are
 locked.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_metadata"></a>3.6.7.4.3.6.1.5.17. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > metadata`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_metadata"></a>3.6.7.8.3.6.1.5.17. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > metadata`
 
 |              |         |
 | ------------ | ------- |
@@ -1762,7 +1820,7 @@ This can be used, for example, to implement support for deprecation notices, sou
 | -------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
 | [MetadataEntry](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_metadata_items) | An entry in the construct metadata table. |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_metadata_items"></a>3.6.7.4.3.6.1.5.17.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > metadata > MetadataEntry
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_metadata_items"></a>3.6.7.8.3.6.1.5.17.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > metadata > MetadataEntry
 
 |                           |                             |
 | ------------------------- | --------------------------- |
@@ -1779,7 +1837,7 @@ This can be used, for example, to implement support for deprecation notices, sou
 | - [trace](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_metadata_items_trace ) | No      | array of string | No         | -          | Stack trace at the point of adding the metadata.<br /><br />Only available if \`addMetadata()\` is called with \`stackTrace: true\`. |
 | + [type](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_metadata_items_type )   | No      | string          | No         | -          | The metadata entry type.                                                                                                             |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_metadata_items_data"></a>3.6.7.4.3.6.1.5.17.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > metadata > metadata items > data`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_metadata_items_data"></a>3.6.7.8.3.6.1.5.17.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > metadata > metadata items > data`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -1789,7 +1847,7 @@ This can be used, for example, to implement support for deprecation notices, sou
 
 **Description:** The data.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_metadata_items_trace"></a>3.6.7.4.3.6.1.5.17.1.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > metadata > metadata items > trace`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_metadata_items_trace"></a>3.6.7.8.3.6.1.5.17.1.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > metadata > metadata items > trace`
 
 |              |                            |
 | ------------ | -------------------------- |
@@ -1813,14 +1871,14 @@ Only available if `addMetadata()` is called with `stackTrace: true`.
 | ------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- |
 | [trace items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_metadata_items_trace_items) | -           |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_metadata_items_trace_items"></a>3.6.7.4.3.6.1.5.17.1.2.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > metadata > metadata items > trace > trace items
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_metadata_items_trace_items"></a>3.6.7.8.3.6.1.5.17.1.2.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > metadata > metadata items > trace > trace items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_metadata_items_type"></a>3.6.7.4.3.6.1.5.17.1.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > metadata > metadata items > type`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_metadata_items_type"></a>3.6.7.8.3.6.1.5.17.1.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > metadata > metadata items > type`
 
 |              |          |
 | ------------ | -------- |
@@ -1829,7 +1887,7 @@ Only available if `addMetadata()` is called with `stackTrace: true`.
 
 **Description:** The metadata entry type.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_path"></a>3.6.7.4.3.6.1.5.18. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > path`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_path"></a>3.6.7.8.3.6.1.5.18. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > path`
 
 |              |          |
 | ------------ | -------- |
@@ -1840,7 +1898,7 @@ Only available if `addMetadata()` is called with `stackTrace: true`.
 
 Components are separated by '/'.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_root"></a>3.6.7.4.3.6.1.5.19. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > root`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_root"></a>3.6.7.8.3.6.1.5.19. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > root`
 
 |                           |                                                                                                                                                                                                                                               |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1851,7 +1909,7 @@ Components are separated by '/'.
 
 **Description:** Returns the root of the construct tree.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_scope"></a>3.6.7.4.3.6.1.5.20. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > scope`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_scope"></a>3.6.7.8.3.6.1.5.20. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > scope`
 
 |                           |                                                                                                                                                                                                                                               |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1864,7 +1922,7 @@ Components are separated by '/'.
 
 The value is `undefined` at the root of the construct scope tree.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_scopes"></a>3.6.7.4.3.6.1.5.21. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > scopes`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_scopes"></a>3.6.7.8.3.6.1.5.21. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > scopes`
 
 |              |         |
 | ------------ | ------- |
@@ -1885,7 +1943,7 @@ The value is `undefined` at the root of the construct scope tree.
 | --------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
 | [IConstruct](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_scopes_items) | Represents a construct. |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_scopes_items"></a>3.6.7.4.3.6.1.5.21.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > scopes > IConstruct
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node_scopes_items"></a>3.6.7.8.3.6.1.5.21.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > node > scopes > IConstruct
 
 |                           |                                                                                                                                                                                                                                               |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1896,7 +1954,7 @@ The value is `undefined` at the root of the construct scope tree.
 
 **Description:** Represents a construct.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_securityGroupId"></a>3.6.7.4.3.6.1.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > securityGroupId`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_securityGroupId"></a>3.6.7.8.3.6.1.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > securityGroupId`
 
 |              |          |
 | ------------ | -------- |
@@ -1905,7 +1963,7 @@ The value is `undefined` at the root of the construct scope tree.
 
 **Description:** ID for the current security group
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_securityGroupRef"></a>3.6.7.4.3.6.1.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > securityGroupRef`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_securityGroupRef"></a>3.6.7.8.3.6.1.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > securityGroupRef`
 
 |                           |                                      |
 | ------------------------- | ------------------------------------ |
@@ -1920,7 +1978,7 @@ The value is `undefined` at the root of the construct scope tree.
 | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------- |
 | + [securityGroupId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_securityGroupRef_securityGroupId ) | No      | string | No         | -          | The Id of the SecurityGroup resource. |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_securityGroupRef_securityGroupId"></a>3.6.7.4.3.6.1.7.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > securityGroupRef > securityGroupId`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_securityGroupRef_securityGroupId"></a>3.6.7.8.3.6.1.7.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > securityGroupRef > securityGroupId`
 
 |              |          |
 | ------------ | -------- |
@@ -1929,7 +1987,7 @@ The value is `undefined` at the root of the construct scope tree.
 
 **Description:** The Id of the SecurityGroup resource.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack"></a>3.6.7.4.3.6.1.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack"></a>3.6.7.8.3.6.1.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack`
 
 |                           |                     |
 | ------------------------- | ------------------- |
@@ -1957,13 +2015,14 @@ The value is `undefined` at the root of the construct scope tree.
 | + [availabilityZones](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_availabilityZones )                       | No      | array of string | No         | -                                                                                                                         | Returns the list of AZs that are available in the AWS environment<br />(account/region) associated with this stack.<br /><br />If the stack is environment-agnostic (either account and/or region are<br />tokens), this property will return an array with 2 tokens that will resolve<br />at deploy-time to the first two availability zones returned from CloudFormation's<br />\`Fn::GetAZs\` intrinsic function.<br /><br />If they are not available in the context, returns a set of dummy values and<br />reports them as missing, and let the CLI resolve them by calling EC2<br />\`DescribeAvailabilityZones\` on the target environment.<br /><br />To specify a different strategy for selecting availability zones override this method.                                                                                                                                                                                                                                                                                                                                                                                   |
 | + [bundlingRequired](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_bundlingRequired )                         | No      | boolean         | No         | -                                                                                                                         | Indicates whether the stack requires bundling or not                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | + [dependencies](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_dependencies )                                 | No      | array           | No         | -                                                                                                                         | Return the stacks this stack depends on                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_env )                                                   | No      | object          | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                       | The environment this Stack deploys to                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | + [environment](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_environment )                                   | No      | string          | No         | -                                                                                                                         | The environment coordinates in which this stack is deployed. In the form<br />\`aws://account/region\`. Use \`stack.account\` and \`stack.region\` to obtain<br />the specific values, no need to parse.<br /><br />You can use this value to determine if two stacks are targeting the same<br />environment.<br /><br />If either \`stack.account\` or \`stack.region\` are not concrete values (e.g.<br />\`Aws.ACCOUNT_ID\` or \`Aws.REGION\`) the special strings \`unknown-account\` and/or<br />\`unknown-region\` will be used respectively to indicate this stack is<br />region/account-agnostic.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | + [generateStackArtifactId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_generateStackArtifactId )           | No      | object          | No         | -                                                                                                                         | The artifact ID for this stack<br /><br />Stack artifact ID is unique within the App's Cloud Assembly.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | + [generateStackId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_generateStackId )                           | No      | object          | No         | -                                                                                                                         | Generate an ID with respect to the given container construct.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | + [generateStackName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_generateStackName )                       | No      | object          | No         | -                                                                                                                         | Calculate the stack name based on the construct path<br /><br />The stack name is the name under which we'll deploy the stack,<br />and incorporates containing Stage names by default.<br /><br />Generally this looks a lot like how logical IDs are calculated.<br />The stack name is calculated based on the construct root path,<br />as follows:<br /><br />- Path is calculated with respect to containing App or Stage (if any)<br />- If the path is one component long just use that component, otherwise<br />  combine them with a hash.<br /><br />Since the hash is quite ugly and we'd like to avoid it if possible -- but<br />we can't anymore in the general case since it has been written into legacy<br />stacks. The introduction of Stages makes it possible to make this nicer however.<br />When a Stack is nested inside a Stage, we use the path components below the<br />Stage, and prefix the path components of the Stage before it.                                                                                                                                                                     |
 | + [maxResources](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_maxResources )                                 | No      | object          | No         | -                                                                                                                         | Maximum number of resources in the stack<br /><br />Set to 0 to mean "unlimited".                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| + [nested](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nested )                                             | No      | boolean         | No         | -                                                                                                                         | Indicates if this is a nested stack, in which case \`parentStack\` will include a reference to it's parent.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| - [nestedStackParent](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackParent )                       | No      | object          | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | If this is a nested stack, returns it's parent stack.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| + [nested](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nested )                                             | No      | boolean         | No         | -                                                                                                                         | Indicates if this is a nested stack, in which case \`parentStack\` will include a reference to its parent.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| - [nestedStackParent](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackParent )                       | No      | object          | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | If this is a nested stack, returns its parent stack.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | - [nestedStackResource](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource )                   | No      | object          | No         | In #/definitions/CfnResource                                                                                              | If this is a nested stack, this represents its \`AWS::CloudFormation::Stack\`<br />resource. \`undefined\` for top-level (non-nested) stacks.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_node )                                                 | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | + [notificationArns](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_notificationArns )                         | No      | array of string | No         | -                                                                                                                         | Returns the list of notification Amazon Resource Names (ARNs) for the current stack.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
@@ -1982,7 +2041,7 @@ The value is `undefined` at the root of the construct scope tree.
 | + [terminationProtection](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_terminationProtection )               | No      | boolean         | No         | -                                                                                                                         | Whether termination protection is enabled for this stack.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | + [urlSuffix](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_urlSuffix )                                       | No      | string          | No         | -                                                                                                                         | The Amazon domain suffix for the region in which this stack is defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__crossRegionReferences"></a>3.6.7.4.3.6.1.8.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _crossRegionReferences`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__crossRegionReferences"></a>3.6.7.8.3.6.1.8.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _crossRegionReferences`
 
 |              |           |
 | ------------ | --------- |
@@ -1991,7 +2050,7 @@ The value is `undefined` at the root of the construct scope tree.
 
 **Description:** Whether cross region references are enabled for this stack
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__logicalIds"></a>3.6.7.4.3.6.1.8.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _logicalIds`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__logicalIds"></a>3.6.7.8.3.6.1.8.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _logicalIds`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -2001,7 +2060,7 @@ The value is `undefined` at the root of the construct scope tree.
 
 **Description:** Logical ID generation strategy
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__missingContext"></a>3.6.7.4.3.6.1.8.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _missingContext`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__missingContext"></a>3.6.7.8.3.6.1.8.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _missingContext`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -2013,7 +2072,7 @@ The value is `undefined` at the root of the construct scope tree.
 This is returned when the stack is synthesized under the 'missing' attribute
 and allows tooling to obtain the context and re-synthesize.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__notificationArns"></a>3.6.7.4.3.6.1.8.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _notificationArns`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__notificationArns"></a>3.6.7.8.3.6.1.8.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _notificationArns`
 
 |              |                   |
 | ------------ | ----------------- |
@@ -2034,14 +2093,14 @@ and allows tooling to obtain the context and re-synthesize.
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | [_notificationArns items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__notificationArns_items) | -           |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__notificationArns_items"></a>3.6.7.4.3.6.1.8.4.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _notificationArns > _notificationArns items
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__notificationArns_items"></a>3.6.7.8.3.6.1.8.4.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _notificationArns > _notificationArns items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__stackDependencies"></a>3.6.7.4.3.6.1.8.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _stackDependencies`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__stackDependencies"></a>3.6.7.8.3.6.1.8.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _stackDependencies`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -2051,7 +2110,7 @@ and allows tooling to obtain the context and re-synthesize.
 
 **Description:** Other stacks this stack depends on
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__stackName"></a>3.6.7.4.3.6.1.8.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _stackName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__stackName"></a>3.6.7.8.3.6.1.8.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _stackName`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -2059,7 +2118,7 @@ and allows tooling to obtain the context and re-synthesize.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__suppressTemplateIndentation"></a>3.6.7.4.3.6.1.8.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _suppressTemplateIndentation`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__suppressTemplateIndentation"></a>3.6.7.8.3.6.1.8.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _suppressTemplateIndentation`
 
 |                           |                                                                                                |
 | ------------------------- | ---------------------------------------------------------------------------------------------- |
@@ -2075,7 +2134,7 @@ If not specified, the value of the `@aws-cdk/core:suppressTemplateIndentation`
 context key will be used. If that is not specified, then the
 default value `false` will be used.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__terminationProtection"></a>3.6.7.4.3.6.1.8.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _terminationProtection`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__terminationProtection"></a>3.6.7.8.3.6.1.8.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _terminationProtection`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -2083,7 +2142,7 @@ default value `false` will be used.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__versionReportingEnabled"></a>3.6.7.4.3.6.1.8.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _versionReportingEnabled`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack__versionReportingEnabled"></a>3.6.7.8.3.6.1.8.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > _versionReportingEnabled`
 
 |              |           |
 | ------------ | --------- |
@@ -2094,7 +2153,7 @@ default value `false` will be used.
 
 Controls whether the CDK Metadata resource is injected
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_account"></a>3.6.7.4.3.6.1.8.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > account`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_account"></a>3.6.7.8.3.6.1.8.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > account`
 
 |              |          |
 | ------------ | -------- |
@@ -2120,7 +2179,7 @@ into an **account-agnostic template**. In this case, your code should either
 fail (throw an error, emit a synth error using `Annotations.of(construct).addError()`) or
 implement some other account-agnostic behavior.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_addPermissionsBoundaryAspect"></a>3.6.7.4.3.6.1.8.11. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > addPermissionsBoundaryAspect`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_addPermissionsBoundaryAspect"></a>3.6.7.8.3.6.1.8.11. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > addPermissionsBoundaryAspect`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -2131,7 +2190,7 @@ implement some other account-agnostic behavior.
 **Description:** Adds an aspect to the stack that will apply the permissions boundary.
 This will only add the aspect if the permissions boundary has been set
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_artifactId"></a>3.6.7.4.3.6.1.8.12. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > artifactId`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_artifactId"></a>3.6.7.8.3.6.1.8.12. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > artifactId`
 
 |              |          |
 | ------------ | -------- |
@@ -2140,7 +2199,7 @@ This will only add the aspect if the permissions boundary has been set
 
 **Description:** The ID of the cloud assembly artifact for this stack.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_availabilityZones"></a>3.6.7.4.3.6.1.8.13. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > availabilityZones`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_availabilityZones"></a>3.6.7.8.3.6.1.8.13. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > availabilityZones`
 
 |              |                   |
 | ------------ | ----------------- |
@@ -2173,14 +2232,14 @@ To specify a different strategy for selecting availability zones override this m
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | [availabilityZones items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_availabilityZones_items) | -           |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_availabilityZones_items"></a>3.6.7.4.3.6.1.8.13.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > availabilityZones > availabilityZones items
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_availabilityZones_items"></a>3.6.7.8.3.6.1.8.13.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > availabilityZones > availabilityZones items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_bundlingRequired"></a>3.6.7.4.3.6.1.8.14. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > bundlingRequired`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_bundlingRequired"></a>3.6.7.8.3.6.1.8.14. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > bundlingRequired`
 
 |              |           |
 | ------------ | --------- |
@@ -2189,7 +2248,7 @@ To specify a different strategy for selecting availability zones override this m
 
 **Description:** Indicates whether the stack requires bundling or not
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_dependencies"></a>3.6.7.4.3.6.1.8.15. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > dependencies`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_dependencies"></a>3.6.7.8.3.6.1.8.15. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > dependencies`
 
 |              |         |
 | ------------ | ------- |
@@ -2210,7 +2269,7 @@ To specify a different strategy for selecting availability zones override this m
 | ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
 | [Stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_dependencies_items) | A root construct which represents a single CloudFormation stack. |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_dependencies_items"></a>3.6.7.4.3.6.1.8.15.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > dependencies > Stack
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_dependencies_items"></a>3.6.7.8.3.6.1.8.15.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > dependencies > Stack
 
 |                           |                                                                                                                  |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -2221,7 +2280,18 @@ To specify a different strategy for selecting availability zones override this m
 
 **Description:** A root construct which represents a single CloudFormation stack.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_environment"></a>3.6.7.4.3.6.1.8.16. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > environment`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_env"></a>3.6.7.8.3.6.1.8.16. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > env`
+
+|                           |                                                            |
+| ------------------------- | ---------------------------------------------------------- |
+| **Type**                  | `object`                                                   |
+| **Required**              | Yes                                                        |
+| **Additional properties** | Not allowed                                                |
+| **Same definition as**    | [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env) |
+
+**Description:** The environment this Stack deploys to
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_environment"></a>3.6.7.8.3.6.1.8.17. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > environment`
 
 |              |          |
 | ------------ | -------- |
@@ -2240,7 +2310,7 @@ If either `stack.account` or `stack.region` are not concrete values (e.g.
 `unknown-region` will be used respectively to indicate this stack is
 region/account-agnostic.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_generateStackArtifactId"></a>3.6.7.4.3.6.1.8.17. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > generateStackArtifactId`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_generateStackArtifactId"></a>3.6.7.8.3.6.1.8.18. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > generateStackArtifactId`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -2252,7 +2322,7 @@ region/account-agnostic.
 
 Stack artifact ID is unique within the App's Cloud Assembly.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_generateStackId"></a>3.6.7.4.3.6.1.8.18. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > generateStackId`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_generateStackId"></a>3.6.7.8.3.6.1.8.19. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > generateStackId`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -2262,7 +2332,7 @@ Stack artifact ID is unique within the App's Cloud Assembly.
 
 **Description:** Generate an ID with respect to the given container construct.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_generateStackName"></a>3.6.7.4.3.6.1.8.19. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > generateStackName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_generateStackName"></a>3.6.7.8.3.6.1.8.20. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > generateStackName`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -2289,7 +2359,7 @@ stacks. The introduction of Stages makes it possible to make this nicer however.
 When a Stack is nested inside a Stage, we use the path components below the
 Stage, and prefix the path components of the Stage before it.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_maxResources"></a>3.6.7.4.3.6.1.8.20. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > maxResources`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_maxResources"></a>3.6.7.8.3.6.1.8.21. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > maxResources`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -2301,16 +2371,16 @@ Stage, and prefix the path components of the Stage before it.
 
 Set to 0 to mean "unlimited".
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nested"></a>3.6.7.4.3.6.1.8.21. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nested`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nested"></a>3.6.7.8.3.6.1.8.22. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nested`
 
 |              |           |
 | ------------ | --------- |
 | **Type**     | `boolean` |
 | **Required** | Yes       |
 
-**Description:** Indicates if this is a nested stack, in which case `parentStack` will include a reference to it's parent.
+**Description:** Indicates if this is a nested stack, in which case `parentStack` will include a reference to its parent.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackParent"></a>3.6.7.4.3.6.1.8.22. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackParent`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackParent"></a>3.6.7.8.3.6.1.8.23. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackParent`
 
 |                           |                                                                                                                  |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -2319,9 +2389,9 @@ Set to 0 to mean "unlimited".
 | **Additional properties** | Not allowed                                                                                                      |
 | **Same definition as**    | [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack) |
 
-**Description:** If this is a nested stack, returns it's parent stack.
+**Description:** If this is a nested stack, returns its parent stack.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource"></a>3.6.7.4.3.6.1.8.23. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource"></a>3.6.7.8.3.6.1.8.24. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource`
 
 |                           |                           |
 | ------------------------- | ------------------------- |
@@ -2333,26 +2403,29 @@ Set to 0 to mean "unlimited".
 **Description:** If this is a nested stack, this represents its `AWS::CloudFormation::Stack`
 resource. `undefined` for top-level (non-nested) stacks.
 
-| Property                                                                                                                                                                  | Pattern | Type            | Deprecated | Definition                                                                                                                | Title/Description                                                                                                                                                                                                                                                        |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| + [_cfnProperties](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource__cfnProperties )           | No      | object          | No         | -                                                                                                                         | AWS CloudFormation resource properties.<br /><br />This object is returned via cfnProperties                                                                                                                                                                             |
-| - [_logicalIdLocked](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource__logicalIdLocked )       | No      | object          | No         | -                                                                                                                         | If the logicalId is locked then it can no longer be overridden.<br />This is needed for cases where the logicalId is consumed prior to synthesis<br />(i.e. Stack.exportValue).                                                                                          |
-| - [_logicalIdOverride](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource__logicalIdOverride )   | No      | object          | No         | -                                                                                                                         | An explicit logical ID provided by \`overrideLogicalId\`.                                                                                                                                                                                                                |
-| + [cfnOptions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions )                   | No      | object          | No         | In #/definitions/ICfnResourceOptions                                                                                      | Options for this resource, such as condition, update policy etc.                                                                                                                                                                                                         |
-| + [cfnProperties](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnProperties )             | No      | object          | No         | -                                                                                                                         | -                                                                                                                                                                                                                                                                        |
-| + [cfnResourceType](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnResourceType )         | No      | string          | No         | -                                                                                                                         | AWS resource type.                                                                                                                                                                                                                                                       |
-| + [creationStack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_creationStack )             | No      | array of string | No         | -                                                                                                                         | -                                                                                                                                                                                                                                                                        |
-| + [dependsOn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_dependsOn )                     | No      | object          | No         | -                                                                                                                         | Logical IDs of dependencies.<br /><br />Is filled during prepare().                                                                                                                                                                                                      |
-| + [logicalId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_logicalId )                     | No      | string          | No         | -                                                                                                                         | The logical ID for this CloudFormation stack element. The logical ID of the element<br />is calculated from the path of the resource node in the construct tree.<br /><br />To override this value, use \`overrideLogicalId(newLogicalId)\`.                             |
-| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_node )                               | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                                                           |
-| + [rawOverrides](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_rawOverrides )               | No      | object          | No         | -                                                                                                                         | An object to be merged on top of the entire resource definition.                                                                                                                                                                                                         |
-| + [ref](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_ref )                                 | No      | string          | No         | -                                                                                                                         | Return a string that will be resolved to a CloudFormation \`{ Ref }\` for this element.<br /><br />If, by any chance, the intrinsic reference of a resource is not a string, you could<br />coerce it to an IResolvable through \`Lazy.any({ produce: resource.ref })\`. |
-| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_stack )                             | No      | object          | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | The stack in which this element is defined. CfnElements must be defined within a stack scope (directly or indirectly).                                                                                                                                                   |
-| + [synthesizeLogicalId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_synthesizeLogicalId ) | No      | object          | No         | -                                                                                                                         | Called during synthesize to render the logical ID of this element. If<br />\`overrideLogicalId\` was it will be used, otherwise, we will allocate the<br />logical ID through the stack.                                                                                 |
-| + [updatedProperites](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_updatedProperites )     | No      | object          | No         | -                                                                                                                         | Deprecated                                                                                                                                                                                                                                                               |
-| + [updatedProperties](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_updatedProperties )     | No      | object          | No         | -                                                                                                                         | Return properties modified after initiation<br /><br />Resources that expose mutable properties should override this function to<br />collect and return the properties object for this resource.                                                                        |
+| Property                                                                                                                                                                                                    | Pattern | Type             | Deprecated | Definition                                                                                                                | Title/Description                                                                                                                                                                                                                                                        |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| + [_cfnProperties](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource__cfnProperties )                                             | No      | object           | No         | -                                                                                                                         | AWS CloudFormation resource properties.<br /><br />This object is returned via cfnProperties                                                                                                                                                                             |
+| - [_crossStackReferenceStrength](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource__crossStackReferenceStrength )                 | No      | object           | No         | -                                                                                                                         | -                                                                                                                                                                                                                                                                        |
+| - [_crossStackReferenceStrengthOverride](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource__crossStackReferenceStrengthOverride ) | No      | enum (of string) | No         | -                                                                                                                         | -                                                                                                                                                                                                                                                                        |
+| - [_logicalIdLocked](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource__logicalIdLocked )                                         | No      | object           | No         | -                                                                                                                         | If the logicalId is locked then it can no longer be overridden.<br />This is needed for cases where the logicalId is consumed prior to synthesis<br />(i.e. Stack.exportValue).                                                                                          |
+| - [_logicalIdOverride](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource__logicalIdOverride )                                     | No      | object           | No         | -                                                                                                                         | An explicit logical ID provided by \`overrideLogicalId\`.                                                                                                                                                                                                                |
+| + [cfnOptions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions )                                                     | No      | object           | No         | In #/definitions/ICfnResourceOptions                                                                                      | Options for this resource, such as condition, update policy etc.                                                                                                                                                                                                         |
+| + [cfnProperties](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnProperties )                                               | No      | object           | No         | -                                                                                                                         | -                                                                                                                                                                                                                                                                        |
+| + [cfnPropertyNames](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnPropertyNames )                                         | No      | object           | No         | In #/definitions/Record%3Cstring%2Cstring%3E                                                                              | -                                                                                                                                                                                                                                                                        |
+| + [cfnResourceType](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnResourceType )                                           | No      | string           | No         | -                                                                                                                         | AWS resource type.                                                                                                                                                                                                                                                       |
+| + [creationStack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_creationStack )                                               | No      | array of string  | No         | -                                                                                                                         | -                                                                                                                                                                                                                                                                        |
+| + [dependsOn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_dependsOn )                                                       | No      | object           | No         | -                                                                                                                         | Logical IDs of dependencies.<br /><br />Is filled during prepare().                                                                                                                                                                                                      |
+| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_env )                                                                   | No      | object           | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                       | Represents the environment a given resource lives in.<br /><br />Used as the return value for the \`IEnvironmentAware.env\` property.                                                                                                                                    |
+| + [logicalId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_logicalId )                                                       | No      | string           | No         | -                                                                                                                         | The logical ID for this CloudFormation stack element. The logical ID of the element<br />is calculated from the path of the resource node in the construct tree.<br /><br />To override this value, use \`overrideLogicalId(newLogicalId)\`.                             |
+| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_node )                                                                 | No      | object           | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                                                           |
+| + [rawOverrides](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_rawOverrides )                                                 | No      | object           | No         | -                                                                                                                         | An object to be merged on top of the entire resource definition.                                                                                                                                                                                                         |
+| + [ref](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_ref )                                                                   | No      | string           | No         | -                                                                                                                         | Return a string that will be resolved to a CloudFormation \`{ Ref }\` for this element.<br /><br />If, by any chance, the intrinsic reference of a resource is not a string, you could<br />coerce it to an IResolvable through \`Lazy.any({ produce: resource.ref })\`. |
+| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_stack )                                                               | No      | object           | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | The stack in which this element is defined. CfnElements must be defined within a stack scope (directly or indirectly).                                                                                                                                                   |
+| + [updatedProperites](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_updatedProperites )                                       | No      | object           | No         | -                                                                                                                         | Deprecated                                                                                                                                                                                                                                                               |
+| + [updatedProperties](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_updatedProperties )                                       | No      | object           | No         | -                                                                                                                         | Return properties modified after initiation<br /><br />Resources that expose mutable properties should override this function to<br />collect and return the properties object for this resource.                                                                        |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource__cfnProperties"></a>3.6.7.4.3.6.1.8.23.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > _cfnProperties`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource__cfnProperties"></a>3.6.7.8.3.6.1.8.24.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > _cfnProperties`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -2364,7 +2437,27 @@ resource. `undefined` for top-level (non-nested) stacks.
 
 This object is returned via cfnProperties
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource__logicalIdLocked"></a>3.6.7.4.3.6.1.8.23.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > _logicalIdLocked`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource__crossStackReferenceStrength"></a>3.6.7.8.3.6.1.8.24.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > _crossStackReferenceStrength`
+
+|                           |                  |
+| ------------------------- | ---------------- |
+| **Type**                  | `object`         |
+| **Required**              | No               |
+| **Additional properties** | Any type allowed |
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource__crossStackReferenceStrengthOverride"></a>3.6.7.8.3.6.1.8.24.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > _crossStackReferenceStrengthOverride`
+
+|              |                    |
+| ------------ | ------------------ |
+| **Type**     | `enum (of string)` |
+| **Required** | No                 |
+
+Must be one of:
+* "both"
+* "strong"
+* "weak"
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource__logicalIdLocked"></a>3.6.7.8.3.6.1.8.24.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > _logicalIdLocked`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -2376,7 +2469,7 @@ This object is returned via cfnProperties
 This is needed for cases where the logicalId is consumed prior to synthesis
 (i.e. Stack.exportValue).
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource__logicalIdOverride"></a>3.6.7.4.3.6.1.8.23.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > _logicalIdOverride`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource__logicalIdOverride"></a>3.6.7.8.3.6.1.8.24.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > _logicalIdOverride`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -2386,7 +2479,7 @@ This is needed for cases where the logicalId is consumed prior to synthesis
 
 **Description:** An explicit logical ID provided by `overrideLogicalId`.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions"></a>3.6.7.4.3.6.1.8.23.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions"></a>3.6.7.8.3.6.1.8.24.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions`
 
 |                           |                                   |
 | ------------------------- | --------------------------------- |
@@ -2408,7 +2501,7 @@ This is needed for cases where the logicalId is consumed prior to synthesis
 | - [updateReplacePolicy](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updateReplacePolicy ) | No      | enum (of string) | No         | -                                  | Use the UpdateReplacePolicy attribute to retain or (in some cases) backup the existing physical instance of a resource<br />when it is replaced during a stack update operation.                                                                                                                                                                                                                                                        |
 | - [version](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_version )                         | No      | string           | No         | -                                  | The version of this resource.<br />Used only for custom CloudFormation resources.                                                                                                                                                                                                                                                                                                                                                       |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition"></a>3.6.7.4.3.6.1.8.23.4.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition"></a>3.6.7.8.3.6.1.8.24.6.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition`
 
 |                           |                            |
 | ------------------------- | -------------------------- |
@@ -2421,18 +2514,17 @@ This is needed for cases where the logicalId is consumed prior to synthesis
 is deployed, the resource will be included. This is provided to allow CDK projects to produce legacy templates, but normally
 there is no need to use it in CDK projects.
 
-| Property                                                                                                                                                                                       | Pattern | Type            | Deprecated | Definition                                                                                                                | Title/Description                                                                                                                                                                                                                            |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| - [_logicalIdLocked](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition__logicalIdLocked )       | No      | object          | No         | -                                                                                                                         | If the logicalId is locked then it can no longer be overridden.<br />This is needed for cases where the logicalId is consumed prior to synthesis<br />(i.e. Stack.exportValue).                                                              |
-| - [_logicalIdOverride](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition__logicalIdOverride )   | No      | object          | No         | -                                                                                                                         | An explicit logical ID provided by \`overrideLogicalId\`.                                                                                                                                                                                    |
-| + [creationStack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_creationStack )             | No      | array of string | No         | -                                                                                                                         | -                                                                                                                                                                                                                                            |
-| - [expression](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_expression )                   | No      | object          | No         | In #/definitions/ICfnConditionExpression                                                                                  | The condition statement.                                                                                                                                                                                                                     |
-| + [logicalId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_logicalId )                     | No      | string          | No         | -                                                                                                                         | The logical ID for this CloudFormation stack element. The logical ID of the element<br />is calculated from the path of the resource node in the construct tree.<br /><br />To override this value, use \`overrideLogicalId(newLogicalId)\`. |
-| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_node )                               | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                               |
-| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_stack )                             | No      | object          | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | The stack in which this element is defined. CfnElements must be defined within a stack scope (directly or indirectly).                                                                                                                       |
-| + [synthesizeLogicalId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_synthesizeLogicalId ) | No      | object          | No         | -                                                                                                                         | Called during synthesize to render the logical ID of this element. If<br />\`overrideLogicalId\` was it will be used, otherwise, we will allocate the<br />logical ID through the stack.                                                     |
+| Property                                                                                                                                                                                     | Pattern | Type            | Deprecated | Definition                                                                                                                | Title/Description                                                                                                                                                                                                                            |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [_logicalIdLocked](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition__logicalIdLocked )     | No      | object          | No         | -                                                                                                                         | If the logicalId is locked then it can no longer be overridden.<br />This is needed for cases where the logicalId is consumed prior to synthesis<br />(i.e. Stack.exportValue).                                                              |
+| - [_logicalIdOverride](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition__logicalIdOverride ) | No      | object          | No         | -                                                                                                                         | An explicit logical ID provided by \`overrideLogicalId\`.                                                                                                                                                                                    |
+| + [creationStack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_creationStack )           | No      | array of string | No         | -                                                                                                                         | -                                                                                                                                                                                                                                            |
+| - [expression](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_expression )                 | No      | object          | No         | In #/definitions/ICfnConditionExpression                                                                                  | The condition statement.                                                                                                                                                                                                                     |
+| + [logicalId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_logicalId )                   | No      | string          | No         | -                                                                                                                         | The logical ID for this CloudFormation stack element. The logical ID of the element<br />is calculated from the path of the resource node in the construct tree.<br /><br />To override this value, use \`overrideLogicalId(newLogicalId)\`. |
+| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_node )                             | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                               |
+| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_stack )                           | No      | object          | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | The stack in which this element is defined. CfnElements must be defined within a stack scope (directly or indirectly).                                                                                                                       |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition__logicalIdLocked"></a>3.6.7.4.3.6.1.8.23.4.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > _logicalIdLocked`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition__logicalIdLocked"></a>3.6.7.8.3.6.1.8.24.6.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > _logicalIdLocked`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -2444,7 +2536,7 @@ there is no need to use it in CDK projects.
 This is needed for cases where the logicalId is consumed prior to synthesis
 (i.e. Stack.exportValue).
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition__logicalIdOverride"></a>3.6.7.4.3.6.1.8.23.4.1.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > _logicalIdOverride`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition__logicalIdOverride"></a>3.6.7.8.3.6.1.8.24.6.1.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > _logicalIdOverride`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -2454,7 +2546,7 @@ This is needed for cases where the logicalId is consumed prior to synthesis
 
 **Description:** An explicit logical ID provided by `overrideLogicalId`.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_creationStack"></a>3.6.7.4.3.6.1.8.23.4.1.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > creationStack`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_creationStack"></a>3.6.7.8.3.6.1.8.24.6.1.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > creationStack`
 
 |              |                   |
 | ------------ | ----------------- |
@@ -2473,14 +2565,14 @@ This is needed for cases where the logicalId is consumed prior to synthesis
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | [creationStack items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_creationStack_items) | -           |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_creationStack_items"></a>3.6.7.4.3.6.1.8.23.4.1.3.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > creationStack > creationStack items
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_creationStack_items"></a>3.6.7.8.3.6.1.8.24.6.1.3.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > creationStack > creationStack items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_expression"></a>3.6.7.4.3.6.1.8.23.4.1.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > expression`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_expression"></a>3.6.7.8.3.6.1.8.24.6.1.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > expression`
 
 |                           |                                       |
 | ------------------------- | ------------------------------------- |
@@ -2496,7 +2588,7 @@ This is needed for cases where the logicalId is consumed prior to synthesis
 | + [creationStack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_expression_creationStack ) | No      | array of string  | No         | -          | The creation stack of this resolvable which will be appended to errors<br />thrown during resolution.<br /><br />This may return an array with a single informational element indicating how<br />to get this property populated, if it was skipped for performance reasons. |
 | - [typeHint](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_expression_typeHint )           | No      | enum (of string) | No         | -          | The type that this token will likely resolve to.                                                                                                                                                                                                                             |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_expression_creationStack"></a>3.6.7.4.3.6.1.8.23.4.1.4.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > expression > creationStack`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_expression_creationStack"></a>3.6.7.8.3.6.1.8.24.6.1.4.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > expression > creationStack`
 
 |              |                   |
 | ------------ | ----------------- |
@@ -2521,14 +2613,14 @@ to get this property populated, if it was skipped for performance reasons.
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- |
 | [creationStack items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_expression_creationStack_items) | -           |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_expression_creationStack_items"></a>3.6.7.4.3.6.1.8.23.4.1.4.1.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > expression > creationStack > creationStack items
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_expression_creationStack_items"></a>3.6.7.8.3.6.1.8.24.6.1.4.1.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > expression > creationStack > creationStack items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_expression_typeHint"></a>3.6.7.4.3.6.1.8.23.4.1.4.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > expression > typeHint`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_expression_typeHint"></a>3.6.7.8.3.6.1.8.24.6.1.4.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > expression > typeHint`
 
 |              |                    |
 | ------------ | ------------------ |
@@ -2542,7 +2634,7 @@ Must be one of:
 * "string"
 * "string-list"
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_logicalId"></a>3.6.7.4.3.6.1.8.23.4.1.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > logicalId`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_logicalId"></a>3.6.7.8.3.6.1.8.24.6.1.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > logicalId`
 
 |              |          |
 | ------------ | -------- |
@@ -2554,7 +2646,7 @@ is calculated from the path of the resource node in the construct tree.
 
 To override this value, use `overrideLogicalId(newLogicalId)`.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_node"></a>3.6.7.4.3.6.1.8.23.4.1.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > node`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_node"></a>3.6.7.8.3.6.1.8.24.6.1.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > node`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -2565,7 +2657,7 @@ To override this value, use `overrideLogicalId(newLogicalId)`.
 
 **Description:** The tree node.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_stack"></a>3.6.7.4.3.6.1.8.23.4.1.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > stack`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_stack"></a>3.6.7.8.3.6.1.8.24.6.1.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > stack`
 
 |                           |                                                                                                                  |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -2576,19 +2668,7 @@ To override this value, use `overrideLogicalId(newLogicalId)`.
 
 **Description:** The stack in which this element is defined. CfnElements must be defined within a stack scope (directly or indirectly).
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_condition_synthesizeLogicalId"></a>3.6.7.4.3.6.1.8.23.4.1.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > condition > synthesizeLogicalId`
-
-|                           |                  |
-| ------------------------- | ---------------- |
-| **Type**                  | `object`         |
-| **Required**              | Yes              |
-| **Additional properties** | Any type allowed |
-
-**Description:** Called during synthesize to render the logical ID of this element. If
-`overrideLogicalId` was it will be used, otherwise, we will allocate the
-logical ID through the stack.
-
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy"></a>3.6.7.4.3.6.1.8.23.4.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > creationPolicy`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy"></a>3.6.7.8.3.6.1.8.24.6.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > creationPolicy`
 
 |                           |                                 |
 | ------------------------- | ------------------------------- |
@@ -2608,7 +2688,7 @@ to the stack events so that you track the number of signals sent.
 | - [resourceSignal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy_resourceSignal )                       | No      | object  | No         | In #/definitions/CfnResourceSignal                    | When AWS CloudFormation creates the associated resource, configures the number of required success signals and<br />the length of time that AWS CloudFormation waits for those signals. |
 | - [startFleet](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy_startFleet )                               | No      | boolean | No         | -                                                     | For an AppStream Fleet creation, specifies that the fleet is started after creation.                                                                                                    |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy_autoScalingCreationPolicy"></a>3.6.7.4.3.6.1.8.23.4.2.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > creationPolicy > autoScalingCreationPolicy`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy_autoScalingCreationPolicy"></a>3.6.7.8.3.6.1.8.24.6.2.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > creationPolicy > autoScalingCreationPolicy`
 
 |                           |                                                    |
 | ------------------------- | -------------------------------------------------- |
@@ -2624,7 +2704,7 @@ update to succeed.
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | - [minSuccessfulInstancesPercent](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy_autoScalingCreationPolicy_minSuccessfulInstancesPercent ) | No      | number | No         | -          | Specifies the percentage of instances in an Auto Scaling replacement update that must signal success for the<br />update to succeed. You can specify a value from 0 to 100. AWS CloudFormation rounds to the nearest tenth of a percent.<br />For example, if you update five instances with a minimum successful percentage of 50, three instances must signal success.<br />If an instance doesn't send a signal within the time specified by the Timeout property, AWS CloudFormation assumes that the<br />instance wasn't created. |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy_autoScalingCreationPolicy_minSuccessfulInstancesPercent"></a>3.6.7.4.3.6.1.8.23.4.2.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > creationPolicy > autoScalingCreationPolicy > minSuccessfulInstancesPercent`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy_autoScalingCreationPolicy_minSuccessfulInstancesPercent"></a>3.6.7.8.3.6.1.8.24.6.2.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > creationPolicy > autoScalingCreationPolicy > minSuccessfulInstancesPercent`
 
 |              |          |
 | ------------ | -------- |
@@ -2637,7 +2717,7 @@ For example, if you update five instances with a minimum successful percentage o
 If an instance doesn't send a signal within the time specified by the Timeout property, AWS CloudFormation assumes that the
 instance wasn't created.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy_resourceSignal"></a>3.6.7.4.3.6.1.8.23.4.2.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > creationPolicy > resourceSignal`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy_resourceSignal"></a>3.6.7.8.3.6.1.8.24.6.2.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > creationPolicy > resourceSignal`
 
 |                           |                                 |
 | ------------------------- | ------------------------------- |
@@ -2654,7 +2734,7 @@ the length of time that AWS CloudFormation waits for those signals.
 | - [count](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy_resourceSignal_count )     | No      | number | No         | -          | The number of success signals AWS CloudFormation must receive before it sets the resource status as CREATE_COMPLETE.<br />If the resource receives a failure signal or doesn't receive the specified number of signals before the timeout period<br />expires, the resource creation fails and AWS CloudFormation rolls the stack back.                          |
 | - [timeout](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy_resourceSignal_timeout ) | No      | string | No         | -          | The length of time that AWS CloudFormation waits for the number of signals that was specified in the Count property.<br />The timeout period starts after AWS CloudFormation starts creating the resource, and the timeout expires no sooner<br />than the time you specify but can occur shortly thereafter. The maximum time that you can specify is 12 hours. |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy_resourceSignal_count"></a>3.6.7.4.3.6.1.8.23.4.2.2.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > creationPolicy > resourceSignal > count`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy_resourceSignal_count"></a>3.6.7.8.3.6.1.8.24.6.2.2.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > creationPolicy > resourceSignal > count`
 
 |              |          |
 | ------------ | -------- |
@@ -2665,7 +2745,7 @@ the length of time that AWS CloudFormation waits for those signals.
 If the resource receives a failure signal or doesn't receive the specified number of signals before the timeout period
 expires, the resource creation fails and AWS CloudFormation rolls the stack back.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy_resourceSignal_timeout"></a>3.6.7.4.3.6.1.8.23.4.2.2.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > creationPolicy > resourceSignal > timeout`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy_resourceSignal_timeout"></a>3.6.7.8.3.6.1.8.24.6.2.2.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > creationPolicy > resourceSignal > timeout`
 
 |              |          |
 | ------------ | -------- |
@@ -2676,7 +2756,7 @@ expires, the resource creation fails and AWS CloudFormation rolls the stack back
 The timeout period starts after AWS CloudFormation starts creating the resource, and the timeout expires no sooner
 than the time you specify but can occur shortly thereafter. The maximum time that you can specify is 12 hours.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy_startFleet"></a>3.6.7.4.3.6.1.8.23.4.2.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > creationPolicy > startFleet`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_creationPolicy_startFleet"></a>3.6.7.8.3.6.1.8.24.6.2.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > creationPolicy > startFleet`
 
 |              |           |
 | ------------ | --------- |
@@ -2685,7 +2765,7 @@ than the time you specify but can occur shortly thereafter. The maximum time tha
 
 **Description:** For an AppStream Fleet creation, specifies that the fleet is started after creation.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_deletionPolicy"></a>3.6.7.4.3.6.1.8.23.4.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > deletionPolicy`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_deletionPolicy"></a>3.6.7.8.3.6.1.8.24.6.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > deletionPolicy`
 
 |              |                    |
 | ------------ | ------------------ |
@@ -2703,7 +2783,7 @@ Must be one of:
 * "RetainExceptOnCreate"
 * "Snapshot"
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_description"></a>3.6.7.4.3.6.1.8.23.4.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > description`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_description"></a>3.6.7.8.3.6.1.8.24.6.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > description`
 
 |              |          |
 | ------------ | -------- |
@@ -2715,7 +2795,7 @@ Used for informational purposes only, is not processed in any way
 (and stays with the CloudFormation template, is not passed to the underlying resource,
 even if it does have a 'description' property).
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_metadata"></a>3.6.7.4.3.6.1.8.23.4.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > metadata`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_metadata"></a>3.6.7.8.3.6.1.8.24.6.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > metadata`
 
 |                           |                                                                                                                                                                                                                             |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -2730,7 +2810,7 @@ using construct.addMetadata(), but would not appear in the CloudFormation templa
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_metadata_additionalProperties ) | No      | object | No         | -          | -                 |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_metadata_additionalProperties"></a>3.6.7.4.3.6.1.8.23.4.5.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > metadata > additionalProperties`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_metadata_additionalProperties"></a>3.6.7.8.3.6.1.8.24.6.5.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > metadata > additionalProperties`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -2738,7 +2818,7 @@ using construct.addMetadata(), but would not appear in the CloudFormation templa
 | **Required**              | No               |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy"></a>3.6.7.4.3.6.1.8.23.4.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy"></a>3.6.7.8.3.6.1.8.24.6.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy`
 
 |                           |                               |
 | ------------------------- | ----------------------------- |
@@ -2760,7 +2840,7 @@ scheduled action is associated with the Auto Scaling group.
 | - [enableVersionUpgrade](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_enableVersionUpgrade )               | No      | boolean | No         | -                                               | To upgrade an Amazon ES domain to a new version of Elasticsearch rather than replacing the entire<br />AWS::Elasticsearch::Domain resource, use the EnableVersionUpgrade update policy.                                                                                                                                                        |
 | - [useOnlineResharding](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_useOnlineResharding )                 | No      | boolean | No         | -                                               | To modify a replication group's shards by adding or removing shards, rather than replacing the entire<br />AWS::ElastiCache::ReplicationGroup resource, use the UseOnlineResharding update policy.                                                                                                                                             |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingReplacingUpdate"></a>3.6.7.4.3.6.1.8.23.4.6.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingReplacingUpdate`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingReplacingUpdate"></a>3.6.7.8.3.6.1.8.24.6.6.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingReplacingUpdate`
 
 |                           |                                             |
 | ------------------------- | ------------------------------------------- |
@@ -2777,14 +2857,14 @@ can roll back to the old Auto Scaling group and delete the new Auto Scaling grou
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- | ------- | ---------- | ---------- | ----------------- |
 | - [willReplace](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingReplacingUpdate_willReplace ) | No      | boolean | No         | -          | -                 |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingReplacingUpdate_willReplace"></a>3.6.7.4.3.6.1.8.23.4.6.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingReplacingUpdate > willReplace`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingReplacingUpdate_willReplace"></a>3.6.7.8.3.6.1.8.24.6.6.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingReplacingUpdate > willReplace`
 
 |              |           |
 | ------------ | --------- |
 | **Type**     | `boolean` |
 | **Required** | No        |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate"></a>3.6.7.4.3.6.1.8.23.4.6.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingRollingUpdate`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate"></a>3.6.7.8.3.6.1.8.24.6.6.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingRollingUpdate`
 
 |                           |                                           |
 | ------------------------- | ----------------------------------------- |
@@ -2807,7 +2887,7 @@ group in batches or all at once.
 | - [suspendProcesses](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_suspendProcesses )                           | No      | array of string | No         | -          | Specifies the Auto Scaling processes to suspend during a stack update. Suspending processes prevents Auto Scaling from<br />interfering with a stack update. For example, you can suspend alarming so that Auto Scaling doesn't execute scaling<br />policies associated with an alarm. For valid values, see the ScalingProcesses.member.N parameter for the SuspendProcesses<br />action in the Auto Scaling API Reference.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | - [waitOnResourceSignals](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_waitOnResourceSignals )                 | No      | boolean         | No         | -          | Specifies whether the Auto Scaling group waits on signals from new instances during an update. Use this property to<br />ensure that instances have completed installing and configuring applications before the Auto Scaling group update proceeds.<br />AWS CloudFormation suspends the update of an Auto Scaling group after new EC2 instances are launched into the group.<br />AWS CloudFormation must receive a signal from each new instance within the specified PauseTime before continuing the update.<br />To signal the Auto Scaling group, use the cfn-signal helper script or SignalResource API.<br /><br />To have instances wait for an Elastic Load Balancing health check before they signal success, add a health-check<br />verification by using the cfn-init helper script. For an example, see the verify_instance_health command in the Auto Scaling<br />rolling updates sample template.                                                                                                                                                                           |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_maxBatchSize"></a>3.6.7.4.3.6.1.8.23.4.6.2.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingRollingUpdate > maxBatchSize`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_maxBatchSize"></a>3.6.7.8.3.6.1.8.24.6.6.2.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingRollingUpdate > maxBatchSize`
 
 |              |          |
 | ------------ | -------- |
@@ -2816,7 +2896,7 @@ group in batches or all at once.
 
 **Description:** Specifies the maximum number of instances that AWS CloudFormation updates.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_minActiveInstancesPercent"></a>3.6.7.4.3.6.1.8.23.4.6.2.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingRollingUpdate > minActiveInstancesPercent`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_minActiveInstancesPercent"></a>3.6.7.8.3.6.1.8.24.6.6.2.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingRollingUpdate > minActiveInstancesPercent`
 
 |              |          |
 | ------------ | -------- |
@@ -2827,7 +2907,7 @@ group in batches or all at once.
 updates old instances. You can specify a value from 0 to 100. AWS CloudFormation rounds to the nearest tenth of a percent.
 For example, if you update five instances with a minimum active percentage of 50, three instances must remain in service.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_minInstancesInService"></a>3.6.7.4.3.6.1.8.23.4.6.2.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingRollingUpdate > minInstancesInService`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_minInstancesInService"></a>3.6.7.8.3.6.1.8.24.6.6.2.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingRollingUpdate > minInstancesInService`
 
 |              |          |
 | ------------ | -------- |
@@ -2837,7 +2917,7 @@ For example, if you update five instances with a minimum active percentage of 50
 **Description:** Specifies the minimum number of instances that must be in service within the Auto Scaling group while AWS
 CloudFormation updates old instances.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_minSuccessfulInstancesPercent"></a>3.6.7.4.3.6.1.8.23.4.6.2.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingRollingUpdate > minSuccessfulInstancesPercent`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_minSuccessfulInstancesPercent"></a>3.6.7.8.3.6.1.8.24.6.6.2.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingRollingUpdate > minSuccessfulInstancesPercent`
 
 |              |          |
 | ------------ | -------- |
@@ -2853,7 +2933,7 @@ that the instance wasn't updated.
 
 If you specify this property, you must also enable the WaitOnResourceSignals and PauseTime properties.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_pauseTime"></a>3.6.7.4.3.6.1.8.23.4.6.2.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingRollingUpdate > pauseTime`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_pauseTime"></a>3.6.7.8.3.6.1.8.24.6.6.2.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingRollingUpdate > pauseTime`
 
 |              |          |
 | ------------ | -------- |
@@ -2873,7 +2953,7 @@ rolled back, a short PauseTime can cause the rollback to fail.
 Specify PauseTime in the ISO8601 duration format (in the format PT#H#M#S, where each # is the number of hours, minutes,
 and seconds, respectively). The maximum PauseTime is one hour (PT1H).
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_suspendProcesses"></a>3.6.7.4.3.6.1.8.23.4.6.2.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingRollingUpdate > suspendProcesses`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_suspendProcesses"></a>3.6.7.8.3.6.1.8.24.6.6.2.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingRollingUpdate > suspendProcesses`
 
 |              |                   |
 | ------------ | ----------------- |
@@ -2897,14 +2977,14 @@ action in the Auto Scaling API Reference.
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | [suspendProcesses items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_suspendProcesses_items) | -           |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_suspendProcesses_items"></a>3.6.7.4.3.6.1.8.23.4.6.2.6.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingRollingUpdate > suspendProcesses > suspendProcesses items
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_suspendProcesses_items"></a>3.6.7.8.3.6.1.8.24.6.6.2.6.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingRollingUpdate > suspendProcesses > suspendProcesses items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_waitOnResourceSignals"></a>3.6.7.4.3.6.1.8.23.4.6.2.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingRollingUpdate > waitOnResourceSignals`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingRollingUpdate_waitOnResourceSignals"></a>3.6.7.8.3.6.1.8.24.6.6.2.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingRollingUpdate > waitOnResourceSignals`
 
 |              |           |
 | ------------ | --------- |
@@ -2921,7 +3001,7 @@ To have instances wait for an Elastic Load Balancing health check before they si
 verification by using the cfn-init helper script. For an example, see the verify_instance_health command in the Auto Scaling
 rolling updates sample template.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingScheduledAction"></a>3.6.7.4.3.6.1.8.23.4.6.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingScheduledAction`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingScheduledAction"></a>3.6.7.8.3.6.1.8.24.6.6.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingScheduledAction`
 
 |                           |                                             |
 | ------------------------- | ------------------------------------------- |
@@ -2938,14 +3018,14 @@ policy.
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- | ------- | ---------- | ---------- | ----------------- |
 | - [ignoreUnmodifiedGroupSizeProperties](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingScheduledAction_ignoreUnmodifiedGroupSizeProperties ) | No      | boolean | No         | -          | -                 |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingScheduledAction_ignoreUnmodifiedGroupSizeProperties"></a>3.6.7.4.3.6.1.8.23.4.6.3.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingScheduledAction > ignoreUnmodifiedGroupSizeProperties`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_autoScalingScheduledAction_ignoreUnmodifiedGroupSizeProperties"></a>3.6.7.8.3.6.1.8.24.6.6.3.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > autoScalingScheduledAction > ignoreUnmodifiedGroupSizeProperties`
 
 |              |           |
 | ------------ | --------- |
 | **Type**     | `boolean` |
 | **Required** | No        |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_codeDeployLambdaAliasUpdate"></a>3.6.7.4.3.6.1.8.23.4.6.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > codeDeployLambdaAliasUpdate`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_codeDeployLambdaAliasUpdate"></a>3.6.7.8.3.6.1.8.24.6.6.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > codeDeployLambdaAliasUpdate`
 
 |                           |                                              |
 | ------------------------- | -------------------------------------------- |
@@ -2964,7 +3044,7 @@ use the CodeDeployLambdaAliasUpdate update policy.
 | - [beforeAllowTrafficHook](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_codeDeployLambdaAliasUpdate_beforeAllowTrafficHook ) | No      | string | No         | -          | The name of the Lambda function to run before traffic routing starts.                              |
 | + [deploymentGroupName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_codeDeployLambdaAliasUpdate_deploymentGroupName )       | No      | string | No         | -          | The name of the AWS CodeDeploy deployment group. This is where the traffic-shifting policy is set. |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_codeDeployLambdaAliasUpdate_afterAllowTrafficHook"></a>3.6.7.4.3.6.1.8.23.4.6.4.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > codeDeployLambdaAliasUpdate > afterAllowTrafficHook`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_codeDeployLambdaAliasUpdate_afterAllowTrafficHook"></a>3.6.7.8.3.6.1.8.24.6.6.4.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > codeDeployLambdaAliasUpdate > afterAllowTrafficHook`
 
 |              |          |
 | ------------ | -------- |
@@ -2973,7 +3053,7 @@ use the CodeDeployLambdaAliasUpdate update policy.
 
 **Description:** The name of the Lambda function to run after traffic routing completes.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_codeDeployLambdaAliasUpdate_applicationName"></a>3.6.7.4.3.6.1.8.23.4.6.4.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > codeDeployLambdaAliasUpdate > applicationName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_codeDeployLambdaAliasUpdate_applicationName"></a>3.6.7.8.3.6.1.8.24.6.6.4.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > codeDeployLambdaAliasUpdate > applicationName`
 
 |              |          |
 | ------------ | -------- |
@@ -2982,7 +3062,7 @@ use the CodeDeployLambdaAliasUpdate update policy.
 
 **Description:** The name of the AWS CodeDeploy application.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_codeDeployLambdaAliasUpdate_beforeAllowTrafficHook"></a>3.6.7.4.3.6.1.8.23.4.6.4.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > codeDeployLambdaAliasUpdate > beforeAllowTrafficHook`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_codeDeployLambdaAliasUpdate_beforeAllowTrafficHook"></a>3.6.7.8.3.6.1.8.24.6.6.4.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > codeDeployLambdaAliasUpdate > beforeAllowTrafficHook`
 
 |              |          |
 | ------------ | -------- |
@@ -2991,7 +3071,7 @@ use the CodeDeployLambdaAliasUpdate update policy.
 
 **Description:** The name of the Lambda function to run before traffic routing starts.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_codeDeployLambdaAliasUpdate_deploymentGroupName"></a>3.6.7.4.3.6.1.8.23.4.6.4.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > codeDeployLambdaAliasUpdate > deploymentGroupName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_codeDeployLambdaAliasUpdate_deploymentGroupName"></a>3.6.7.8.3.6.1.8.24.6.6.4.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > codeDeployLambdaAliasUpdate > deploymentGroupName`
 
 |              |          |
 | ------------ | -------- |
@@ -3000,7 +3080,7 @@ use the CodeDeployLambdaAliasUpdate update policy.
 
 **Description:** The name of the AWS CodeDeploy deployment group. This is where the traffic-shifting policy is set.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_enableVersionUpgrade"></a>3.6.7.4.3.6.1.8.23.4.6.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > enableVersionUpgrade`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_enableVersionUpgrade"></a>3.6.7.8.3.6.1.8.24.6.6.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > enableVersionUpgrade`
 
 |              |           |
 | ------------ | --------- |
@@ -3010,7 +3090,7 @@ use the CodeDeployLambdaAliasUpdate update policy.
 **Description:** To upgrade an Amazon ES domain to a new version of Elasticsearch rather than replacing the entire
 AWS::Elasticsearch::Domain resource, use the EnableVersionUpgrade update policy.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_useOnlineResharding"></a>3.6.7.4.3.6.1.8.23.4.6.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > useOnlineResharding`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updatePolicy_useOnlineResharding"></a>3.6.7.8.3.6.1.8.24.6.6.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updatePolicy > useOnlineResharding`
 
 |              |           |
 | ------------ | --------- |
@@ -3020,7 +3100,7 @@ AWS::Elasticsearch::Domain resource, use the EnableVersionUpgrade update policy.
 **Description:** To modify a replication group's shards by adding or removing shards, rather than replacing the entire
 AWS::ElastiCache::ReplicationGroup resource, use the UseOnlineResharding update policy.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updateReplacePolicy"></a>3.6.7.4.3.6.1.8.23.4.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updateReplacePolicy`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_updateReplacePolicy"></a>3.6.7.8.3.6.1.8.24.6.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > updateReplacePolicy`
 
 |              |                    |
 | ------------ | ------------------ |
@@ -3036,7 +3116,7 @@ Must be one of:
 * "RetainExceptOnCreate"
 * "Snapshot"
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_version"></a>3.6.7.4.3.6.1.8.23.4.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > version`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnOptions_version"></a>3.6.7.8.3.6.1.8.24.6.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnOptions > version`
 
 |              |          |
 | ------------ | -------- |
@@ -3046,7 +3126,7 @@ Must be one of:
 **Description:** The version of this resource.
 Used only for custom CloudFormation resources.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnProperties"></a>3.6.7.4.3.6.1.8.23.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnProperties`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnProperties"></a>3.6.7.8.3.6.1.8.24.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnProperties`
 
 |                           |                                                                                                                                                                                                                       |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -3058,7 +3138,7 @@ Used only for custom CloudFormation resources.
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnProperties_additionalProperties ) | No      | object | No         | -          | -                 |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnProperties_additionalProperties"></a>3.6.7.4.3.6.1.8.23.5.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnProperties > additionalProperties`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnProperties_additionalProperties"></a>3.6.7.8.3.6.1.8.24.7.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnProperties > additionalProperties`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3066,7 +3146,16 @@ Used only for custom CloudFormation resources.
 | **Required**              | No               |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnResourceType"></a>3.6.7.4.3.6.1.8.23.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnResourceType`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnPropertyNames"></a>3.6.7.8.3.6.1.8.24.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnPropertyNames`
+
+|                           |                                           |
+| ------------------------- | ----------------------------------------- |
+| **Type**                  | `object`                                  |
+| **Required**              | Yes                                       |
+| **Additional properties** | Any type allowed                          |
+| **Defined in**            | #/definitions/Record%3Cstring%2Cstring%3E |
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_cfnResourceType"></a>3.6.7.8.3.6.1.8.24.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > cfnResourceType`
 
 |              |          |
 | ------------ | -------- |
@@ -3075,7 +3164,7 @@ Used only for custom CloudFormation resources.
 
 **Description:** AWS resource type.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_creationStack"></a>3.6.7.4.3.6.1.8.23.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > creationStack`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_creationStack"></a>3.6.7.8.3.6.1.8.24.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > creationStack`
 
 |              |                   |
 | ------------ | ----------------- |
@@ -3094,14 +3183,14 @@ Used only for custom CloudFormation resources.
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | [creationStack items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_creationStack_items) | -           |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_creationStack_items"></a>3.6.7.4.3.6.1.8.23.7.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > creationStack > creationStack items
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_creationStack_items"></a>3.6.7.8.3.6.1.8.24.10.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > creationStack > creationStack items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_dependsOn"></a>3.6.7.4.3.6.1.8.23.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > dependsOn`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_dependsOn"></a>3.6.7.8.3.6.1.8.24.11. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > dependsOn`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3113,7 +3202,20 @@ Used only for custom CloudFormation resources.
 
 Is filled during prepare().
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_logicalId"></a>3.6.7.4.3.6.1.8.23.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > logicalId`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_env"></a>3.6.7.8.3.6.1.8.24.12. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > env`
+
+|                           |                                                            |
+| ------------------------- | ---------------------------------------------------------- |
+| **Type**                  | `object`                                                   |
+| **Required**              | Yes                                                        |
+| **Additional properties** | Not allowed                                                |
+| **Same definition as**    | [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env) |
+
+**Description:** Represents the environment a given resource lives in.
+
+Used as the return value for the `IEnvironmentAware.env` property.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_logicalId"></a>3.6.7.8.3.6.1.8.24.13. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > logicalId`
 
 |              |          |
 | ------------ | -------- |
@@ -3125,7 +3227,7 @@ is calculated from the path of the resource node in the construct tree.
 
 To override this value, use `overrideLogicalId(newLogicalId)`.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_node"></a>3.6.7.4.3.6.1.8.23.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > node`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_node"></a>3.6.7.8.3.6.1.8.24.14. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > node`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -3136,7 +3238,7 @@ To override this value, use `overrideLogicalId(newLogicalId)`.
 
 **Description:** The tree node.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_rawOverrides"></a>3.6.7.4.3.6.1.8.23.11. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > rawOverrides`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_rawOverrides"></a>3.6.7.8.3.6.1.8.24.15. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > rawOverrides`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3146,7 +3248,7 @@ To override this value, use `overrideLogicalId(newLogicalId)`.
 
 **Description:** An object to be merged on top of the entire resource definition.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_ref"></a>3.6.7.4.3.6.1.8.23.12. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > ref`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_ref"></a>3.6.7.8.3.6.1.8.24.16. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > ref`
 
 |              |          |
 | ------------ | -------- |
@@ -3158,7 +3260,7 @@ To override this value, use `overrideLogicalId(newLogicalId)`.
 If, by any chance, the intrinsic reference of a resource is not a string, you could
 coerce it to an IResolvable through `Lazy.any({ produce: resource.ref })`.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_stack"></a>3.6.7.4.3.6.1.8.23.13. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > stack`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_stack"></a>3.6.7.8.3.6.1.8.24.17. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > stack`
 
 |                           |                                                                                                                  |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -3169,19 +3271,7 @@ coerce it to an IResolvable through `Lazy.any({ produce: resource.ref })`.
 
 **Description:** The stack in which this element is defined. CfnElements must be defined within a stack scope (directly or indirectly).
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_synthesizeLogicalId"></a>3.6.7.4.3.6.1.8.23.14. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > synthesizeLogicalId`
-
-|                           |                  |
-| ------------------------- | ---------------- |
-| **Type**                  | `object`         |
-| **Required**              | Yes              |
-| **Additional properties** | Any type allowed |
-
-**Description:** Called during synthesize to render the logical ID of this element. If
-`overrideLogicalId` was it will be used, otherwise, we will allocate the
-logical ID through the stack.
-
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_updatedProperites"></a>3.6.7.4.3.6.1.8.23.15. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > updatedProperites`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_updatedProperites"></a>3.6.7.8.3.6.1.8.24.18. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > updatedProperites`
 
 |                           |                                                                                                                                                                                                                           |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -3195,7 +3285,7 @@ logical ID through the stack.
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_updatedProperites_additionalProperties ) | No      | object | No         | -          | -                 |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_updatedProperites_additionalProperties"></a>3.6.7.4.3.6.1.8.23.15.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > updatedProperites > additionalProperties`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_updatedProperites_additionalProperties"></a>3.6.7.8.3.6.1.8.24.18.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > updatedProperites > additionalProperties`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3203,7 +3293,7 @@ logical ID through the stack.
 | **Required**              | No               |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_updatedProperties"></a>3.6.7.4.3.6.1.8.23.16. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > updatedProperties`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_updatedProperties"></a>3.6.7.8.3.6.1.8.24.19. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > updatedProperties`
 
 |                           |                                                                                                                                                                                                                           |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -3220,7 +3310,7 @@ collect and return the properties object for this resource.
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_updatedProperties_additionalProperties ) | No      | object | No         | -          | -                 |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_updatedProperties_additionalProperties"></a>3.6.7.4.3.6.1.8.23.16.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > updatedProperties > additionalProperties`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_nestedStackResource_updatedProperties_additionalProperties"></a>3.6.7.8.3.6.1.8.24.19.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > nestedStackResource > updatedProperties > additionalProperties`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3228,7 +3318,7 @@ collect and return the properties object for this resource.
 | **Required**              | No               |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_node"></a>3.6.7.4.3.6.1.8.24. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > node`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_node"></a>3.6.7.8.3.6.1.8.25. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > node`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -3239,7 +3329,7 @@ collect and return the properties object for this resource.
 
 **Description:** The tree node.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_notificationArns"></a>3.6.7.4.3.6.1.8.25. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > notificationArns`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_notificationArns"></a>3.6.7.8.3.6.1.8.26. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > notificationArns`
 
 |              |                   |
 | ------------ | ----------------- |
@@ -3260,14 +3350,14 @@ collect and return the properties object for this resource.
 | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | [notificationArns items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_notificationArns_items) | -           |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_notificationArns_items"></a>3.6.7.4.3.6.1.8.25.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > notificationArns > notificationArns items
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_notificationArns_items"></a>3.6.7.8.3.6.1.8.26.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > notificationArns > notificationArns items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_parseEnvironment"></a>3.6.7.4.3.6.1.8.26. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > parseEnvironment`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_parseEnvironment"></a>3.6.7.8.3.6.1.8.27. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > parseEnvironment`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3277,7 +3367,7 @@ collect and return the properties object for this resource.
 
 **Description:** Determine the various stack environment attributes.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_partition"></a>3.6.7.4.3.6.1.8.27. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > partition`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_partition"></a>3.6.7.8.3.6.1.8.28. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > partition`
 
 |              |          |
 | ------------ | -------- |
@@ -3286,7 +3376,7 @@ collect and return the properties object for this resource.
 
 **Description:** The partition in which this stack is defined
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_permissionsBoundaryArn"></a>3.6.7.4.3.6.1.8.28. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > permissionsBoundaryArn`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_permissionsBoundaryArn"></a>3.6.7.8.3.6.1.8.29. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > permissionsBoundaryArn`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3312,7 +3402,7 @@ const stack = new Stack(stage, 'Stack', {
 
  Stack.permissionsBoundaryArn === 'arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/some-other-pb';
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_region"></a>3.6.7.4.3.6.1.8.29. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > region`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_region"></a>3.6.7.8.3.6.1.8.30. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > region`
 
 |              |          |
 | ------------ | -------- |
@@ -3338,7 +3428,7 @@ into a **region-agnostic template**. In this case, your code should either
 fail (throw an error, emit a synth error using `Annotations.of(construct).addError()`) or
 implement some other region-agnostic behavior.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_resolveExportedValue"></a>3.6.7.4.3.6.1.8.30. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > resolveExportedValue`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_resolveExportedValue"></a>3.6.7.8.3.6.1.8.31. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > resolveExportedValue`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3346,7 +3436,7 @@ implement some other region-agnostic behavior.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_stackDependencyReasons"></a>3.6.7.4.3.6.1.8.31. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > stackDependencyReasons`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_stackDependencyReasons"></a>3.6.7.8.3.6.1.8.32. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > stackDependencyReasons`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3359,7 +3449,7 @@ implement some other region-agnostic behavior.
 Returns the list of reasons on the dependency path, or undefined
 if there is no dependency.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_stackId"></a>3.6.7.4.3.6.1.8.32. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > stackId`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_stackId"></a>3.6.7.8.3.6.1.8.33. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > stackId`
 
 |              |          |
 | ------------ | -------- |
@@ -3368,7 +3458,7 @@ if there is no dependency.
 
 **Description:** The ID of the stack
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_stackName"></a>3.6.7.4.3.6.1.8.33. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > stackName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_stackName"></a>3.6.7.8.3.6.1.8.34. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > stackName`
 
 |              |          |
 | ------------ | -------- |
@@ -3386,7 +3476,7 @@ scheme based on the construct path to ensure uniqueness.
 If you wish to obtain the deploy-time AWS::StackName intrinsic,
 you can use `Aws.STACK_NAME` directly.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_synthesizer"></a>3.6.7.4.3.6.1.8.34. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > synthesizer`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_synthesizer"></a>3.6.7.8.3.6.1.8.35. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > synthesizer`
 
 |                           |                                 |
 | ------------------------- | ------------------------------- |
@@ -3397,12 +3487,13 @@ you can use `Aws.STACK_NAME` directly.
 
 **Description:** Synthesis method for this stack
 
-| Property                                                                                                                                                        | Pattern | Type   | Deprecated | Definition | Title/Description                          |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------ |
-| - [bootstrapQualifier](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_synthesizer_bootstrapQualifier ) | No      | string | No         | -          | The qualifier used to bootstrap this stack |
-| - [lookupRole](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_synthesizer_lookupRole )                 | No      | string | No         | -          | The role used to lookup for this stack     |
+| Property                                                                                                                                                                          | Pattern | Type   | Deprecated | Definition | Title/Description                                                   |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------------------------------- |
+| - [bootstrapQualifier](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_synthesizer_bootstrapQualifier )                   | No      | string | No         | -          | The qualifier used to bootstrap this stack                          |
+| - [cloudFormationExecutionRole](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_synthesizer_cloudFormationExecutionRole ) | No      | string | No         | -          | The role that is passed to CloudFormation to execute the change set |
+| - [lookupRole](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_synthesizer_lookupRole )                                   | No      | string | No         | -          | The role used to lookup for this stack                              |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_synthesizer_bootstrapQualifier"></a>3.6.7.4.3.6.1.8.34.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > synthesizer > bootstrapQualifier`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_synthesizer_bootstrapQualifier"></a>3.6.7.8.3.6.1.8.35.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > synthesizer > bootstrapQualifier`
 
 |              |                    |
 | ------------ | ------------------ |
@@ -3412,7 +3503,17 @@ you can use `Aws.STACK_NAME` directly.
 
 **Description:** The qualifier used to bootstrap this stack
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_synthesizer_lookupRole"></a>3.6.7.4.3.6.1.8.34.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > synthesizer > lookupRole`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_synthesizer_cloudFormationExecutionRole"></a>3.6.7.8.3.6.1.8.35.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > synthesizer > cloudFormationExecutionRole`
+
+|              |               |
+| ------------ | ------------- |
+| **Type**     | `string`      |
+| **Required** | No            |
+| **Default**  | `"- no role"` |
+
+**Description:** The role that is passed to CloudFormation to execute the change set
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_synthesizer_lookupRole"></a>3.6.7.8.3.6.1.8.35.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > synthesizer > lookupRole`
 
 |              |               |
 | ------------ | ------------- |
@@ -3422,7 +3523,7 @@ you can use `Aws.STACK_NAME` directly.
 
 **Description:** The role used to lookup for this stack
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags"></a>3.6.7.4.3.6.1.8.35. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags"></a>3.6.7.8.3.6.1.8.36. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags`
 
 |                           |                          |
 | ------------------------- | ------------------------ |
@@ -3448,7 +3549,7 @@ you can use `Aws.STACK_NAME` directly.
 | + [tagPropertyName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_tagPropertyName )         | No      | string | No         | -                            | The property name for tag values<br /><br />Normally this is \`tags\` but some resources choose a different name. Cognito<br />UserPool uses UserPoolTags                                                                      |
 | + [tags](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_tags )                               | No      | object | No         | -                            | -                                                                                                                                                                                                                              |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags__setTag"></a>3.6.7.4.3.6.1.8.35.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > _setTag`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags__setTag"></a>3.6.7.8.3.6.1.8.36.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > _setTag`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3456,7 +3557,7 @@ you can use `Aws.STACK_NAME` directly.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_didHaveInitialTags"></a>3.6.7.4.3.6.1.8.35.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > didHaveInitialTags`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_didHaveInitialTags"></a>3.6.7.8.3.6.1.8.36.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > didHaveInitialTags`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3464,7 +3565,7 @@ you can use `Aws.STACK_NAME` directly.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_dynamicTags"></a>3.6.7.4.3.6.1.8.35.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > dynamicTags`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_dynamicTags"></a>3.6.7.8.3.6.1.8.36.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > dynamicTags`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3472,7 +3573,7 @@ you can use `Aws.STACK_NAME` directly.
 | **Required**              | No               |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_externalTagPriority"></a>3.6.7.4.3.6.1.8.35.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > externalTagPriority`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_externalTagPriority"></a>3.6.7.8.3.6.1.8.36.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > externalTagPriority`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3480,7 +3581,7 @@ you can use `Aws.STACK_NAME` directly.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_parseExternalTags"></a>3.6.7.4.3.6.1.8.35.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > parseExternalTags`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_parseExternalTags"></a>3.6.7.8.3.6.1.8.36.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > parseExternalTags`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3492,7 +3593,7 @@ you can use `Aws.STACK_NAME` directly.
 
 Set the parseable ones into this tag manager. Save the rest (tokens, lazies) in `this.dynamicTags`.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_priorities"></a>3.6.7.4.3.6.1.8.35.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > priorities`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_priorities"></a>3.6.7.8.3.6.1.8.36.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > priorities`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3500,7 +3601,7 @@ Set the parseable ones into this tag manager. Save the rest (tokens, lazies) in 
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_renderedTags"></a>3.6.7.4.3.6.1.8.35.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > renderedTags`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_renderedTags"></a>3.6.7.8.3.6.1.8.36.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > renderedTags`
 
 |                           |                           |
 | ------------------------- | ------------------------- |
@@ -3519,7 +3620,7 @@ property to pass to the `tags` property of the underlying construct.
 | + [creationStack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_renderedTags_creationStack ) | No      | array of string  | No         | -          | The creation stack of this resolvable which will be appended to errors<br />thrown during resolution.<br /><br />This may return an array with a single informational element indicating how<br />to get this property populated, if it was skipped for performance reasons. |
 | - [typeHint](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_renderedTags_typeHint )           | No      | enum (of string) | No         | -          | The type that this token will likely resolve to.                                                                                                                                                                                                                             |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_renderedTags_creationStack"></a>3.6.7.4.3.6.1.8.35.7.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > renderedTags > creationStack`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_renderedTags_creationStack"></a>3.6.7.8.3.6.1.8.36.7.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > renderedTags > creationStack`
 
 |              |                   |
 | ------------ | ----------------- |
@@ -3544,14 +3645,14 @@ to get this property populated, if it was skipped for performance reasons.
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | [creationStack items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_renderedTags_creationStack_items) | -           |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_renderedTags_creationStack_items"></a>3.6.7.4.3.6.1.8.35.7.1.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > renderedTags > creationStack > creationStack items
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_renderedTags_creationStack_items"></a>3.6.7.8.3.6.1.8.36.7.1.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > renderedTags > creationStack > creationStack items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_renderedTags_typeHint"></a>3.6.7.4.3.6.1.8.35.7.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > renderedTags > typeHint`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_renderedTags_typeHint"></a>3.6.7.8.3.6.1.8.36.7.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > renderedTags > typeHint`
 
 |              |                    |
 | ------------ | ------------------ |
@@ -3565,7 +3666,7 @@ Must be one of:
 * "string"
 * "string-list"
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_resourceTypeName"></a>3.6.7.4.3.6.1.8.35.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > resourceTypeName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_resourceTypeName"></a>3.6.7.8.3.6.1.8.36.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > resourceTypeName`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3573,7 +3674,7 @@ Must be one of:
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_sortedTags"></a>3.6.7.4.3.6.1.8.35.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > sortedTags`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_sortedTags"></a>3.6.7.8.3.6.1.8.36.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > sortedTags`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3581,7 +3682,7 @@ Must be one of:
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_tagFormatter"></a>3.6.7.4.3.6.1.8.35.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > tagFormatter`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_tagFormatter"></a>3.6.7.8.3.6.1.8.36.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > tagFormatter`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3589,7 +3690,7 @@ Must be one of:
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_tagPropertyName"></a>3.6.7.4.3.6.1.8.35.11. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > tagPropertyName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_tagPropertyName"></a>3.6.7.8.3.6.1.8.36.11. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > tagPropertyName`
 
 |              |          |
 | ------------ | -------- |
@@ -3601,7 +3702,7 @@ Must be one of:
 Normally this is `tags` but some resources choose a different name. Cognito
 UserPool uses UserPoolTags
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_tags"></a>3.6.7.4.3.6.1.8.35.12. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > tags`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_tags_tags"></a>3.6.7.8.3.6.1.8.36.12. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > tags > tags`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3609,7 +3710,7 @@ UserPool uses UserPoolTags
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateFile"></a>3.6.7.4.3.6.1.8.36. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > templateFile`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateFile"></a>3.6.7.8.3.6.1.8.37. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > templateFile`
 
 |              |          |
 | ------------ | -------- |
@@ -3621,7 +3722,7 @@ directory during synthesis.
 
 Example value: `MyStack.template.json`
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateOptions"></a>3.6.7.4.3.6.1.8.37. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > templateOptions`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateOptions"></a>3.6.7.8.3.6.1.8.38. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > templateOptions`
 
 |                           |                                |
 | ------------------------- | ------------------------------ |
@@ -3639,7 +3740,7 @@ Example value: `MyStack.template.json`
 | - [templateFormatVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateOptions_templateFormatVersion ) | No      | string          | No         | -          | Gets or sets the AWSTemplateFormatVersion field of the CloudFormation template.                                                             |
 | - [transforms](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateOptions_transforms )                       | No      | array of string | No         | -          | Gets or sets the top-level template transform(s) for this stack (e.g. \`["AWS::Serverless-2016-10-31"]\`).                                  |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateOptions_description"></a>3.6.7.4.3.6.1.8.37.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > templateOptions > description`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateOptions_description"></a>3.6.7.8.3.6.1.8.38.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > templateOptions > description`
 
 |              |          |
 | ------------ | -------- |
@@ -3649,7 +3750,7 @@ Example value: `MyStack.template.json`
 **Description:** Gets or sets the description of this stack.
 If provided, it will be included in the CloudFormation template's "Description" attribute.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateOptions_metadata"></a>3.6.7.4.3.6.1.8.37.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > templateOptions > metadata`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateOptions_metadata"></a>3.6.7.8.3.6.1.8.38.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > templateOptions > metadata`
 
 |                           |                                                                                                                                                                                                              |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -3663,7 +3764,7 @@ If provided, it will be included in the CloudFormation template's "Description" 
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateOptions_metadata_additionalProperties ) | No      | object | No         | -          | -                 |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateOptions_metadata_additionalProperties"></a>3.6.7.4.3.6.1.8.37.2.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > templateOptions > metadata > additionalProperties`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateOptions_metadata_additionalProperties"></a>3.6.7.8.3.6.1.8.38.2.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > templateOptions > metadata > additionalProperties`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3671,7 +3772,7 @@ If provided, it will be included in the CloudFormation template's "Description" 
 | **Required**              | No               |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateOptions_templateFormatVersion"></a>3.6.7.4.3.6.1.8.37.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > templateOptions > templateFormatVersion`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateOptions_templateFormatVersion"></a>3.6.7.8.3.6.1.8.38.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > templateOptions > templateFormatVersion`
 
 |              |          |
 | ------------ | -------- |
@@ -3680,7 +3781,7 @@ If provided, it will be included in the CloudFormation template's "Description" 
 
 **Description:** Gets or sets the AWSTemplateFormatVersion field of the CloudFormation template.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateOptions_transforms"></a>3.6.7.4.3.6.1.8.37.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > templateOptions > transforms`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateOptions_transforms"></a>3.6.7.8.3.6.1.8.38.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > templateOptions > transforms`
 
 |              |                   |
 | ------------ | ----------------- |
@@ -3701,14 +3802,14 @@ If provided, it will be included in the CloudFormation template's "Description" 
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- |
 | [transforms items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateOptions_transforms_items) | -           |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateOptions_transforms_items"></a>3.6.7.4.3.6.1.8.37.4.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > templateOptions > transforms > transforms items
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_templateOptions_transforms_items"></a>3.6.7.8.3.6.1.8.38.4.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > templateOptions > transforms > transforms items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_terminationProtection"></a>3.6.7.4.3.6.1.8.38. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > terminationProtection`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_terminationProtection"></a>3.6.7.8.3.6.1.8.39. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > terminationProtection`
 
 |              |           |
 | ------------ | --------- |
@@ -3717,7 +3818,7 @@ If provided, it will be included in the CloudFormation template's "Description" 
 
 **Description:** Whether termination protection is enabled for this stack.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_urlSuffix"></a>3.6.7.4.3.6.1.8.39. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > urlSuffix`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack_urlSuffix"></a>3.6.7.8.3.6.1.8.40. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > stack > urlSuffix`
 
 |              |          |
 | ------------ | -------- |
@@ -3726,7 +3827,7 @@ If provided, it will be included in the CloudFormation template's "Description" 
 
 **Description:** The Amazon domain suffix for the region in which this stack is defined
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_uniqueId"></a>3.6.7.4.3.6.1.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > uniqueId`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_uniqueId"></a>3.6.7.8.3.6.1.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > securityGroups > securityGroups items > uniqueId`
 
 |              |          |
 | ------------ | -------- |
@@ -3735,7 +3836,7 @@ If provided, it will be included in the CloudFormation template's "Description" 
 
 **Description:** A unique identifier for this connection peer
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_skip"></a>3.6.7.4.3.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > skip`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_skip"></a>3.6.7.8.3.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _connections > skip`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3745,7 +3846,7 @@ If provided, it will be included in the CloudFormation template's "Description" 
 
 **Description:** When doing bidirectional grants between Connections, make sure we don't recursive infinitely
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__currentVersion"></a>3.6.7.4.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _currentVersion`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__currentVersion"></a>3.6.7.8.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _currentVersion`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3753,7 +3854,27 @@ If provided, it will be included in the CloudFormation template's "Description" 
 | **Required**              | No               |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__functionUrlInvocationGrants"></a>3.6.7.4.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _functionUrlInvocationGrants`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__customAccount"></a>3.6.7.8.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _customAccount`
+
+|                           |                  |
+| ------------------------- | ---------------- |
+| **Type**                  | `object`         |
+| **Required**              | Yes              |
+| **Additional properties** | Any type allowed |
+
+**Description:** Account given in the constructor, if any. Will be same as Stack if not supplied.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__customRegion"></a>3.6.7.8.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _customRegion`
+
+|                           |                  |
+| ------------------------- | ---------------- |
+| **Type**                  | `object`         |
+| **Required**              | Yes              |
+| **Additional properties** | Any type allowed |
+
+**Description:** Account given in the constructor, if any. Will be same as Stack if not supplied.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__functionUrlInvocationGrants"></a>3.6.7.8.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _functionUrlInvocationGrants`
 
 |                           |                                          |
 | ------------------------- | ---------------------------------------- |
@@ -3764,7 +3885,27 @@ If provided, it will be included in the CloudFormation template's "Description" 
 
 **Description:** Mapping of function URL invocation principals to grants. Used to de-dupe `grantInvokeUrl()` calls.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__hasAddedArrayTokenStatements"></a>3.6.7.4.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _hasAddedArrayTokenStatements`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__generatedPhysicalName"></a>3.6.7.8.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _generatedPhysicalName`
+
+|                           |                  |
+| ------------------------- | ---------------- |
+| **Type**                  | `object`         |
+| **Required**              | Yes              |
+| **Additional properties** | Any type allowed |
+
+**Description:** The generated physical name, in case of cross-env access
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__givenPhysicalName"></a>3.6.7.8.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _givenPhysicalName`
+
+|                           |                  |
+| ------------------------- | ---------------- |
+| **Type**                  | `object`         |
+| **Required**              | Yes              |
+| **Additional properties** | Any type allowed |
+
+**Description:** The physicalName supplied into the constructor
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__hasAddedArrayTokenStatements"></a>3.6.7.8.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _hasAddedArrayTokenStatements`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3774,7 +3915,7 @@ If provided, it will be included in the CloudFormation template's "Description" 
 
 **Description:** Track whether we've added statements with array token resources to the role's default policy
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__hasAddedLiteralStatements"></a>3.6.7.4.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _hasAddedLiteralStatements`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__hasAddedLiteralStatements"></a>3.6.7.8.11. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _hasAddedLiteralStatements`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3784,7 +3925,7 @@ If provided, it will be included in the CloudFormation template's "Description" 
 
 **Description:** Track whether we've added statements with literal resources to the role's default policy
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__invocationGrants"></a>3.6.7.4.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _invocationGrants`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__invocationGrants"></a>3.6.7.8.12. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _invocationGrants`
 
 |                           |                                                                                                                              |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
@@ -3795,7 +3936,7 @@ If provided, it will be included in the CloudFormation template's "Description" 
 
 **Description:** Mapping of invocation principals to grants. Used to de-dupe `grantInvoke()` calls.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__latestVersion"></a>3.6.7.4.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _latestVersion`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__latestVersion"></a>3.6.7.8.13. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _latestVersion`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -3803,52 +3944,40 @@ If provided, it will be included in the CloudFormation template's "Description" 
 | **Required**              | No               |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers"></a>3.6.7.4.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers"></a>3.6.7.8.14. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers`
 
-|              |         |
-| ------------ | ------- |
-| **Type**     | `array` |
-| **Required** | Yes     |
+|                           |                                            |
+| ------------------------- | ------------------------------------------ |
+| **Type**                  | `object`                                   |
+| **Required**              | Yes                                        |
+| **Additional properties** | Not allowed                                |
+| **Defined in**            | #/definitions/IArrayBox%3CILayerVersion%3E |
 
-|                      | Array restrictions |
-| -------------------- | ------------------ |
-| **Min items**        | N/A                |
-| **Max items**        | N/A                |
-| **Items unicity**    | False              |
-| **Additional items** | False              |
-| **Tuple validation** | See below          |
+**Description:** A mutable box specialized for arrays, extending `Box<Array<A>>` with `push`.
 
-| Each item of this array must be                                                                | Description |
-| ---------------------------------------------------------------------------------------------- | ----------- |
-| [ILayerVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items) | -           |
+Unlike `set` (which replaces all stack traces), `push` *appends* a new stack
+trace to the existing list. This means that each element addition is tracked
+individually, and the resulting metadata will contain one entry per `push` call
+(plus one for the initial construction or last `set`, if any).
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items"></a>3.6.7.4.10.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > ILayerVersion
+| Property                                                                                                  | Pattern | Type             | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                            |
+| --------------------------------------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| + [creationStack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_creationStack ) | No      | array of string  | No         | -          | The creation stack of this resolvable which will be appended to errors<br />thrown during resolution.<br /><br />This may return an array with a single informational element indicating how<br />to get this property populated, if it was skipped for performance reasons. |
+| + [length](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_length )               | No      | number           | No         | -          | Returns the number of elements in the array.                                                                                                                                                                                                                                 |
+| - [typeHint](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_typeHint )           | No      | enum (of string) | No         | -          | The type that this token will likely resolve to.                                                                                                                                                                                                                             |
 
-|                           |                             |
-| ------------------------- | --------------------------- |
-| **Type**                  | `object`                    |
-| **Required**              | No                          |
-| **Additional properties** | Not allowed                 |
-| **Defined in**            | #/definitions/ILayerVersion |
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_creationStack"></a>3.6.7.8.14.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > creationStack`
 
-| Property                                                                                                                  | Pattern | Type   | Deprecated | Definition                                                                                                                | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| ------------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| - [compatibleRuntimes](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes ) | No      | array  | No         | -                                                                                                                         | The runtimes compatible with this Layer.                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_env )                               | No      | object | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                       | The environment this resource belongs to.<br />For resources that are created and managed by the CDK<br />(generally, those created by creating new class instances like Role, Bucket, etc.),<br />this is always the same as the environment of the stack they belong to;<br />however, for imported resources<br />(those obtained from static methods like fromRoleArn, fromBucketName, etc.),<br />that might be different than the stack they were imported into. |
-| + [layerVersionArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_layerVersionArn )       | No      | string | No         | -                                                                                                                         | The ARN of the Lambda Layer version that this Layer defines.                                                                                                                                                                                                                                                                                                                                                                                                           |
-| + [layerVersionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_layerVersionRef )       | No      | object | No         | In #/definitions/LayerVersionReference                                                                                    | A reference to a LayerVersion resource.                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_node )                             | No      | object | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_stack )                           | No      | object | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                           |
+|              |                   |
+| ------------ | ----------------- |
+| **Type**     | `array of string` |
+| **Required** | Yes               |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes"></a>3.6.7.4.10.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > _layers items > compatibleRuntimes`
+**Description:** The creation stack of this resolvable which will be appended to errors
+thrown during resolution.
 
-|              |                                                                                                  |
-| ------------ | ------------------------------------------------------------------------------------------------ |
-| **Type**     | `array`                                                                                          |
-| **Required** | No                                                                                               |
-| **Default**  | `"- All supported runtimes. Setting this to Runtime.ALL is equivalent to leaving it undefined."` |
-
-**Description:** The runtimes compatible with this Layer.
+This may return an array with a single informational element indicating how
+to get this property populated, if it was skipped for performance reasons.
 
 |                      | Array restrictions |
 | -------------------- | ------------------ |
@@ -3858,195 +3987,41 @@ If provided, it will be included in the CloudFormation template's "Description" 
 | **Additional items** | False              |
 | **Tuple validation** | See below          |
 
-| Each item of this array must be                                                                                   | Description                              |
-| ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| [Runtime](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items) | Lambda function runtime environment. ... |
+| Each item of this array must be                                                                                    | Description |
+| ------------------------------------------------------------------------------------------------------------------ | ----------- |
+| [creationStack items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_creationStack_items) | -           |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items"></a>3.6.7.4.10.1.1.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > _layers items > compatibleRuntimes > Runtime
-
-|                           |                       |
-| ------------------------- | --------------------- |
-| **Type**                  | `object`              |
-| **Required**              | No                    |
-| **Additional properties** | Not allowed           |
-| **Defined in**            | #/definitions/Runtime |
-
-**Description:** Lambda function runtime environment.
-
-If you need to use a runtime name that doesn't exist as a static member, you
-can instantiate a `Runtime` object, e.g: `new Runtime('nodejs99.99')`.
-
-| Property                                                                                                                                                         | Pattern | Type              | Deprecated | Definition                   | Title/Description                                                                                   |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ----------------- | ---------- | ---------------------------- | --------------------------------------------------------------------------------------------------- |
-| + [bundlingImage](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items_bundlingImage )                         | No      | object            | No         | In #/definitions/DockerImage | The bundling Docker image for this runtime.                                                         |
-| - [family](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items_family )                                       | No      | enum (of integer) | No         | -                            | The runtime family.                                                                                 |
-| + [isVariable](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items_isVariable )                               | No      | boolean           | No         | -                            | Enabled for runtime enums that always target the latest available.                                  |
-| + [name](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items_name )                                           | No      | string            | No         | -                            | The name of this runtime, as expected by the Lambda resource.                                       |
-| + [supportsCodeGuruProfiling](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items_supportsCodeGuruProfiling ) | No      | boolean           | No         | -                            | Whether this runtime is integrated with and supported for profiling using Amazon CodeGuru Profiler. |
-| + [supportsInlineCode](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items_supportsInlineCode )               | No      | boolean           | No         | -                            | Whether the \`\`ZipFile\`\` (aka inline code) property can be used with this<br />runtime.          |
-| + [supportsSnapStart](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items_supportsSnapStart )                 | No      | boolean           | No         | -                            | Whether this runtime supports snapstart.                                                            |
-
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items_bundlingImage"></a>3.6.7.4.10.1.1.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > _layers items > compatibleRuntimes > compatibleRuntimes items > bundlingImage`
-
-|                           |                           |
-| ------------------------- | ------------------------- |
-| **Type**                  | `object`                  |
-| **Required**              | Yes                       |
-| **Additional properties** | Not allowed               |
-| **Defined in**            | #/definitions/DockerImage |
-
-**Description:** The bundling Docker image for this runtime.
-
-| Property                                                                                                                               | Pattern | Type   | Deprecated | Definition | Title/Description |
-| -------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| + [image](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items_bundlingImage_image ) | No      | string | No         | -          | The Docker image  |
-
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items_bundlingImage_image"></a>3.6.7.4.10.1.1.1.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > _layers items > compatibleRuntimes > compatibleRuntimes items > bundlingImage > image`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_creationStack_items"></a>3.6.7.8.14.1.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > creationStack > creationStack items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
+| **Required** | No       |
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_length"></a>3.6.7.8.14.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > length`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `number` |
 | **Required** | Yes      |
 
-**Description:** The Docker image
+**Description:** Returns the number of elements in the array.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items_family"></a>3.6.7.4.10.1.1.1.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > _layers items > compatibleRuntimes > compatibleRuntimes items > family`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_typeHint"></a>3.6.7.8.14.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > typeHint`
 
-|              |                     |
-| ------------ | ------------------- |
-| **Type**     | `enum (of integer)` |
-| **Required** | No                  |
+|              |                    |
+| ------------ | ------------------ |
+| **Type**     | `enum (of string)` |
+| **Required** | No                 |
 
-**Description:** The runtime family.
+**Description:** The type that this token will likely resolve to.
 
 Must be one of:
-* 0
-* 1
-* 2
-* 3
-* 4
-* 5
-* 6
+* "number"
+* "string"
+* "string-list"
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items_isVariable"></a>3.6.7.4.10.1.1.1.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > _layers items > compatibleRuntimes > compatibleRuntimes items > isVariable`
-
-|              |           |
-| ------------ | --------- |
-| **Type**     | `boolean` |
-| **Required** | Yes       |
-
-**Description:** Enabled for runtime enums that always target the latest available.
-
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items_name"></a>3.6.7.4.10.1.1.1.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > _layers items > compatibleRuntimes > compatibleRuntimes items > name`
-
-|              |          |
-| ------------ | -------- |
-| **Type**     | `string` |
-| **Required** | Yes      |
-
-**Description:** The name of this runtime, as expected by the Lambda resource.
-
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items_supportsCodeGuruProfiling"></a>3.6.7.4.10.1.1.1.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > _layers items > compatibleRuntimes > compatibleRuntimes items > supportsCodeGuruProfiling`
-
-|              |           |
-| ------------ | --------- |
-| **Type**     | `boolean` |
-| **Required** | Yes       |
-
-**Description:** Whether this runtime is integrated with and supported for profiling using Amazon CodeGuru Profiler.
-
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items_supportsInlineCode"></a>3.6.7.4.10.1.1.1.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > _layers items > compatibleRuntimes > compatibleRuntimes items > supportsInlineCode`
-
-|              |           |
-| ------------ | --------- |
-| **Type**     | `boolean` |
-| **Required** | Yes       |
-
-**Description:** Whether the ``ZipFile`` (aka inline code) property can be used with this
-runtime.
-
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items_supportsSnapStart"></a>3.6.7.4.10.1.1.1.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > _layers items > compatibleRuntimes > compatibleRuntimes items > supportsSnapStart`
-
-|              |           |
-| ------------ | --------- |
-| **Type**     | `boolean` |
-| **Required** | Yes       |
-
-**Description:** Whether this runtime supports snapstart.
-
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_env"></a>3.6.7.4.10.1.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > _layers items > env`
-
-|                           |                                                            |
-| ------------------------- | ---------------------------------------------------------- |
-| **Type**                  | `object`                                                   |
-| **Required**              | Yes                                                        |
-| **Additional properties** | Not allowed                                                |
-| **Same definition as**    | [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env) |
-
-**Description:** The environment this resource belongs to.
-For resources that are created and managed by the CDK
-(generally, those created by creating new class instances like Role, Bucket, etc.),
-this is always the same as the environment of the stack they belong to;
-however, for imported resources
-(those obtained from static methods like fromRoleArn, fromBucketName, etc.),
-that might be different than the stack they were imported into.
-
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_layerVersionArn"></a>3.6.7.4.10.1.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > _layers items > layerVersionArn`
-
-|              |          |
-| ------------ | -------- |
-| **Type**     | `string` |
-| **Required** | Yes      |
-
-**Description:** The ARN of the Lambda Layer version that this Layer defines.
-
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_layerVersionRef"></a>3.6.7.4.10.1.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > _layers items > layerVersionRef`
-
-|                           |                                     |
-| ------------------------- | ----------------------------------- |
-| **Type**                  | `object`                            |
-| **Required**              | Yes                                 |
-| **Additional properties** | Not allowed                         |
-| **Defined in**            | #/definitions/LayerVersionReference |
-
-**Description:** A reference to a LayerVersion resource.
-
-| Property                                                                                                                            | Pattern | Type   | Deprecated | Definition | Title/Description                                 |
-| ----------------------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------------- |
-| + [layerVersionArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_layerVersionRef_layerVersionArn ) | No      | string | No         | -          | The LayerVersionArn of the LayerVersion resource. |
-
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_layerVersionRef_layerVersionArn"></a>3.6.7.4.10.1.4.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > _layers items > layerVersionRef > layerVersionArn`
-
-|              |          |
-| ------------ | -------- |
-| **Type**     | `string` |
-| **Required** | Yes      |
-
-**Description:** The LayerVersionArn of the LayerVersion resource.
-
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_node"></a>3.6.7.4.10.1.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > _layers items > node`
-
-|                           |                                                                                                                |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                       |
-| **Required**              | Yes                                                                                                            |
-| **Additional properties** | Not allowed                                                                                                    |
-| **Same definition as**    | [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node) |
-
-**Description:** The tree node.
-
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_stack"></a>3.6.7.4.10.1.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _layers > _layers items > stack`
-
-|                           |                                                                                                                  |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                         |
-| **Required**              | Yes                                                                                                              |
-| **Additional properties** | Not allowed                                                                                                      |
-| **Same definition as**    | [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack) |
-
-**Description:** The stack in which this resource is defined.
-
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__logGroup"></a>3.6.7.4.11. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _logGroup`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__logGroup"></a>3.6.7.8.15. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _logGroup`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4054,7 +4029,7 @@ that might be different than the stack they were imported into.
 | **Required**              | No               |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__logRetention"></a>3.6.7.4.12. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _logRetention`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__logRetention"></a>3.6.7.8.16. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _logRetention`
 
 |                           |                            |
 | ------------------------- | -------------------------- |
@@ -4075,7 +4050,7 @@ specifying `logGroupRegion`
 | + [logGroupArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__logRetention_logGroupArn )                                                 | No      | string | No         | -                                                                                                                       | The ARN of the LogGroup.                                                                                                                                                                                      |
 | + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__logRetention_node )                                                               | No      | object | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node ) | The tree node.                                                                                                                                                                                                |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__logRetention_ensureSingletonLogRetentionFunction"></a>3.6.7.4.12.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _logRetention > ensureSingletonLogRetentionFunction`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__logRetention_ensureSingletonLogRetentionFunction"></a>3.6.7.8.16.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _logRetention > ensureSingletonLogRetentionFunction`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4086,7 +4061,7 @@ specifying `logGroupRegion`
 **Description:** Helper method to ensure that only one instance of LogRetentionFunction resources are in the stack mimicking the
 behaviour of aws-cdk-lib/aws-lambda's SingletonFunction to prevent circular dependencies
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__logRetention_logGroupArn"></a>3.6.7.4.12.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _logRetention > logGroupArn`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__logRetention_logGroupArn"></a>3.6.7.8.16.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _logRetention > logGroupArn`
 
 |              |          |
 | ------------ | -------- |
@@ -4095,7 +4070,7 @@ behaviour of aws-cdk-lib/aws-lambda's SingletonFunction to prevent circular depe
 
 **Description:** The ARN of the LogGroup.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__logRetention_node"></a>3.6.7.4.12.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _logRetention > node`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__logRetention_node"></a>3.6.7.8.16.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _logRetention > node`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -4106,7 +4081,7 @@ behaviour of aws-cdk-lib/aws-lambda's SingletonFunction to prevent circular depe
 
 **Description:** The tree node.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__physicalName"></a>3.6.7.4.13. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _physicalName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__physicalNameMode"></a>3.6.7.8.17. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _physicalNameMode`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4114,7 +4089,9 @@ behaviour of aws-cdk-lib/aws-lambda's SingletonFunction to prevent circular depe
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__policyCounter"></a>3.6.7.4.14. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _policyCounter`
+**Description:** What we are doing for the physical name
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__policyCounter"></a>3.6.7.8.18. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _policyCounter`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4124,7 +4101,7 @@ behaviour of aws-cdk-lib/aws-lambda's SingletonFunction to prevent circular depe
 
 **Description:** The number of permissions added to this function
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__skipPermissions"></a>3.6.7.4.15. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _skipPermissions`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__skipPermissions"></a>3.6.7.8.19. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _skipPermissions`
 
 |              |           |
 | ------------ | --------- |
@@ -4136,7 +4113,7 @@ The only use case is for cross-account, imported lambdas
 where the user commits to modifying the permisssions
 on the imported lambda outside CDK.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__warnIfCurrentVersionCalled"></a>3.6.7.4.16. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _warnIfCurrentVersionCalled`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__warnIfCurrentVersionCalled"></a>3.6.7.8.20. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > _warnIfCurrentVersionCalled`
 
 |              |           |
 | ------------ | --------- |
@@ -4145,7 +4122,7 @@ on the imported lambda outside CDK.
 
 **Description:** Flag to delay adding a warning message until current version is invoked.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_architecture"></a>3.6.7.4.17. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > architecture`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_architecture"></a>3.6.7.8.21. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > architecture`
 
 |                           |                            |
 | ------------------------- | -------------------------- |
@@ -4161,7 +4138,7 @@ on the imported lambda outside CDK.
 | + [dockerPlatform](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_architecture_dockerPlatform ) | No      | string | No         | -          | The platform to use for this architecture when building with Docker.       |
 | + [name](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_architecture_name )                     | No      | string | No         | -          | The name of the architecture as recognized by the AWS Lambda service APIs. |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_architecture_dockerPlatform"></a>3.6.7.4.17.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > architecture > dockerPlatform`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_architecture_dockerPlatform"></a>3.6.7.8.21.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > architecture > dockerPlatform`
 
 |              |          |
 | ------------ | -------- |
@@ -4170,7 +4147,7 @@ on the imported lambda outside CDK.
 
 **Description:** The platform to use for this architecture when building with Docker.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_architecture_name"></a>3.6.7.4.17.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > architecture > name`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_architecture_name"></a>3.6.7.8.21.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > architecture > name`
 
 |              |          |
 | ------------ | -------- |
@@ -4179,7 +4156,7 @@ on the imported lambda outside CDK.
 
 **Description:** The name of the architecture as recognized by the AWS Lambda service APIs.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_buildDeadLetterConfig"></a>3.6.7.4.18. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > buildDeadLetterConfig`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_buildDeadLetterConfig"></a>3.6.7.8.22. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > buildDeadLetterConfig`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4187,7 +4164,7 @@ on the imported lambda outside CDK.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_buildDeadLetterQueue"></a>3.6.7.4.19. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > buildDeadLetterQueue`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_buildDeadLetterQueue"></a>3.6.7.8.23. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > buildDeadLetterQueue`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4195,7 +4172,7 @@ on the imported lambda outside CDK.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_buildTracingConfig"></a>3.6.7.4.20. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > buildTracingConfig`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_buildTracingConfig"></a>3.6.7.8.24. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > buildTracingConfig`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4203,7 +4180,7 @@ on the imported lambda outside CDK.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_canCreatePermissions"></a>3.6.7.4.21. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > canCreatePermissions`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_canCreatePermissions"></a>3.6.7.8.25. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > canCreatePermissions`
 
 |              |         |
 | ------------ | ------- |
@@ -4218,7 +4195,7 @@ from different accounts.
 
 Specific value: `true`
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureAdotInstrumentation"></a>3.6.7.4.22. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > configureAdotInstrumentation`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureAdotInstrumentation"></a>3.6.7.8.26. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > configureAdotInstrumentation`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4228,7 +4205,7 @@ Specific value: `true`
 
 **Description:** Add an AWS Distro for OpenTelemetry Lambda layer.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureLambdaInsights"></a>3.6.7.4.23. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > configureLambdaInsights`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureLambdaInsights"></a>3.6.7.8.27. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > configureLambdaInsights`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4241,7 +4218,7 @@ list of lambda layers on synthesis.
 
 https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-extension-versions.html
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureParamsAndSecretsExtension"></a>3.6.7.4.24. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > configureParamsAndSecretsExtension`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureParamsAndSecretsExtension"></a>3.6.7.8.28. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > configureParamsAndSecretsExtension`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4251,7 +4228,7 @@ https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-e
 
 **Description:** Add a Parameters and Secrets Extension Lambda layer.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureSnapStart"></a>3.6.7.4.25. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > configureSnapStart`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureSnapStart"></a>3.6.7.8.29. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > configureSnapStart`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4259,7 +4236,7 @@ https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-e
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureVpc"></a>3.6.7.4.26. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > configureVpc`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_configureVpc"></a>3.6.7.8.30. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > configureVpc`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4272,7 +4249,7 @@ https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-e
 Returns the VpcConfig that should be added to the
 Lambda creation properties.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_connections"></a>3.6.7.4.27. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > connections`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_connections"></a>3.6.7.8.31. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > connections`
 
 |                           |                                                                                              |
 | ------------------------- | -------------------------------------------------------------------------------------------- |
@@ -4285,7 +4262,7 @@ Lambda creation properties.
 
 Will fail if not a VPC-enabled Lambda Function
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion"></a>3.6.7.4.28. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion"></a>3.6.7.8.32. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion`
 
 |                           |                       |
 | ------------------------- | --------------------- |
@@ -4301,49 +4278,55 @@ configuration changes.
 You can specify options for this version using the `currentVersionOptions`
 prop when initializing the `lambda.Function`.
 
-| Property                                                                                                                                             | Pattern | Type            | Deprecated | Definition                                                                                                                            | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| + [_allowCrossEnvironment](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__allowCrossEnvironment )                   | No      | object          | No         | -                                                                                                                                     | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| - [_connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__connections )                                       | No      | object          | No         | Same as [_connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections )                                 | Actual connections object for this Lambda<br /><br />May be unset, in which case this Lambda is not configured use in a VPC.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| + [_functionUrlInvocationGrants](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__functionUrlInvocationGrants )       | No      | object          | No         | Same as [_functionUrlInvocationGrants](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__functionUrlInvocationGrants ) | Mapping of function URL invocation principals to grants. Used to de-dupe \`grantInvokeUrl()\` calls.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| + [_hasAddedArrayTokenStatements](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__hasAddedArrayTokenStatements )     | No      | object          | No         | -                                                                                                                                     | Track whether we've added statements with array token resources to the role's default policy                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| + [_hasAddedLiteralStatements](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__hasAddedLiteralStatements )           | No      | object          | No         | -                                                                                                                                     | Track whether we've added statements with literal resources to the role's default policy                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| + [_invocationGrants](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__invocationGrants )                             | No      | object          | No         | Same as [_functionUrlInvocationGrants](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__functionUrlInvocationGrants ) | Mapping of invocation principals to grants. Used to de-dupe \`grantInvoke()\` calls.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| - [_latestVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__latestVersion )                                   | No      | object          | No         | -                                                                                                                                     | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [_physicalName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__physicalName )                                     | No      | object          | No         | -                                                                                                                                     | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [_policyCounter](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__policyCounter )                                   | No      | object          | No         | -                                                                                                                                     | The number of permissions added to this function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| - [_skipPermissions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__skipPermissions )                               | No      | boolean         | No         | -                                                                                                                                     | Whether the user decides to skip adding permissions.<br />The only use case is for cross-account, imported lambdas<br />where the user commits to modifying the permisssions<br />on the imported lambda outside CDK.                                                                                                                                                                                                                                                                                                                                                                                              |
-| + [_warnIfCurrentVersionCalled](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__warnIfCurrentVersionCalled )         | No      | boolean         | No         | -                                                                                                                                     | Flag to delay adding a warning message until current version is invoked.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| + [architecture](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_architecture )                                       | No      | object          | No         | Same as [architecture](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_architecture )                                 | The architecture of this Lambda Function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| + [canCreatePermissions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_canCreatePermissions )                       | No      | const           | No         | -                                                                                                                                     | Whether the addPermission() call adds any permissions<br /><br />True for new Lambdas, false for version $LATEST and imported Lambdas<br />from different accounts.                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| + [connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_connections )                                         | No      | object          | No         | Same as [_connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections )                                 | Access the Connections object<br /><br />Will fail if not a VPC-enabled Lambda Function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| + [determineProvisionedConcurrency](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_determineProvisionedConcurrency ) | No      | object          | No         | -                                                                                                                                     | Validate that the provisionedConcurrentExecutions makes sense<br /><br />Member must have value greater than or equal to 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [edgeArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_edgeArn )                                                 | No      | string          | No         | -                                                                                                                                     | The ARN of the version for Lambda@Edge.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_env )                                                         | No      | object          | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                                   | The environment this resource belongs to.<br />For resources that are created and managed by the CDK<br />(generally, those created by creating new class instances like Role, Bucket, etc.),<br />this is always the same as the environment of the stack they belong to;<br />however, for imported resources<br />(those obtained from static methods like fromRoleArn, fromBucketName, etc.),<br />that might be different than the stack they were imported into.                                                                                                                                             |
-| + [functionArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionArn )                                         | No      | string          | No         | -                                                                                                                                     | The ARN fo the function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| + [functionName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionName )                                       | No      | string          | No         | -                                                                                                                                     | The name of the function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| + [functionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionRef )                                         | No      | object          | No         | In #/definitions/FunctionReference                                                                                                    | A reference to a Function resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| + [grant](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grant )                                                     | No      | object          | No         | -                                                                                                                                     | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [grantPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal )                                   | No      | object          | No         | In #/definitions/IPrincipal                                                                                                           | The principal this Lambda Function is running as                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| + [isBoundToVpc](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_isBoundToVpc )                                       | No      | boolean         | No         | -                                                                                                                                     | Whether or not this Lambda function was bound to a VPC<br /><br />If this is is \`false\`, trying to access the \`connections\` object will fail.                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [isPrincipalWithConditions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_isPrincipalWithConditions )             | No      | object          | No         | -                                                                                                                                     | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [lambda](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda )                                                   | No      | object          | No         | In #/definitions/IFunction                                                                                                            | The underlying \`IFunction\`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| + [latestVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_latestVersion )                                     | No      | object          | No         | Same as [latestVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion )         | The \`$LATEST\` version of this function.<br /><br />Note that this is reference to a non-specific AWS Lambda version, which<br />means the function this version refers to can return different results in<br />different invocations.<br /><br />To obtain a reference to an explicit version which references the current<br />function configuration, use \`lambdaFunction.currentVersion\` instead.                                                                                                                                                                                                           |
-| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_node )                                                       | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )               | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| + [parsePermissionPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_parsePermissionPrincipal )               | No      | object          | No         | -                                                                                                                                     | Translate IPrincipal to something we can pass to AWS::Lambda::Permissions<br /><br />Do some nasty things because \`Permission\` supports a subset of what the<br />full IAM principal language supports, and we may not be able to parse strings<br />outright because they may be tokens.<br /><br />Try to recognize some specific Principal classes first, then try a generic<br />fallback.                                                                                                                                                                                                                   |
-| + [permissionsNode](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_permissionsNode )                                 | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )               | The construct node where permissions are attached.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| + [physicalName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_physicalName )                                       | No      | string          | No         | -                                                                                                                                     | Returns a string-encoded token that resolves to the physical name that<br />should be passed to the CloudFormation resource.<br /><br />This value will resolve to one of the following:<br />- a concrete value (e.g. \`"my-awesome-bucket"\`)<br />- \`undefined\`, when a name should be generated by CloudFormation<br />- a concrete name generated automatically during synthesis, in<br />  cross-environment scenarios.                                                                                                                                                                                    |
-| + [qualifier](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_qualifier )                                             | No      | string          | No         | -                                                                                                                                     | The qualifier of the version or alias of this function.<br />A qualifier is the identifier that's appended to a version or alias ARN.                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| + [resourceArnsForGrantInvoke](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_resourceArnsForGrantInvoke )           | No      | array of string | No         | -                                                                                                                                     | The ARN(s) to put into the resource field of the generated IAM policy for grantInvoke()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| - [role](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_role )                                                       | No      | object          | No         | Same as [role](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role )             | The IAM role associated with this function.<br /><br />Undefined if the function was imported without a role.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_stack )                                                     | No      | object          | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack )             | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| + [statementHasArrayTokens](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_statementHasArrayTokens )                 | No      | object          | No         | -                                                                                                                                     | Check if a policy statement contains array tokens that would cause CloudFormation<br />resolution conflicts when mixed with literal arrays in the same policy document.<br /><br />Array tokens are created by CloudFormation intrinsic functions that return arrays,<br />such as Fn::Split, Fn::GetAZs, etc. These cannot be safely merged with literal<br />resource arrays due to CloudFormation's token resolution limitations.<br /><br />Individual string tokens within literal arrays (e.g., \`["arn:${token}:..."]\`) are<br />safe and do not cause conflicts, so they are not detected by this method. |
-| + [validateConditionCombinations](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_validateConditionCombinations )     | No      | object          | No         | -                                                                                                                                     | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [validateConditions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_validateConditions )                           | No      | object          | No         | -                                                                                                                                     | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [version](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_version )                                                 | No      | string          | No         | -                                                                                                                                     | The most recently deployed version of this function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| + [versionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_versionRef )                                           | No      | object          | No         | Same as [versionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_versionRef ) | A reference to a Version resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Property                                                                                                                                             | Pattern | Type            | Deprecated | Definition                                                                                                                                  | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| + [_allowCrossEnvironment](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__allowCrossEnvironment )                   | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| - [_connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__connections )                                       | No      | object          | No         | Same as [_connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections )                                       | Actual connections object for this Lambda<br /><br />May be unset, in which case this Lambda is not configured use in a VPC.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| + [_customAccount](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__customAccount )                                   | No      | object          | No         | -                                                                                                                                           | Account given in the constructor, if any. Will be same as Stack if not supplied.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| + [_customRegion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__customRegion )                                     | No      | object          | No         | -                                                                                                                                           | Account given in the constructor, if any. Will be same as Stack if not supplied.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| + [_functionUrlInvocationGrants](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__functionUrlInvocationGrants )       | No      | object          | No         | Same as [_functionUrlInvocationGrants](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__functionUrlInvocationGrants )       | Mapping of function URL invocation principals to grants. Used to de-dupe \`grantInvokeUrl()\` calls.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| + [_generatedPhysicalName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__generatedPhysicalName )                   | No      | object          | No         | -                                                                                                                                           | The generated physical name, in case of cross-env access                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| + [_givenPhysicalName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__givenPhysicalName )                           | No      | object          | No         | -                                                                                                                                           | The physicalName supplied into the constructor                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| + [_hasAddedArrayTokenStatements](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__hasAddedArrayTokenStatements )     | No      | object          | No         | -                                                                                                                                           | Track whether we've added statements with array token resources to the role's default policy                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| + [_hasAddedLiteralStatements](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__hasAddedLiteralStatements )           | No      | object          | No         | -                                                                                                                                           | Track whether we've added statements with literal resources to the role's default policy                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| + [_invocationGrants](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__invocationGrants )                             | No      | object          | No         | Same as [_functionUrlInvocationGrants](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__functionUrlInvocationGrants )       | Mapping of invocation principals to grants. Used to de-dupe \`grantInvoke()\` calls.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| - [_latestVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__latestVersion )                                   | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [_physicalNameMode](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__physicalNameMode )                             | No      | object          | No         | -                                                                                                                                           | What we are doing for the physical name                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| + [_policyCounter](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__policyCounter )                                   | No      | object          | No         | -                                                                                                                                           | The number of permissions added to this function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| - [_skipPermissions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__skipPermissions )                               | No      | boolean         | No         | -                                                                                                                                           | Whether the user decides to skip adding permissions.<br />The only use case is for cross-account, imported lambdas<br />where the user commits to modifying the permisssions<br />on the imported lambda outside CDK.                                                                                                                                                                                                                                                                                                                                                                                              |
+| + [_warnIfCurrentVersionCalled](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__warnIfCurrentVersionCalled )         | No      | boolean         | No         | -                                                                                                                                           | Flag to delay adding a warning message until current version is invoked.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| + [architecture](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_architecture )                                       | No      | object          | No         | Same as [architecture](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_architecture )                                       | The architecture of this Lambda Function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| + [canCreatePermissions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_canCreatePermissions )                       | No      | const           | No         | -                                                                                                                                           | Whether the addPermission() call adds any permissions<br /><br />True for new Lambdas, false for version $LATEST and imported Lambdas<br />from different accounts.                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| + [connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_connections )                                         | No      | object          | No         | Same as [_connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections )                                       | Access the Connections object<br /><br />Will fail if not a VPC-enabled Lambda Function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| + [determineProvisionedConcurrency](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_determineProvisionedConcurrency ) | No      | object          | No         | -                                                                                                                                           | Validate that the provisionedConcurrentExecutions makes sense<br /><br />Member must have value greater than or equal to 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| + [edgeArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_edgeArn )                                                 | No      | string          | No         | -                                                                                                                                           | The ARN of the version for Lambda@Edge.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_env )                                                         | No      | object          | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                                         | The environment this resource belongs to.<br /><br />For resources that are created and managed in a Stack (those created by<br />creating new class instances like \`new Role()\`, \`new Bucket()\`, etc.), this<br />is always the same as the environment of the stack they belong to.<br /><br />For referenced resources (those obtained from referencing methods like<br />\`Role.fromRoleArn()\`, \`Bucket.fromBucketName()\`, etc.), they might be<br />different than the stack they were imported into.                                                                                                  |
+| + [functionArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionArn )                                         | No      | string          | No         | -                                                                                                                                           | The ARN fo the function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| + [functionName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionName )                                       | No      | string          | No         | -                                                                                                                                           | The name of the function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| + [functionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionRef )                                         | No      | object          | No         | In #/definitions/FunctionReference                                                                                                          | A reference to a Function resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| + [getFunctionScalingConfig](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_getFunctionScalingConfig )               | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [grant](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grant )                                                     | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [grantPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal )                                   | No      | object          | No         | In #/definitions/IPrincipal                                                                                                                 | The principal this Lambda Function is running as                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| + [isBoundToVpc](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_isBoundToVpc )                                       | No      | boolean         | No         | -                                                                                                                                           | Whether or not this Lambda function was bound to a VPC<br /><br />If this is is \`false\`, trying to access the \`connections\` object will fail.                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [isPrincipalWithConditions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_isPrincipalWithConditions )             | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [lambda](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda )                                                   | No      | object          | No         | In #/definitions/IFunction                                                                                                                  | The underlying \`IFunction\`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| + [latestVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_latestVersion )                                     | No      | object          | No         | Same as [latestVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion )               | The \`$LATEST\` version of this function.<br /><br />Note that this is reference to a non-specific AWS Lambda version, which<br />means the function this version refers to can return different results in<br />different invocations.<br /><br />To obtain a reference to an explicit version which references the current<br />function configuration, use \`lambdaFunction.currentVersion\` instead.                                                                                                                                                                                                           |
+| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_node )                                                       | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )                     | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| + [parsePermissionPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_parsePermissionPrincipal )               | No      | object          | No         | -                                                                                                                                           | Translate IPrincipal to something we can pass to AWS::Lambda::Permissions<br /><br />Do some nasty things because \`Permission\` supports a subset of what the<br />full IAM principal language supports, and we may not be able to parse strings<br />outright because they may be tokens.<br /><br />Try to recognize some specific Principal classes first, then try a generic<br />fallback.                                                                                                                                                                                                                   |
+| + [permissionsNode](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_permissionsNode )                                 | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )                     | The construct node where permissions are attached.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| + [physicalName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_physicalName )                                       | No      | string          | No         | -                                                                                                                                           | Returns a string-encoded token that resolves to the physical name that<br />should be passed to the CloudFormation resource.<br /><br />This value will resolve to one of the following:<br />- a concrete value (e.g. \`"my-awesome-bucket"\`)<br />- \`undefined\`, when a name should be generated by CloudFormation<br />- a concrete name generated automatically during synthesis, in<br />  cross-environment scenarios.                                                                                                                                                                                    |
+| + [qualifier](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_qualifier )                                             | No      | string          | No         | -                                                                                                                                           | The qualifier of the version or alias of this function.<br />A qualifier is the identifier that's appended to a version or alias ARN.                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| + [resourceArnsForGrantInvoke](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_resourceArnsForGrantInvoke )           | No      | array of string | No         | -                                                                                                                                           | The ARN(s) to put into the resource field of the generated IAM policy for grantInvoke()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| - [role](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_role )                                                       | No      | object          | No         | Same as [role](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role )                   | The IAM role associated with this function.<br /><br />Undefined if the function was imported without a role.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_stack )                                                     | No      | object          | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack )                   | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| + [statementHasArrayTokens](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_statementHasArrayTokens )                 | No      | object          | No         | -                                                                                                                                           | Check if a policy statement contains array tokens that would cause CloudFormation<br />resolution conflicts when mixed with literal arrays in the same policy document.<br /><br />Array tokens are created by CloudFormation intrinsic functions that return arrays,<br />such as Fn::Split, Fn::GetAZs, etc. These cannot be safely merged with literal<br />resource arrays due to CloudFormation's token resolution limitations.<br /><br />Individual string tokens within literal arrays (e.g., \`["arn:${token}:..."]\`) are<br />safe and do not cause conflicts, so they are not detected by this method. |
+| - [tenancyConfig](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_tenancyConfig )                                     | No      | object          | No         | Same as [tenancyConfig](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_tenancyConfig ) | The tenancy configuration for this function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| + [validateConditionCombinations](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_validateConditionCombinations )     | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [validateConditions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_validateConditions )                           | No      | object          | No         | -                                                                                                                                           | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [version](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_version )                                                 | No      | string          | No         | -                                                                                                                                           | The most recently deployed version of this function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| + [versionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_versionRef )                                           | No      | object          | No         | Same as [versionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_versionRef )       | A reference to a Version resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__allowCrossEnvironment"></a>3.6.7.4.28.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _allowCrossEnvironment`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__allowCrossEnvironment"></a>3.6.7.8.32.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _allowCrossEnvironment`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4351,7 +4334,7 @@ prop when initializing the `lambda.Function`.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__connections"></a>3.6.7.4.28.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _connections`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__connections"></a>3.6.7.8.32.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _connections`
 
 |                           |                                                                                              |
 | ------------------------- | -------------------------------------------------------------------------------------------- |
@@ -4364,7 +4347,27 @@ prop when initializing the `lambda.Function`.
 
 May be unset, in which case this Lambda is not configured use in a VPC.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__functionUrlInvocationGrants"></a>3.6.7.4.28.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _functionUrlInvocationGrants`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__customAccount"></a>3.6.7.8.32.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _customAccount`
+
+|                           |                  |
+| ------------------------- | ---------------- |
+| **Type**                  | `object`         |
+| **Required**              | Yes              |
+| **Additional properties** | Any type allowed |
+
+**Description:** Account given in the constructor, if any. Will be same as Stack if not supplied.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__customRegion"></a>3.6.7.8.32.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _customRegion`
+
+|                           |                  |
+| ------------------------- | ---------------- |
+| **Type**                  | `object`         |
+| **Required**              | Yes              |
+| **Additional properties** | Any type allowed |
+
+**Description:** Account given in the constructor, if any. Will be same as Stack if not supplied.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__functionUrlInvocationGrants"></a>3.6.7.8.32.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _functionUrlInvocationGrants`
 
 |                           |                                                                                                                              |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
@@ -4375,7 +4378,27 @@ May be unset, in which case this Lambda is not configured use in a VPC.
 
 **Description:** Mapping of function URL invocation principals to grants. Used to de-dupe `grantInvokeUrl()` calls.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__hasAddedArrayTokenStatements"></a>3.6.7.4.28.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _hasAddedArrayTokenStatements`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__generatedPhysicalName"></a>3.6.7.8.32.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _generatedPhysicalName`
+
+|                           |                  |
+| ------------------------- | ---------------- |
+| **Type**                  | `object`         |
+| **Required**              | Yes              |
+| **Additional properties** | Any type allowed |
+
+**Description:** The generated physical name, in case of cross-env access
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__givenPhysicalName"></a>3.6.7.8.32.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _givenPhysicalName`
+
+|                           |                  |
+| ------------------------- | ---------------- |
+| **Type**                  | `object`         |
+| **Required**              | Yes              |
+| **Additional properties** | Any type allowed |
+
+**Description:** The physicalName supplied into the constructor
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__hasAddedArrayTokenStatements"></a>3.6.7.8.32.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _hasAddedArrayTokenStatements`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4385,7 +4408,7 @@ May be unset, in which case this Lambda is not configured use in a VPC.
 
 **Description:** Track whether we've added statements with array token resources to the role's default policy
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__hasAddedLiteralStatements"></a>3.6.7.4.28.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _hasAddedLiteralStatements`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__hasAddedLiteralStatements"></a>3.6.7.8.32.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _hasAddedLiteralStatements`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4395,7 +4418,7 @@ May be unset, in which case this Lambda is not configured use in a VPC.
 
 **Description:** Track whether we've added statements with literal resources to the role's default policy
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__invocationGrants"></a>3.6.7.4.28.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _invocationGrants`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__invocationGrants"></a>3.6.7.8.32.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _invocationGrants`
 
 |                           |                                                                                                                              |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
@@ -4406,7 +4429,7 @@ May be unset, in which case this Lambda is not configured use in a VPC.
 
 **Description:** Mapping of invocation principals to grants. Used to de-dupe `grantInvoke()` calls.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__latestVersion"></a>3.6.7.4.28.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _latestVersion`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__latestVersion"></a>3.6.7.8.32.11. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _latestVersion`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4414,7 +4437,7 @@ May be unset, in which case this Lambda is not configured use in a VPC.
 | **Required**              | No               |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__physicalName"></a>3.6.7.4.28.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _physicalName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__physicalNameMode"></a>3.6.7.8.32.12. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _physicalNameMode`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4422,7 +4445,9 @@ May be unset, in which case this Lambda is not configured use in a VPC.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__policyCounter"></a>3.6.7.4.28.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _policyCounter`
+**Description:** What we are doing for the physical name
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__policyCounter"></a>3.6.7.8.32.13. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _policyCounter`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4432,7 +4457,7 @@ May be unset, in which case this Lambda is not configured use in a VPC.
 
 **Description:** The number of permissions added to this function
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__skipPermissions"></a>3.6.7.4.28.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _skipPermissions`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__skipPermissions"></a>3.6.7.8.32.14. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _skipPermissions`
 
 |              |           |
 | ------------ | --------- |
@@ -4444,7 +4469,7 @@ The only use case is for cross-account, imported lambdas
 where the user commits to modifying the permisssions
 on the imported lambda outside CDK.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__warnIfCurrentVersionCalled"></a>3.6.7.4.28.11. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _warnIfCurrentVersionCalled`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion__warnIfCurrentVersionCalled"></a>3.6.7.8.32.15. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > _warnIfCurrentVersionCalled`
 
 |              |           |
 | ------------ | --------- |
@@ -4453,7 +4478,7 @@ on the imported lambda outside CDK.
 
 **Description:** Flag to delay adding a warning message until current version is invoked.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_architecture"></a>3.6.7.4.28.12. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > architecture`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_architecture"></a>3.6.7.8.32.16. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > architecture`
 
 |                           |                                                                                              |
 | ------------------------- | -------------------------------------------------------------------------------------------- |
@@ -4464,7 +4489,7 @@ on the imported lambda outside CDK.
 
 **Description:** The architecture of this Lambda Function.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_canCreatePermissions"></a>3.6.7.4.28.13. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > canCreatePermissions`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_canCreatePermissions"></a>3.6.7.8.32.17. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > canCreatePermissions`
 
 |              |         |
 | ------------ | ------- |
@@ -4479,7 +4504,7 @@ from different accounts.
 
 Specific value: `true`
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_connections"></a>3.6.7.4.28.14. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > connections`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_connections"></a>3.6.7.8.32.18. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > connections`
 
 |                           |                                                                                              |
 | ------------------------- | -------------------------------------------------------------------------------------------- |
@@ -4492,7 +4517,7 @@ Specific value: `true`
 
 Will fail if not a VPC-enabled Lambda Function
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_determineProvisionedConcurrency"></a>3.6.7.4.28.15. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > determineProvisionedConcurrency`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_determineProvisionedConcurrency"></a>3.6.7.8.32.19. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > determineProvisionedConcurrency`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4504,7 +4529,7 @@ Will fail if not a VPC-enabled Lambda Function
 
 Member must have value greater than or equal to 1
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_edgeArn"></a>3.6.7.4.28.16. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > edgeArn`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_edgeArn"></a>3.6.7.8.32.20. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > edgeArn`
 
 |              |          |
 | ------------ | -------- |
@@ -4513,7 +4538,7 @@ Member must have value greater than or equal to 1
 
 **Description:** The ARN of the version for Lambda@Edge.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_env"></a>3.6.7.4.28.17. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > env`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_env"></a>3.6.7.8.32.21. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > env`
 
 |                           |                                                            |
 | ------------------------- | ---------------------------------------------------------- |
@@ -4523,14 +4548,16 @@ Member must have value greater than or equal to 1
 | **Same definition as**    | [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env) |
 
 **Description:** The environment this resource belongs to.
-For resources that are created and managed by the CDK
-(generally, those created by creating new class instances like Role, Bucket, etc.),
-this is always the same as the environment of the stack they belong to;
-however, for imported resources
-(those obtained from static methods like fromRoleArn, fromBucketName, etc.),
-that might be different than the stack they were imported into.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionArn"></a>3.6.7.4.28.18. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > functionArn`
+For resources that are created and managed in a Stack (those created by
+creating new class instances like `new Role()`, `new Bucket()`, etc.), this
+is always the same as the environment of the stack they belong to.
+
+For referenced resources (those obtained from referencing methods like
+`Role.fromRoleArn()`, `Bucket.fromBucketName()`, etc.), they might be
+different than the stack they were imported into.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionArn"></a>3.6.7.8.32.22. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > functionArn`
 
 |              |          |
 | ------------ | -------- |
@@ -4539,7 +4566,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The ARN fo the function.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionName"></a>3.6.7.4.28.19. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > functionName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionName"></a>3.6.7.8.32.23. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > functionName`
 
 |              |          |
 | ------------ | -------- |
@@ -4548,7 +4575,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The name of the function.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionRef"></a>3.6.7.4.28.20. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > functionRef`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionRef"></a>3.6.7.8.32.24. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > functionRef`
 
 |                           |                                 |
 | ------------------------- | ------------------------------- |
@@ -4564,7 +4591,7 @@ that might be different than the stack they were imported into.
 | + [functionArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionRef_functionArn )   | No      | string | No         | -          | The ARN of the Function resource.          |
 | + [functionName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionRef_functionName ) | No      | string | No         | -          | The FunctionName of the Function resource. |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionRef_functionArn"></a>3.6.7.4.28.20.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > functionRef > functionArn`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionRef_functionArn"></a>3.6.7.8.32.24.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > functionRef > functionArn`
 
 |              |          |
 | ------------ | -------- |
@@ -4573,7 +4600,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The ARN of the Function resource.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionRef_functionName"></a>3.6.7.4.28.20.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > functionRef > functionName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionRef_functionName"></a>3.6.7.8.32.24.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > functionRef > functionName`
 
 |              |          |
 | ------------ | -------- |
@@ -4582,7 +4609,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The FunctionName of the Function resource.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grant"></a>3.6.7.4.28.21. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grant`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_getFunctionScalingConfig"></a>3.6.7.8.32.25. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > getFunctionScalingConfig`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4590,7 +4617,15 @@ that might be different than the stack they were imported into.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal"></a>3.6.7.4.28.22. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grantPrincipal`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grant"></a>3.6.7.8.32.26. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grant`
+
+|                           |                  |
+| ------------------------- | ---------------- |
+| **Type**                  | `object`         |
+| **Required**              | Yes              |
+| **Additional properties** | Any type allowed |
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal"></a>3.6.7.8.32.27. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grantPrincipal`
 
 |                           |                          |
 | ------------------------- | ------------------------ |
@@ -4608,7 +4643,7 @@ that might be different than the stack they were imported into.
 | + [policyFragment](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_policyFragment )     | No      | object | No         | In #/definitions/PrincipalPolicyFragment                                                                                 | Return the policy fragment that identifies this principal in a Policy.                                                                                                                                            |
 | - [principalAccount](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_principalAccount ) | No      | string | No         | -                                                                                                                        | The AWS account ID of this principal.<br />Can be undefined when the account is not known<br />(for example, for service principals).<br />Can be a Token - in that case,<br />it's assumed to be AWS::AccountId. |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_assumeRoleAction"></a>3.6.7.4.28.22.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grantPrincipal > assumeRoleAction`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_assumeRoleAction"></a>3.6.7.8.32.27.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grantPrincipal > assumeRoleAction`
 
 |              |          |
 | ------------ | -------- |
@@ -4617,7 +4652,7 @@ that might be different than the stack they were imported into.
 
 **Description:** When this Principal is used in an AssumeRole policy, the action to use.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_grantPrincipal"></a>3.6.7.4.28.22.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grantPrincipal > grantPrincipal`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_grantPrincipal"></a>3.6.7.8.32.27.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grantPrincipal > grantPrincipal`
 
 |                           |                                                                                                                 |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------- |
@@ -4628,7 +4663,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The principal to grant permissions to
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_policyFragment"></a>3.6.7.4.28.22.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grantPrincipal > policyFragment`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_policyFragment"></a>3.6.7.8.32.27.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grantPrincipal > policyFragment`
 
 |                           |                                       |
 | ------------------------- | ------------------------------------- |
@@ -4644,7 +4679,7 @@ that might be different than the stack they were imported into.
 | + [conditions](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_policyFragment_conditions )       | No      | object | No         | In #/definitions/Conditions | The conditions under which the policy is in effect.<br />See [the IAM documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_condition.html). |
 | + [principalJson](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_policyFragment_principalJson ) | No      | object | No         | -                           | -                                                                                                                                                                                  |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_policyFragment_conditions"></a>3.6.7.4.28.22.3.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grantPrincipal > policyFragment > conditions`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_policyFragment_conditions"></a>3.6.7.8.32.27.3.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grantPrincipal > policyFragment > conditions`
 
 |                           |                          |
 | ------------------------- | ------------------------ |
@@ -4656,7 +4691,7 @@ that might be different than the stack they were imported into.
 **Description:** The conditions under which the policy is in effect.
 See [the IAM documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_condition.html).
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_policyFragment_principalJson"></a>3.6.7.4.28.22.3.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grantPrincipal > policyFragment > principalJson`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_policyFragment_principalJson"></a>3.6.7.8.32.27.3.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grantPrincipal > policyFragment > principalJson`
 
 |                           |                                                                                                                                                                                                        |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -4668,7 +4703,7 @@ See [the IAM documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/ref
 | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- | --------------- | ---------- | ---------- | ----------------- |
 | - [](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_policyFragment_principalJson_additionalProperties ) | No      | array of string | No         | -          | -                 |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_policyFragment_principalJson_additionalProperties"></a>3.6.7.4.28.22.3.2.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grantPrincipal > policyFragment > principalJson > additionalProperties`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_policyFragment_principalJson_additionalProperties"></a>3.6.7.8.32.27.3.2.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grantPrincipal > policyFragment > principalJson > additionalProperties`
 
 |              |                   |
 | ------------ | ----------------- |
@@ -4687,14 +4722,14 @@ See [the IAM documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/ref
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | [additionalProperties items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_policyFragment_principalJson_additionalProperties_items) | -           |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_policyFragment_principalJson_additionalProperties_items"></a>3.6.7.4.28.22.3.2.1.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grantPrincipal > policyFragment > principalJson > additionalProperties > additionalProperties items
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_policyFragment_principalJson_additionalProperties_items"></a>3.6.7.8.32.27.3.2.1.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grantPrincipal > policyFragment > principalJson > additionalProperties > additionalProperties items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_principalAccount"></a>3.6.7.4.28.22.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grantPrincipal > principalAccount`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_principalAccount"></a>3.6.7.8.32.27.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > grantPrincipal > principalAccount`
 
 |              |          |
 | ------------ | -------- |
@@ -4707,7 +4742,7 @@ Can be undefined when the account is not known
 Can be a Token - in that case,
 it's assumed to be AWS::AccountId.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_isBoundToVpc"></a>3.6.7.4.28.23. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > isBoundToVpc`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_isBoundToVpc"></a>3.6.7.8.32.28. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > isBoundToVpc`
 
 |              |           |
 | ------------ | --------- |
@@ -4718,7 +4753,7 @@ it's assumed to be AWS::AccountId.
 
 If this is is `false`, trying to access the `connections` object will fail.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_isPrincipalWithConditions"></a>3.6.7.4.28.24. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > isPrincipalWithConditions`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_isPrincipalWithConditions"></a>3.6.7.8.32.29. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > isPrincipalWithConditions`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -4726,7 +4761,7 @@ If this is is `false`, trying to access the `connections` object will fail.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda"></a>3.6.7.4.28.25. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda"></a>3.6.7.8.32.30. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda`
 
 |                           |                         |
 | ------------------------- | ----------------------- |
@@ -4737,24 +4772,25 @@ If this is is `false`, trying to access the `connections` object will fail.
 
 **Description:** The underlying `IFunction`
 
-| Property                                                                                                                                          | Pattern | Type            | Deprecated | Definition                                                                                                                | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| ------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| + [architecture](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_architecture )                             | No      | object          | No         | Same as [architecture](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_architecture )                     | The system architectures compatible with this lambda function.                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_connections )                               | No      | object          | No         | Same as [_connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections )                     | The network connections associated with this resource.                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_env )                                               | No      | object          | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                       | The environment this resource belongs to.<br />For resources that are created and managed by the CDK<br />(generally, those created by creating new class instances like Role, Bucket, etc.),<br />this is always the same as the environment of the stack they belong to;<br />however, for imported resources<br />(those obtained from static methods like fromRoleArn, fromBucketName, etc.),<br />that might be different than the stack they were imported into. |
-| + [functionArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_functionArn )                               | No      | string          | No         | -                                                                                                                         | The ARN of the function.                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| + [functionName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_functionName )                             | No      | string          | No         | -                                                                                                                         | The name of the function.                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| + [functionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_functionRef )                               | No      | object          | No         | Same as [functionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionRef )        | A reference to a Function resource.                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| + [grantPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_grantPrincipal )                         | No      | object          | No         | Same as [grantPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal )  | The principal to grant permissions to                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [isBoundToVpc](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_isBoundToVpc )                             | No      | boolean         | No         | -                                                                                                                         | Whether or not this Lambda function was bound to a VPC<br /><br />If this is is \`false\`, trying to access the \`connections\` object will fail.                                                                                                                                                                                                                                                                                                                      |
-| + [latestVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion )                           | No      | object          | No         | In #/definitions/IVersion                                                                                                 | The \`$LATEST\` version of this function.<br /><br />Note that this is reference to a non-specific AWS Lambda version, which<br />means the function this version refers to can return different results in<br />different invocations.<br /><br />To obtain a reference to an explicit version which references the current<br />function configuration, use \`lambdaFunction.currentVersion\` instead.                                                               |
-| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_node )                                             | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [permissionsNode](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_permissionsNode )                       | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The construct node where permissions are attached.                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| + [resourceArnsForGrantInvoke](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_resourceArnsForGrantInvoke ) | No      | array of string | No         | -                                                                                                                         | The ARN(s) to put into the resource field of the generated IAM policy for grantInvoke().<br /><br />This property is for cdk modules to consume only. You should not need to use this property.<br />Instead, use grantInvoke() directly.                                                                                                                                                                                                                              |
-| - [role](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_role )                                             | No      | object          | No         | Same as [role](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role ) | The IAM role associated with this function.                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_stack )                                           | No      | object          | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Property                                                                                                                                          | Pattern | Type            | Deprecated | Definition                                                                                                                                  | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| + [architecture](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_architecture )                             | No      | object          | No         | Same as [architecture](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_architecture )                                       | The system architectures compatible with this lambda function.                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| + [connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_connections )                               | No      | object          | No         | Same as [_connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections )                                       | The network connections associated with this resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_env )                                               | No      | object          | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                                         | The environment this resource belongs to.<br /><br />For resources that are created and managed in a Stack (those created by<br />creating new class instances like \`new Role()\`, \`new Bucket()\`, etc.), this<br />is always the same as the environment of the stack they belong to.<br /><br />For referenced resources (those obtained from referencing methods like<br />\`Role.fromRoleArn()\`, \`Bucket.fromBucketName()\`, etc.), they might be<br />different than the stack they were imported into. |
+| + [functionArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_functionArn )                               | No      | string          | No         | -                                                                                                                                           | The ARN of the function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| + [functionName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_functionName )                             | No      | string          | No         | -                                                                                                                                           | The name of the function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| + [functionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_functionRef )                               | No      | object          | No         | Same as [functionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionRef )                          | A reference to a Function resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| + [grantPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_grantPrincipal )                         | No      | object          | No         | Same as [grantPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal )                    | The principal to grant permissions to                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| + [isBoundToVpc](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_isBoundToVpc )                             | No      | boolean         | No         | -                                                                                                                                           | Whether or not this Lambda function was bound to a VPC<br /><br />If this is is \`false\`, trying to access the \`connections\` object will fail.                                                                                                                                                                                                                                                                                                                                                                 |
+| + [latestVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion )                           | No      | object          | No         | In #/definitions/IVersion                                                                                                                   | The \`$LATEST\` version of this function.<br /><br />Note that this is reference to a non-specific AWS Lambda version, which<br />means the function this version refers to can return different results in<br />different invocations.<br /><br />To obtain a reference to an explicit version which references the current<br />function configuration, use \`lambdaFunction.currentVersion\` instead.                                                                                                          |
+| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_node )                                             | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )                     | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| + [permissionsNode](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_permissionsNode )                       | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )                     | The construct node where permissions are attached.                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| + [resourceArnsForGrantInvoke](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_resourceArnsForGrantInvoke ) | No      | array of string | No         | -                                                                                                                                           | The ARN(s) to put into the resource field of the generated IAM policy for grantInvoke().<br /><br />This property is for cdk modules to consume only. You should not need to use this property.<br />Instead, use grantInvoke() directly.                                                                                                                                                                                                                                                                         |
+| - [role](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_role )                                             | No      | object          | No         | Same as [role](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role )                   | The IAM role associated with this function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_stack )                                           | No      | object          | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack )                   | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| - [tenancyConfig](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_tenancyConfig )                           | No      | object          | No         | Same as [tenancyConfig](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_tenancyConfig ) | The tenancy configuration for this function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_architecture"></a>3.6.7.4.28.25.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > architecture`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_architecture"></a>3.6.7.8.32.30.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > architecture`
 
 |                           |                                                                                              |
 | ------------------------- | -------------------------------------------------------------------------------------------- |
@@ -4765,7 +4801,7 @@ If this is is `false`, trying to access the `connections` object will fail.
 
 **Description:** The system architectures compatible with this lambda function.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_connections"></a>3.6.7.4.28.25.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > connections`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_connections"></a>3.6.7.8.32.30.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > connections`
 
 |                           |                                                                                              |
 | ------------------------- | -------------------------------------------------------------------------------------------- |
@@ -4776,7 +4812,7 @@ If this is is `false`, trying to access the `connections` object will fail.
 
 **Description:** The network connections associated with this resource.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_env"></a>3.6.7.4.28.25.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > env`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_env"></a>3.6.7.8.32.30.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > env`
 
 |                           |                                                            |
 | ------------------------- | ---------------------------------------------------------- |
@@ -4786,14 +4822,16 @@ If this is is `false`, trying to access the `connections` object will fail.
 | **Same definition as**    | [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env) |
 
 **Description:** The environment this resource belongs to.
-For resources that are created and managed by the CDK
-(generally, those created by creating new class instances like Role, Bucket, etc.),
-this is always the same as the environment of the stack they belong to;
-however, for imported resources
-(those obtained from static methods like fromRoleArn, fromBucketName, etc.),
-that might be different than the stack they were imported into.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_functionArn"></a>3.6.7.4.28.25.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > functionArn`
+For resources that are created and managed in a Stack (those created by
+creating new class instances like `new Role()`, `new Bucket()`, etc.), this
+is always the same as the environment of the stack they belong to.
+
+For referenced resources (those obtained from referencing methods like
+`Role.fromRoleArn()`, `Bucket.fromBucketName()`, etc.), they might be
+different than the stack they were imported into.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_functionArn"></a>3.6.7.8.32.30.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > functionArn`
 
 |              |          |
 | ------------ | -------- |
@@ -4802,7 +4840,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The ARN of the function.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_functionName"></a>3.6.7.4.28.25.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > functionName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_functionName"></a>3.6.7.8.32.30.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > functionName`
 
 |              |          |
 | ------------ | -------- |
@@ -4811,7 +4849,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The name of the function.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_functionRef"></a>3.6.7.4.28.25.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > functionRef`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_functionRef"></a>3.6.7.8.32.30.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > functionRef`
 
 |                           |                                                                                                           |
 | ------------------------- | --------------------------------------------------------------------------------------------------------- |
@@ -4822,7 +4860,7 @@ that might be different than the stack they were imported into.
 
 **Description:** A reference to a Function resource.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_grantPrincipal"></a>3.6.7.4.28.25.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > grantPrincipal`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_grantPrincipal"></a>3.6.7.8.32.30.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > grantPrincipal`
 
 |                           |                                                                                                                 |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------- |
@@ -4833,7 +4871,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The principal to grant permissions to
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_isBoundToVpc"></a>3.6.7.4.28.25.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > isBoundToVpc`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_isBoundToVpc"></a>3.6.7.8.32.30.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > isBoundToVpc`
 
 |              |           |
 | ------------ | --------- |
@@ -4844,7 +4882,7 @@ that might be different than the stack they were imported into.
 
 If this is is `false`, trying to access the `connections` object will fail.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion"></a>3.6.7.4.28.25.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion"></a>3.6.7.8.32.30.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion`
 
 |                           |                        |
 | ------------------------- | ---------------------- |
@@ -4862,28 +4900,29 @@ different invocations.
 To obtain a reference to an explicit version which references the current
 function configuration, use `lambdaFunction.currentVersion` instead.
 
-| Property                                                                                                                                                        | Pattern | Type            | Deprecated | Definition                                                                                                                    | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| + [architecture](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_architecture )                             | No      | object          | No         | Same as [architecture](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_architecture )                         | The system architectures compatible with this lambda function.                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_connections )                               | No      | object          | No         | Same as [_connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections )                         | The network connections associated with this resource.                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| + [edgeArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_edgeArn )                                       | No      | string          | No         | -                                                                                                                             | The ARN of the version for Lambda@Edge.                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_env )                                               | No      | object          | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                           | The environment this resource belongs to.<br />For resources that are created and managed by the CDK<br />(generally, those created by creating new class instances like Role, Bucket, etc.),<br />this is always the same as the environment of the stack they belong to;<br />however, for imported resources<br />(those obtained from static methods like fromRoleArn, fromBucketName, etc.),<br />that might be different than the stack they were imported into. |
-| + [functionArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_functionArn )                               | No      | string          | No         | -                                                                                                                             | The ARN of the function.                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| + [functionName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_functionName )                             | No      | string          | No         | -                                                                                                                             | The name of the function.                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| + [functionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_functionRef )                               | No      | object          | No         | Same as [functionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionRef )            | A reference to a Function resource.                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| + [grantPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_grantPrincipal )                         | No      | object          | No         | Same as [grantPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal )      | The principal to grant permissions to                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [isBoundToVpc](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_isBoundToVpc )                             | No      | boolean         | No         | -                                                                                                                             | Whether or not this Lambda function was bound to a VPC<br /><br />If this is is \`false\`, trying to access the \`connections\` object will fail.                                                                                                                                                                                                                                                                                                                      |
-| + [lambda](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_lambda )                                         | No      | object          | No         | Same as [lambda](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda )                      | The underlying AWS Lambda function.                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| + [latestVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_latestVersion )                           | No      | object          | No         | Same as [latestVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion ) | The \`$LATEST\` version of this function.<br /><br />Note that this is reference to a non-specific AWS Lambda version, which<br />means the function this version refers to can return different results in<br />different invocations.<br /><br />To obtain a reference to an explicit version which references the current<br />function configuration, use \`lambdaFunction.currentVersion\` instead.                                                               |
-| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_node )                                             | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )       | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [permissionsNode](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_permissionsNode )                       | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )       | The construct node where permissions are attached.                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| + [resourceArnsForGrantInvoke](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_resourceArnsForGrantInvoke ) | No      | array of string | No         | -                                                                                                                             | The ARN(s) to put into the resource field of the generated IAM policy for grantInvoke().<br /><br />This property is for cdk modules to consume only. You should not need to use this property.<br />Instead, use grantInvoke() directly.                                                                                                                                                                                                                              |
-| - [role](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role )                                             | No      | object          | No         | In #/definitions/IRole                                                                                                        | The IAM role associated with this function.                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_stack )                                           | No      | object          | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack )     | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| + [version](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_version )                                       | No      | string          | No         | -                                                                                                                             | The most recently deployed version of this function.                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| + [versionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_versionRef )                                 | No      | object          | No         | In #/definitions/VersionReference                                                                                             | A reference to a Version resource.                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| Property                                                                                                                                                        | Pattern | Type            | Deprecated | Definition                                                                                                                    | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| + [architecture](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_architecture )                             | No      | object          | No         | Same as [architecture](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_architecture )                         | The system architectures compatible with this lambda function.                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| + [connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_connections )                               | No      | object          | No         | Same as [_connections](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections )                         | The network connections associated with this resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| + [edgeArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_edgeArn )                                       | No      | string          | No         | -                                                                                                                             | The ARN of the version for Lambda@Edge.                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_env )                                               | No      | object          | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                           | The environment this resource belongs to.<br /><br />For resources that are created and managed in a Stack (those created by<br />creating new class instances like \`new Role()\`, \`new Bucket()\`, etc.), this<br />is always the same as the environment of the stack they belong to.<br /><br />For referenced resources (those obtained from referencing methods like<br />\`Role.fromRoleArn()\`, \`Bucket.fromBucketName()\`, etc.), they might be<br />different than the stack they were imported into. |
+| + [functionArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_functionArn )                               | No      | string          | No         | -                                                                                                                             | The ARN of the function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| + [functionName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_functionName )                             | No      | string          | No         | -                                                                                                                             | The name of the function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| + [functionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_functionRef )                               | No      | object          | No         | Same as [functionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_functionRef )            | A reference to a Function resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| + [grantPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_grantPrincipal )                         | No      | object          | No         | Same as [grantPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal )      | The principal to grant permissions to                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| + [isBoundToVpc](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_isBoundToVpc )                             | No      | boolean         | No         | -                                                                                                                             | Whether or not this Lambda function was bound to a VPC<br /><br />If this is is \`false\`, trying to access the \`connections\` object will fail.                                                                                                                                                                                                                                                                                                                                                                 |
+| + [lambda](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_lambda )                                         | No      | object          | No         | Same as [lambda](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda )                      | The underlying AWS Lambda function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| + [latestVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_latestVersion )                           | No      | object          | No         | Same as [latestVersion](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion ) | The \`$LATEST\` version of this function.<br /><br />Note that this is reference to a non-specific AWS Lambda version, which<br />means the function this version refers to can return different results in<br />different invocations.<br /><br />To obtain a reference to an explicit version which references the current<br />function configuration, use \`lambdaFunction.currentVersion\` instead.                                                                                                          |
+| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_node )                                             | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )       | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| + [permissionsNode](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_permissionsNode )                       | No      | object          | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )       | The construct node where permissions are attached.                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| + [resourceArnsForGrantInvoke](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_resourceArnsForGrantInvoke ) | No      | array of string | No         | -                                                                                                                             | The ARN(s) to put into the resource field of the generated IAM policy for grantInvoke().<br /><br />This property is for cdk modules to consume only. You should not need to use this property.<br />Instead, use grantInvoke() directly.                                                                                                                                                                                                                                                                         |
+| - [role](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role )                                             | No      | object          | No         | In #/definitions/IRole                                                                                                        | The IAM role associated with this function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_stack )                                           | No      | object          | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack )     | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| - [tenancyConfig](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_tenancyConfig )                           | No      | object          | No         | In #/definitions/TenancyConfig                                                                                                | The tenancy configuration for this function.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| + [version](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_version )                                       | No      | string          | No         | -                                                                                                                             | The most recently deployed version of this function.                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| + [versionRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_versionRef )                                 | No      | object          | No         | In #/definitions/VersionReference                                                                                             | A reference to a Version resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_architecture"></a>3.6.7.4.28.25.9.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > architecture`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_architecture"></a>3.6.7.8.32.30.9.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > architecture`
 
 |                           |                                                                                              |
 | ------------------------- | -------------------------------------------------------------------------------------------- |
@@ -4894,7 +4933,7 @@ function configuration, use `lambdaFunction.currentVersion` instead.
 
 **Description:** The system architectures compatible with this lambda function.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_connections"></a>3.6.7.4.28.25.9.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > connections`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_connections"></a>3.6.7.8.32.30.9.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > connections`
 
 |                           |                                                                                              |
 | ------------------------- | -------------------------------------------------------------------------------------------- |
@@ -4905,7 +4944,7 @@ function configuration, use `lambdaFunction.currentVersion` instead.
 
 **Description:** The network connections associated with this resource.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_edgeArn"></a>3.6.7.4.28.25.9.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > edgeArn`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_edgeArn"></a>3.6.7.8.32.30.9.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > edgeArn`
 
 |              |          |
 | ------------ | -------- |
@@ -4914,7 +4953,7 @@ function configuration, use `lambdaFunction.currentVersion` instead.
 
 **Description:** The ARN of the version for Lambda@Edge.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_env"></a>3.6.7.4.28.25.9.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > env`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_env"></a>3.6.7.8.32.30.9.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > env`
 
 |                           |                                                            |
 | ------------------------- | ---------------------------------------------------------- |
@@ -4924,14 +4963,16 @@ function configuration, use `lambdaFunction.currentVersion` instead.
 | **Same definition as**    | [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env) |
 
 **Description:** The environment this resource belongs to.
-For resources that are created and managed by the CDK
-(generally, those created by creating new class instances like Role, Bucket, etc.),
-this is always the same as the environment of the stack they belong to;
-however, for imported resources
-(those obtained from static methods like fromRoleArn, fromBucketName, etc.),
-that might be different than the stack they were imported into.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_functionArn"></a>3.6.7.4.28.25.9.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > functionArn`
+For resources that are created and managed in a Stack (those created by
+creating new class instances like `new Role()`, `new Bucket()`, etc.), this
+is always the same as the environment of the stack they belong to.
+
+For referenced resources (those obtained from referencing methods like
+`Role.fromRoleArn()`, `Bucket.fromBucketName()`, etc.), they might be
+different than the stack they were imported into.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_functionArn"></a>3.6.7.8.32.30.9.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > functionArn`
 
 |              |          |
 | ------------ | -------- |
@@ -4940,7 +4981,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The ARN of the function.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_functionName"></a>3.6.7.4.28.25.9.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > functionName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_functionName"></a>3.6.7.8.32.30.9.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > functionName`
 
 |              |          |
 | ------------ | -------- |
@@ -4949,7 +4990,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The name of the function.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_functionRef"></a>3.6.7.4.28.25.9.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > functionRef`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_functionRef"></a>3.6.7.8.32.30.9.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > functionRef`
 
 |                           |                                                                                                           |
 | ------------------------- | --------------------------------------------------------------------------------------------------------- |
@@ -4960,7 +5001,7 @@ that might be different than the stack they were imported into.
 
 **Description:** A reference to a Function resource.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_grantPrincipal"></a>3.6.7.4.28.25.9.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > grantPrincipal`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_grantPrincipal"></a>3.6.7.8.32.30.9.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > grantPrincipal`
 
 |                           |                                                                                                                 |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------- |
@@ -4971,7 +5012,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The principal to grant permissions to
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_isBoundToVpc"></a>3.6.7.4.28.25.9.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > isBoundToVpc`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_isBoundToVpc"></a>3.6.7.8.32.30.9.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > isBoundToVpc`
 
 |              |           |
 | ------------ | --------- |
@@ -4982,7 +5023,7 @@ that might be different than the stack they were imported into.
 
 If this is is `false`, trying to access the `connections` object will fail.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_lambda"></a>3.6.7.4.28.25.9.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > lambda`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_lambda"></a>3.6.7.8.32.30.9.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > lambda`
 
 |                           |                                                                                                 |
 | ------------------------- | ----------------------------------------------------------------------------------------------- |
@@ -4993,7 +5034,7 @@ If this is is `false`, trying to access the `connections` object will fail.
 
 **Description:** The underlying AWS Lambda function.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_latestVersion"></a>3.6.7.4.28.25.9.11. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > latestVersion`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_latestVersion"></a>3.6.7.8.32.30.9.11. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > latestVersion`
 
 |                           |                                                                                                                      |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------- |
@@ -5011,7 +5052,7 @@ different invocations.
 To obtain a reference to an explicit version which references the current
 function configuration, use `lambdaFunction.currentVersion` instead.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_node"></a>3.6.7.4.28.25.9.12. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > node`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_node"></a>3.6.7.8.32.30.9.12. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > node`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -5022,7 +5063,7 @@ function configuration, use `lambdaFunction.currentVersion` instead.
 
 **Description:** The tree node.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_permissionsNode"></a>3.6.7.4.28.25.9.13. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > permissionsNode`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_permissionsNode"></a>3.6.7.8.32.30.9.13. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > permissionsNode`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -5033,7 +5074,7 @@ function configuration, use `lambdaFunction.currentVersion` instead.
 
 **Description:** The construct node where permissions are attached.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_resourceArnsForGrantInvoke"></a>3.6.7.4.28.25.9.14. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > resourceArnsForGrantInvoke`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_resourceArnsForGrantInvoke"></a>3.6.7.8.32.30.9.14. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > resourceArnsForGrantInvoke`
 
 |              |                   |
 | ------------ | ----------------- |
@@ -5057,14 +5098,14 @@ Instead, use grantInvoke() directly.
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- |
 | [resourceArnsForGrantInvoke items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_resourceArnsForGrantInvoke_items) | -           |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_resourceArnsForGrantInvoke_items"></a>3.6.7.4.28.25.9.14.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > resourceArnsForGrantInvoke > resourceArnsForGrantInvoke items
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_resourceArnsForGrantInvoke_items"></a>3.6.7.8.32.30.9.14.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > resourceArnsForGrantInvoke > resourceArnsForGrantInvoke items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role"></a>3.6.7.4.28.25.9.15. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role"></a>3.6.7.8.32.30.9.15. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role`
 
 |                           |                     |
 | ------------------------- | ------------------- |
@@ -5075,20 +5116,20 @@ Instead, use grantInvoke() directly.
 
 **Description:** The IAM role associated with this function.
 
-| Property                                                                                                                                         | Pattern | Type   | Deprecated | Definition                                                                                                                              | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| ------------------------------------------------------------------------------------------------------------------------------------------------ | ------- | ------ | ---------- | --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| + [assumeRoleAction](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_assumeRoleAction ) | No      | string | No         | -                                                                                                                                       | When this Principal is used in an AssumeRole policy, the action to use.                                                                                                                                                                                                                                                                                                                                                                                                |
-| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_env )                           | No      | object | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                                     | The environment this resource belongs to.<br />For resources that are created and managed by the CDK<br />(generally, those created by creating new class instances like Role, Bucket, etc.),<br />this is always the same as the environment of the stack they belong to;<br />however, for imported resources<br />(those obtained from static methods like fromRoleArn, fromBucketName, etc.),<br />that might be different than the stack they were imported into. |
-| + [grantPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_grantPrincipal )     | No      | object | No         | Same as [grantPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal )                | The principal to grant permissions to                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_node )                         | No      | object | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )                 | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [policyFragment](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_policyFragment )     | No      | object | No         | Same as [policyFragment](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_policyFragment ) | Return the policy fragment that identifies this principal in a Policy.                                                                                                                                                                                                                                                                                                                                                                                                 |
-| - [principalAccount](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_principalAccount ) | No      | string | No         | -                                                                                                                                       | The AWS account ID of this principal.<br />Can be undefined when the account is not known<br />(for example, for service principals).<br />Can be a Token - in that case,<br />it's assumed to be AWS::AccountId.                                                                                                                                                                                                                                                      |
-| + [roleArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_roleArn )                   | No      | string | No         | -                                                                                                                                       | Returns the ARN of this role.                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| + [roleName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_roleName )                 | No      | string | No         | -                                                                                                                                       | Returns the name of this role.                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [roleRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_roleRef )                   | No      | object | No         | In #/definitions/RoleReference                                                                                                          | A reference to a Role resource.                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_stack )                       | No      | object | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack )               | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Property                                                                                                                                         | Pattern | Type   | Deprecated | Definition                                                                                                                              | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | ------- | ------ | ---------- | --------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| + [assumeRoleAction](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_assumeRoleAction ) | No      | string | No         | -                                                                                                                                       | When this Principal is used in an AssumeRole policy, the action to use.                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_env )                           | No      | object | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                                     | The environment this resource belongs to.<br /><br />For resources that are created and managed in a Stack (those created by<br />creating new class instances like \`new Role()\`, \`new Bucket()\`, etc.), this<br />is always the same as the environment of the stack they belong to.<br /><br />For referenced resources (those obtained from referencing methods like<br />\`Role.fromRoleArn()\`, \`Bucket.fromBucketName()\`, etc.), they might be<br />different than the stack they were imported into. |
+| + [grantPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_grantPrincipal )     | No      | object | No         | Same as [grantPrincipal](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal )                | The principal to grant permissions to                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_node )                         | No      | object | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )                 | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| + [policyFragment](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_policyFragment )     | No      | object | No         | Same as [policyFragment](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_grantPrincipal_policyFragment ) | Return the policy fragment that identifies this principal in a Policy.                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| - [principalAccount](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_principalAccount ) | No      | string | No         | -                                                                                                                                       | The AWS account ID of this principal.<br />Can be undefined when the account is not known<br />(for example, for service principals).<br />Can be a Token - in that case,<br />it's assumed to be AWS::AccountId.                                                                                                                                                                                                                                                                                                 |
+| + [roleArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_roleArn )                   | No      | string | No         | -                                                                                                                                       | Returns the ARN of this role.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| + [roleName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_roleName )                 | No      | string | No         | -                                                                                                                                       | Returns the name of this role.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| + [roleRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_roleRef )                   | No      | object | No         | In #/definitions/RoleReference                                                                                                          | A reference to a Role resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_stack )                       | No      | object | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack )               | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_assumeRoleAction"></a>3.6.7.4.28.25.9.15.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > assumeRoleAction`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_assumeRoleAction"></a>3.6.7.8.32.30.9.15.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > assumeRoleAction`
 
 |              |          |
 | ------------ | -------- |
@@ -5097,7 +5138,7 @@ Instead, use grantInvoke() directly.
 
 **Description:** When this Principal is used in an AssumeRole policy, the action to use.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_env"></a>3.6.7.4.28.25.9.15.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > env`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_env"></a>3.6.7.8.32.30.9.15.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > env`
 
 |                           |                                                            |
 | ------------------------- | ---------------------------------------------------------- |
@@ -5107,14 +5148,16 @@ Instead, use grantInvoke() directly.
 | **Same definition as**    | [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env) |
 
 **Description:** The environment this resource belongs to.
-For resources that are created and managed by the CDK
-(generally, those created by creating new class instances like Role, Bucket, etc.),
-this is always the same as the environment of the stack they belong to;
-however, for imported resources
-(those obtained from static methods like fromRoleArn, fromBucketName, etc.),
-that might be different than the stack they were imported into.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_grantPrincipal"></a>3.6.7.4.28.25.9.15.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > grantPrincipal`
+For resources that are created and managed in a Stack (those created by
+creating new class instances like `new Role()`, `new Bucket()`, etc.), this
+is always the same as the environment of the stack they belong to.
+
+For referenced resources (those obtained from referencing methods like
+`Role.fromRoleArn()`, `Bucket.fromBucketName()`, etc.), they might be
+different than the stack they were imported into.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_grantPrincipal"></a>3.6.7.8.32.30.9.15.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > grantPrincipal`
 
 |                           |                                                                                                                 |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------- |
@@ -5125,7 +5168,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The principal to grant permissions to
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_node"></a>3.6.7.4.28.25.9.15.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > node`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_node"></a>3.6.7.8.32.30.9.15.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > node`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -5136,7 +5179,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The tree node.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_policyFragment"></a>3.6.7.4.28.25.9.15.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > policyFragment`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_policyFragment"></a>3.6.7.8.32.30.9.15.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > policyFragment`
 
 |                           |                                                                                                                                |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
@@ -5147,7 +5190,7 @@ that might be different than the stack they were imported into.
 
 **Description:** Return the policy fragment that identifies this principal in a Policy.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_principalAccount"></a>3.6.7.4.28.25.9.15.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > principalAccount`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_principalAccount"></a>3.6.7.8.32.30.9.15.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > principalAccount`
 
 |              |          |
 | ------------ | -------- |
@@ -5160,7 +5203,7 @@ Can be undefined when the account is not known
 Can be a Token - in that case,
 it's assumed to be AWS::AccountId.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_roleArn"></a>3.6.7.4.28.25.9.15.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > roleArn`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_roleArn"></a>3.6.7.8.32.30.9.15.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > roleArn`
 
 |              |          |
 | ------------ | -------- |
@@ -5169,7 +5212,7 @@ it's assumed to be AWS::AccountId.
 
 **Description:** Returns the ARN of this role.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_roleName"></a>3.6.7.4.28.25.9.15.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > roleName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_roleName"></a>3.6.7.8.32.30.9.15.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > roleName`
 
 |              |          |
 | ------------ | -------- |
@@ -5178,7 +5221,7 @@ it's assumed to be AWS::AccountId.
 
 **Description:** Returns the name of this role.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_roleRef"></a>3.6.7.4.28.25.9.15.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > roleRef`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_roleRef"></a>3.6.7.8.32.30.9.15.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > roleRef`
 
 |                           |                             |
 | ------------------------- | --------------------------- |
@@ -5194,7 +5237,7 @@ it's assumed to be AWS::AccountId.
 | + [roleArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_roleRef_roleArn )   | No      | string | No         | -          | The ARN of the Role resource.      |
 | + [roleName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_roleRef_roleName ) | No      | string | No         | -          | The RoleName of the Role resource. |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_roleRef_roleArn"></a>3.6.7.4.28.25.9.15.9.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > roleRef > roleArn`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_roleRef_roleArn"></a>3.6.7.8.32.30.9.15.9.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > roleRef > roleArn`
 
 |              |          |
 | ------------ | -------- |
@@ -5203,7 +5246,7 @@ it's assumed to be AWS::AccountId.
 
 **Description:** The ARN of the Role resource.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_roleRef_roleName"></a>3.6.7.4.28.25.9.15.9.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > roleRef > roleName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_roleRef_roleName"></a>3.6.7.8.32.30.9.15.9.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > roleRef > roleName`
 
 |              |          |
 | ------------ | -------- |
@@ -5212,7 +5255,7 @@ it's assumed to be AWS::AccountId.
 
 **Description:** The RoleName of the Role resource.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_stack"></a>3.6.7.4.28.25.9.15.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > stack`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_role_stack"></a>3.6.7.8.32.30.9.15.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > role > stack`
 
 |                           |                                                                                                                  |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -5223,7 +5266,7 @@ it's assumed to be AWS::AccountId.
 
 **Description:** The stack in which this resource is defined.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_stack"></a>3.6.7.4.28.25.9.16. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > stack`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_stack"></a>3.6.7.8.32.30.9.16. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > stack`
 
 |                           |                                                                                                                  |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -5234,7 +5277,46 @@ it's assumed to be AWS::AccountId.
 
 **Description:** The stack in which this resource is defined.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_version"></a>3.6.7.4.28.25.9.17. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > version`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_tenancyConfig"></a>3.6.7.8.32.30.9.17. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > tenancyConfig`
+
+|                           |                             |
+| ------------------------- | --------------------------- |
+| **Type**                  | `object`                    |
+| **Required**              | No                          |
+| **Additional properties** | Not allowed                 |
+| **Defined in**            | #/definitions/TenancyConfig |
+
+**Description:** The tenancy configuration for this function.
+
+| Property                                                                                                                                                            | Pattern | Type   | Deprecated | Definition                                         | Title/Description                                      |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------------- | ------------------------------------------------------ |
+| + [tenancyConfigProperty](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_tenancyConfig_tenancyConfigProperty ) | No      | object | No         | In #/definitions/CfnFunction.TenancyConfigProperty | The CloudFormation property for tenancy configuration. |
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_tenancyConfig_tenancyConfigProperty"></a>3.6.7.8.32.30.9.17.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > tenancyConfig > tenancyConfigProperty`
+
+|                           |                                                 |
+| ------------------------- | ----------------------------------------------- |
+| **Type**                  | `object`                                        |
+| **Required**              | Yes                                             |
+| **Additional properties** | Not allowed                                     |
+| **Defined in**            | #/definitions/CfnFunction.TenancyConfigProperty |
+
+**Description:** The CloudFormation property for tenancy configuration.
+
+| Property                                                                                                                                                                              | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| + [tenantIsolationMode](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_tenancyConfig_tenancyConfigProperty_tenantIsolationMode ) | No      | string | No         | -          | Tenant isolation mode allows for invocation to be sent to a corresponding execution environment dedicated to a specific tenant ID. |
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_tenancyConfig_tenancyConfigProperty_tenantIsolationMode"></a>3.6.7.8.32.30.9.17.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > tenancyConfig > tenancyConfigProperty > tenantIsolationMode`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `string` |
+| **Required** | Yes      |
+
+**Description:** Tenant isolation mode allows for invocation to be sent to a corresponding execution environment dedicated to a specific tenant ID.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_version"></a>3.6.7.8.32.30.9.18. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > version`
 
 |              |          |
 | ------------ | -------- |
@@ -5243,7 +5325,7 @@ it's assumed to be AWS::AccountId.
 
 **Description:** The most recently deployed version of this function.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_versionRef"></a>3.6.7.4.28.25.9.18. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > versionRef`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_versionRef"></a>3.6.7.8.32.30.9.19. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > versionRef`
 
 |                           |                                |
 | ------------------------- | ------------------------------ |
@@ -5258,7 +5340,7 @@ it's assumed to be AWS::AccountId.
 | -------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ---------------------------------------- |
 | + [functionArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_versionRef_functionArn ) | No      | string | No         | -          | The FunctionArn of the Version resource. |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_versionRef_functionArn"></a>3.6.7.4.28.25.9.18.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > versionRef > functionArn`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_versionRef_functionArn"></a>3.6.7.8.32.30.9.19.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > latestVersion > versionRef > functionArn`
 
 |              |          |
 | ------------ | -------- |
@@ -5267,7 +5349,7 @@ it's assumed to be AWS::AccountId.
 
 **Description:** The FunctionArn of the Version resource.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_node"></a>3.6.7.4.28.25.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > node`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_node"></a>3.6.7.8.32.30.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > node`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -5278,7 +5360,7 @@ it's assumed to be AWS::AccountId.
 
 **Description:** The tree node.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_permissionsNode"></a>3.6.7.4.28.25.11. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > permissionsNode`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_permissionsNode"></a>3.6.7.8.32.30.11. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > permissionsNode`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -5289,7 +5371,7 @@ it's assumed to be AWS::AccountId.
 
 **Description:** The construct node where permissions are attached.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_resourceArnsForGrantInvoke"></a>3.6.7.4.28.25.12. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > resourceArnsForGrantInvoke`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_resourceArnsForGrantInvoke"></a>3.6.7.8.32.30.12. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > resourceArnsForGrantInvoke`
 
 |              |                   |
 | ------------ | ----------------- |
@@ -5313,14 +5395,14 @@ Instead, use grantInvoke() directly.
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | [resourceArnsForGrantInvoke items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_resourceArnsForGrantInvoke_items) | -           |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_resourceArnsForGrantInvoke_items"></a>3.6.7.4.28.25.12.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > resourceArnsForGrantInvoke > resourceArnsForGrantInvoke items
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_resourceArnsForGrantInvoke_items"></a>3.6.7.8.32.30.12.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > resourceArnsForGrantInvoke > resourceArnsForGrantInvoke items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_role"></a>3.6.7.4.28.25.13. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > role`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_role"></a>3.6.7.8.32.30.13. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > role`
 
 |                           |                                                                                                                  |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -5331,7 +5413,7 @@ Instead, use grantInvoke() directly.
 
 **Description:** The IAM role associated with this function.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_stack"></a>3.6.7.4.28.25.14. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > stack`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_stack"></a>3.6.7.8.32.30.14. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > stack`
 
 |                           |                                                                                                                  |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -5342,7 +5424,18 @@ Instead, use grantInvoke() directly.
 
 **Description:** The stack in which this resource is defined.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_latestVersion"></a>3.6.7.4.28.26. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > latestVersion`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_tenancyConfig"></a>3.6.7.8.32.30.15. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > lambda > tenancyConfig`
+
+|                           |                                                                                                                                    |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                           |
+| **Required**              | No                                                                                                                                 |
+| **Additional properties** | Not allowed                                                                                                                        |
+| **Same definition as**    | [tenancyConfig](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_tenancyConfig) |
+
+**Description:** The tenancy configuration for this function.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_latestVersion"></a>3.6.7.8.32.31. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > latestVersion`
 
 |                           |                                                                                                                      |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------- |
@@ -5360,7 +5453,7 @@ different invocations.
 To obtain a reference to an explicit version which references the current
 function configuration, use `lambdaFunction.currentVersion` instead.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_node"></a>3.6.7.4.28.27. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > node`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_node"></a>3.6.7.8.32.32. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > node`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -5371,7 +5464,7 @@ function configuration, use `lambdaFunction.currentVersion` instead.
 
 **Description:** The tree node.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_parsePermissionPrincipal"></a>3.6.7.4.28.28. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > parsePermissionPrincipal`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_parsePermissionPrincipal"></a>3.6.7.8.32.33. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > parsePermissionPrincipal`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -5388,7 +5481,7 @@ outright because they may be tokens.
 Try to recognize some specific Principal classes first, then try a generic
 fallback.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_permissionsNode"></a>3.6.7.4.28.29. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > permissionsNode`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_permissionsNode"></a>3.6.7.8.32.34. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > permissionsNode`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -5399,7 +5492,7 @@ fallback.
 
 **Description:** The construct node where permissions are attached.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_physicalName"></a>3.6.7.4.28.30. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > physicalName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_physicalName"></a>3.6.7.8.32.35. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > physicalName`
 
 |              |          |
 | ------------ | -------- |
@@ -5415,7 +5508,7 @@ This value will resolve to one of the following:
 - a concrete name generated automatically during synthesis, in
   cross-environment scenarios.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_qualifier"></a>3.6.7.4.28.31. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > qualifier`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_qualifier"></a>3.6.7.8.32.36. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > qualifier`
 
 |              |          |
 | ------------ | -------- |
@@ -5425,7 +5518,7 @@ This value will resolve to one of the following:
 **Description:** The qualifier of the version or alias of this function.
 A qualifier is the identifier that's appended to a version or alias ARN.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_resourceArnsForGrantInvoke"></a>3.6.7.4.28.32. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > resourceArnsForGrantInvoke`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_resourceArnsForGrantInvoke"></a>3.6.7.8.32.37. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > resourceArnsForGrantInvoke`
 
 |              |                   |
 | ------------ | ----------------- |
@@ -5446,14 +5539,14 @@ A qualifier is the identifier that's appended to a version or alias ARN.
 | --------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | [resourceArnsForGrantInvoke items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_resourceArnsForGrantInvoke_items) | -           |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_resourceArnsForGrantInvoke_items"></a>3.6.7.4.28.32.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > resourceArnsForGrantInvoke > resourceArnsForGrantInvoke items
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_resourceArnsForGrantInvoke_items"></a>3.6.7.8.32.37.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > resourceArnsForGrantInvoke > resourceArnsForGrantInvoke items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_role"></a>3.6.7.4.28.33. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > role`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_role"></a>3.6.7.8.32.38. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > role`
 
 |                           |                                                                                                                  |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -5466,7 +5559,7 @@ A qualifier is the identifier that's appended to a version or alias ARN.
 
 Undefined if the function was imported without a role.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_stack"></a>3.6.7.4.28.34. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > stack`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_stack"></a>3.6.7.8.32.39. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > stack`
 
 |                           |                                                                                                                  |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -5477,7 +5570,7 @@ Undefined if the function was imported without a role.
 
 **Description:** The stack in which this resource is defined.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_statementHasArrayTokens"></a>3.6.7.4.28.35. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > statementHasArrayTokens`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_statementHasArrayTokens"></a>3.6.7.8.32.40. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > statementHasArrayTokens`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -5495,7 +5588,18 @@ resource arrays due to CloudFormation's token resolution limitations.
 Individual string tokens within literal arrays (e.g., `["arn:${token}:..."]`) are
 safe and do not cause conflicts, so they are not detected by this method.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_validateConditionCombinations"></a>3.6.7.4.28.36. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > validateConditionCombinations`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_tenancyConfig"></a>3.6.7.8.32.41. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > tenancyConfig`
+
+|                           |                                                                                                                                    |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                           |
+| **Required**              | No                                                                                                                                 |
+| **Additional properties** | Not allowed                                                                                                                        |
+| **Same definition as**    | [tenancyConfig](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_tenancyConfig) |
+
+**Description:** The tenancy configuration for this function.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_validateConditionCombinations"></a>3.6.7.8.32.42. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > validateConditionCombinations`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -5503,7 +5607,7 @@ safe and do not cause conflicts, so they are not detected by this method.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_validateConditions"></a>3.6.7.4.28.37. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > validateConditions`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_validateConditions"></a>3.6.7.8.32.43. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > validateConditions`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -5511,7 +5615,7 @@ safe and do not cause conflicts, so they are not detected by this method.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_version"></a>3.6.7.4.28.38. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > version`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_version"></a>3.6.7.8.32.44. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > version`
 
 |              |          |
 | ------------ | -------- |
@@ -5520,7 +5624,7 @@ safe and do not cause conflicts, so they are not detected by this method.
 
 **Description:** The most recently deployed version of this function.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_versionRef"></a>3.6.7.4.28.39. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > versionRef`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_versionRef"></a>3.6.7.8.32.45. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersion > versionRef`
 
 |                           |                                                                                                                              |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
@@ -5531,7 +5635,7 @@ safe and do not cause conflicts, so they are not detected by this method.
 
 **Description:** A reference to a Version resource.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersionOptions"></a>3.6.7.4.29. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersionOptions`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersionOptions"></a>3.6.7.8.33. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > currentVersionOptions`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -5539,7 +5643,7 @@ safe and do not cause conflicts, so they are not detected by this method.
 | **Required**              | No               |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue"></a>3.6.7.4.30. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue"></a>3.6.7.8.34. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue`
 
 |                           |                      |
 | ------------------------- | -------------------- |
@@ -5550,19 +5654,20 @@ safe and do not cause conflicts, so they are not detected by this method.
 
 **Description:** The DLQ (as queue) associated with this Lambda Function (this is an optional attribute).
 
-| Property                                                                                                                      | Pattern | Type             | Deprecated | Definition                                                                                                                | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| ----------------------------------------------------------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| - [encryptionMasterKey](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey ) | No      | object           | No         | In #/definitions/IKey                                                                                                     | If this queue is server-side encrypted, this is the KMS encryption key.                                                                                                                                                                                                                                                                                                                                                                                                |
-| - [encryptionType](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionType )           | No      | enum (of string) | No         | -                                                                                                                         | Whether the contents of the queue are encrypted, and by what type of key.                                                                                                                                                                                                                                                                                                                                                                                              |
-| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_env )                                 | No      | object           | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                       | The environment this resource belongs to.<br />For resources that are created and managed by the CDK<br />(generally, those created by creating new class instances like Role, Bucket, etc.),<br />this is always the same as the environment of the stack they belong to;<br />however, for imported resources<br />(those obtained from static methods like fromRoleArn, fromBucketName, etc.),<br />that might be different than the stack they were imported into. |
-| + [fifo](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_fifo )                               | No      | boolean          | No         | -                                                                                                                         | Whether this queue is an Amazon SQS FIFO queue. If false, this is a standard queue.                                                                                                                                                                                                                                                                                                                                                                                    |
-| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_node )                               | No      | object           | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [queueArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_queueArn )                       | No      | string           | No         | -                                                                                                                         | The ARN of this queue                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [queueName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_queueName )                     | No      | string           | No         | -                                                                                                                         | The name of this queue                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| + [queueUrl](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_queueUrl )                       | No      | string           | No         | -                                                                                                                         | The URL of this queue                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_stack )                             | No      | object           | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Property                                                                                                                      | Pattern | Type             | Deprecated | Definition                                                                                                                | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ----------------------------------------------------------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [encryptionMasterKey](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey ) | No      | object           | No         | In #/definitions/IKey                                                                                                     | If this queue is server-side encrypted, this is the KMS encryption key.                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| - [encryptionType](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionType )           | No      | enum (of string) | No         | -                                                                                                                         | Whether the contents of the queue are encrypted, and by what type of key.                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_env )                                 | No      | object           | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                       | The environment this resource belongs to.<br /><br />For resources that are created and managed in a Stack (those created by<br />creating new class instances like \`new Role()\`, \`new Bucket()\`, etc.), this<br />is always the same as the environment of the stack they belong to.<br /><br />For referenced resources (those obtained from referencing methods like<br />\`Role.fromRoleArn()\`, \`Bucket.fromBucketName()\`, etc.), they might be<br />different than the stack they were imported into. |
+| + [fifo](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_fifo )                               | No      | boolean          | No         | -                                                                                                                         | Whether this queue is an Amazon SQS FIFO queue. If false, this is a standard queue.                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_node )                               | No      | object           | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| + [queueArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_queueArn )                       | No      | string           | No         | -                                                                                                                         | The ARN of this queue                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| + [queueName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_queueName )                     | No      | string           | No         | -                                                                                                                         | The name of this queue                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| + [queueRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_queueRef )                       | No      | object           | No         | In #/definitions/QueueReference                                                                                           | A reference to a Queue resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| + [queueUrl](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_queueUrl )                       | No      | string           | No         | -                                                                                                                         | The URL of this queue                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_stack )                             | No      | object           | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey"></a>3.6.7.4.30.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey"></a>3.6.7.8.34.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey`
 
 |                           |                    |
 | ------------------------- | ------------------ |
@@ -5573,16 +5678,16 @@ safe and do not cause conflicts, so they are not detected by this method.
 
 **Description:** If this queue is server-side encrypted, this is the KMS encryption key.
 
-| Property                                                                                                                | Pattern | Type   | Deprecated | Definition                                                                                                                | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| ----------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_env )       | No      | object | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                       | The environment this resource belongs to.<br />For resources that are created and managed by the CDK<br />(generally, those created by creating new class instances like Role, Bucket, etc.),<br />this is always the same as the environment of the stack they belong to;<br />however, for imported resources<br />(those obtained from static methods like fromRoleArn, fromBucketName, etc.),<br />that might be different than the stack they were imported into. |
-| + [keyArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyArn ) | No      | string | No         | -                                                                                                                         | The ARN of the key.                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| + [keyId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyId )   | No      | string | No         | -                                                                                                                         | The ID of the key<br />(the part that looks something like: 1234abcd-12ab-34cd-56ef-1234567890ab).                                                                                                                                                                                                                                                                                                                                                                     |
-| + [keyRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef ) | No      | object | No         | In #/definitions/KeyReference                                                                                             | A reference to a Key resource.                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_node )     | No      | object | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_stack )   | No      | object | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Property                                                                                                                | Pattern | Type   | Deprecated | Definition                                                                                                                | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ----------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_env )       | No      | object | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                       | The environment this resource belongs to.<br /><br />For resources that are created and managed in a Stack (those created by<br />creating new class instances like \`new Role()\`, \`new Bucket()\`, etc.), this<br />is always the same as the environment of the stack they belong to.<br /><br />For referenced resources (those obtained from referencing methods like<br />\`Role.fromRoleArn()\`, \`Bucket.fromBucketName()\`, etc.), they might be<br />different than the stack they were imported into. |
+| + [keyArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyArn ) | No      | string | No         | -                                                                                                                         | The ARN of the key.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| + [keyId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyId )   | No      | string | No         | -                                                                                                                         | The ID of the key<br />(the part that looks something like: 1234abcd-12ab-34cd-56ef-1234567890ab).                                                                                                                                                                                                                                                                                                                                                                                                                |
+| + [keyRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef ) | No      | object | No         | In #/definitions/KeyReference                                                                                             | A reference to a Key resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_node )     | No      | object | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_stack )   | No      | object | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_env"></a>3.6.7.4.30.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > env`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_env"></a>3.6.7.8.34.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > env`
 
 |                           |                                                            |
 | ------------------------- | ---------------------------------------------------------- |
@@ -5592,14 +5697,16 @@ safe and do not cause conflicts, so they are not detected by this method.
 | **Same definition as**    | [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env) |
 
 **Description:** The environment this resource belongs to.
-For resources that are created and managed by the CDK
-(generally, those created by creating new class instances like Role, Bucket, etc.),
-this is always the same as the environment of the stack they belong to;
-however, for imported resources
-(those obtained from static methods like fromRoleArn, fromBucketName, etc.),
-that might be different than the stack they were imported into.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyArn"></a>3.6.7.4.30.1.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyArn`
+For resources that are created and managed in a Stack (those created by
+creating new class instances like `new Role()`, `new Bucket()`, etc.), this
+is always the same as the environment of the stack they belong to.
+
+For referenced resources (those obtained from referencing methods like
+`Role.fromRoleArn()`, `Bucket.fromBucketName()`, etc.), they might be
+different than the stack they were imported into.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyArn"></a>3.6.7.8.34.1.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyArn`
 
 |              |          |
 | ------------ | -------- |
@@ -5608,7 +5715,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The ARN of the key.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyId"></a>3.6.7.4.30.1.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyId`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyId"></a>3.6.7.8.34.1.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyId`
 
 |              |          |
 | ------------ | -------- |
@@ -5618,7 +5725,7 @@ that might be different than the stack they were imported into.
 **Description:** The ID of the key
 (the part that looks something like: 1234abcd-12ab-34cd-56ef-1234567890ab).
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef"></a>3.6.7.4.30.1.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyRef`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef"></a>3.6.7.8.34.1.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyRef`
 
 |                           |                            |
 | ------------------------- | -------------------------- |
@@ -5634,7 +5741,7 @@ that might be different than the stack they were imported into.
 | + [keyArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef_keyArn ) | No      | string | No         | -          | The ARN of the Key resource.   |
 | + [keyId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef_keyId )   | No      | string | No         | -          | The KeyId of the Key resource. |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef_keyArn"></a>3.6.7.4.30.1.4.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyRef > keyArn`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef_keyArn"></a>3.6.7.8.34.1.4.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyRef > keyArn`
 
 |              |          |
 | ------------ | -------- |
@@ -5643,7 +5750,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The ARN of the Key resource.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef_keyId"></a>3.6.7.4.30.1.4.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyRef > keyId`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef_keyId"></a>3.6.7.8.34.1.4.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyRef > keyId`
 
 |              |          |
 | ------------ | -------- |
@@ -5652,7 +5759,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The KeyId of the Key resource.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_node"></a>3.6.7.4.30.1.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > node`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_node"></a>3.6.7.8.34.1.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > node`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -5663,7 +5770,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The tree node.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_stack"></a>3.6.7.4.30.1.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > stack`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_stack"></a>3.6.7.8.34.1.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > stack`
 
 |                           |                                                                                                                  |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -5674,7 +5781,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The stack in which this resource is defined.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionType"></a>3.6.7.4.30.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionType`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionType"></a>3.6.7.8.34.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionType`
 
 |              |                    |
 | ------------ | ------------------ |
@@ -5689,7 +5796,7 @@ Must be one of:
 * "NONE"
 * "SQS_MANAGED"
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_env"></a>3.6.7.4.30.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > env`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_env"></a>3.6.7.8.34.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > env`
 
 |                           |                                                            |
 | ------------------------- | ---------------------------------------------------------- |
@@ -5699,14 +5806,16 @@ Must be one of:
 | **Same definition as**    | [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env) |
 
 **Description:** The environment this resource belongs to.
-For resources that are created and managed by the CDK
-(generally, those created by creating new class instances like Role, Bucket, etc.),
-this is always the same as the environment of the stack they belong to;
-however, for imported resources
-(those obtained from static methods like fromRoleArn, fromBucketName, etc.),
-that might be different than the stack they were imported into.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_fifo"></a>3.6.7.4.30.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > fifo`
+For resources that are created and managed in a Stack (those created by
+creating new class instances like `new Role()`, `new Bucket()`, etc.), this
+is always the same as the environment of the stack they belong to.
+
+For referenced resources (those obtained from referencing methods like
+`Role.fromRoleArn()`, `Bucket.fromBucketName()`, etc.), they might be
+different than the stack they were imported into.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_fifo"></a>3.6.7.8.34.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > fifo`
 
 |              |           |
 | ------------ | --------- |
@@ -5715,7 +5824,7 @@ that might be different than the stack they were imported into.
 
 **Description:** Whether this queue is an Amazon SQS FIFO queue. If false, this is a standard queue.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_node"></a>3.6.7.4.30.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > node`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_node"></a>3.6.7.8.34.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > node`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -5726,7 +5835,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The tree node.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_queueArn"></a>3.6.7.4.30.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > queueArn`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_queueArn"></a>3.6.7.8.34.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > queueArn`
 
 |              |          |
 | ------------ | -------- |
@@ -5735,7 +5844,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The ARN of this queue
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_queueName"></a>3.6.7.4.30.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > queueName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_queueName"></a>3.6.7.8.34.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > queueName`
 
 |              |          |
 | ------------ | -------- |
@@ -5744,7 +5853,41 @@ that might be different than the stack they were imported into.
 
 **Description:** The name of this queue
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_queueUrl"></a>3.6.7.4.30.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > queueUrl`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_queueRef"></a>3.6.7.8.34.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > queueRef`
+
+|                           |                              |
+| ------------------------- | ---------------------------- |
+| **Type**                  | `object`                     |
+| **Required**              | Yes                          |
+| **Additional properties** | Not allowed                  |
+| **Defined in**            | #/definitions/QueueReference |
+
+**Description:** A reference to a Queue resource.
+
+| Property                                                                                                         | Pattern | Type   | Deprecated | Definition | Title/Description                   |
+| ---------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------------------------- |
+| + [queueArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_queueRef_queueArn ) | No      | string | No         | -          | The ARN of the Queue resource.      |
+| + [queueUrl](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_queueRef_queueUrl ) | No      | string | No         | -          | The QueueUrl of the Queue resource. |
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_queueRef_queueArn"></a>3.6.7.8.34.8.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > queueRef > queueArn`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `string` |
+| **Required** | Yes      |
+
+**Description:** The ARN of the Queue resource.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_queueRef_queueUrl"></a>3.6.7.8.34.8.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > queueRef > queueUrl`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `string` |
+| **Required** | Yes      |
+
+**Description:** The QueueUrl of the Queue resource.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_queueUrl"></a>3.6.7.8.34.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > queueUrl`
 
 |              |          |
 | ------------ | -------- |
@@ -5753,7 +5896,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The URL of this queue
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_stack"></a>3.6.7.4.30.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > stack`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_stack"></a>3.6.7.8.34.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > stack`
 
 |                           |                                                                                                                  |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -5764,7 +5907,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The stack in which this resource is defined.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic"></a>3.6.7.4.31. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic"></a>3.6.7.8.35. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic`
 
 |                           |                      |
 | ------------------------- | -------------------- |
@@ -5775,18 +5918,19 @@ that might be different than the stack they were imported into.
 
 **Description:** The DLQ (as topic) associated with this Lambda Function (this is an optional attribute).
 
-| Property                                                                                                                                  | Pattern | Type    | Deprecated | Definition                                                                                                                | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| ----------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| + [contentBasedDeduplication](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_contentBasedDeduplication ) | No      | boolean | No         | -                                                                                                                         | Enables content-based deduplication for FIFO topics.                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_env )                                             | No      | object  | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                       | The environment this resource belongs to.<br />For resources that are created and managed by the CDK<br />(generally, those created by creating new class instances like Role, Bucket, etc.),<br />this is always the same as the environment of the stack they belong to;<br />however, for imported resources<br />(those obtained from static methods like fromRoleArn, fromBucketName, etc.),<br />that might be different than the stack they were imported into. |
-| + [fifo](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_fifo )                                           | No      | boolean | No         | -                                                                                                                         | Whether this topic is an Amazon SNS FIFO queue. If false, this is a standard topic.                                                                                                                                                                                                                                                                                                                                                                                    |
-| - [masterKey](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_masterKey )                                 | No      | object  | No         | In #/definitions/IKey                                                                                                     | A KMS Key, either managed by this CDK app, or imported.<br /><br />This property applies only to server-side encryption.                                                                                                                                                                                                                                                                                                                                               |
-| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_node )                                           | No      | object  | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_stack )                                         | No      | object  | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| + [topicArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_topicArn )                                   | No      | string  | No         | -                                                                                                                         | The ARN of the topic                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| + [topicName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_topicName )                                 | No      | string  | No         | -                                                                                                                         | The name of the topic                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Property                                                                                                                                  | Pattern | Type    | Deprecated | Definition                                                                                                                | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ----------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| + [contentBasedDeduplication](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_contentBasedDeduplication ) | No      | boolean | No         | -                                                                                                                         | Enables content-based deduplication for FIFO topics.                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_env )                                             | No      | object  | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                       | The environment this resource belongs to.<br /><br />For resources that are created and managed in a Stack (those created by<br />creating new class instances like \`new Role()\`, \`new Bucket()\`, etc.), this<br />is always the same as the environment of the stack they belong to.<br /><br />For referenced resources (those obtained from referencing methods like<br />\`Role.fromRoleArn()\`, \`Bucket.fromBucketName()\`, etc.), they might be<br />different than the stack they were imported into. |
+| + [fifo](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_fifo )                                           | No      | boolean | No         | -                                                                                                                         | Whether this topic is an Amazon SNS FIFO queue. If false, this is a standard topic.                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| - [masterKey](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_masterKey )                                 | No      | object  | No         | In #/definitions/IKey                                                                                                     | A KMS Key, either managed by this CDK app, or imported.<br /><br />This property applies only to server-side encryption.                                                                                                                                                                                                                                                                                                                                                                                          |
+| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_node )                                           | No      | object  | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_stack )                                         | No      | object  | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| + [topicArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_topicArn )                                   | No      | string  | No         | -                                                                                                                         | The ARN of the topic                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| + [topicName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_topicName )                                 | No      | string  | No         | -                                                                                                                         | The name of the topic                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| + [topicRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_topicRef )                                   | No      | object  | No         | In #/definitions/TopicReference                                                                                           | A reference to a Topic resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_contentBasedDeduplication"></a>3.6.7.4.31.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic > contentBasedDeduplication`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_contentBasedDeduplication"></a>3.6.7.8.35.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic > contentBasedDeduplication`
 
 |              |           |
 | ------------ | --------- |
@@ -5795,7 +5939,7 @@ that might be different than the stack they were imported into.
 
 **Description:** Enables content-based deduplication for FIFO topics.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_env"></a>3.6.7.4.31.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic > env`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_env"></a>3.6.7.8.35.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic > env`
 
 |                           |                                                            |
 | ------------------------- | ---------------------------------------------------------- |
@@ -5805,14 +5949,16 @@ that might be different than the stack they were imported into.
 | **Same definition as**    | [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env) |
 
 **Description:** The environment this resource belongs to.
-For resources that are created and managed by the CDK
-(generally, those created by creating new class instances like Role, Bucket, etc.),
-this is always the same as the environment of the stack they belong to;
-however, for imported resources
-(those obtained from static methods like fromRoleArn, fromBucketName, etc.),
-that might be different than the stack they were imported into.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_fifo"></a>3.6.7.4.31.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic > fifo`
+For resources that are created and managed in a Stack (those created by
+creating new class instances like `new Role()`, `new Bucket()`, etc.), this
+is always the same as the environment of the stack they belong to.
+
+For referenced resources (those obtained from referencing methods like
+`Role.fromRoleArn()`, `Bucket.fromBucketName()`, etc.), they might be
+different than the stack they were imported into.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_fifo"></a>3.6.7.8.35.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic > fifo`
 
 |              |           |
 | ------------ | --------- |
@@ -5821,7 +5967,7 @@ that might be different than the stack they were imported into.
 
 **Description:** Whether this topic is an Amazon SNS FIFO queue. If false, this is a standard topic.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_masterKey"></a>3.6.7.4.31.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic > masterKey`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_masterKey"></a>3.6.7.8.35.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic > masterKey`
 
 |                           |                    |
 | ------------------------- | ------------------ |
@@ -5835,16 +5981,16 @@ that might be different than the stack they were imported into.
 
 This property applies only to server-side encryption.
 
-| Property                                                                                                                | Pattern | Type   | Deprecated | Definition                                                                                                                | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| ----------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_env )       | No      | object | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                       | The environment this resource belongs to.<br />For resources that are created and managed by the CDK<br />(generally, those created by creating new class instances like Role, Bucket, etc.),<br />this is always the same as the environment of the stack they belong to;<br />however, for imported resources<br />(those obtained from static methods like fromRoleArn, fromBucketName, etc.),<br />that might be different than the stack they were imported into. |
-| + [keyArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyArn ) | No      | string | No         | -                                                                                                                         | The ARN of the key.                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| + [keyId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyId )   | No      | string | No         | -                                                                                                                         | The ID of the key<br />(the part that looks something like: 1234abcd-12ab-34cd-56ef-1234567890ab).                                                                                                                                                                                                                                                                                                                                                                     |
-| + [keyRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef ) | No      | object | No         | In #/definitions/KeyReference                                                                                             | A reference to a Key resource.                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_node )     | No      | object | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_stack )   | No      | object | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Property                                                                                                                | Pattern | Type   | Deprecated | Definition                                                                                                                | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ----------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_env )       | No      | object | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                       | The environment this resource belongs to.<br /><br />For resources that are created and managed in a Stack (those created by<br />creating new class instances like \`new Role()\`, \`new Bucket()\`, etc.), this<br />is always the same as the environment of the stack they belong to.<br /><br />For referenced resources (those obtained from referencing methods like<br />\`Role.fromRoleArn()\`, \`Bucket.fromBucketName()\`, etc.), they might be<br />different than the stack they were imported into. |
+| + [keyArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyArn ) | No      | string | No         | -                                                                                                                         | The ARN of the key.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| + [keyId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyId )   | No      | string | No         | -                                                                                                                         | The ID of the key<br />(the part that looks something like: 1234abcd-12ab-34cd-56ef-1234567890ab).                                                                                                                                                                                                                                                                                                                                                                                                                |
+| + [keyRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef ) | No      | object | No         | In #/definitions/KeyReference                                                                                             | A reference to a Key resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_node )     | No      | object | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_stack )   | No      | object | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_env"></a>3.6.7.4.31.4.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > env`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_env"></a>3.6.7.8.35.4.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > env`
 
 |                           |                                                            |
 | ------------------------- | ---------------------------------------------------------- |
@@ -5854,14 +6000,16 @@ This property applies only to server-side encryption.
 | **Same definition as**    | [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env) |
 
 **Description:** The environment this resource belongs to.
-For resources that are created and managed by the CDK
-(generally, those created by creating new class instances like Role, Bucket, etc.),
-this is always the same as the environment of the stack they belong to;
-however, for imported resources
-(those obtained from static methods like fromRoleArn, fromBucketName, etc.),
-that might be different than the stack they were imported into.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyArn"></a>3.6.7.4.31.4.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyArn`
+For resources that are created and managed in a Stack (those created by
+creating new class instances like `new Role()`, `new Bucket()`, etc.), this
+is always the same as the environment of the stack they belong to.
+
+For referenced resources (those obtained from referencing methods like
+`Role.fromRoleArn()`, `Bucket.fromBucketName()`, etc.), they might be
+different than the stack they were imported into.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyArn"></a>3.6.7.8.35.4.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyArn`
 
 |              |          |
 | ------------ | -------- |
@@ -5870,7 +6018,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The ARN of the key.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyId"></a>3.6.7.4.31.4.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyId`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyId"></a>3.6.7.8.35.4.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyId`
 
 |              |          |
 | ------------ | -------- |
@@ -5880,7 +6028,7 @@ that might be different than the stack they were imported into.
 **Description:** The ID of the key
 (the part that looks something like: 1234abcd-12ab-34cd-56ef-1234567890ab).
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef"></a>3.6.7.4.31.4.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyRef`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef"></a>3.6.7.8.35.4.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyRef`
 
 |                           |                            |
 | ------------------------- | -------------------------- |
@@ -5896,7 +6044,7 @@ that might be different than the stack they were imported into.
 | + [keyArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef_keyArn ) | No      | string | No         | -          | The ARN of the Key resource.   |
 | + [keyId](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef_keyId )   | No      | string | No         | -          | The KeyId of the Key resource. |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef_keyArn"></a>3.6.7.4.31.4.4.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyRef > keyArn`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef_keyArn"></a>3.6.7.8.35.4.4.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyRef > keyArn`
 
 |              |          |
 | ------------ | -------- |
@@ -5905,7 +6053,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The ARN of the Key resource.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef_keyId"></a>3.6.7.4.31.4.4.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyRef > keyId`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_keyRef_keyId"></a>3.6.7.8.35.4.4.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > keyRef > keyId`
 
 |              |          |
 | ------------ | -------- |
@@ -5914,7 +6062,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The KeyId of the Key resource.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_node"></a>3.6.7.4.31.4.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > node`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_node"></a>3.6.7.8.35.4.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > node`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -5925,7 +6073,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The tree node.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_stack"></a>3.6.7.4.31.4.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > stack`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterQueue_encryptionMasterKey_stack"></a>3.6.7.8.35.4.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterQueue > encryptionMasterKey > stack`
 
 |                           |                                                                                                                  |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -5936,7 +6084,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The stack in which this resource is defined.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_node"></a>3.6.7.4.31.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic > node`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_node"></a>3.6.7.8.35.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic > node`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -5947,7 +6095,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The tree node.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_stack"></a>3.6.7.4.31.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic > stack`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_stack"></a>3.6.7.8.35.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic > stack`
 
 |                           |                                                                                                                  |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -5958,7 +6106,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The stack in which this resource is defined.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_topicArn"></a>3.6.7.4.31.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic > topicArn`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_topicArn"></a>3.6.7.8.35.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic > topicArn`
 
 |              |          |
 | ------------ | -------- |
@@ -5967,7 +6115,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The ARN of the topic
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_topicName"></a>3.6.7.4.31.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic > topicName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_topicName"></a>3.6.7.8.35.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic > topicName`
 
 |              |          |
 | ------------ | -------- |
@@ -5976,7 +6124,31 @@ that might be different than the stack they were imported into.
 
 **Description:** The name of the topic
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_env"></a>3.6.7.4.32. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > env`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_topicRef"></a>3.6.7.8.35.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic > topicRef`
+
+|                           |                              |
+| ------------------------- | ---------------------------- |
+| **Type**                  | `object`                     |
+| **Required**              | Yes                          |
+| **Additional properties** | Not allowed                  |
+| **Defined in**            | #/definitions/TopicReference |
+
+**Description:** A reference to a Topic resource.
+
+| Property                                                                                                         | Pattern | Type   | Deprecated | Definition | Title/Description                   |
+| ---------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------------------------- |
+| + [topicArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_topicRef_topicArn ) | No      | string | No         | -          | The TopicArn of the Topic resource. |
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_deadLetterTopic_topicRef_topicArn"></a>3.6.7.8.35.9.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > deadLetterTopic > topicRef > topicArn`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `string` |
+| **Required** | Yes      |
+
+**Description:** The TopicArn of the Topic resource.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_env"></a>3.6.7.8.36. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > env`
 
 |                           |                                                            |
 | ------------------------- | ---------------------------------------------------------- |
@@ -5986,14 +6158,16 @@ that might be different than the stack they were imported into.
 | **Same definition as**    | [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env) |
 
 **Description:** The environment this resource belongs to.
-For resources that are created and managed by the CDK
-(generally, those created by creating new class instances like Role, Bucket, etc.),
-this is always the same as the environment of the stack they belong to;
-however, for imported resources
-(those obtained from static methods like fromRoleArn, fromBucketName, etc.),
-that might be different than the stack they were imported into.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_environment"></a>3.6.7.4.33. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > environment`
+For resources that are created and managed in a Stack (those created by
+creating new class instances like `new Role()`, `new Bucket()`, etc.), this
+is always the same as the environment of the stack they belong to.
+
+For referenced resources (those obtained from referencing methods like
+`Role.fromRoleArn()`, `Bucket.fromBucketName()`, etc.), they might be
+different than the stack they were imported into.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_environment"></a>3.6.7.8.37. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > environment`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -6003,7 +6177,7 @@ that might be different than the stack they were imported into.
 
 **Description:** Environment variables for this function
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_functionArn"></a>3.6.7.4.34. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > functionArn`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_functionArn"></a>3.6.7.8.38. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > functionArn`
 
 |              |          |
 | ------------ | -------- |
@@ -6012,7 +6186,7 @@ that might be different than the stack they were imported into.
 
 **Description:** ARN of this function
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_functionName"></a>3.6.7.4.35. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > functionName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_functionName"></a>3.6.7.8.39. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > functionName`
 
 |              |          |
 | ------------ | -------- |
@@ -6021,7 +6195,7 @@ that might be different than the stack they were imported into.
 
 **Description:** Name of this function
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_functionRef"></a>3.6.7.4.36. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > functionRef`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_functionRef"></a>3.6.7.8.40. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > functionRef`
 
 |                           |                                                                                                           |
 | ------------------------- | --------------------------------------------------------------------------------------------------------- |
@@ -6032,7 +6206,7 @@ that might be different than the stack they were imported into.
 
 **Description:** A reference to a Function resource.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_getLoggingConfig"></a>3.6.7.4.37. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > getLoggingConfig`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_getLoggingConfig"></a>3.6.7.8.41. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > getLoggingConfig`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -6044,7 +6218,7 @@ that might be different than the stack they were imported into.
 This method returns the function LoggingConfig Property if the property is set on the
 function and undefined if not.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_grant"></a>3.6.7.4.38. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > grant`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_grant"></a>3.6.7.8.42. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > grant`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -6052,7 +6226,7 @@ function and undefined if not.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_grantPrincipal"></a>3.6.7.4.39. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > grantPrincipal`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_grantPrincipal"></a>3.6.7.8.43. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > grantPrincipal`
 
 |                           |                                                                                                                 |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------- |
@@ -6063,7 +6237,7 @@ function and undefined if not.
 
 **Description:** The principal this Lambda Function is running as
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_hashMixins"></a>3.6.7.4.40. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > hashMixins`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_hashMixins"></a>3.6.7.8.44. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > hashMixins`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -6071,7 +6245,7 @@ function and undefined if not.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_isBoundToVpc"></a>3.6.7.4.41. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > isBoundToVpc`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_isBoundToVpc"></a>3.6.7.8.45. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > isBoundToVpc`
 
 |              |           |
 | ------------ | --------- |
@@ -6082,7 +6256,7 @@ function and undefined if not.
 
 If this is is `false`, trying to access the `connections` object will fail.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_isPrincipalWithConditions"></a>3.6.7.4.42. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > isPrincipalWithConditions`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_isPrincipalWithConditions"></a>3.6.7.8.46. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > isPrincipalWithConditions`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -6090,7 +6264,7 @@ If this is is `false`, trying to access the `connections` object will fail.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_isQueue"></a>3.6.7.4.43. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > isQueue`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_isQueue"></a>3.6.7.8.47. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > isQueue`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -6098,7 +6272,7 @@ If this is is `false`, trying to access the `connections` object will fail.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_latestVersion"></a>3.6.7.4.44. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > latestVersion`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_latestVersion"></a>3.6.7.8.48. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > latestVersion`
 
 |                           |                                                                                                                      |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------- |
@@ -6116,7 +6290,7 @@ different invocations.
 To obtain a reference to an explicit version which references the current
 function configuration, use `lambdaFunction.currentVersion` instead.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup"></a>3.6.7.4.45. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > logGroup`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup"></a>3.6.7.8.49. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > logGroup`
 
 |                           |                         |
 | ------------------------- | ----------------------- |
@@ -6134,15 +6308,16 @@ period (never expire, by default).
 Further, if the log group already exists and the `logRetention` is not set, the custom resource will reset the log retention
 to never expire even if it was configured with a different value.
 
-| Property                                                                                                 | Pattern | Type   | Deprecated | Definition                                                                                                                | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| -------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_env )                   | No      | object | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                       | The environment this resource belongs to.<br />For resources that are created and managed by the CDK<br />(generally, those created by creating new class instances like Role, Bucket, etc.),<br />this is always the same as the environment of the stack they belong to;<br />however, for imported resources<br />(those obtained from static methods like fromRoleArn, fromBucketName, etc.),<br />that might be different than the stack they were imported into. |
-| + [logGroupArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_logGroupArn )   | No      | string | No         | -                                                                                                                         | The ARN of this log group, with ':*' appended                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| + [logGroupName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_logGroupName ) | No      | string | No         | -                                                                                                                         | The name of this log group                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_node )                 | No      | object | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_stack )               | No      | object | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Property                                                                                                 | Pattern | Type   | Deprecated | Definition                                                                                                                | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| -------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| + [env](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_env )                   | No      | object | No         | Same as [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env )                                                       | The environment this resource belongs to.<br /><br />For resources that are created and managed in a Stack (those created by<br />creating new class instances like \`new Role()\`, \`new Bucket()\`, etc.), this<br />is always the same as the environment of the stack they belong to.<br /><br />For referenced resources (those obtained from referencing methods like<br />\`Role.fromRoleArn()\`, \`Bucket.fromBucketName()\`, etc.), they might be<br />different than the stack they were imported into. |
+| + [logGroupArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_logGroupArn )   | No      | string | No         | -                                                                                                                         | The ARN of this log group, with ':*' appended                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| + [logGroupName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_logGroupName ) | No      | string | No         | -                                                                                                                         | The name of this log group                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| + [logGroupRef](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_logGroupRef )   | No      | object | No         | In #/definitions/LogGroupReference                                                                                        | A reference to a LogGroup resource.                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| + [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_node )                 | No      | object | No         | Same as [node](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_node )   | The tree node.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| + [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_stack )               | No      | object | No         | Same as [stack](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__connections_securityGroups_items_stack ) | The stack in which this resource is defined.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_env"></a>3.6.7.4.45.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > logGroup > env`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_env"></a>3.6.7.8.49.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > logGroup > env`
 
 |                           |                                                            |
 | ------------------------- | ---------------------------------------------------------- |
@@ -6152,14 +6327,16 @@ to never expire even if it was configured with a different value.
 | **Same definition as**    | [env](#sagemakerBlueprint_domainConfig_domainConfigCr_env) |
 
 **Description:** The environment this resource belongs to.
-For resources that are created and managed by the CDK
-(generally, those created by creating new class instances like Role, Bucket, etc.),
-this is always the same as the environment of the stack they belong to;
-however, for imported resources
-(those obtained from static methods like fromRoleArn, fromBucketName, etc.),
-that might be different than the stack they were imported into.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_logGroupArn"></a>3.6.7.4.45.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > logGroup > logGroupArn`
+For resources that are created and managed in a Stack (those created by
+creating new class instances like `new Role()`, `new Bucket()`, etc.), this
+is always the same as the environment of the stack they belong to.
+
+For referenced resources (those obtained from referencing methods like
+`Role.fromRoleArn()`, `Bucket.fromBucketName()`, etc.), they might be
+different than the stack they were imported into.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_logGroupArn"></a>3.6.7.8.49.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > logGroup > logGroupArn`
 
 |              |          |
 | ------------ | -------- |
@@ -6168,7 +6345,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The ARN of this log group, with ':*' appended
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_logGroupName"></a>3.6.7.4.45.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > logGroup > logGroupName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_logGroupName"></a>3.6.7.8.49.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > logGroup > logGroupName`
 
 |              |          |
 | ------------ | -------- |
@@ -6177,7 +6354,41 @@ that might be different than the stack they were imported into.
 
 **Description:** The name of this log group
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_node"></a>3.6.7.4.45.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > logGroup > node`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_logGroupRef"></a>3.6.7.8.49.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > logGroup > logGroupRef`
+
+|                           |                                 |
+| ------------------------- | ------------------------------- |
+| **Type**                  | `object`                        |
+| **Required**              | Yes                             |
+| **Additional properties** | Not allowed                     |
+| **Defined in**            | #/definitions/LogGroupReference |
+
+**Description:** A reference to a LogGroup resource.
+
+| Property                                                                                                             | Pattern | Type   | Deprecated | Definition | Title/Description                          |
+| -------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------ |
+| + [logGroupArn](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_logGroupRef_logGroupArn )   | No      | string | No         | -          | The ARN of the LogGroup resource.          |
+| + [logGroupName](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_logGroupRef_logGroupName ) | No      | string | No         | -          | The LogGroupName of the LogGroup resource. |
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_logGroupRef_logGroupArn"></a>3.6.7.8.49.4.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > logGroup > logGroupRef > logGroupArn`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `string` |
+| **Required** | Yes      |
+
+**Description:** The ARN of the LogGroup resource.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_logGroupRef_logGroupName"></a>3.6.7.8.49.4.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > logGroup > logGroupRef > logGroupName`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `string` |
+| **Required** | Yes      |
+
+**Description:** The LogGroupName of the LogGroup resource.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_node"></a>3.6.7.8.49.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > logGroup > node`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -6188,7 +6399,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The tree node.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_stack"></a>3.6.7.4.45.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > logGroup > stack`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_logGroup_stack"></a>3.6.7.8.49.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > logGroup > stack`
 
 |                           |                                                                                                                  |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -6199,7 +6410,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The stack in which this resource is defined.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_node"></a>3.6.7.4.46. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > node`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_node"></a>3.6.7.8.50. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > node`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -6210,7 +6421,7 @@ that might be different than the stack they were imported into.
 
 **Description:** The tree node.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_parsePermissionPrincipal"></a>3.6.7.4.47. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > parsePermissionPrincipal`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_parsePermissionPrincipal"></a>3.6.7.8.51. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > parsePermissionPrincipal`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -6227,7 +6438,7 @@ outright because they may be tokens.
 Try to recognize some specific Principal classes first, then try a generic
 fallback.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_permissionsNode"></a>3.6.7.4.48. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > permissionsNode`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_permissionsNode"></a>3.6.7.8.52. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > permissionsNode`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -6238,7 +6449,7 @@ fallback.
 
 **Description:** The construct node where permissions are attached.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_physicalName"></a>3.6.7.4.49. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > physicalName`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_physicalName"></a>3.6.7.8.53. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > physicalName`
 
 |              |          |
 | ------------ | -------- |
@@ -6254,7 +6465,7 @@ This value will resolve to one of the following:
 - a concrete name generated automatically during synthesis, in
   cross-environment scenarios.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_renderEnvironment"></a>3.6.7.4.50. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > renderEnvironment`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_renderDurableConfig"></a>3.6.7.8.54. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > renderDurableConfig`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -6262,7 +6473,7 @@ This value will resolve to one of the following:
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_renderLayers"></a>3.6.7.4.51. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > renderLayers`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_renderEnvironment"></a>3.6.7.8.55. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > renderEnvironment`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -6270,7 +6481,23 @@ This value will resolve to one of the following:
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_resourceArnsForGrantInvoke"></a>3.6.7.4.52. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > resourceArnsForGrantInvoke`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_renderLayers"></a>3.6.7.8.56. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > renderLayers`
+
+|                           |                  |
+| ------------------------- | ---------------- |
+| **Type**                  | `object`         |
+| **Required**              | Yes              |
+| **Additional properties** | Any type allowed |
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_resource"></a>3.6.7.8.57. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > resource`
+
+|                           |                  |
+| ------------------------- | ---------------- |
+| **Type**                  | `object`         |
+| **Required**              | Yes              |
+| **Additional properties** | Any type allowed |
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_resourceArnsForGrantInvoke"></a>3.6.7.8.58. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > resourceArnsForGrantInvoke`
 
 |              |                   |
 | ------------ | ----------------- |
@@ -6291,14 +6518,14 @@ This value will resolve to one of the following:
 | ------------------------------------------------------------------------------------------------------------------------------------ | ----------- |
 | [resourceArnsForGrantInvoke items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_resourceArnsForGrantInvoke_items) | -           |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_resourceArnsForGrantInvoke_items"></a>3.6.7.4.52.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > resourceArnsForGrantInvoke > resourceArnsForGrantInvoke items
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_resourceArnsForGrantInvoke_items"></a>3.6.7.8.58.1. root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > resourceArnsForGrantInvoke > resourceArnsForGrantInvoke items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_role"></a>3.6.7.4.53. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > role`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_role"></a>3.6.7.8.59. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > role`
 
 |                           |                                                                                                                  |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -6309,18 +6536,116 @@ This value will resolve to one of the following:
 
 **Description:** Execution role associated with this function
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime"></a>3.6.7.4.54. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > runtime`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime"></a>3.6.7.8.60. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > runtime`
 
-|                           |                                                                                                                                                                                                                 |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                                        |
-| **Required**              | Yes                                                                                                                                                                                                             |
-| **Additional properties** | Not allowed                                                                                                                                                                                                     |
-| **Same definition as**    | [sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction__layers_items_compatibleRuntimes_items) |
+|                           |                       |
+| ------------------------- | --------------------- |
+| **Type**                  | `object`              |
+| **Required**              | Yes                   |
+| **Additional properties** | Not allowed           |
+| **Defined in**            | #/definitions/Runtime |
 
 **Description:** The runtime configured for this lambda.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_stack"></a>3.6.7.4.55. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > stack`
+| Property                                                                                                                          | Pattern | Type              | Deprecated | Definition                   | Title/Description                                                                                   |
+| --------------------------------------------------------------------------------------------------------------------------------- | ------- | ----------------- | ---------- | ---------------------------- | --------------------------------------------------------------------------------------------------- |
+| + [bundlingImage](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime_bundlingImage )                         | No      | object            | No         | In #/definitions/DockerImage | The bundling Docker image for this runtime.                                                         |
+| - [family](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime_family )                                       | No      | enum (of integer) | No         | -                            | The runtime family.                                                                                 |
+| + [isVariable](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime_isVariable )                               | No      | boolean           | No         | -                            | Enabled for runtime enums that always target the latest available.                                  |
+| + [name](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime_name )                                           | No      | string            | No         | -                            | The name of this runtime, as expected by the Lambda resource.                                       |
+| + [supportsCodeGuruProfiling](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime_supportsCodeGuruProfiling ) | No      | boolean           | No         | -                            | Whether this runtime is integrated with and supported for profiling using Amazon CodeGuru Profiler. |
+| + [supportsInlineCode](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime_supportsInlineCode )               | No      | boolean           | No         | -                            | Whether the \`\`ZipFile\`\` (aka inline code) property can be used with this<br />runtime.          |
+| + [supportsSnapStart](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime_supportsSnapStart )                 | No      | boolean           | No         | -                            | Whether this runtime supports snapstart.                                                            |
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime_bundlingImage"></a>3.6.7.8.60.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > runtime > bundlingImage`
+
+|                           |                           |
+| ------------------------- | ------------------------- |
+| **Type**                  | `object`                  |
+| **Required**              | Yes                       |
+| **Additional properties** | Not allowed               |
+| **Defined in**            | #/definitions/DockerImage |
+
+**Description:** The bundling Docker image for this runtime.
+
+| Property                                                                                                | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| + [image](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime_bundlingImage_image ) | No      | string | No         | -          | The Docker image  |
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime_bundlingImage_image"></a>3.6.7.8.60.1.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > runtime > bundlingImage > image`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `string` |
+| **Required** | Yes      |
+
+**Description:** The Docker image
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime_family"></a>3.6.7.8.60.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > runtime > family`
+
+|              |                     |
+| ------------ | ------------------- |
+| **Type**     | `enum (of integer)` |
+| **Required** | No                  |
+
+**Description:** The runtime family.
+
+Must be one of:
+* 0
+* 1
+* 2
+* 3
+* 4
+* 5
+* 6
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime_isVariable"></a>3.6.7.8.60.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > runtime > isVariable`
+
+|              |           |
+| ------------ | --------- |
+| **Type**     | `boolean` |
+| **Required** | Yes       |
+
+**Description:** Enabled for runtime enums that always target the latest available.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime_name"></a>3.6.7.8.60.4. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > runtime > name`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `string` |
+| **Required** | Yes      |
+
+**Description:** The name of this runtime, as expected by the Lambda resource.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime_supportsCodeGuruProfiling"></a>3.6.7.8.60.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > runtime > supportsCodeGuruProfiling`
+
+|              |           |
+| ------------ | --------- |
+| **Type**     | `boolean` |
+| **Required** | Yes       |
+
+**Description:** Whether this runtime is integrated with and supported for profiling using Amazon CodeGuru Profiler.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime_supportsInlineCode"></a>3.6.7.8.60.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > runtime > supportsInlineCode`
+
+|              |           |
+| ------------ | --------- |
+| **Type**     | `boolean` |
+| **Required** | Yes       |
+
+**Description:** Whether the ``ZipFile`` (aka inline code) property can be used with this
+runtime.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_runtime_supportsSnapStart"></a>3.6.7.8.60.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > runtime > supportsSnapStart`
+
+|              |           |
+| ------------ | --------- |
+| **Type**     | `boolean` |
+| **Required** | Yes       |
+
+**Description:** Whether this runtime supports snapstart.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_stack"></a>3.6.7.8.61. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > stack`
 
 |                           |                                                                                                                  |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -6331,7 +6656,7 @@ This value will resolve to one of the following:
 
 **Description:** The stack in which this resource is defined.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_statementHasArrayTokens"></a>3.6.7.4.56. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > statementHasArrayTokens`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_statementHasArrayTokens"></a>3.6.7.8.62. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > statementHasArrayTokens`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -6349,7 +6674,18 @@ resource arrays due to CloudFormation's token resolution limitations.
 Individual string tokens within literal arrays (e.g., `["arn:${token}:..."]`) are
 safe and do not cause conflicts, so they are not detected by this method.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_timeout"></a>3.6.7.4.57. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > timeout`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_tenancyConfig"></a>3.6.7.8.63. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > tenancyConfig`
+
+|                           |                                                                                                                                    |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                           |
+| **Required**              | No                                                                                                                                 |
+| **Additional properties** | Not allowed                                                                                                                        |
+| **Same definition as**    | [tenancyConfig](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_currentVersion_lambda_latestVersion_tenancyConfig) |
+
+**Description:** The tenancy configuration for this function.
+
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_timeout"></a>3.6.7.8.64. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > timeout`
 
 |                           |                        |
 | ------------------------- | ---------------------- |
@@ -6366,7 +6702,7 @@ safe and do not cause conflicts, so they are not detected by this method.
 | + [components](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_timeout_components ) | No      | object | No         | -          | Return the duration in a set of whole numbered time components, ordered from largest to smallest<br /><br />Only components != 0 will be returned.<br /><br />Can combine millis and seconds together for the benefit of toIsoString,<br />makes the logic in there simpler. |
 | + [unit](#sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_timeout_unit )             | No      | object | No         | -          | -                                                                                                                                                                                                                                                                            |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_timeout_amount"></a>3.6.7.4.57.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > timeout > amount`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_timeout_amount"></a>3.6.7.8.64.1. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > timeout > amount`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -6374,7 +6710,7 @@ safe and do not cause conflicts, so they are not detected by this method.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_timeout_components"></a>3.6.7.4.57.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > timeout > components`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_timeout_components"></a>3.6.7.8.64.2. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > timeout > components`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -6389,7 +6725,7 @@ Only components != 0 will be returned.
 Can combine millis and seconds together for the benefit of toIsoString,
 makes the logic in there simpler.
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_timeout_unit"></a>3.6.7.4.57.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > timeout > unit`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_timeout_unit"></a>3.6.7.8.64.3. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > timeout > unit`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -6397,7 +6733,7 @@ makes the logic in there simpler.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_validateConditionCombinations"></a>3.6.7.4.58. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > validateConditionCombinations`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_validateConditionCombinations"></a>3.6.7.8.65. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > validateConditionCombinations`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -6405,7 +6741,7 @@ makes the logic in there simpler.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_validateConditions"></a>3.6.7.4.59. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > validateConditions`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_validateConditions"></a>3.6.7.8.66. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > validateConditions`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -6413,7 +6749,7 @@ makes the logic in there simpler.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_validateProfiling"></a>3.6.7.4.60. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > validateProfiling`
+###### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_handlerFunction_validateProfiling"></a>3.6.7.8.67. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > handlerFunction > validateProfiling`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -6421,7 +6757,7 @@ makes the logic in there simpler.
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_node"></a>3.6.7.5. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > node`
+##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_node"></a>3.6.7.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > node`
 
 |                           |                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -6432,7 +6768,7 @@ makes the logic in there simpler.
 
 **Description:** The tree node.
 
-##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_physicalName"></a>3.6.7.6. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > physicalName`
+##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_physicalName"></a>3.6.7.10. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > physicalName`
 
 |              |          |
 | ------------ | -------- |
@@ -6448,7 +6784,7 @@ This value will resolve to one of the following:
 - a concrete name generated automatically during synthesis, in
   cross-environment scenarios.
 
-##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_ref"></a>3.6.7.7. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > ref`
+##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_ref"></a>3.6.7.11. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > ref`
 
 |              |          |
 | ------------ | -------- |
@@ -6457,7 +6793,7 @@ This value will resolve to one of the following:
 
 **Description:** The physical name of this custom resource.
 
-##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_resource"></a>3.6.7.8. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > resource`
+##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_resource"></a>3.6.7.12. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > resource`
 
 |                           |                  |
 | ------------------------- | ---------------- |
@@ -6465,7 +6801,7 @@ This value will resolve to one of the following:
 | **Required**              | Yes              |
 | **Additional properties** | Any type allowed |
 
-##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_stack"></a>3.6.7.9. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > stack`
+##### <a name="sagemakerBlueprint_domainConfig_domainConfigCr_stack"></a>3.6.7.13. Property `root > sagemakerBlueprint > domainConfig > domainConfigCr > stack`
 
 |                           |                                                                                                                  |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |

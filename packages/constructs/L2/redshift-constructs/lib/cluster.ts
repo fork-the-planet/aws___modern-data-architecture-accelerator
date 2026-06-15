@@ -158,7 +158,7 @@ export class MdaaRedshiftCluster extends Cluster {
       const crProps: MdaaCustomResourceProps = {
         resourceType: 'RedshiftSnapshotCopy',
         code: Code.fromAsset(`${__dirname}/../src/lambda/snapshot_copy`),
-        runtime: Runtime.PYTHON_3_13,
+        runtime: Runtime.PYTHON_3_14,
         handler: 'snapshot_copy.lambda_handler',
         handlerRolePolicyStatements: [
           new PolicyStatement({

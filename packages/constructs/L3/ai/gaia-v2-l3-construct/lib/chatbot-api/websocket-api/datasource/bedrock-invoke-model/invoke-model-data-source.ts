@@ -38,7 +38,7 @@ export interface InvokeModelDataSourceProps {
   readonly lambdaMemorySize?: number;
   /** Lambda architecture (ARM64 or x86_64). If undefined, Architecture.X86_64 is used */
   readonly lambdaArchitecture?: 'ARM_64' | 'X86_64';
-  /** Python runtime version. If undefined, Runtime.PYTHON_3_13 is used. */
+  /** Python runtime version. If undefined, Runtime.PYTHON_3_14 is used. */
   readonly pythonRuntime?: string;
   /** Reserved concurrent executions for Lambda */
   readonly reservedConcurrentExecutions?: number;
@@ -197,7 +197,7 @@ export class InvokeModelDataSource extends MdaaL3Construct {
       handler: 'index.handler',
       runtime: this.props.pythonRuntime
         ? new Runtime(this.props.pythonRuntime, RuntimeFamily.PYTHON)
-        : Runtime.PYTHON_3_13,
+        : Runtime.PYTHON_3_14,
       architecture: this.props.lambdaArchitecture === 'ARM_64' ? Architecture.ARM_64 : Architecture.X86_64,
       timeout: cdk.Duration.seconds(this.props.lambdaTimeoutInSeconds ?? DEFAULT_LAMBDA_TIMEOUT_SECONDS),
       memorySize: this.props.lambdaMemorySize ?? DEFAULT_LAMBDA_MEMORY_SIZE_MB,

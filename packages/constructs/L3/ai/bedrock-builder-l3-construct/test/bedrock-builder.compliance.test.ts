@@ -44,7 +44,7 @@ jest.mock('@aws-mdaa/lambda-constructs', () => {
     constructor(scope: any, id: string, props: { naming: { resourceName: (name: string) => string } }) {
       super(scope, id, {
         code: Code.fromAsset(mockLayerDir),
-        compatibleRuntimes: [Runtime.PYTHON_3_12, Runtime.PYTHON_3_13],
+        compatibleRuntimes: [Runtime.PYTHON_3_12, Runtime.PYTHON_3_14],
         layerVersionName: props.naming.resourceName(`mock-layer-${id}`),
       });
     }
@@ -71,7 +71,7 @@ describe('Bedrock Builder Compliance Stack Tests', () => {
     srcDir: './test/lambda/test',
     handler: 'test_handler',
     roleArn: 'arn:test-partition:iam::test-acct:role/test-lambda-role',
-    runtime: 'python3.13',
+    runtime: 'python3.14',
     generatedLayerNames: ['test-layer'],
   };
 
@@ -1439,7 +1439,7 @@ describe('Bedrock Builder Compliance Stack Tests', () => {
         Description: 'Batch sync data source multiSyncDataSource for knowledge base test-kb-multi-sync',
         Handler: 'datasource_batch_sync.lambda_handler',
         Role: 'arn:test-partition:iam::test-account:role/batch-sync-lambda-role',
-        Runtime: 'python3.13',
+        Runtime: 'python3.14',
         Timeout: 900,
       });
     });

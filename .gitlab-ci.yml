@@ -292,6 +292,8 @@ feature_merge_build_test:
     AWS_CREDS_TARGET_ROLE: '${DEV_ROLE_ARN}'
     AWS_DEFAULT_REGION: us-east-1
     GIT_DEPTH: '0'
+    LERNA_CONCURRENCY: '8'
+    NODE_OPTIONS: '--max-old-space-size=3072'
   script:
     - ./scripts/build/npm_install_repo.sh
     - npm run build

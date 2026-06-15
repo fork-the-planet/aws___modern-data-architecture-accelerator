@@ -5,7 +5,6 @@
     "inlineSources": true,
     "alwaysStrict": true,
     "declaration": true,
-    "experimentalDecorators": true,
     "incremental": true,
     "lib": [
       "es2020"
@@ -32,8 +31,7 @@
     "**/*.ts"
   ],
   "exclude": [
-    "node_modules",
-    ".types-compat"
+    "node_modules"
   ],
   "references": [
     {

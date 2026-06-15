@@ -52,7 +52,7 @@ export class MdaaStudioLifecycleConfig extends Construct {
     const crProps: MdaaCustomResourceProps = {
       resourceType: 'StudioLifecycleConfig',
       code: Code.fromAsset(`${__dirname}/../src/lambda/lifecycle`),
-      runtime: Runtime.PYTHON_3_13,
+      runtime: Runtime.PYTHON_3_14,
       handler: 'lifecycle.lambda_handler',
       handlerRolePolicyStatements: [statement],
       handlerPolicySuppressions: [

@@ -820,7 +820,7 @@ export class CommonDomainHelper {
     const crProps: MdaaCustomResourceProps = {
       resourceType: 'RamAssociationMonitor',
       code: Code.fromAsset(`${__dirname}/../../src/lambda/monitor_ram_association`),
-      runtime: Runtime.PYTHON_3_13,
+      runtime: Runtime.PYTHON_3_14,
       handler: 'monitor_ram_association.lambda_handler',
       handlerRolePolicyStatements: searchUserProfileStatements,
       handlerPolicySuppressions: [

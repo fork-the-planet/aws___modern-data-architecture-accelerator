@@ -131,7 +131,7 @@ export class LakeFormationSettingsL3Construct extends MdaaL3Construct {
       resourceType: 'lakeformation-idc-configs',
       code: Code.fromAsset(`${__dirname}/../src/python/lakeformation_idc_configs`),
       handler: 'lakeformation_idc_configs.lambda_handler',
-      runtime: Runtime.PYTHON_3_13,
+      runtime: Runtime.PYTHON_3_14,
       handlerTimeout: Duration.seconds(120),
       handlerRolePolicyStatements: [
         manageIdcConfigsPolicyStatement,
@@ -209,7 +209,7 @@ export class LakeFormationSettingsL3Construct extends MdaaL3Construct {
       resourceType: 'lakeformation-settings',
       code: Code.fromAsset(`${__dirname}/../src/python/lakeformation_settings`),
       handler: 'lakeformation_settings.lambda_handler',
-      runtime: Runtime.PYTHON_3_13,
+      runtime: Runtime.PYTHON_3_14,
       handlerTimeout: Duration.seconds(120),
       handlerRolePolicyStatements: [manageSettingsPolicyStatement],
       handlerPolicySuppressions: [

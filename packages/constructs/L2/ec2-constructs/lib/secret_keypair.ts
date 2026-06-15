@@ -51,7 +51,7 @@ export class MdaaEC2SecretKeyPair extends Construct {
     const crProps: MdaaCustomResourceProps = {
       resourceType: 'SecretKeyPair',
       code: Code.fromAsset(`${__dirname}/../src/lambda/keypair`),
-      runtime: Runtime.PYTHON_3_13,
+      runtime: Runtime.PYTHON_3_14,
       handler: 'keypair.lambda_handler',
       handlerRolePolicyStatements: [statement],
       handlerProps: handlerProps,

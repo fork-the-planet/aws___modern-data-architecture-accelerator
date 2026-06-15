@@ -22,7 +22,7 @@ describe('MDAA Compliance Stack Tests', () => {
   const policyDocument = {
     Statement: [
       {
-        Sid: 'test-statement',
+        Sid: 'testStatement',
         Action: 's3:GetObject',
         Resource: 'arn:test-partition:s3:::test-bucket/*',
         Effect: 'Allow',
@@ -203,7 +203,7 @@ describe('MDAA Compliance Stack Tests', () => {
               Action: 's3:GetObject',
               Effect: 'Allow',
               Resource: 'arn:test-partition:s3:::test-bucket/*',
-              Sid: 'test-statement',
+              Sid: 'testStatement',
             },
           ],
           Version: '2012-10-17',

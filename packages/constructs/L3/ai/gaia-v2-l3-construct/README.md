@@ -303,7 +303,7 @@ Uses Bedrock's `RetrieveAndGenerate` API to query a Knowledge Base and generate 
 | Property | Description |
 |----------|-------------|
 | `lambdaArchitecture` | `ARM_64` or `X86_64` (default: X86_64) |
-| `pythonRuntime` | Python runtime version (default: Python 3.13) |
+| `pythonRuntime` | Python runtime version (default: Python 3.14) |
 | `lambdaTimeoutInSeconds` | Lambda timeout (default: 600s) |
 | `lambdaMemorySize` | Lambda memory in MB (default: 1024) |
 | `provisionedConcurrentExecutions` | Pre-warmed Lambda instances |
@@ -329,7 +329,7 @@ Direct invocation of Bedrock foundation models via `invokeModelWithResponseStrea
 | Property | Description |
 |----------|-------------|
 | `lambdaArchitecture` | `ARM_64` or `X86_64` (default: X86_64) |
-| `pythonRuntime` | Python runtime version (default: Python 3.13) |
+| `pythonRuntime` | Python runtime version (default: Python 3.14) |
 | `lambdaTimeoutInSeconds` | Lambda timeout (default: 600s) |
 | `lambdaMemorySize` | Lambda memory in MB (default: 1024) |
 | `provisionedConcurrentExecutions` | Pre-warmed Lambda instances |

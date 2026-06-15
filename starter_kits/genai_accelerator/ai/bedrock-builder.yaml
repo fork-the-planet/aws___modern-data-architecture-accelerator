@@ -13,7 +13,7 @@ lambdaFunctions:
     - functionName: customer-support-agent-lambda
       srcDir: ../lambda/src
       handler: support_function.lambda_handler
-      runtime: python3.13
+      runtime: python3.14
       roleArn: ssm:/{{org}}/shared/generated-role/agent-lambda-role/arn
       description: "Lambda function for Bedrock Agent Action group: customer-support-agent/support-actions"
       generatedLayerNames:
@@ -22,7 +22,7 @@ lambdaFunctions:
     - functionName: knowledge-base-transformer
       srcDir: ../lambda/src
       handler: kb_custom_transform.lambda_handler
-      runtime: python3.13
+      runtime: python3.14
       roleArn: ssm:/{{org}}/shared/generated-role/agent-lambda-role/arn
       description: "Lambda function for performing custom transformations on data while ingesting into knowledgebases"
       generatedLayerNames:

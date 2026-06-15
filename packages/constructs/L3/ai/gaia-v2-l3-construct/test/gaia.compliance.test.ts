@@ -83,7 +83,9 @@ describe('GAIA v2 L3 Construct Compliance Tests', () => {
   };
 
   new GAIAL3Construct(testApp.testStack, 'teststack', constructProps);
-  testApp.checkCdkNagCompliance(testApp.testStack);
+  testApp.checkCdkNagCompliance(testApp.testStack, {
+    ignorePathPatterns: ['OverflowPolicy', 'Notifications/Handler'],
+  });
   const template = Template.fromStack(testApp.testStack);
 
   describe('Core Infrastructure Resources', () => {

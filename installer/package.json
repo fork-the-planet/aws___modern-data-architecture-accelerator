@@ -26,8 +26,8 @@
     "typescript": "5.9.3"
   },
   "dependencies": {
-    "aws-cdk-lib": "2.220.0",
-    "constructs": "10.0.96"
+    "aws-cdk-lib": "2.258.0",
+    "constructs": "10.6.0"
   },
   "repository": {
     "type": "git",

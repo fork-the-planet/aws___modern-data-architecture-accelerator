@@ -262,7 +262,7 @@
         "MemorySize": 256,
         "ReservedConcurrentExecutions": 10,
         "Role": "arn:test-partition:iam::test-account:role/test-lambda-role",
-        "Runtime": "python3.13",
+        "Runtime": "python3.14",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -1872,7 +1872,7 @@
         "Handler": "test.lambda_handler",
         "KmsKeyArn": "arn:test-partition:kms:test-region:test-account:key/test-key-id",
         "Role": "arn:test-partition:iam::test-account:role/test-lambda-role",
-        "Runtime": "python3.13",
+        "Runtime": "python3.14",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -2280,7 +2280,7 @@
         "Handler": "test.lambda_handler",
         "KmsKeyArn": "arn:test-partition:kms:test-region:test-account:key/test-key-id",
         "Role": "arn:test-partition:iam::test-account:role/test-lambda-role",
-        "Runtime": "python3.13",
+        "Runtime": "python3.14",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -4248,7 +4248,7 @@
             "arn"
           ]
         },
-        "Runtime": "python3.13",
+        "Runtime": "python3.14",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -5998,7 +5998,7 @@
             "arn"
           ]
         },
-        "Runtime": "python3.13",
+        "Runtime": "python3.14",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -7626,7 +7626,7 @@
             "Arn"
           ]
         },
-        "Runtime": "python3.13",
+        "Runtime": "python3.14",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -8100,7 +8100,7 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -8408,7 +8408,7 @@
             "Arn"
           ]
         },
-        "Runtime": "python3.13",
+        "Runtime": "python3.14",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -8891,7 +8891,7 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -9821,15 +9821,15 @@
     "bedrockbuilderbedrockkbtestknowledgebasepgvectortestvectorstoreRotationSingleUserSARMapping27A1F0F8": {
       "aws": {
         "applicationId": "arn:aws:serverlessrepo:us-east-1:297356227824:applications/SecretsManagerRDSPostgreSQLRotationSingleUser",
-        "semanticVersion": "1.1.618"
+        "semanticVersion": "1.1.671"
       },
       "aws-cn": {
         "applicationId": "arn:aws-cn:serverlessrepo:cn-north-1:193023089310:applications/SecretsManagerRDSPostgreSQLRotationSingleUser",
-        "semanticVersion": "1.1.237"
+        "semanticVersion": "1.1.440"
       },
       "aws-us-gov": {
         "applicationId": "arn:aws-us-gov:serverlessrepo:us-gov-west-1:023102451235:applications/SecretsManagerRDSPostgreSQLRotationSingleUser",
-        "semanticVersion": "1.1.213"
+        "semanticVersion": "1.1.397"
       }
     }
   },

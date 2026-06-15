@@ -225,7 +225,7 @@ describe('Bedrock Knowledge Base L3 Construct Tests', () => {
 
     template.hasResourceProperties('AWS::Lambda::Function', {
       Handler: 'datasource_sync.lambda_handler',
-      Runtime: 'python3.13',
+      Runtime: 'python3.14',
     });
   });
 
@@ -260,7 +260,7 @@ describe('Bedrock Knowledge Base L3 Construct Tests', () => {
 
     template.hasResourceProperties('AWS::Lambda::Function', {
       Handler: 'datasource_batch_sync.lambda_handler',
-      Runtime: 'python3.13',
+      Runtime: 'python3.14',
       Role: 'arn:test-partition:iam::test-account:role/batch-sync-lambda-role',
     });
 

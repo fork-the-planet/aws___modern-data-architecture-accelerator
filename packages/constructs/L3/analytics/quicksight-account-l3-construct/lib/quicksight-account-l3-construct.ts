@@ -261,7 +261,7 @@ export class QuickSightAccountL3Construct extends MdaaL3Construct {
     const crProps: MdaaCustomResourceProps = {
       resourceType: 'ip-restrictions',
       code: Code.fromAsset(`${__dirname}/../src/python/ip_restrictions`),
-      runtime: Runtime.PYTHON_3_13,
+      runtime: Runtime.PYTHON_3_14,
       handler: 'ip_restrictions.lambda_handler',
       handlerRolePolicyStatements: [crStatement],
       handlerPolicySuppressions: [
@@ -384,7 +384,7 @@ export class QuickSightAccountL3Construct extends MdaaL3Construct {
       naming: this.props.naming,
       code: Code.fromAsset(srcDir),
       handler: 'quicksight_account.lambda_handler',
-      runtime: Runtime.PYTHON_3_13,
+      runtime: Runtime.PYTHON_3_14,
       timeout: Duration.seconds(300),
       environment: {
         ACCOUNT_ID: this.account,

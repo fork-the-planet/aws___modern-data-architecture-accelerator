@@ -716,11 +716,15 @@ export class BedrockBuilderL3Construct extends MdaaL3Construct {
   }
 
   private addInternalConstructSuppressions(): void {
-    // Add suppressions for internal CDK constructs like BucketNotificationsHandler
-    Stack.of(this).node.children.forEach(child => {
+    // Add suppressions for internal CDK constructs like BucketNotificationsHandler.
+    // 'Notifications' matches CDK's S3 BucketNotifications construct (the only CDK construct using this ID).
+    // Search both stack-level children and all nested constructs within this tree.
+    const allConstructs = [...Stack.of(this).node.children, ...this.node.findAll()];
+    allConstructs.forEach(child => {
       if (
         child.node.id.includes('Custom::CDKBucketDeployment') ||
         child.node.id.includes('BucketNotificationsHandler') ||
+        child.node.id.includes('Notifications') ||
         child.node.id.includes('DatabaseSetupFunction') ||
         child.node.id.includes('LogRetention')
       ) {

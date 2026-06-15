@@ -191,7 +191,7 @@ export class MdaaDatazoneProject extends Construct {
     const crProps: MdaaCustomResourceProps = {
       resourceType: 'UserProfileManager',
       code: Code.fromAsset(`${__dirname}/../src/lambda/check_user_profiles`),
-      runtime: Runtime.PYTHON_3_13,
+      runtime: Runtime.PYTHON_3_14,
       handler: 'check_user_profiles.lambda_handler',
       handlerRole: this.customResourceRole,
       handlerPolicySuppressions: [
@@ -248,7 +248,7 @@ export class MdaaSageMakerProject extends MdaaDatazoneProject {
     const crProps: MdaaCustomResourceProps = {
       resourceType: 'EnvDeploymentMonitor',
       code: Code.fromAsset(`${__dirname}/../src/lambda/monitor_env_deployment`),
-      runtime: Runtime.PYTHON_3_13,
+      runtime: Runtime.PYTHON_3_14,
       handler: 'monitor_env_deployment.lambda_handler',
       handlerRole: this.customResourceRole,
       handlerProps: {

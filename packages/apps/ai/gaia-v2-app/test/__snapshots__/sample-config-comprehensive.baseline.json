@@ -1154,6 +1154,37 @@
         "PointInTimeRecoverySpecification": {
           "PointInTimeRecoveryEnabled": true
         },
+        "ResourcePolicy": {
+          "PolicyDocument": {
+            "Statement": [
+              {
+                "Action": [
+                  "dynamodb:BatchGetItem",
+                  "dynamodb:Query",
+                  "dynamodb:GetItem",
+                  "dynamodb:Scan",
+                  "dynamodb:ConditionCheckItem",
+                  "dynamodb:BatchWriteItem",
+                  "dynamodb:PutItem",
+                  "dynamodb:UpdateItem",
+                  "dynamodb:DeleteItem",
+                  "dynamodb:DescribeTable"
+                ],
+                "Effect": "Allow",
+                "Principal": {
+                  "AWS": {
+                    "Fn::GetAtt": [
+                      "RoleResbedrockragrole",
+                      "arn"
+                    ]
+                  }
+                },
+                "Resource": "*"
+              }
+            ],
+            "Version": "2012-10-17"
+          }
+        },
         "SSESpecification": {
           "KMSMasterKeyId": {
             "Fn::GetAtt": [
@@ -1450,6 +1481,33 @@
         ],
         "PointInTimeRecoverySpecification": {
           "PointInTimeRecoveryEnabled": true
+        },
+        "ResourcePolicy": {
+          "PolicyDocument": {
+            "Statement": [
+              {
+                "Action": [
+                  "dynamodb:BatchGetItem",
+                  "dynamodb:Query",
+                  "dynamodb:GetItem",
+                  "dynamodb:Scan",
+                  "dynamodb:ConditionCheckItem",
+                  "dynamodb:DescribeTable"
+                ],
+                "Effect": "Allow",
+                "Principal": {
+                  "AWS": {
+                    "Fn::GetAtt": [
+                      "RoleResbedrockragrole",
+                      "arn"
+                    ]
+                  }
+                },
+                "Resource": "*"
+              }
+            ],
+            "Version": "2012-10-17"
+          }
         },
         "SSESpecification": {
           "KMSMasterKeyId": {
@@ -2249,6 +2307,43 @@
             },
             {
               "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "gaiaChatBotApiChatDynamoDBTablesSessionsTable293F01E3",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "gaiaChatBotApiChatDynamoDBTablesSessionsTable293F01E3",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
                 "kms:Decrypt",
                 "kms:DescribeKey",
                 "kms:Encrypt",
@@ -2265,18 +2360,8 @@
             },
             {
               "Action": [
-                "dynamodb:BatchGetItem",
                 "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
-                "dynamodb:Query",
-                "dynamodb:GetItem",
-                "dynamodb:Scan",
-                "dynamodb:ConditionCheckItem",
-                "dynamodb:BatchWriteItem",
-                "dynamodb:PutItem",
-                "dynamodb:UpdateItem",
-                "dynamodb:DeleteItem",
-                "dynamodb:DescribeTable"
+                "dynamodb:GetShardIterator"
               ],
               "Effect": "Allow",
               "Resource": [
@@ -2318,8 +2403,6 @@
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -2333,9 +2416,21 @@
                     "gaiaChatBotApiWebSocketApiServiceInterruptionServiceInterruptionTable97894F93",
                     "Arn"
                   ]
-                },
+                }
+              ]
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator"
+              ],
+              "Effect": "Allow",
+              "Resource": [
                 {
-                  "Ref": "AWS::NoValue"
+                  "Fn::GetAtt": [
+                    "gaiaChatBotApiWebSocketApiServiceInterruptionServiceInterruptionTable97894F93",
+                    "Arn"
+                  ]
                 }
               ]
             }
@@ -2912,7 +3007,7 @@
             "arn"
           ]
         },
-        "Runtime": "python3.13",
+        "Runtime": "python3.14",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -3600,25 +3695,7 @@
             },
             {
               "Action": [
-                "kms:Decrypt",
-                "kms:DescribeKey",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*"
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "gaiaStackEncryptionKey9D8ED7C8",
-                  "Arn"
-                ]
-              }
-            },
-            {
-              "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -3655,9 +3732,52 @@
             },
             {
               "Action": [
-                "dynamodb:BatchGetItem",
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "gaiaStackEncryptionKey9D8ED7C8",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": [
                 "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
+                "dynamodb:GetShardIterator"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "gaiaChatBotApiChatDynamoDBTablesSessionsTable293F01E3",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "gaiaChatBotApiChatDynamoDBTablesSessionsTable293F01E3",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -3694,9 +3814,36 @@
             },
             {
               "Action": [
-                "dynamodb:BatchGetItem",
                 "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
+                "dynamodb:GetShardIterator"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "gaiaChatBotApiUserFeedbackFeedbackTable80C284A9",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "gaiaChatBotApiUserFeedbackFeedbackTable80C284A9",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -3714,9 +3861,21 @@
                     "gaiaChatBotApiWebSocketApiServiceInterruptionServiceInterruptionTable97894F93",
                     "Arn"
                   ]
-                },
+                }
+              ]
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator"
+              ],
+              "Effect": "Allow",
+              "Resource": [
                 {
-                  "Ref": "AWS::NoValue"
+                  "Fn::GetAtt": [
+                    "gaiaChatBotApiWebSocketApiServiceInterruptionServiceInterruptionTable97894F93",
+                    "Arn"
+                  ]
                 }
               ]
             },
@@ -3857,7 +4016,7 @@
             "Arn"
           ]
         },
-        "Runtime": "python3.13",
+        "Runtime": "python3.14",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -6189,7 +6348,29 @@
           "Comment": "test-regiontest-org-test-enexHtmlCfFunctionE3E473E2",
           "Runtime": "cloudfront-js-2.0"
         },
-        "Name": "test-regiontest-org-test-enexHtmlCfFunctionE3E473E2"
+        "Name": "test-regiontest-org-test-enexHtmlCfFunctionE3E473E2",
+        "Tags": [
+          {
+            "Key": "mdaa_cdk_app",
+            "Value": "gaia-v2"
+          },
+          {
+            "Key": "mdaa_domain",
+            "Value": "test-domain"
+          },
+          {
+            "Key": "mdaa_env",
+            "Value": "test-env"
+          },
+          {
+            "Key": "mdaa_module_name",
+            "Value": "test-gaia-v2-app"
+          },
+          {
+            "Key": "mdaa_org",
+            "Value": "test-org"
+          }
+        ]
       }
     },
     "gaiaUserInterfaceSecurityHeadersPolicyFFC23E29": {
@@ -6987,7 +7168,29 @@
           "Comment": "test-regiontest-org-test-enexHtmlCfFunction0BE03045",
           "Runtime": "cloudfront-js-2.0"
         },
-        "Name": "test-regiontest-org-test-enexHtmlCfFunction0BE03045"
+        "Name": "test-regiontest-org-test-enexHtmlCfFunction0BE03045",
+        "Tags": [
+          {
+            "Key": "mdaa_cdk_app",
+            "Value": "gaia-v2"
+          },
+          {
+            "Key": "mdaa_domain",
+            "Value": "test-domain"
+          },
+          {
+            "Key": "mdaa_env",
+            "Value": "test-env"
+          },
+          {
+            "Key": "mdaa_module_name",
+            "Value": "test-gaia-v2-app"
+          },
+          {
+            "Key": "mdaa_org",
+            "Value": "test-org"
+          }
+        ]
       }
     },
     "gaiaAdminInterfaceSecurityHeadersPolicy014BC0CA": {
@@ -7568,7 +7771,7 @@
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Handler": "index.handler",
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Timeout": 900,
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-test-account-test-region",
@@ -8296,7 +8499,7 @@
             "Arn"
           ]
         },
-        "Runtime": "python3.13",
+        "Runtime": "python3.14",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -8770,7 +8973,7 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",

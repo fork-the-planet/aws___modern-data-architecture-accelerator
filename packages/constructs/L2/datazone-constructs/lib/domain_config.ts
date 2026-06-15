@@ -255,7 +255,7 @@ export class DomainConfig extends Construct {
     const crProps: MdaaCustomResourceProps = {
       resourceType: 'DomainConfig',
       code: Code.fromAsset(`${__dirname}/../src/lambda/domain_config`),
-      runtime: Runtime.PYTHON_3_13,
+      runtime: Runtime.PYTHON_3_14,
       handler: 'domain_config.lambda_handler',
       handlerRolePolicyStatements: statements,
       handlerPolicySuppressions: [

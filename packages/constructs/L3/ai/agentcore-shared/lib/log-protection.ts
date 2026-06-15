@@ -86,7 +86,7 @@ export function createAgentCoreLogProtection(
   const crProps: MdaaCustomResourceProps = {
     resourceType: 'AgentCoreLogProtection',
     code: Code.fromAsset(`${__dirname}/../src/lambda/log_protection`),
-    runtime: Runtime.PYTHON_3_13,
+    runtime: Runtime.PYTHON_3_14,
     handler: 'log_protection.lambda_handler',
     handlerRolePolicyStatements: handlerStatements,
     handlerPolicySuppressions: [

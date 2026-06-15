@@ -10,7 +10,7 @@ import { IMdaaKmsKey, MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
 import { MdaaResourceType } from '@aws-mdaa/naming';
 import { Duration, IResolvable } from 'aws-cdk-lib';
-import { IRule, IRuleTarget, RuleTargetConfig, RuleTargetInput } from 'aws-cdk-lib/aws-events';
+import { IRuleRef, IRuleTarget, RuleTargetConfig, RuleTargetInput } from 'aws-cdk-lib/aws-events';
 import { TargetBaseProps } from 'aws-cdk-lib/aws-events-targets';
 import { CfnTrigger, CfnWorkflow } from 'aws-cdk-lib/aws-glue';
 import { Effect, IRole, ManagedPolicy, PolicyStatement, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
@@ -84,7 +84,7 @@ export class GlueWorkflowTarget implements IRuleTarget {
     this.props = props;
   }
 
-  bind(_rule: IRule, _id?: string): RuleTargetConfig {
+  bind(_rule: IRuleRef, _id?: string): RuleTargetConfig {
     console.log(`Rule: ${_rule}, id: ${_id}`);
     const retryPolicy =
       this.props.maxEventAge || this.props.retryAttempts

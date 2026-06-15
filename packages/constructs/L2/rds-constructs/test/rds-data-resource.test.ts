@@ -63,7 +63,7 @@ describe('MdaaRdsDataResource Tests', () => {
     // Verify the custom resource handler function exists
     template.hasResourceProperties('AWS::Lambda::Function', {
       FunctionName: testApp.naming.resourceName('RDS-Data-handler', 64),
-      Runtime: 'python3.13',
+      Runtime: 'python3.14',
       Handler: 'index.lambda_handler',
     });
 

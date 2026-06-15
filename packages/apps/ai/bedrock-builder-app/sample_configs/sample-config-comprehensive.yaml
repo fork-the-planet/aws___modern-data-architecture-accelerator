@@ -45,8 +45,8 @@ lambdaFunctions:
       srcDir: ./src/function
       # Lambda function handler (e.g., 'index.handler')
       handler: test.lambda_handler
-      # Lambda runtime (e.g., python3.13, nodejs22.x)
-      runtime: python3.13
+      # Lambda runtime (e.g., python3.14, nodejs24.x)
+      runtime: python3.14
       # IAM role ARN for Lambda function execution
       roleArn: 'arn:{{partition}}:iam::{{account}}:role/test-lambda-role'
       # (Optional) Memory allocation in MB (128-10240)
@@ -356,13 +356,13 @@ lambdaFunctions:
     - functionName: test-custom-transformer
       srcDir: ./src/function
       handler: test.lambda_handler
-      runtime: python3.13
+      runtime: python3.14
       roleArn: 'arn:{{partition}}:iam::{{account}}:role/test-lambda-role'
       description: For custom parsing and chunking logic
     - functionName: test-custom-router1
       srcDir: ./src/function
       handler: test.lambda_handler
-      runtime: python3.13
+      runtime: python3.14
       roleArn: 'arn:{{partition}}:iam::{{account}}:role/test-lambda-role'
       description: For custom chat routing logic
       grantInvoke: 'arn:{{partition}}:iam::{{account}}:role/role-in-another-account'

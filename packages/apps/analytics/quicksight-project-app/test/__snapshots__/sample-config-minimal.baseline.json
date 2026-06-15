@@ -282,7 +282,7 @@
             "Arn"
           ]
         },
-        "Runtime": "python3.13",
+        "Runtime": "python3.14",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -746,7 +746,7 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",

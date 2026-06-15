@@ -28,9 +28,9 @@
     "typescript-json-schema": "0.67.4"
   },
   "dependencies": {
-    "aws-cdk-lib": "2.220.0",
+    "aws-cdk-lib": "2.258.0",
     "cdk-nag": "2.37.55",
-    "constructs": "10.0.96"
+    "constructs": "10.6.0"
   },
   "gitHead": "8b49a2b371014baec046605ffdbfe38951099c31",
   "repository": {

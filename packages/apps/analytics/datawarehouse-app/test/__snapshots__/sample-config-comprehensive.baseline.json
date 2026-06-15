@@ -2322,7 +2322,7 @@
             "Arn"
           ]
         },
-        "Runtime": "python3.13",
+        "Runtime": "python3.14",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -2796,7 +2796,7 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -4005,7 +4005,7 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -4661,7 +4661,7 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -5412,7 +5412,7 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -6079,43 +6079,43 @@
     "clusterRotationSingleUserSARMappingC73F9A4D": {
       "aws": {
         "applicationId": "arn:aws:serverlessrepo:us-east-1:297356227824:applications/SecretsManagerRedshiftRotationSingleUser",
-        "semanticVersion": "1.1.618"
+        "semanticVersion": "1.1.671"
       },
       "aws-cn": {
         "applicationId": "arn:aws-cn:serverlessrepo:cn-north-1:193023089310:applications/SecretsManagerRedshiftRotationSingleUser",
-        "semanticVersion": "1.1.237"
+        "semanticVersion": "1.1.441"
       },
       "aws-us-gov": {
         "applicationId": "arn:aws-us-gov:serverlessrepo:us-gov-west-1:023102451235:applications/SecretsManagerRedshiftRotationSingleUser",
-        "semanticVersion": "1.1.213"
+        "semanticVersion": "1.1.398"
       }
     },
     "clustermultiuserrotationserviceuserglueSARMapping8E9BCC0C": {
       "aws": {
         "applicationId": "arn:aws:serverlessrepo:us-east-1:297356227824:applications/SecretsManagerRedshiftRotationMultiUser",
-        "semanticVersion": "1.1.618"
+        "semanticVersion": "1.1.671"
       },
       "aws-cn": {
         "applicationId": "arn:aws-cn:serverlessrepo:cn-north-1:193023089310:applications/SecretsManagerRedshiftRotationMultiUser",
-        "semanticVersion": "1.1.237"
+        "semanticVersion": "1.1.440"
       },
       "aws-us-gov": {
         "applicationId": "arn:aws-us-gov:serverlessrepo:us-gov-west-1:023102451235:applications/SecretsManagerRedshiftRotationMultiUser",
-        "semanticVersion": "1.1.213"
+        "semanticVersion": "1.1.397"
       }
     },
     "clustermultiuserrotationserviceuserquicksightSARMapping64849BC3": {
       "aws": {
         "applicationId": "arn:aws:serverlessrepo:us-east-1:297356227824:applications/SecretsManagerRedshiftRotationMultiUser",
-        "semanticVersion": "1.1.618"
+        "semanticVersion": "1.1.671"
       },
       "aws-cn": {
         "applicationId": "arn:aws-cn:serverlessrepo:cn-north-1:193023089310:applications/SecretsManagerRedshiftRotationMultiUser",
-        "semanticVersion": "1.1.237"
+        "semanticVersion": "1.1.440"
       },
       "aws-us-gov": {
         "applicationId": "arn:aws-us-gov:serverlessrepo:us-gov-west-1:023102451235:applications/SecretsManagerRedshiftRotationMultiUser",
-        "semanticVersion": "1.1.213"
+        "semanticVersion": "1.1.397"
       }
     }
   },

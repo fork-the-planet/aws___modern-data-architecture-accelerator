@@ -58,7 +58,7 @@ const boto3Layer = new MdaaBoto3LayerVersion(stack, 'Boto3Layer', { naming });
 new MdaaLambdaFunction(stack, 'Function', {
   naming,
   functionName: 'integ-fn',
-  runtime: Runtime.PYTHON_3_13,
+  runtime: Runtime.PYTHON_3_14,
   handler: 'index.handler',
   code: Code.fromInline('def handler(event, context):\n    return {"statusCode": 200, "body": "ok"}'),
   role: lambdaRole,
@@ -120,7 +120,7 @@ const multiLayerRole = new MdaaLambdaRole(stack, 'MultiLayerRole', {
 new MdaaLambdaFunction(stack, 'MultiLayerFunction', {
   naming,
   functionName: 'integ-multi-layer',
-  runtime: Runtime.PYTHON_3_13,
+  runtime: Runtime.PYTHON_3_14,
   handler: 'index.handler',
   code: Code.fromInline('def handler(event, context):\n    return {"statusCode": 200, "body": "multi-layer-ok"}'),
   role: multiLayerRole,

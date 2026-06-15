@@ -34,7 +34,7 @@ describe('MdaaSageMakerCustomBlueprintConstruct', () => {
     const template = Template.fromStack(testApp.testStack);
     // Verify Lambda function is created for the custom resource
     template.hasResourceProperties('AWS::Lambda::Function', {
-      Runtime: 'python3.13',
+      Runtime: 'python3.14',
     });
   });
 
@@ -72,7 +72,7 @@ describe('MdaaSageMakerCustomBlueprintConstruct', () => {
 
     const template = Template.fromStack(testApp.testStack);
     template.hasResourceProperties('AWS::Lambda::Function', {
-      Runtime: 'python3.13',
+      Runtime: 'python3.14',
     });
   });
 
@@ -127,7 +127,7 @@ describe('MdaaSageMakerCustomBlueprintConstruct', () => {
 
     const template = Template.fromStack(testApp.testStack);
     template.hasResourceProperties('AWS::Lambda::Function', {
-      Runtime: 'python3.13',
+      Runtime: 'python3.14',
     });
   });
 });

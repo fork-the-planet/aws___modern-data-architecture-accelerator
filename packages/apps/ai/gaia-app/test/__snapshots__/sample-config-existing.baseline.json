@@ -3132,6 +3132,43 @@
             },
             {
               "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "gaiaRagEnginesRagDynamoDBTablesWorkspacesTable32BA9E1F",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "gaiaRagEnginesRagDynamoDBTablesWorkspacesTable32BA9E1F",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
                 "kms:Decrypt",
                 "kms:DescribeKey",
                 "kms:Encrypt",
@@ -3148,18 +3185,8 @@
             },
             {
               "Action": [
-                "dynamodb:BatchGetItem",
                 "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
-                "dynamodb:Query",
-                "dynamodb:GetItem",
-                "dynamodb:Scan",
-                "dynamodb:ConditionCheckItem",
-                "dynamodb:BatchWriteItem",
-                "dynamodb:PutItem",
-                "dynamodb:UpdateItem",
-                "dynamodb:DeleteItem",
-                "dynamodb:DescribeTable"
+                "dynamodb:GetShardIterator"
               ],
               "Effect": "Allow",
               "Resource": [
@@ -4349,6 +4376,42 @@
         }
       }
     },
+    "gaiaRagEnginesDataImportUploadBucketNotificationsHandlerPolicyCB3D4D51": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:PutBucketNotification",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "gaiaRagEnginesDataImportUploadBucket04257A94",
+                  "Arn"
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "gaiaRagEnginesDataImportUploadBucketNotificationsHandlerPolicyCB3D4D51",
+        "Roles": [
+          {
+            "Ref": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
+          }
+        ]
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/ai/gaia-l3-construct/lib/gaia-l3-construct.ts] GAIA designed for Python 3.11.",
+              "id": "AwsSolutions-L1"
+            }
+          ]
+        }
+      }
+    },
     "gaiaRagEnginesDataImportUploadBucketNotificationsFE17E460": {
       "Type": "Custom::S3BucketNotifications",
       "Properties": {
@@ -4393,6 +4456,7 @@
       "DependsOn": [
         "gaiaRagEnginesDataImportIngestionQueuePolicyA29EF0F5",
         "gaiaRagEnginesDataImportIngestionQueueC465759B",
+        "gaiaRagEnginesDataImportUploadBucketNotificationsHandlerPolicyCB3D4D51",
         "gaiaRagEnginesDataImportUploadBucketPolicy3E063D18"
       ],
       "Metadata": {
@@ -5341,8 +5405,6 @@
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -5379,9 +5441,36 @@
             },
             {
               "Action": [
-                "dynamodb:BatchGetItem",
                 "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
+                "dynamodb:GetShardIterator"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "gaiaRagEnginesRagDynamoDBTablesWorkspacesTable32BA9E1F",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "gaiaRagEnginesRagDynamoDBTablesWorkspacesTable32BA9E1F",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -5391,6 +5480,35 @@
                 "dynamodb:UpdateItem",
                 "dynamodb:DeleteItem",
                 "dynamodb:DescribeTable"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "gaiaRagEnginesRagDynamoDBTablesDocumentsTableCFC134DE",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "gaiaRagEnginesRagDynamoDBTablesDocumentsTableCFC134DE",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator"
               ],
               "Effect": "Allow",
               "Resource": [
@@ -6371,8 +6489,6 @@
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -6409,9 +6525,36 @@
             },
             {
               "Action": [
-                "dynamodb:BatchGetItem",
                 "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
+                "dynamodb:GetShardIterator"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "gaiaRagEnginesRagDynamoDBTablesWorkspacesTable32BA9E1F",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "gaiaRagEnginesRagDynamoDBTablesWorkspacesTable32BA9E1F",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -6421,6 +6564,35 @@
                 "dynamodb:UpdateItem",
                 "dynamodb:DeleteItem",
                 "dynamodb:DescribeTable"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "gaiaRagEnginesRagDynamoDBTablesDocumentsTableCFC134DE",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "gaiaRagEnginesRagDynamoDBTablesDocumentsTableCFC134DE",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator"
               ],
               "Effect": "Allow",
               "Resource": [
@@ -7111,8 +7283,6 @@
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -7149,9 +7319,36 @@
             },
             {
               "Action": [
-                "dynamodb:BatchGetItem",
                 "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
+                "dynamodb:GetShardIterator"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "gaiaRagEnginesRagDynamoDBTablesWorkspacesTable32BA9E1F",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "gaiaRagEnginesRagDynamoDBTablesWorkspacesTable32BA9E1F",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -7161,6 +7358,35 @@
                 "dynamodb:UpdateItem",
                 "dynamodb:DeleteItem",
                 "dynamodb:DescribeTable"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "gaiaRagEnginesRagDynamoDBTablesDocumentsTableCFC134DE",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "gaiaRagEnginesRagDynamoDBTablesDocumentsTableCFC134DE",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator"
               ],
               "Effect": "Allow",
               "Resource": [
@@ -8633,25 +8859,7 @@
             },
             {
               "Action": [
-                "kms:Decrypt",
-                "kms:DescribeKey",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*"
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "gaiaStackEncryptionKey9D8ED7C8",
-                  "Arn"
-                ]
-              }
-            },
-            {
-              "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -8688,9 +8896,52 @@
             },
             {
               "Action": [
-                "dynamodb:BatchGetItem",
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "gaiaStackEncryptionKey9D8ED7C8",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": [
                 "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
+                "dynamodb:GetShardIterator"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "gaiaRagEnginesRagDynamoDBTablesWorkspacesTable32BA9E1F",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "gaiaRagEnginesRagDynamoDBTablesWorkspacesTable32BA9E1F",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -8700,6 +8951,35 @@
                 "dynamodb:UpdateItem",
                 "dynamodb:DeleteItem",
                 "dynamodb:DescribeTable"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "gaiaRagEnginesRagDynamoDBTablesDocumentsTableCFC134DE",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "gaiaRagEnginesRagDynamoDBTablesDocumentsTableCFC134DE",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator"
               ],
               "Effect": "Allow",
               "Resource": [
@@ -8880,8 +9160,6 @@
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -8891,6 +9169,35 @@
                 "dynamodb:UpdateItem",
                 "dynamodb:DeleteItem",
                 "dynamodb:DescribeTable"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "gaiaChatBotApiChatDynamoDBTablesSessionsTable293F01E3",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "gaiaChatBotApiChatDynamoDBTablesSessionsTable293F01E3",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator"
               ],
               "Effect": "Allow",
               "Resource": [
@@ -11093,6 +11400,43 @@
             },
             {
               "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "gaiaChatBotApiWebSocketApiConnectionsTable1CB10360",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "gaiaChatBotApiWebSocketApiConnectionsTable1CB10360",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
                 "kms:Decrypt",
                 "kms:DescribeKey",
                 "kms:Encrypt",
@@ -11109,18 +11453,8 @@
             },
             {
               "Action": [
-                "dynamodb:BatchGetItem",
                 "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
-                "dynamodb:Query",
-                "dynamodb:GetItem",
-                "dynamodb:Scan",
-                "dynamodb:ConditionCheckItem",
-                "dynamodb:BatchWriteItem",
-                "dynamodb:PutItem",
-                "dynamodb:UpdateItem",
-                "dynamodb:DeleteItem",
-                "dynamodb:DescribeTable"
+                "dynamodb:GetShardIterator"
               ],
               "Effect": "Allow",
               "Resource": [
@@ -12709,13 +13043,40 @@
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
                 "dynamodb:ConditionCheckItem",
                 "dynamodb:DescribeTable"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "gaiaChatBotApiWebSocketApiConnectionsTable1CB10360",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "gaiaChatBotApiWebSocketApiConnectionsTable1CB10360",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator"
               ],
               "Effect": "Allow",
               "Resource": [
@@ -13695,25 +14056,7 @@
             },
             {
               "Action": [
-                "kms:Decrypt",
-                "kms:DescribeKey",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*"
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "gaiaStackEncryptionKey9D8ED7C8",
-                  "Arn"
-                ]
-              }
-            },
-            {
-              "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -13750,9 +14093,52 @@
             },
             {
               "Action": [
-                "dynamodb:BatchGetItem",
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "gaiaStackEncryptionKey9D8ED7C8",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": [
                 "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
+                "dynamodb:GetShardIterator"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "gaiaRagEnginesRagDynamoDBTablesWorkspacesTable32BA9E1F",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "gaiaRagEnginesRagDynamoDBTablesWorkspacesTable32BA9E1F",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -13762,6 +14148,35 @@
                 "dynamodb:UpdateItem",
                 "dynamodb:DeleteItem",
                 "dynamodb:DescribeTable"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "gaiaRagEnginesRagDynamoDBTablesDocumentsTableCFC134DE",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "gaiaRagEnginesRagDynamoDBTablesDocumentsTableCFC134DE",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator"
               ],
               "Effect": "Allow",
               "Resource": [
@@ -13805,8 +14220,6 @@
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -13816,6 +14229,35 @@
                 "dynamodb:UpdateItem",
                 "dynamodb:DeleteItem",
                 "dynamodb:DescribeTable"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "gaiaChatBotApiChatDynamoDBTablesSessionsTable293F01E3",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "gaiaChatBotApiChatDynamoDBTablesSessionsTable293F01E3",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator"
               ],
               "Effect": "Allow",
               "Resource": [
@@ -15947,7 +16389,7 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "mdaa_cdk_app",
@@ -16202,98 +16644,6 @@
         }
       }
     },
-    "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36": {
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "s3:PutBucketNotification",
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "gaiaRagEnginesDataImportUploadBucket04257A94",
-                  "Arn"
-                ]
-              }
-            }
-          ],
-          "Version": "2012-10-17"
-        },
-        "PolicyName": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36",
-        "Roles": [
-          {
-            "Ref": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
-          }
-        ]
-      },
-      "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "reason": "[MDAA:@aws-mdaa/ai/gaia-l3-construct/lib/gaia-l3-construct.ts] Function is used only as custom resource during CDK deployment.",
-              "id": "AwsSolutions-L1"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/ai/gaia-l3-construct/lib/gaia-l3-construct.ts] Function is used only as custom resource during CDK deployment.",
-              "id": "NIST.800.53.R5-LambdaConcurrency"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/ai/gaia-l3-construct/lib/gaia-l3-construct.ts] Function is used only as custom resource during CDK deployment and interacts only with S3.",
-              "id": "NIST.800.53.R5-LambdaInsideVPC"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/ai/gaia-l3-construct/lib/gaia-l3-construct.ts] Function is used only as custom resource during CDK deployment. Errors will be handled by CloudFormation.",
-              "id": "NIST.800.53.R5-LambdaDLQ"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/ai/gaia-l3-construct/lib/gaia-l3-construct.ts] Function is used only as custom resource during CDK deployment.",
-              "id": "HIPAA.Security-LambdaConcurrency"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/ai/gaia-l3-construct/lib/gaia-l3-construct.ts] Function is used only as custom resource during CDK deployment.",
-              "id": "PCI.DSS.321-LambdaConcurrency"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/ai/gaia-l3-construct/lib/gaia-l3-construct.ts] Function is used only as custom resource during CDK deployment and interacts only with S3.",
-              "id": "HIPAA.Security-LambdaInsideVPC"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/ai/gaia-l3-construct/lib/gaia-l3-construct.ts] Function is used only as custom resource during CDK deployment and interacts only with S3.",
-              "id": "PCI.DSS.321-LambdaInsideVPC"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/ai/gaia-l3-construct/lib/gaia-l3-construct.ts] Function is used only as custom resource during CDK deployment. Errors will be handled by CloudFormation.",
-              "id": "HIPAA.Security-LambdaDLQ"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/ai/gaia-l3-construct/lib/gaia-l3-construct.ts] Function is used only as custom resource during CDK deployment. Errors will be handled by CloudFormation.",
-              "id": "PCI.DSS.321-LambdaDLQ"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/ai/gaia-l3-construct/lib/gaia-l3-construct.ts] Function is used only as custom resource during CDK deployment.",
-              "id": "AwsSolutions-IAM4"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/ai/gaia-l3-construct/lib/gaia-l3-construct.ts] Function is used only as custom resource during CDK deployment.",
-              "id": "AwsSolutions-IAM5"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/ai/gaia-l3-construct/lib/gaia-l3-construct.ts] Policy managed by CDK and only used during deployment.",
-              "id": "HIPAA.Security-IAMNoInlinePolicy"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/ai/gaia-l3-construct/lib/gaia-l3-construct.ts] Policy managed by CDK and only used during deployment.",
-              "id": "PCI.DSS.321-IAMNoInlinePolicy"
-            },
-            {
-              "reason": "[MDAA:@aws-mdaa/ai/gaia-l3-construct/lib/gaia-l3-construct.ts] Policy managed by CDK and only used during deployment.",
-              "id": "NIST.800.53.R5-IAMNoInlinePolicy"
-            }
-          ]
-        }
-      }
-    },
     "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
@@ -16334,7 +16684,6 @@
         ]
       },
       "DependsOn": [
-        "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36",
         "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
       ],
       "Metadata": {
@@ -16562,15 +16911,15 @@
     "gaiaRagEnginesAuroraPgVectoraurorapostgrespgvectorRotationSingleUserSARMappingDDE27BCE": {
       "aws": {
         "applicationId": "arn:aws:serverlessrepo:us-east-1:297356227824:applications/SecretsManagerRDSPostgreSQLRotationSingleUser",
-        "semanticVersion": "1.1.618"
+        "semanticVersion": "1.1.671"
       },
       "aws-cn": {
         "applicationId": "arn:aws-cn:serverlessrepo:cn-north-1:193023089310:applications/SecretsManagerRDSPostgreSQLRotationSingleUser",
-        "semanticVersion": "1.1.237"
+        "semanticVersion": "1.1.440"
       },
       "aws-us-gov": {
         "applicationId": "arn:aws-us-gov:serverlessrepo:us-gov-west-1:023102451235:applications/SecretsManagerRDSPostgreSQLRotationSingleUser",
-        "semanticVersion": "1.1.213"
+        "semanticVersion": "1.1.397"
       }
     }
   },

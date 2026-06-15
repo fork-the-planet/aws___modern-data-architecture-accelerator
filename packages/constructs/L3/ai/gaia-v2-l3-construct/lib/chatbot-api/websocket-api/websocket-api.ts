@@ -42,7 +42,7 @@ import { Certificate } from 'aws-cdk-lib/aws-certificatemanager';
 export interface WebSocketApiProps {
   /** Lambda architecture (ARM64 or x86_64). If undefined, Architecture.X86_64 is used */
   readonly lambdaArchitecture?: 'ARM_64' | 'X86_64';
-  /** Python runtime version. If undefined, Runtime.PYTHON_3_13 is used. */
+  /** Python runtime version. If undefined, Runtime.PYTHON_3_14 is used. */
   readonly pythonRuntime?: string;
   /** Bedrock RAG data source configuration */
   readonly bedrockRagDataSource?: BedrockRagDataSourceProps;

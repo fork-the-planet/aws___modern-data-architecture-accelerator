@@ -16,7 +16,7 @@ functions:
     handler: odpf_file_manager.lambda_handler
 
     # The runtime for the function source code.
-    runtime: python3.13
+    runtime: python3.14
 
     # The role with which the Lambda function will be executed
     roleArn: ssm:/{{org}}/dataops/generated-role/file-manager-lambda-role/arn
@@ -73,7 +73,7 @@ functions:
     handler: odpf_batch_generator_lambda.lambda_handler
 
     # The runtime for the function source code.
-    runtime: python3.13
+    runtime: python3.14
 
     # The role with which the Lambda function will be executed
     roleArn: ssm:/{{org}}/dataops/generated-role/batch-generator-lambda-role/arn
@@ -114,7 +114,7 @@ functions:
     handler: odpf_file_processor_trigger_lambda.lambda_handler
 
     # The runtime for the function source code.
-    runtime: python3.13
+    runtime: python3.14
 
     # The role with which the Lambda function will be executed
     roleArn: ssm:/{{org}}/dataops/generated-role/file-processor-trigger-lambda-role/arn

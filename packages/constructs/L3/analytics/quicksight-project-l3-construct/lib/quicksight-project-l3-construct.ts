@@ -458,7 +458,7 @@ export class QuickSightProjectL3Construct extends MdaaL3Construct {
       naming: this.props.naming,
       code: Code.fromAsset(srcDir),
       handler: 'quicksight_folders.lambda_handler',
-      runtime: Runtime.PYTHON_3_13,
+      runtime: Runtime.PYTHON_3_14,
       timeout: Duration.seconds(120),
       environment: {
         ACCOUNT_ID: this.account,

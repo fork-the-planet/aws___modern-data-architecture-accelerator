@@ -24,7 +24,7 @@ describe('MDAA Compliance Stack Tests', () => {
     srcDir: './test/src/lambda/test',
     handler: 'test_handler',
     roleArn: 'arn:test-partition:iam::test-acct:role/test-lambda-role',
-    runtime: 'python3.13',
+    runtime: 'python3.14',
   };
 
   const dockerImageFunctionProps: FunctionProps = {
@@ -585,7 +585,7 @@ describe('Bad function config', () => {
       srcDir: './test/src/lambda/test',
       handler: 'test_handler',
       roleArn: 'arn:test-partition:iam::test-acct:role/test-lambda-role',
-      runtime: 'python3.13',
+      runtime: 'python3.14',
     };
     const constructProps: LambdaFunctionL3ConstructProps = {
       roleHelper: new MdaaRoleHelper(stack, testApp.naming),
@@ -607,7 +607,7 @@ describe('Bad function config', () => {
       srcDir: './test/src/lambda/test',
       handler: 'test_handler',
       roleArn: 'arn:test-partition:iam::test-acct:role/test-lambda-role',
-      runtime: 'python3.13',
+      runtime: 'python3.14',
       alarms: [
         {
           alarmName: 'InvalidAlarm',
@@ -649,7 +649,7 @@ describe('MDAA test with override scope', () => {
     srcDir: './test/src/lambda/test',
     handler: 'test_handler',
     roleArn: 'arn:test-partition:iam::test-acct:role/test-lambda-role',
-    runtime: 'python3.13',
+    runtime: 'python3.14',
   };
 
   const constructPropsWithOverride: LambdaFunctionL3ConstructProps = {
