@@ -419,13 +419,7 @@ uv run pytest -v               # Verbose output
 2. Add `"test:python": "bash ../../../../scripts/test/test_python_package.sh"` to the package's `package.json` scripts (adjust the relative path depth as needed)
 3. The centralized runner (`scripts/test/test_python_package.sh`) no-ops gracefully if `python-tests/` doesn't exist
 
-## Integration Tests
-
-Integration tests deploy actual infrastructure to AWS accounts and validate end-to-end behavior. Tests are located under `packages/constructs/*/test/integ/` and organized into splits for parallel CI execution.
-
-See [integ/constructs/README.md](integ/constructs/README.md) for full documentation.
-
-### Testing Apps Locally
+## Testing Apps Locally
 
 MDAA Apps can be tested like any CDK app using `cdk synth/diff/deploy` from the app directory, providing the necessary context values:
 
@@ -441,24 +435,6 @@ cdk synth --require-approval never \
 
 Any changes to underlying dependencies (stacks, constructs) require rebuilding those packages first (`npm run build:all` from the repo root, or `npm run build` in each modified package).
 
-### Running Integration Tests
-
-```bash
-# Bootstrap shared resources (VPC, KMS, KeyPair)
-./scripts/test/bootstrap-integ.sh
-
-# Run tests for a specific package
-python3 ./scripts/test/run-integ-tests.py packages/constructs/L2/s3-constructs
-
-# Run a CI split
-python3 ./scripts/test/run-integ-tests.py split_0
-
-# Teardown
-./scripts/test/bootstrap-integ.sh --teardown
-```
-
-Prerequisites: AWS credentials configured, `AWS_REGION` or `AWS_DEFAULT_REGION` set.
-
 ## CI Pipeline
 
 The CI pipeline runs tests at multiple stages:
@@ -471,7 +447,6 @@ The CI pipeline runs tests at multiple stages:
 | build    | `feature_merge_build_test`   | Build + unit tests + diff tests with coverage |
 | test     | `feature_merge_python_test`  | Python tests (reuses build cache) |
 | test     | `feature_merge_test_docs`    | Documentation build validation |
-| test     | `feature_merge_integ_split_*`| Integration tests against AWS accounts |
 | analyze  | `feature_merge_sonarqube`    | SonarQube analysis |
 
 ## Adding Tests

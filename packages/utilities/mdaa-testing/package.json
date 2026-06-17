@@ -17,14 +17,6 @@
     ".": {
       "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
-    },
-    "./integ": {
-      "types": "./lib/integ.d.ts",
-      "default": "./lib/integ.js"
-    },
-    "./lib/integ": {
-      "types": "./lib/integ.d.ts",
-      "default": "./lib/integ.js"
     }
   },
   "scripts": {

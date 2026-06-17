@@ -7,6 +7,3 @@
 export * from './test-app';
 export * from './diff';
 export * from './mdaa-test-helpers';
-
-// Integration test helpers (no Jest dependency)
-export * from './mdaa-integ-helpers';

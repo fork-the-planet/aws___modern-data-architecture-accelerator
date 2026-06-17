@@ -5,7 +5,7 @@ fileMatchPattern: '**/*.test.ts,**/jest.config.*'
 
 # Testing Standards - Steering Guide
 
-Enforce and improve testing across all MDAA packages — L2 constructs, L3 constructs, app modules, Python code, and integration tests. This steering file covers the full testing strategy, including writing new tests, reviewing test quality, and working with diff baselines.
+Enforce and improve testing across all MDAA packages — L2 constructs, L3 constructs, app modules, and Python code. This steering file covers the full testing strategy, including writing new tests, reviewing test quality, and working with diff baselines.
 
 #[[file:TESTING.md]]
 #[[file:CONTRIBUTING.md]]
@@ -16,7 +16,6 @@ Enforce and improve testing across all MDAA packages — L2 constructs, L3 const
 - **L3 construct tests**: `packages/constructs/L3/*/*/test/`
 - **App module tests**: `packages/apps/*/*/test/`
 - **Python tests**: `*/python-tests/`
-- **Integration tests**: `packages/constructs/*/test/integ/`
 - **Diff baselines**: `*/test/__snapshots__/*.baseline.json`
 
 ## Standards Summary
