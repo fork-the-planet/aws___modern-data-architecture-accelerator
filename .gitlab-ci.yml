@@ -38,6 +38,12 @@ variables:
   # instead of only affected/changed packages. The pre-merge gate will block merge
   # while this is set, so remember to set it back to 'false' before merging.
   MERGE_PIPELINE_RUN_ALL: 'false'
+  # Helper container memory/ephemeral for large cache operations (~2.3GB workspace
+  # cache). Default 256Mi OOMs during cache upload/download. These apply globally
+  # since all jobs share the same cache size regardless of build-container sizing.
+  KUBERNETES_HELPER_MEMORY_REQUEST: 2Gi
+  KUBERNETES_HELPER_MEMORY_LIMIT: 2Gi
+  KUBERNETES_HELPER_EPHEMERAL_STORAGE_REQUEST: 4Gi
 
 image: ${BASE_IMAGE_TAG}
 
@@ -122,6 +128,22 @@ before_script:
     KUBERNETES_MEMORY_LIMIT: 64Gi
     KUBERNETES_EPHEMERAL_STORAGE_REQUEST: 64Gi
 
+# -----------------------------------------------------------------------------
+# Retry on infrastructure failure (merge-pipeline jobs)
+# -----------------------------------------------------------------------------
+# Merge-pipeline jobs are idempotent (fresh checkout + build/test from scratch),
+# so re-running on a transient fleet failure is safe. Retry up to 2 times (the
+# GitLab maximum) on infra failures only. We deliberately do NOT retry on
+# script_failure: a genuine test/build failure must fail immediately and loudly.
+.retry_on_infra_failure:
+  retry:
+    max: 2
+    when:
+      - runner_system_failure   # helper container evicted, pod terminated, runner OOM
+      - stuck_or_timeout_failure # job stuck waiting for a runner to pick it up
+      - api_failure              # GitLab API hiccup during job orchestration
+      - scheduler_failure        # GitLab couldn't schedule the job onto a runner
+
 # Template: Kaniko-based Docker image build
 .base_image_template:
   extends: .size_2xlarge
@@ -153,7 +175,9 @@ before_script:
 
 # Build the base Docker image for merge request pipelines
 feature_merge_base_image:
-  extends: .base_image_template
+  extends:
+    - .base_image_template
+    - .retry_on_infra_failure
   interruptible: true
   only:
     - merge_requests
@@ -178,7 +202,9 @@ feature_validate_packages:
 
 # Lint TypeScript/JavaScript source
 feature_merge_lint:
-  extends: .size_large
+  extends:
+    - .size_large
+    - .retry_on_infra_failure
   interruptible: true
   tags:
     - arch:amd64
@@ -199,7 +225,9 @@ feature_merge_lint:
 
 # Lint Python source
 feature_merge_lint_python:
-  extends: .size_medium
+  extends:
+    - .size_medium
+    - .retry_on_infra_failure
   interruptible: true
   tags:
     - arch:amd64
@@ -234,7 +262,9 @@ feature_check_target:
 
 # Scan for accidentally committed secrets
 feature_merge_git_secrets:
-  extends: .size_small
+  extends:
+    - .size_small
+    - .retry_on_infra_failure
   interruptible: true
   tags:
     - arch:amd64
@@ -264,7 +294,9 @@ feature_validate_dependencies:
 
 # Build and run TypeScript/JavaScript tests
 feature_merge_build_test:
-  extends: .size_3xlarge
+  extends:
+    - .size_3xlarge
+    - .retry_on_infra_failure
   interruptible: true
   tags:
     - arch:amd64
@@ -287,6 +319,7 @@ feature_merge_build_test:
       - '*'
     exclude:
       - '**/node_modules/**'
+      - '.nx/**'
   allow_failure: false
   variables:
     AWS_CREDS_TARGET_ROLE: '${DEV_ROLE_ARN}'
@@ -299,10 +332,14 @@ feature_merge_build_test:
     - npm run build
     - ./scripts/ci/check_schema_drift.sh
     - npm run test
+    # Remove nx daemon log before cache save (~157MB of no CI value)
+    - rm -rf .nx/workspace-data/d/
 
 # Run Python tests (after build_test to reuse node_modules cache)
 feature_merge_python_test:
-  extends: .size_large
+  extends:
+    - .size_large
+    - .retry_on_infra_failure
   interruptible: true
   stage: test
   tags:
@@ -344,7 +381,9 @@ feature_merge_python_test:
 
 # Validate package-level documentation for changed packages
 feature_merge_test_package_docs:
-  extends: .size_medium
+  extends:
+    - .size_medium
+    - .retry_on_infra_failure
   interruptible: true
   tags:
     - arch:amd64
@@ -415,7 +454,9 @@ pages:
 # NOTE: Integration tests are currently disabled across all pipelines.
 # To re-enable, remove the `rules: - when: never` block and uncomment the `only` block.
 .integ_test_template: &integ_test_template
-  extends: .size_3xlarge
+  extends:
+    - .size_3xlarge
+    - .retry_on_infra_failure
   interruptible: true
   tags:
     - arch:amd64
@@ -479,7 +520,9 @@ feature_merge_integ_split_2:
 
 # Run baseline review against previous release
 feature_merge_baseline_review:
-  extends: .size_medium
+  extends:
+    - .size_medium
+    - .retry_on_infra_failure
   interruptible: true
   tags:
     - arch:amd64
@@ -518,7 +561,9 @@ feature_merge_baseline_review:
 
 # Auto-populate MR description with change summary and narrative
 feature_merge_mr_summary:
-  extends: .size_medium
+  extends:
+    - .size_medium
+    - .retry_on_infra_failure
   interruptible: true
   tags:
     - arch:amd64
@@ -544,7 +589,9 @@ feature_merge_mr_summary:
 
 # Review L2/L3 construct changes for compliance (encryption, IAM, nag suppressions)
 feature_merge_compliance_review:
-  extends: .size_medium
+  extends:
+    - .size_medium
+    - .retry_on_infra_failure
   interruptible: true
   tags:
     - arch:amd64
@@ -581,7 +628,9 @@ feature_merge_compliance_review:
 
 # Review test standards alignment across changed packages
 feature_merge_test_standards_review:
-  extends: .size_medium
+  extends:
+    - .size_medium
+    - .retry_on_infra_failure
   interruptible: true
   tags:
     - arch:amd64
@@ -618,7 +667,9 @@ feature_merge_test_standards_review:
 
 # Review app module quality (README, sample configs, config schema, JSDoc)
 feature_merge_module_quality_review:
-  extends: .size_medium
+  extends:
+    - .size_medium
+    - .retry_on_infra_failure
   interruptible: true
   tags:
     - arch:amd64
@@ -655,7 +706,9 @@ feature_merge_module_quality_review:
 
 # Review code architecture (construct hierarchy, dependency direction, separation of concerns)
 feature_merge_architecture_review:
-  extends: .size_medium
+  extends:
+    - .size_medium
+    - .retry_on_infra_failure
   interruptible: true
   tags:
     - arch:amd64
@@ -692,7 +745,9 @@ feature_merge_architecture_review:
 
 # Review repo-wide documentation quality (CHANGELOG, SCHEMA.md, cross-references)
 feature_merge_doc_quality_review:
-  extends: .size_medium
+  extends:
+    - .size_medium
+    - .retry_on_infra_failure
   interruptible: true
   tags:
     - arch:amd64
@@ -729,7 +784,9 @@ feature_merge_doc_quality_review:
 # Scan the target branch (main) to establish the SonarQube baseline so
 # that MR changes are correctly classified as "new code".
 feature_merge_sonarqube_target:
-  extends: .size_xlarge
+  extends:
+    - .size_xlarge
+    - .retry_on_infra_failure
   interruptible: true
   tags:
     - arch:amd64
@@ -757,7 +814,9 @@ feature_merge_sonarqube_target:
 
 # Run SonarQube analysis
 feature_merge_sonarqube:
-  extends: .size_xlarge
+  extends:
+    - .size_xlarge
+    - .retry_on_infra_failure
   interruptible: true
   tags:
     - arch:amd64
@@ -845,6 +904,7 @@ feature_version:
       - schemas
     exclude:
       - '**/node_modules/**'
+      - '.nx/**'
   allow_failure: false
   variables:
     AWS_CREDS_TARGET_ROLE: '${DEV_ROLE_ARN}'
@@ -884,6 +944,7 @@ feature_build_test:
       - schemas
     exclude:
       - '**/node_modules/**'
+      - '.nx/**'
   allow_failure: false
   variables:
     NX_RUN_ALL: 'true'
@@ -891,6 +952,8 @@ feature_build_test:
     - npm run build
     - ./scripts/ci/check_schema_drift.sh
     - npm run test
+    # Remove nx daemon log before cache save (~157MB of no CI value)
+    - rm -rf .nx/workspace-data/d/
 
 # Run Python tests (after build_test to reuse node_modules cache)
 feature_python_test:
@@ -1150,6 +1213,8 @@ prerelease_build_test:
     - npm run build
     - ./scripts/ci/check_schema_drift.sh
     - npm run test
+    # Remove nx daemon log before cache save (~157MB of no CI value)
+    - rm -rf .nx/workspace-data/d/
 
 # --- analyze stage ---
 
@@ -1444,6 +1509,7 @@ release_version_package:
       - CHANGELOG.md
     exclude:
       - '**/node_modules/**'
+      - '.nx/**'
   allow_failure: false
   needs:
     - prerelease_analyze
@@ -1458,6 +1524,8 @@ release_version_package:
     - npm run build
     - ./scripts/ci/check_schema_drift.sh
     - npm run test
+    # Remove nx daemon log before cache save (~157MB of no CI value)
+    - rm -rf .nx/workspace-data/d/
     - ./scripts/build/package_repo.sh
 
 # Manual confirmation gate to proceed with the release
