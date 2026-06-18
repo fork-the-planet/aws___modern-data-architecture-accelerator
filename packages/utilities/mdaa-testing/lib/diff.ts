@@ -28,13 +28,36 @@ const VERSION_NUMBER_PATTERN = /\d+\.\d+\.\d+(?:[a-zA-Z][a-zA-Z0-9.]*|\.\d[a-zA-
  * Normalize volatile values in a template so that MDAA version bumps
  * don't cause diff failures.
  */
-function normalizeTemplate(template: Record<string, unknown>): Record<string, unknown> {
+export function normalizeTemplate(template: Record<string, unknown>): Record<string, unknown> {
   const json = VERSION_PATTERNS.reduce(
     (s, pattern) => s.replace(pattern, match => match.replace(VERSION_NUMBER_PATTERN, 'VERSION')),
     JSON.stringify(template),
   );
 
-  return JSON.parse(json) as Record<string, unknown>;
+  const normalized = JSON.parse(json) as Record<string, unknown>;
+
+  // Strip encoded cdk_nag suppression reasons. CDK Nag base64-encodes reasons
+  // containing characters > U+00FF (e.g. em-dashes), and embeds the full temp-dir
+  // config path in the reason prefix. This makes the value non-deterministic across
+  // runs. We strip only the `reason` field when `is_reason_encoded` is true — the
+  // `id` field still detects new/removed suppressions.
+  const resources = normalized.Resources as Record<string, Record<string, unknown>> | undefined;
+  if (resources) {
+    for (const resource of Object.values(resources)) {
+      const metadata = resource.Metadata as Record<string, unknown> | undefined;
+      const cdkNag = metadata?.cdk_nag as { rules_to_suppress?: Array<Record<string, unknown>> } | undefined;
+      if (cdkNag?.rules_to_suppress) {
+        for (const rule of cdkNag.rules_to_suppress) {
+          if (rule.is_reason_encoded) {
+            delete rule.reason;
+            delete rule.is_reason_encoded;
+          }
+        }
+      }
+    }
+  }
+
+  return normalized;
 }
 
 function isValidTestName(name: string): boolean {
@@ -85,6 +108,61 @@ function mockCodeFactoryMethods(): Array<any> {
     mockOnClass(lambda.DockerImageCode, 'fromEcr'),
     mockOnClass(lambda.DockerImageCode, 'fromImageAsset'),
   ];
+}
+
+/** Default resource logical ID patterns to ignore in baseline diffs. */
+export const DEFAULT_IGNORE_PATTERNS: string[] = [
+  'CurrentVersion[a-fA-F0-9]+$', // Lambda version hash changes with code/config
+  'AliasLive[a-fA-F0-9]+$', // Lambda aliases reference CurrentVersion
+  '^CDKMetadata$', // AWS::CDK::Metadata Analytics string encodes CDK construct versions (env-dependent)
+];
+
+/**
+ * Default resource properties to strip from baselines.
+ * These apply identically to module-level and starter kit diff tests.
+ */
+export const DEFAULT_IGNORE_PROPERTIES: Record<string, string[]> = {
+  'Alias[a-fA-F0-9]+$': ['FunctionVersion'],
+  // The datazone/sagemaker domain config custom resource carries a Date.now()
+  // 'refresh' property to force re-invocation on every deploy — always non-deterministic.
+  domainConfigcr: ['refresh'],
+};
+
+/**
+ * Strip ignored resources and properties from a CloudFormation template.
+ * Used by both module-level and starter kit baseline tests.
+ */
+export function stripIgnoredContent(
+  template: Record<string, unknown>,
+  extraPatterns: string[] = [],
+  extraProperties: Record<string, string[]> = {},
+): Record<string, unknown> {
+  const ignorePatterns = [...DEFAULT_IGNORE_PATTERNS, ...extraPatterns].map(p => new RegExp(p));
+  const mergedProps = { ...DEFAULT_IGNORE_PROPERTIES, ...extraProperties };
+  const ignoreProperties = Object.entries(mergedProps).map(([pattern, props]) => ({
+    pattern: new RegExp(pattern),
+    properties: props,
+  }));
+
+  const resources = template.Resources as Record<string, Record<string, unknown>> | undefined;
+  if (!resources) return template;
+
+  const filtered: Record<string, Record<string, unknown>> = {};
+  for (const [logicalId, resource] of Object.entries(resources)) {
+    if (ignorePatterns.some(p => p.test(logicalId))) continue;
+    let processedResource = resource;
+    for (const { pattern, properties } of ignoreProperties) {
+      if (pattern.test(logicalId) && processedResource.Properties) {
+        const props = { ...(processedResource.Properties as Record<string, unknown>) };
+        for (const prop of properties) {
+          delete props[prop];
+        }
+        processedResource = { ...processedResource, Properties: props };
+      }
+    }
+    filtered[logicalId] = processedResource;
+  }
+  return { ...template, Resources: filtered };
 }
 
 /**
@@ -148,54 +226,12 @@ export function baselineDiffTestApp(
   }
 
   // Global patterns for resources with non-deterministic logical IDs
-  const defaultIgnorePatterns = [
-    'CurrentVersion[a-fA-F0-9]+$', // Lambda version hash changes with code/config across version bumps
-    'AliasLive[a-fA-F0-9]+$', // Lambda aliases reference CurrentVersion, so they drift too
-  ];
-  const ignorePatterns = [...defaultIgnorePatterns, ...(options?.ignoreResourcePatterns ?? [])].map(p => new RegExp(p));
-
-  // Strip FunctionVersion from all Lambda Alias resources globally.
-  // The version reference contains a CurrentVersion hash that drifts
-  // across environments, but the alias itself is stable and worth diffing.
-  const defaultIgnoreProperties: Record<string, string[]> = {
-    'Alias[a-fA-F0-9]+$': ['FunctionVersion'],
-  };
-  const mergedIgnoreProperties = { ...defaultIgnoreProperties, ...(options?.ignoreResourceProperties ?? {}) };
-  const ignoreProperties = Object.entries(mergedIgnoreProperties).map(([pattern, props]) => ({
-    pattern: new RegExp(pattern),
-    properties: props,
-  }));
 
   /**
    * Remove ignored resources and properties from a template.
-   * - Resources matching ignoreResourcePatterns are stripped entirely.
-   * - Properties matching ignoreResourceProperties are removed from
-   *   the resource's Properties object, keeping the resource itself.
    */
-  function stripIgnoredContent(template: Record<string, unknown>): Record<string, unknown> {
-    const resources = template.Resources as Record<string, Record<string, unknown>> | undefined;
-    if (!resources) return template;
-
-    const filtered: Record<string, Record<string, unknown>> = {};
-    for (const [logicalId, resource] of Object.entries(resources)) {
-      // Strip entire resource if it matches an ignore pattern
-      if (ignorePatterns.some(p => p.test(logicalId))) continue;
-
-      // Strip specific properties if configured
-      let processedResource = resource;
-      for (const { pattern, properties } of ignoreProperties) {
-        if (pattern.test(logicalId) && processedResource.Properties) {
-          const props = { ...(processedResource.Properties as Record<string, unknown>) };
-          for (const prop of properties) {
-            delete props[prop];
-          }
-          processedResource = { ...processedResource, Properties: props };
-        }
-      }
-      filtered[logicalId] = processedResource;
-    }
-
-    return { ...template, Resources: filtered };
+  function stripIgnored(template: Record<string, unknown>): Record<string, unknown> {
+    return stripIgnoredContent(template, options?.ignoreResourcePatterns, options?.ignoreResourceProperties);
   }
 
   test(`${testNamePrefix} Baseline Diff Test`, async () => {
@@ -235,7 +271,7 @@ export function baselineDiffTestApp(
 
         if (!fs.existsSync(baselineFile)) {
           fs.mkdirSync(snapshotsDir, { recursive: true });
-          const normalized = stripIgnoredContent(normalizeTemplate(stack.template as Record<string, unknown>));
+          const normalized = stripIgnored(normalizeTemplate(stack.template as Record<string, unknown>));
           fs.writeFileSync(baselineFile, JSON.stringify(normalized, null, 2) + '\n');
           firstRun = true;
         }
@@ -253,7 +289,7 @@ export function baselineDiffTestApp(
       for (const stack of stacks) {
         const templateFile = path.join(assembly.directory, stack.templateFile);
         const raw = JSON.parse(fs.readFileSync(templateFile, 'utf-8'));
-        const normalized = stripIgnoredContent(normalizeTemplate(raw as Record<string, unknown>));
+        const normalized = stripIgnored(normalizeTemplate(raw as Record<string, unknown>));
         fs.writeFileSync(templateFile, JSON.stringify(normalized, null, 2));
       }
 
@@ -280,7 +316,7 @@ export function baselineDiffTestApp(
             if (UPDATE_BASELINES) {
               // Print the diff, update the baseline, and continue without failing
               console.log(`\n${diffSummary}`);
-              const normalized = stripIgnoredContent(normalizeTemplate(stack.template as Record<string, unknown>));
+              const normalized = stripIgnored(normalizeTemplate(stack.template as Record<string, unknown>));
               fs.writeFileSync(baselineFile, JSON.stringify(normalized, null, 2) + '\n');
               console.log(`[baseline-updated] ${baselineFile}\n`);
             } else {

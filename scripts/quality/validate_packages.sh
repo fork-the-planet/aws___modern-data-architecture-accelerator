@@ -41,6 +41,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$SCRIPT_DIR/../.."
 
 CANONICAL_TEST="jest --passWithNoTests --coverage"
+CANONICAL_STARTER_KIT_TEST="python3 ../scripts/test/test_starter_kit.py"
 
 CANONICAL_JSII_BUILD="export JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 && jsii --project-references"
 CANONICAL_JSII_WATCH="jsii -w  --project-references"
@@ -107,6 +108,38 @@ for pkg_dir in $(discover_packages); do
   fi
 
   CHECKED=$((CHECKED + 1))
+
+  # The single starter kits package (config distributions + diff-test harness)
+  # has reduced validation requirements — it is not a code module.
+  _is_starter_kit=false
+  if [[ "$pkg_dir" == "starter_kits" ]]; then
+    _is_starter_kit=true
+  fi
+
+  if [ "$_is_starter_kit" = true ]; then
+    # Starter kits only require: test script, .npmignore, and coverage threshold
+    if [ "$test_val" != "$CANONICAL_STARTER_KIT_TEST" ]; then
+      fail "$pkg_dir" "Property 1 - test script is not canonical. Got: '$test_val'"
+    fi
+
+    if [ ! -f "${pkg_dir}/.npmignore" ]; then
+      fail "$pkg_dir" "Property 9 - .npmignore file is missing"
+    fi
+
+    jest_config="${pkg_dir}/jest.config.js"
+    if [ -f "$jest_config" ]; then
+      effective_check=$(node -e "
+        const c = require('./${jest_config}');
+        const t = c.coverageThreshold && c.coverageThreshold.global;
+        if (!t) { console.log('NO_THRESHOLD'); }
+      " 2>&1) || true
+      if echo "$effective_check" | grep -q 'NO_THRESHOLD'; then
+        fail "$pkg_dir" "Property 4 - effective jest config has no coverageThreshold"
+      fi
+    fi
+
+    continue
+  fi
 
   # Property 1: test script
   if [ "$test_val" != "$CANONICAL_TEST" ]; then

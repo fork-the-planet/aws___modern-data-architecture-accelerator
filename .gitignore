@@ -8,6 +8,7 @@ codescan*
 !jest.config.js
 !jest.setup.js
 !eslint.config.js
+!packages/utilities/mdaa-testing/lib/starter-kit-synth-setup.js
 *.d.ts
 *.d.ts.map
 node_modules

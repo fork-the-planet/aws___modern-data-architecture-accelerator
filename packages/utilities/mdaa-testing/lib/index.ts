@@ -7,3 +7,6 @@
 export * from './test-app';
 export * from './diff';
 export * from './mdaa-test-helpers';
+
+// Starter kit diff/baseline test helpers
+export * from './starter-kit-diff';

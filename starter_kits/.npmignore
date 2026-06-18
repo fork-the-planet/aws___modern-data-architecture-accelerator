@@ -1,0 +1,4 @@
+test/
+jest.config.js
+coverage/
+.DS_Store

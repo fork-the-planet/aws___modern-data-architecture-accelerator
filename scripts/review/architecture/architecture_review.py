@@ -249,7 +249,14 @@ def main() -> None:
 
     if not packages:
         try:
-            verify_no_false_negative("packages/", [".ts"])
+            # Exclude packages that aren't L2/L3/app (CLI, utilities, config)
+            # — they're expected to return 0 from the architecture detection
+            excluded = [
+                "packages/cli",
+                "packages/utilities/mdaa-testing",
+                "packages/utilities/mdaa-config",
+            ]
+            verify_no_false_negative("packages/", [".ts"], excluded_roots=excluded)
         except FalseNegativeError as e:
             print("\n" + "=" * 70)
             print("REVIEW AGENT FAILURE: Silent pass-through detected")

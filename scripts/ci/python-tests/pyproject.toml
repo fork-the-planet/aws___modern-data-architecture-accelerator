@@ -1,0 +1,19 @@
+[project]
+name = "ci-script-tests"
+version = "0.1.0"
+description = "Tests for CI helper scripts (generate_starter_kit_jobs.py)"
+requires-python = ">=3.12"
+dependencies = [
+    "pytest==7.4.0",
+    "pyyaml==6.0.2",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["."]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--verbose",
+    "--tb=short",
+]

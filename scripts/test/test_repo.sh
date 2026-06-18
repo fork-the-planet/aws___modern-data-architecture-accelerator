@@ -29,19 +29,35 @@ MAX_WORKERS="${JEST_MAX_WORKERS:-$DEFAULT_MAX_WORKERS}"
 # Otherwise (local dev, feature branches, MRs), run only affected tests.
 source "$SCRIPT_DIR/../nx/affected-base.sh"
 
+# Starter kits live in the single @aws-mdaa/starter-kits package and are always
+# tested via the dedicated self-filtering harness (test_starter_kits_repo.sh),
+# never via `nx affected` here. Excluding them keeps that separation in both CI
+# (where they run in a dedicated job) and locally (where we invoke the harness
+# after the TS tests below).
+EXCLUDE_STARTER_KITS='--exclude=@aws-mdaa/starter-kits'
+
 if [ "${CI:-}" = "true" ] && [ "${CI_COMMIT_BRANCH:-}" = "main" ] || [ "${NX_RUN_ALL:-false}" = "true" ]; then
   echo "Running full TypeScript test suite (main or MERGE_PIPELINE_RUN_ALL=true)"
   echo "Using CONCURRENCY=${CONCURRENCY}, MAX_WORKERS=${MAX_WORKERS}"
-  npx nx run-many -t test --all --parallel="$CONCURRENCY" -- --silent --maxWorkers="$MAX_WORKERS"
+  npx nx run-many -t test --all --parallel="$CONCURRENCY" $EXCLUDE_STARTER_KITS -- --silent --maxWorkers="$MAX_WORKERS"
 else
   echo "Running affected TypeScript tests (base: $NX_BASE)"
 
   if [ "${CI:-}" = "true" ]; then
     echo "Using CONCURRENCY=${CONCURRENCY}, MAX_WORKERS=${MAX_WORKERS}"
-    npx nx affected -t test --base="$NX_BASE" --head="$NX_HEAD" --parallel="$CONCURRENCY" -- --silent --maxWorkers="$MAX_WORKERS"
+    npx nx affected -t test --base="$NX_BASE" --head="$NX_HEAD" --parallel="$CONCURRENCY" $EXCLUDE_STARTER_KITS -- --silent --maxWorkers="$MAX_WORKERS"
   else
-    npx nx affected -t test --base="$NX_BASE" --head="$NX_HEAD" -- --maxWorkers="$MAX_WORKERS" "$@"
+    npx nx affected -t test --base="$NX_BASE" --head="$NX_HEAD" $EXCLUDE_STARTER_KITS -- --maxWorkers="$MAX_WORKERS" "$@"
   fi
+fi
+
+# --- Starter kit tests ---
+# In CI, the heavy starter kit synth tests run in a separate job
+# (feature_merge_starter_kit_test) to avoid overwhelming the build pod.
+# Locally, run them inline via the self-filtering harness.
+if [ "${CI:-}" != "true" ]; then
+  echo "Running starter kit tests..."
+  "$SCRIPT_DIR/test_starter_kits_repo.sh"
 fi
 
 # --- Python tests ---

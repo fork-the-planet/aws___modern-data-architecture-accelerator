@@ -22,6 +22,35 @@ Preferred patterns, in order:
 
 Avoid: literal account IDs (`123456789012`), region strings (`us-east-1`), or copy-pasted ARNs.
 
+## 1a. SSM cross-module reference integrity
+
+When one module consumes a value another module produces, the consumer's SSM reference must point to a path that a producer module actually creates. MDAA SSM paths follow the resource naming convention:
+
+```text
+/<org>/<domain>/<module>/<resource-type>/<resource-name>/<attribute>
+```
+
+A reference like `ssm-org:/ent-data/smus-dom/domain/domain1/config/bucket_arn` therefore implies a `smus-dom` module deployed in the `ent-data` domain that publishes a `.../domain/domain1/config/bucket_arn` parameter. If no such module exists in the deployment, the reference is dangling.
+
+Rules:
+
+- **Every consumer SSM reference must have a producer.** For each `ssm-org:`, `ssm-domain:`, or `{{resolve:ssm:...}}` reference, confirm a module in the same `mdaa.yaml` (or a documented external dependency) publishes that exact path. The `<domain>/<module>` segments of an `ssm-org:` path must map to a real domain/module pair.
+- **Respect the producer's path structure.** Don't invent attribute names — use the parameter paths the producing module documents in its README (e.g. the Roles module publishes `/<org>/<domain>/generated-role/<name>/id`).
+- **Cross-account references need the full ARN form** (`arn:<partition>:ssm:<region>:<account>:parameter/<path>`), and the producing module must be deployed in that account (listed under `additional_accounts`/`additional_stacks` where relevant).
+- **Order does not need to be manual** — MDAA stages modules by dependency — but the producer must exist somewhere in the deployment graph.
+
+Failure mode: a dangling SSM reference does **not** fail config schema validation. It fails later — at synth time (a context-provider lookup records missing context) or at deploy time (the SSM parameter is not found). The diff baseline tests (synth-time) are the authoritative gate for catching these; treat authoring-time discipline and review as the first line of defense, not the last.
+
+```yaml
+# Good — consumer references a path produced by the smus-dom module,
+# which is present in this mdaa.yaml under the ent-data domain.
+domainConfigSSMParam: /{{org}}/ent-data/smus-dom/domain/domain1/config
+
+# Bad — references a module/path that no deployed module produces.
+# Passes schema validation, fails at synth/deploy.
+domainConfigSSMParam: /{{org}}/ent-data/nonexistent-module/domain/domain1/config
+```
+
 ## 2. Comment every configuration line
 
 Each config property should have a YAML comment explaining what it does and why. Comments help future users understand intent, not just structure.

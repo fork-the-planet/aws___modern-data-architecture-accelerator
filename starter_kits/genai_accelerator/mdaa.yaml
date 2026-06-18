@@ -7,16 +7,16 @@ tag_configs:
   - ./tags.yaml
 
 ## Pre-Deployment Instructions
-organization: <unique-org-name>
+organization: <YOUR_ORG_NAME>
 
 context:
-  vpc_id: <your vpc id>
-  subnet_id_1:  <your subnet id 1>
-  subnet_id_2:  <your subnet id 2>
-  subnet_id_3:  <your subnet id 3>
-  llm_model: <your_model> # e.g. anthropic.claude-3-5-sonnet-20240620-v1:0 or an ARN
-  kb_embedding_model: <kb_embedding_model> # e.g. amazon.titan-embed-text-v2:0
-  kb_parsing_model: <kb_parsing_model> # e.g. anthropic.claude-3-5-sonnet-20240620-v1:0 or an ARN
+  vpc_id: <YOUR_VPC_ID>
+  subnet_id_1:  <YOUR_SUBNET_ID_1>
+  subnet_id_2:  <YOUR_SUBNET_ID_2>
+  subnet_id_3:  <YOUR_SUBNET_ID_3>
+  llm_model: <YOUR_BEDROCK_MODEL_ID> # e.g. anthropic.claude-3-5-sonnet-20240620-v1:0 or an ARN
+  kb_embedding_model: <YOUR_BEDROCK_MODEL_ID_2> # e.g. amazon.titan-embed-text-v2:0
+  kb_parsing_model: <YOUR_BEDROCK_MODEL_ID_3> # e.g. anthropic.claude-3-5-sonnet-20240620-v1:0 or an ARN
 
 # One or more domains may be specified. Domain name will be incorporated by default naming implementation
 # to prefix all resource names.

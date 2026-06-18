@@ -34,7 +34,7 @@ region: default
 ## Pre-Deployment Instructions
 # TODO: Set an appropriate, unique organization name
 # Failure to do so may result in global naming conflicts for S3 buckets and other global resources.
-organization: <UNIQUE_ORG_NAME>
+organization: <YOUR_ORG_NAME>
 
 # Context values set here can be referenced throughout module configs using {{context:key}} syntax
 context:
@@ -43,43 +43,43 @@ context:
   # - Members of an AWS Organization
   # - Have AWS Organizations RAM sharing with automated associations enabled
   #   (required for cross-account resource sharing)
-  enterprise_account: '<ENTERPRISE_ACCOUNT_ID>'
-  team1_account: '<TEAM1_ACCOUNT_ID>'
-  team2_account: '<TEAM2_ACCOUNT_ID>'
+  enterprise_account: '<YOUR_ACCOUNT_ID>'
+  team1_account: '<YOUR_ACCOUNT_ID_2>'
+  team2_account: '<YOUR_ACCOUNT_ID_3>'
 
   # TODO: Configure to match SSO group IDs for your teams
   # Note that IAM Identity Center (IAM IDC) should be:
   # - Enabled in the same region targeted for MDAA deployment
   # - Have these groups created (or create them in IAM IDC)
   # - Group IDs can be found in IAM Identity Center console
-  admin1_user_sso_id: '<ADMIN_USER_SSO_ID>'
-  enterprise_group_sso_id: '<ENTERPRISE_GROUP_SSO_ID>'
-  team1_group_sso_id: '<TEAM1_GROUP_SSO_ID>'
-  team2_group_sso_id: '<TEAM2_GROUP_SSO_ID>'
+  admin1_user_sso_id: '<YOUR_ADMIN_USER_SSO_ID>'
+  enterprise_group_sso_id: '<YOUR_ENTERPRISE_GROUP_SSO_ID>'
+  team1_group_sso_id: '<YOUR_TEAM1_GROUP_SSO_ID>'
+  team2_group_sso_id: '<YOUR_TEAM2_GROUP_SSO_ID>'
 
   # TODO: Configure to match networking for your enterprise/main account
   # where the SageMaker domain and enterprise projects will be deployed.
   # Note that configured subnets should have access to AWS Service endpoints
   # via public routing or via VPC Endpoints (recommended for production).
-  enterprise_vpc_id: '<ENTERPRISE_VPC_ID>'
-  enterprise_private_subnet_id1: '<ENTERPRISE_PRIVATE_SUBNET_ID_1>'
-  enterprise_private_subnet_id2: '<ENTERPRISE_PRIVATE_SUBNET_ID_2>'
+  enterprise_vpc_id: '<YOUR_ENTERPRISE_VPC_ID>'
+  enterprise_private_subnet_id1: '<YOUR_ENTERPRISE_PRIVATE_SUBNET_ID_1>'
+  enterprise_private_subnet_id2: '<YOUR_ENTERPRISE_PRIVATE_SUBNET_ID_2>'
 
   # TODO: Configure to match networking for your team1 account
   # where team1 projects will be deployed.
   # Note that configured subnets should have access to AWS Service endpoints
   # via public routing or via VPC Endpoints.
-  team1_vpc_id: '<TEAM1_VPC_ID>'
-  team1_private_subnet_id1: '<TEAM1_PRIVATE_SUBNET_ID_1>'
-  team1_private_subnet_id2: '<TEAM1_PRIVATE_SUBNET_ID_2>'
+  team1_vpc_id: '<YOUR_TEAM1_VPC_ID>'
+  team1_private_subnet_id1: '<YOUR_TEAM1_PRIVATE_SUBNET_ID_1>'
+  team1_private_subnet_id2: '<YOUR_TEAM1_PRIVATE_SUBNET_ID_2>'
 
   # TODO: Configure to match networking for your team2 account
   # where team2 projects will be deployed.
   # Note that configured subnets should have access to AWS Service endpoints
   # via public routing or via VPC Endpoints.
-  team2_vpc_id: '<TEAM2_VPC_ID>'
-  team2_private_subnet_id1: '<TEAM2_PRIVATE_SUBNET_ID_1>'
-  team2_private_subnet_id2: '<TEAM2_PRIVATE_SUBNET_ID_2>'
+  team2_vpc_id: '<YOUR_TEAM2_VPC_ID>'
+  team2_private_subnet_id1: '<YOUR_TEAM2_PRIVATE_SUBNET_ID_1>'
+  team2_private_subnet_id2: '<YOUR_TEAM2_PRIVATE_SUBNET_ID_2>'
 
 # Forces modules to deploy in the order they are listed in the config. This is important to ensure
 # MDAA modules being deployed as custom blueprints are deployed in proper order.

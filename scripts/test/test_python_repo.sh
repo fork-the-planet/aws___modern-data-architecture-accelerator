@@ -29,3 +29,19 @@ if [ -d "$QUALITY_TESTS" ]; then
   echo "Running baseline review script tests..."
   (cd "$QUALITY_TESTS" && uv run pytest)
 fi
+
+# Run starter kit test-runner unit tests (not managed by nx)
+RUNNER_TESTS="$SCRIPT_DIR/python-tests"
+if [ -d "$RUNNER_TESTS" ]; then
+  echo ""
+  echo "Running starter kit test-runner tests..."
+  (cd "$RUNNER_TESTS" && uv run pytest)
+fi
+
+# Run CI helper script tests (not managed by nx)
+CI_TESTS="$SCRIPT_DIR/../ci/python-tests"
+if [ -d "$CI_TESTS" ]; then
+  echo ""
+  echo "Running CI helper script tests..."
+  (cd "$CI_TESTS" && uv run pytest)
+fi

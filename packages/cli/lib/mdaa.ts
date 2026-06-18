@@ -168,6 +168,11 @@ const optionDefinitions = [
     type: Boolean,
     description: 'Prints this help.',
   },
+  {
+    name: 'testing',
+    type: Boolean,
+    description: 'Testing mode - prints CDK commands without executing them.',
+  },
 ];
 
 const options = commandLineArgs(optionDefinitions, { partial: true });

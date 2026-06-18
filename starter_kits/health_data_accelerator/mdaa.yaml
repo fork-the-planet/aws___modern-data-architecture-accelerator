@@ -10,20 +10,20 @@ tag_configs:
 
 # TODO: Set an appropriate, unique organization name
 # Failure to do so may result in global naming conflicts.
-organization: <unique-org-name>
+organization: <YOUR_ORG_NAME>
 
 # TODO: Set appropriate context values for your environment.
 context:
-  dms-source-db: <dms source relational db database name>
-  dms-rds-secrets-arn: <arn of the AWS secrets manager secret containing RDS credentials for DMS>
-  dms-rds-secrets-kms-arn: <arn of the KMS key to decrypt the above secret>
-  vpc_id: <your vpc id>
-  subnet_id1: <your subnet id1>
-  subnet_id2: <your subnet id2>
-  file_processor_event_bridge_trigger_hour: <file processor triggered every these hours>
-  file_processor_event_bridge_trigger_rate: <file processor processing these many days>
-  transformation_event_bridge_trigger_rate: <transformation processing these many days>
-  transformation_event_bridge_trigger_hour: <transformation triggered every these hours>
+  dms-source-db: <YOUR_DMS_SOURCE_DB>
+  dms-rds-secrets-arn: <YOUR_SECRET_ARN>
+  dms-rds-secrets-kms-arn: <YOUR_KMS_ARN>
+  vpc_id: <YOUR_VPC_ID>
+  subnet_id1: <YOUR_SUBNET_ID_1>
+  subnet_id2: <YOUR_SUBNET_ID_2>
+  file_processor_event_bridge_trigger_hour: <YOUR_HOUR>
+  file_processor_event_bridge_trigger_rate: <YOUR_INT>
+  transformation_event_bridge_trigger_rate: <YOUR_INT_2>
+  transformation_event_bridge_trigger_hour: <YOUR_HOUR_2>
 
 # One or more domains may be specified. Domain name will be incorporated by default naming implementation
 # to prefix all resource names.

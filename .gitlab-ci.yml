@@ -377,6 +377,59 @@ feature_merge_python_test:
     - echo "Running Python tests with coverage..."
     - npm run test:python
 
+# Generate a child pipeline with one job per starter kit (dynamic, derived from
+# the kit directories — no hand-maintained job list). The generator is fast
+# (just enumerates kits); the actual synth runs in the triggered child pipeline.
+feature_merge_starter_kit_generate:
+  extends:
+    - .size_small
+    - .retry_on_infra_failure
+  interruptible: true
+  stage: test
+  tags:
+    - arch:amd64
+  only:
+    - merge_requests
+  dependencies:
+    - feature_merge_build_test
+  needs:
+    - feature_merge_build_test
+  cache:
+    key: feature-merge-build-$CI_COMMIT_REF_SLUG
+    paths:
+      - node_modules/
+      - packages/**/node_modules/
+      - .nx/
+    policy: pull
+  allow_failure: false
+  variables:
+    GIT_DEPTH: '0'
+  script:
+    - python3 ./scripts/ci/generate_starter_kit_jobs.py > starter-kit-pipeline.yml
+    - echo "Generated child pipeline:"
+    - cat starter-kit-pipeline.yml
+  artifacts:
+    paths:
+      - starter-kit-pipeline.yml
+    expire_in: 1 day
+
+# Trigger the generated child pipeline. strategy:depend makes this job (and thus
+# the MR) reflect the child pipeline's aggregate pass/fail. The child jobs pull
+# the built workspace from the shared feature-merge-build cache.
+# NOTE: trigger jobs do not support `retry` (or most normal job keys); the child
+# jobs carry their own retry instead.
+feature_merge_starter_kit_test:
+  stage: test
+  only:
+    - merge_requests
+  needs:
+    - feature_merge_starter_kit_generate
+  trigger:
+    include:
+      - artifact: starter-kit-pipeline.yml
+        job: feature_merge_starter_kit_generate
+    strategy: depend
+
 # --- test stage ---
 
 # Validate package-level documentation for changed packages
@@ -713,6 +766,45 @@ feature_merge_doc_quality_review:
       - doc-quality-review/report.json
     reports:
       codequality: doc-quality-review/codequality-report.json
+    when: always
+
+# Review starter kit quality (README structure, deployment instructions, CDK Nag, schema directives)
+feature_merge_starter_kit_quality_review:
+  extends:
+    - .size_medium
+    - .retry_on_infra_failure
+  interruptible: true
+  tags:
+    - arch:amd64
+  only:
+    - merge_requests
+  stage: analyze
+  dependencies:
+    - feature_merge_build_test
+  needs:
+    - feature_merge_build_test
+    - feature_check_target
+  cache:
+    key: feature-merge-build-$CI_COMMIT_REF_SLUG
+    paths:
+      - node_modules/
+      - packages/**/node_modules/
+      - .nx/
+    policy: pull
+  allow_failure: false
+  variables:
+    GIT_DEPTH: '0'
+    KIRO_API_KEY: '${KIRO_API_KEY}'
+    KIRO_TIMEOUT: '600'
+    KIRO_MAX_THREADS: '5'
+  script:
+    - python3 ./scripts/review/starter_kit_quality/starter_kit_quality_review.py --output-dir starter-kit-quality-review
+    - python3 ./scripts/review/starter_kit_quality/post_starter_kit_quality_threads.py --report starter-kit-quality-review/report.json
+  artifacts:
+    paths:
+      - starter-kit-quality-review/report.json
+    reports:
+      codequality: starter-kit-quality-review/codequality-report.json
     when: always
 
 # Scan the target branch (main) to establish the SonarQube baseline so

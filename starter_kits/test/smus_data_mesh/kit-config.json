@@ -1,0 +1,8 @@
+{
+  "_cdk_default_account": "111111111111",
+  "cdkContext": {
+    "ent-data/smus-bp-ddb": {
+      "ssm:account=111111111111:parameterName=/test-org/ent-data/smus-dom/domain/domain1/config/bucket_arn:region=test-region": "arn:test-partition:s3:::test-org-dev-ent-data-smus-dom-domain1"
+    }
+  }
+}

@@ -3,13 +3,13 @@ inclusion: auto
 description: General working instructions
 ---
 
-# General Working Instructions - Steering Guide
+# General Working Instructions - Steering Requirements
 
-Guidance to be applied to all Kiro tasks.
+Non-optional requirements to be applied to all Kiro tasks.
 
 #[[file:CONTRIBUTING.md]] #[[file:TESTING.md]]
 
-## Guidance
+## Working Requirements
 
 - All temporary working kiro files and outputs should written be under .kiro/working/<task identifier>
 - Run formatter and linting on any modified file.

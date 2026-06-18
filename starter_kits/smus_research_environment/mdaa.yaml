@@ -8,14 +8,14 @@ region: default
 
 # TODO: Set an appropriate, unique organization name
 # Failure to do so may result in global naming conflicts.
-organization: <unique org name>
+organization: <YOUR_ORG_NAME>
 # TODO: Set appropriate context values
 context:
-  team1-group-sso-id: <team1 sso group name>
-  team2-group-sso-id: <team2 sso group name>
-  vpc_id: <vpc id>
-  private_subnet_id1: <subnet id 1>
-  private_subnet_id2: <subnet id 2>
+  team1-group-sso-id: <YOUR_TEAM1_SSO_GROUP_ID>
+  team2-group-sso-id: <YOUR_TEAM2_SSO_GROUP_ID>
+  vpc_id: <YOUR_VPC_ID>
+  private_subnet_id1: <YOUR_SUBNET_ID_1>
+  private_subnet_id2: <YOUR_SUBNET_ID_2>
 
 # This configuration deploys SageMaker Unified Studio (SMUS) domains using DataZone V2
 # SMUS provides ML platform capabilities with integrated data governance

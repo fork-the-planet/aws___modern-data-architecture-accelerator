@@ -1,0 +1,146 @@
+[
+  {
+    "index": 0,
+    "command": "cd '/REPO_ROOT/packages/cli/lib/../../../' && MDAA_BUILD_CODE_ONLY=true npx lerna run build --scope @aws-mdaa/bootstrap --loglevel warn && cd '/TEMP_DIR/basic_datalake'"
+  },
+  {
+    "index": 1,
+    "command": "cd '/REPO_ROOT/packages/cli/lib/../../../' && MDAA_BUILD_CODE_ONLY=true npx lerna run build --scope @aws-mdaa/roles --loglevel warn && cd '/TEMP_DIR/basic_datalake'"
+  },
+  {
+    "index": 2,
+    "command": "cd '/REPO_ROOT/packages/cli/lib/../../../' && MDAA_BUILD_CODE_ONLY=true npx lerna run build --scope @aws-mdaa/datalake --loglevel warn && cd '/TEMP_DIR/basic_datalake'"
+  },
+  {
+    "index": 3,
+    "command": "cd '/REPO_ROOT/packages/cli/lib/../../../' && MDAA_BUILD_CODE_ONLY=true npx lerna run build --scope @aws-mdaa/glue-catalog --loglevel warn && cd '/TEMP_DIR/basic_datalake'"
+  },
+  {
+    "index": 4,
+    "command": "cd '/REPO_ROOT/packages/cli/lib/../../../' && MDAA_BUILD_CODE_ONLY=true npx lerna run build --scope @aws-mdaa/lakeformation-settings --loglevel warn && cd '/TEMP_DIR/basic_datalake'"
+  },
+  {
+    "index": 5,
+    "command": "cd '/REPO_ROOT/packages/cli/lib/../../../' && MDAA_BUILD_CODE_ONLY=true npx lerna run build --scope @aws-mdaa/athena-workgroup --loglevel warn && cd '/TEMP_DIR/basic_datalake'"
+  },
+  {
+    "index": 6,
+    "command": "cd '/REPO_ROOT/packages/cli/lib/../../../' && MDAA_BUILD_CODE_ONLY=true npx lerna run build --scope @aws-mdaa/audit --loglevel warn && cd '/TEMP_DIR/basic_datalake'"
+  },
+  {
+    "index": 7,
+    "command": "cd '/REPO_ROOT/packages/cli/lib/../../../' && MDAA_BUILD_CODE_ONLY=true npx lerna run build --scope @aws-mdaa/audit-trail --loglevel warn && cd '/TEMP_DIR/basic_datalake'"
+  },
+  {
+    "index": 8,
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/caef-bootstrap' -c 'org=test-org' -c 'env=dev' -c 'module_name=caef-bootstrap' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 9,
+    "command": "cd '/REPO_ROOT/packages/apps/core/bootstrap' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/caef-bootstrap' -c 'org=test-org' -c 'env=dev' -c 'module_name=caef-bootstrap' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 10,
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/roles' -c 'org=test-org' -c 'env=dev' -c 'module_name=roles' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/roles.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 11,
+    "command": "cd '/REPO_ROOT/packages/apps/governance/roles-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/roles' -c 'org=test-org' -c 'env=dev' -c 'module_name=roles' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/roles.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 12,
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/glue-catalog' -c 'org=test-org' -c 'env=dev' -c 'module_name=glue-catalog' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 13,
+    "command": "cd '/REPO_ROOT/packages/apps/governance/glue-catalog-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/glue-catalog' -c 'org=test-org' -c 'env=dev' -c 'module_name=glue-catalog' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 14,
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/lakeformation-settings' -c 'org=test-org' -c 'env=dev' -c 'module_name=lakeformation-settings' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/datalake/lakeformation-settings.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 15,
+    "command": "cd '/REPO_ROOT/packages/apps/governance/lakeformation-settings-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/lakeformation-settings' -c 'org=test-org' -c 'env=dev' -c 'module_name=lakeformation-settings' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/datalake/lakeformation-settings.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 16,
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/athena' -c 'org=test-org' -c 'env=dev' -c 'module_name=athena' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/datalake/athena.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 17,
+    "command": "cd '/REPO_ROOT/packages/apps/datalake/athena-workgroup-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/athena' -c 'org=test-org' -c 'env=dev' -c 'module_name=athena' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/datalake/athena.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 18,
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/audit' -c 'org=test-org' -c 'env=dev' -c 'module_name=audit' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/governance/audit.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 19,
+    "command": "cd '/REPO_ROOT/packages/apps/governance/audit-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/audit' -c 'org=test-org' -c 'env=dev' -c 'module_name=audit' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/governance/audit.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 20,
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/datalake' -c 'org=test-org' -c 'env=dev' -c 'module_name=datalake' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/datalake/datalake.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 21,
+    "command": "cd '/REPO_ROOT/packages/apps/datalake/datalake-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/datalake' -c 'org=test-org' -c 'env=dev' -c 'module_name=datalake' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/datalake/datalake.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 22,
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/audit-trail' -c 'org=test-org' -c 'env=dev' -c 'module_name=audit-trail' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/governance/audit-trail.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 23,
+    "command": "cd '/REPO_ROOT/packages/apps/governance/audit-trail-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/audit-trail' -c 'org=test-org' -c 'env=dev' -c 'module_name=audit-trail' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/governance/audit-trail.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 24,
+    "command": "cd '/REPO_ROOT/packages/cli/lib/../../../' && MDAA_BUILD_CODE_ONLY=true npx lerna run build --scope @aws-mdaa/bootstrap --loglevel warn && cd '/TEMP_DIR/basic_datalake'"
+  },
+  {
+    "index": 25,
+    "command": "cd '/REPO_ROOT/packages/cli/lib/../../../' && MDAA_BUILD_CODE_ONLY=true npx lerna run build --scope @aws-mdaa/dataops-project --loglevel warn && cd '/TEMP_DIR/basic_datalake'"
+  },
+  {
+    "index": 26,
+    "command": "cd '/REPO_ROOT/packages/cli/lib/../../../' && MDAA_BUILD_CODE_ONLY=true npx lerna run build --scope @aws-mdaa/dataops-crawler --loglevel warn && cd '/TEMP_DIR/basic_datalake'"
+  },
+  {
+    "index": 27,
+    "command": "cd '/REPO_ROOT/packages/cli/lib/../../../' && MDAA_BUILD_CODE_ONLY=true npx lerna run build --scope @aws-mdaa/dataops-data-quality --loglevel warn && cd '/TEMP_DIR/basic_datalake'"
+  },
+  {
+    "index": 28,
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/caef-bootstrap' -c 'org=test-org' -c 'env=dev' -c 'module_name=caef-bootstrap' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 29,
+    "command": "cd '/REPO_ROOT/packages/apps/core/bootstrap' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/caef-bootstrap' -c 'org=test-org' -c 'env=dev' -c 'module_name=caef-bootstrap' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 30,
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/example-project' -c 'org=test-org' -c 'env=dev' -c 'module_name=example-project' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/dataops/project.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 31,
+    "command": "cd '/REPO_ROOT/packages/apps/dataops/dataops-project-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/example-project' -c 'org=test-org' -c 'env=dev' -c 'module_name=example-project' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/dataops/project.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 32,
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/example-crawler' -c 'org=test-org' -c 'env=dev' -c 'module_name=example-crawler' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/dataops/crawler.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 33,
+    "command": "cd '/REPO_ROOT/packages/apps/dataops/dataops-crawler-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/example-crawler' -c 'org=test-org' -c 'env=dev' -c 'module_name=example-crawler' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/dataops/crawler.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 34,
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/example-data-quality' -c 'org=test-org' -c 'env=dev' -c 'module_name=example-data-quality' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/dataops/data-quality.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  },
+  {
+    "index": 35,
+    "command": "cd '/REPO_ROOT/packages/apps/dataops/dataops-data-quality-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/example-data-quality' -c 'org=test-org' -c 'env=dev' -c 'module_name=example-data-quality' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/dataops/data-quality.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+  }
+]

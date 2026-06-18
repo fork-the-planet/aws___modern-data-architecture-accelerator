@@ -3541,9 +3541,7 @@
               "id": "HIPAA.Security-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "HIPAA.Security-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "HIPAA.Security-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -3554,9 +3552,7 @@
               "id": "NIST.800.53.R5-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "NIST.800.53.R5-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "NIST.800.53.R5-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -3567,9 +3563,7 @@
               "id": "PCI.DSS.321-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "PCI.DSS.321-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "PCI.DSS.321-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -4061,9 +4055,7 @@
               "id": "HIPAA.Security-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "HIPAA.Security-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "HIPAA.Security-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -4074,9 +4066,7 @@
               "id": "NIST.800.53.R5-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "NIST.800.53.R5-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "NIST.800.53.R5-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -4087,9 +4077,7 @@
               "id": "PCI.DSS.321-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "PCI.DSS.321-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "PCI.DSS.321-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -4541,9 +4529,7 @@
               "id": "HIPAA.Security-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "HIPAA.Security-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "HIPAA.Security-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -4554,9 +4540,7 @@
               "id": "NIST.800.53.R5-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "NIST.800.53.R5-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "NIST.800.53.R5-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -4567,9 +4551,7 @@
               "id": "PCI.DSS.321-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "PCI.DSS.321-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "PCI.DSS.321-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -4987,9 +4969,7 @@
               "id": "HIPAA.Security-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "HIPAA.Security-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "HIPAA.Security-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -5000,9 +4980,7 @@
               "id": "NIST.800.53.R5-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "NIST.800.53.R5-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "NIST.800.53.R5-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -5013,9 +4991,7 @@
               "id": "PCI.DSS.321-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "PCI.DSS.321-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "PCI.DSS.321-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -8617,9 +8593,7 @@
               "id": "HIPAA.Security-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "HIPAA.Security-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "HIPAA.Security-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -8630,9 +8604,7 @@
               "id": "NIST.800.53.R5-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "NIST.800.53.R5-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "NIST.800.53.R5-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -8643,9 +8615,7 @@
               "id": "PCI.DSS.321-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "PCI.DSS.321-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "PCI.DSS.321-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -10051,9 +10021,7 @@
               "id": "HIPAA.Security-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "HIPAA.Security-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "HIPAA.Security-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -10064,9 +10032,7 @@
               "id": "NIST.800.53.R5-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "NIST.800.53.R5-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "NIST.800.53.R5-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -10077,9 +10043,7 @@
               "id": "PCI.DSS.321-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "PCI.DSS.321-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "PCI.DSS.321-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -10571,9 +10535,7 @@
               "id": "HIPAA.Security-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "HIPAA.Security-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "HIPAA.Security-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -10584,9 +10546,7 @@
               "id": "NIST.800.53.R5-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "NIST.800.53.R5-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "NIST.800.53.R5-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -10597,9 +10557,7 @@
               "id": "PCI.DSS.321-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "PCI.DSS.321-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "PCI.DSS.321-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -10722,9 +10680,7 @@
               "id": "HIPAA.Security-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "HIPAA.Security-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "HIPAA.Security-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -10735,9 +10691,7 @@
               "id": "NIST.800.53.R5-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "NIST.800.53.R5-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "NIST.800.53.R5-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -10748,9 +10702,7 @@
               "id": "PCI.DSS.321-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "PCI.DSS.321-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "PCI.DSS.321-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -11203,9 +11155,7 @@
               "id": "HIPAA.Security-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "HIPAA.Security-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "HIPAA.Security-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -11216,9 +11166,7 @@
               "id": "NIST.800.53.R5-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "NIST.800.53.R5-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "NIST.800.53.R5-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -11229,9 +11177,7 @@
               "id": "PCI.DSS.321-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "PCI.DSS.321-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "PCI.DSS.321-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -11649,9 +11595,7 @@
               "id": "HIPAA.Security-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "HIPAA.Security-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "HIPAA.Security-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -11662,9 +11606,7 @@
               "id": "NIST.800.53.R5-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "NIST.800.53.R5-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "NIST.800.53.R5-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",
@@ -11675,9 +11617,7 @@
               "id": "PCI.DSS.321-LambdaConcurrency"
             },
             {
-              "reason": "W01EQUE6QGF3cy1tZGFhL2FpL3NhZ2VtYWtlci1ncm91bmQtdHJ1dGgtbDMtY29uc3RydWN0L2xpYi9zYWdlbWFrZXItZ3JvdW5kLXRydXRoLWwzLWNvbnN0cnVjdC50c10gRExRIG5vdCBuZWVkZWQg4oCUIFN0ZXAgRnVuY3Rpb25zIGhhbmRsZXMgcmV0cnkvZXJyb3IgbG9naWMu",
-              "id": "PCI.DSS.321-LambdaDLQ",
-              "is_reason_encoded": true
+              "id": "PCI.DSS.321-LambdaDLQ"
             },
             {
               "reason": "[MDAA:@aws-mdaa/ai/sagemaker-ground-truth-l3-construct/lib/sagemaker-ground-truth-l3-construct.ts] Lambda does not access VPC resources; runs in service VPC.",

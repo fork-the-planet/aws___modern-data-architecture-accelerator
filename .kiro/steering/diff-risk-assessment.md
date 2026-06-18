@@ -339,3 +339,114 @@ git diff -- '**/*.baseline.json'
 
 # CloudFormation will delete the old bucket (with all data) and create a new one
 ```
+
+## Starter Kit CLI Command Baselines
+
+Starter kits have an additional baseline type: `cli-commands.baseline.json`. This is a **deployment orchestration baseline** — it captures the ordered list of CDK commands that the MDAA CLI would execute for a given starter kit configuration, without actually running CDK. It validates that config parsing, module resolution, and execution ordering are stable.
+
+### What It Contains
+
+Each entry in the baseline is a structured command:
+
+```json
+[
+  { "index": 0, "command": "cd '/REPO_ROOT/packages/apps/governance/roles-app' && npx  cdk synth  --require-approval never -o '...' -c 'org=test-org' -c 'env=dev' -c 'module_name=roles' -c 'domain=shared' ..." },
+  { "index": 1, "command": "cd '/REPO_ROOT/packages/apps/governance/glue-catalog-app' && npx  cdk synth  --require-approval never -o '...' -c 'org=test-org' -c 'env=dev' -c 'module_name=glue-catalog' -c 'domain=shared' ..." },
+  { "index": 2, "command": "cd '/REPO_ROOT/packages/apps/governance/lakeformation-settings-app' && npx  cdk synth  --require-approval never -o '...' -c 'org=test-org' -c 'env=dev' -c 'module_name=lakeformation-settings' -c 'domain=shared' ..." }
+]
+```
+
+The `index` field preserves execution order. The `command` field contains the full CDK
+CLI invocation: the module is selected by `cd`-ing into its package directory (there is no
+`--app`/`-a` flag for local modules), and context is passed via repeated `-c 'key=value'`
+arguments (org, env, module_name, domain, plus optional `module_config_data`,
+`permissions_boundary_arn`, role ARN, and pushdown context). The MDAA CLI joins these
+arguments across multiple physical lines with a trailing-backslash continuation; the test
+harness folds them back into one logical command before diffing. Temporary directory paths
+and the repo root are normalized (`/TEMP_DIR`, `/REPO_ROOT`).
+
+### How It Differs from CloudFormation Baselines
+
+| Aspect | CloudFormation Baseline (`*.baseline.json`) | CLI Command Baseline (`cli-commands.baseline.json`) |
+|--------|---------------------------------------------|-----------------------------------------------------|
+| What it validates | Synthesized infrastructure resources | Deployment orchestration and module resolution |
+| Risk of drift | Resource deletion, data loss, privilege changes | Deployment order errors, missing modules, wrong context |
+| Execution cost | Full CDK synth per module (slow) | CLI `--testing` mode only (fast, no CDK execution) |
+| Location | `test/baselines/<stack>.baseline.json` | `test/baselines/cli-commands.baseline.json` |
+
+### Risk Categories for CLI Command Baseline Changes
+
+CLI command baseline diffs do NOT carry the same infrastructure risk as CloudFormation baselines. They represent changes to how the deployment is orchestrated, not what gets deployed. Apply these risk levels:
+
+#### Module Added (MEDIUM)
+
+A new command entry appears in the baseline that was not present before:
+
+```diff
++ { "index": 3, "command": "cd '/REPO_ROOT/packages/apps/.../new-module-app' && npx  cdk synth  --require-approval never ... -c 'module_name=new-module' ..." }
+```
+
+**Why MEDIUM:** A new module means new infrastructure will be deployed. Review whether the module is intentionally added and whether downstream modules depend on it being deployed first.
+
+**Action:** Verify the module was intentionally added to `mdaa.yaml`. Check that its position in the command list respects any dependency ordering requirements.
+
+#### Module Removed (MEDIUM)
+
+A command entry that previously existed is no longer present:
+
+```diff
+- { "index": 2, "command": "cd '/REPO_ROOT/packages/apps/.../removed-module-app' && npx  cdk synth  --require-approval never ... -c 'module_name=removed-module' ..." }
+```
+
+**Why MEDIUM:** Removing a module from the CLI orchestration means its infrastructure will no longer be managed by MDAA. Existing deployed resources become orphaned — they are not deleted, but they are no longer updated or validated.
+
+**Action:** Verify the module was intentionally removed from `mdaa.yaml`. Confirm whether the previously deployed resources should be manually deleted or retained as-is.
+
+#### Module Reordered (LOW)
+
+Command entries remain the same but their `index` values change:
+
+```diff
+- { "index": 1, "command": "cd '/REPO_ROOT/packages/apps/governance/glue-catalog-app' && npx  cdk synth ... -c 'module_name=glue-catalog' ..." }
+- { "index": 2, "command": "cd '/REPO_ROOT/packages/apps/governance/roles-app' && npx  cdk synth ... -c 'module_name=roles' ..." }
++ { "index": 1, "command": "cd '/REPO_ROOT/packages/apps/governance/roles-app' && npx  cdk synth ... -c 'module_name=roles' ..." }
++ { "index": 2, "command": "cd '/REPO_ROOT/packages/apps/governance/glue-catalog-app' && npx  cdk synth ... -c 'module_name=glue-catalog' ..." }
+```
+
+**Why LOW:** Module ordering changes rarely cause deployment failures because MDAA modules are designed to be independently deployable. However, if a module depends on outputs from another module (via SSM parameters), reordering could cause first-time deployment failures.
+
+**Action:** Approve unless the reordered modules have known deployment dependencies (one module reads SSM parameters written by the other).
+
+#### Context Value Changed (LOW-MEDIUM)
+
+A command's context values change (different `-c` arguments):
+
+```diff
+- { "index": 0, "command": "cd '...' && npx  cdk synth ... -c 'org=old-org' ..." }
++ { "index": 0, "command": "cd '...' && npx  cdk synth ... -c 'org=new-org' ..." }
+```
+
+**Why LOW-MEDIUM:** Context value changes affect resource naming and configuration. If the kit is being deployed fresh, this is LOW. If the kit was previously deployed with the old values, changing context values like `org` or `env` would create new resources with different names while leaving old ones orphaned.
+
+**Action:** Verify the context change is intentional. For starter kits (which are typically deployed fresh), this is LOW. For production environments, this could be HIGH due to naming convention changes.
+
+#### Module Package Path Changed (LOW)
+
+The module's package directory (the `cd` target) changes:
+
+```diff
+- { "index": 0, "command": "cd '/REPO_ROOT/packages/apps/governance/roles-app' && npx  cdk synth ... -c 'module_name=roles' ..." }
++ { "index": 0, "command": "cd '/REPO_ROOT/packages/apps/governance/roles' && npx  cdk synth ... -c 'module_name=roles' ..." }
+```
+
+**Why LOW:** Package path changes typically reflect module renaming or reorganization. The synthesized infrastructure is unchanged — only the path to the code that generates it differs.
+
+**Action:** Approve after confirming the new package path resolves correctly.
+
+### Review Process for CLI Command Baselines
+
+1. Run `git diff -- '**/cli-commands.baseline.json'`
+2. Count added/removed/modified entries
+3. For each change, classify using the categories above
+4. If modules were added or removed, cross-reference with `mdaa.yaml` changes in the same PR
+5. If only reordering occurred, verify no deployment dependencies exist between the reordered modules

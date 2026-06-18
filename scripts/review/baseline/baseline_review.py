@@ -175,6 +175,9 @@ def get_module_code_diff(baseline_path: str) -> str:
     Uses the nx project graph to find all transitive dependencies, then
     returns the combined git diff for the app's own code and all upstream
     dependency lib/ directories.
+
+    For starter kit baselines, the "source" is the kit's config files
+    (mdaa.yaml, *.yaml) plus upstream construct/app code changes.
     """
     parts = Path(baseline_path).parts
     try:
@@ -183,11 +186,19 @@ def get_module_code_diff(baseline_path: str) -> str:
     except ValueError:
         return "(could not determine module root from baseline path)"
 
-    # Always include the app's own lib/ and sample_configs/
-    diff_paths = [
-        f"{module_root}/lib/",
-        f"{module_root}/sample_configs/",
-    ]
+    is_starter_kit = module_root.startswith("starter_kits/")
+
+    if is_starter_kit:
+        # For starter kits: include the kit's own config files and upstream construct code
+        diff_paths = [
+            f"{module_root}/",
+        ]
+    else:
+        # For regular modules: include the app's own lib/ and sample_configs/
+        diff_paths = [
+            f"{module_root}/lib/",
+            f"{module_root}/sample_configs/",
+        ]
 
     # Use the nx project graph to find all upstream dependencies (transitive)
     pkg_json_path = Path(module_root) / "package.json"
@@ -211,6 +222,8 @@ def get_module_code_diff(baseline_path: str) -> str:
 
     code_diff = result.stdout.strip()
     if not code_diff:
+        if is_starter_kit:
+            return "(no starter kit config or upstream construct changes detected)"
         return "(no source code or sample config changes detected for this module)"
 
     return code_diff

@@ -41,6 +41,7 @@
     "typescript-json-schema": "0.67.4"
   },
   "dependencies": {
+    "@aws-cdk/cloudformation-diff": "2.187.1",
     "@aws-cdk/toolkit-lib": "^1.19.3",
     "@aws-mdaa/naming": "1.6.0",
     "aws-cdk-lib": "2.258.0",

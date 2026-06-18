@@ -1,0 +1,35 @@
+[project]
+name = "starter-kit-test-runner-tests"
+version = "0.1.0"
+description = "Tests for the starter kit test runner (test_starter_kit.py)"
+requires-python = ">=3.12"
+dependencies = [
+    "pytest==7.4.0",
+    "pytest-cov==4.1.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["."]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--verbose",
+    "--tb=short",
+    "--cov=test_starter_kit",
+    "--cov-report=term-missing",
+    "--cov-fail-under=45",
+]
+
+[tool.coverage.run]
+# Scope coverage to the module under test. The test suite deliberately covers
+# the pure helper functions only (parsing, filtering, affected-module
+# resolution) — not main(), git, or subprocess wrappers, which require a live
+# git repo and nx workspace (see the test module docstring). The whole-module
+# percentage is therefore well below 100%; the gate below enforces a realistic
+# floor rather than asserting an inflated figure in prose.
+source = ["test_starter_kit"]
+omit = [
+    "*/python-tests/*",
+    "*/__pycache__/*",
+]
