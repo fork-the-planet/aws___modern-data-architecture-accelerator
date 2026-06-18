@@ -302,7 +302,6 @@
     "bedrockagentcoreruntimeRuntime84537D71": {
       "Type": "AWS::BedrockAgentCore::Runtime",
       "Properties": {
-        "AgentRuntimeName": "test_org_test_env_test_domain_test_bed__331064c9",
         "AgentRuntimeArtifact": {
           "ContainerConfiguration": {
             "ContainerUri": {
@@ -310,11 +309,17 @@
             }
           }
         },
-        "RoleArn": {
-          "Fn::GetAtt": [
-            "bedrockagentcoreruntimeRuntimeRole7820E6C7",
-            "Arn"
-          ]
+        "AgentRuntimeName": "test_org_test_env_test_domain_test_bed__331064c9",
+        "AuthorizerConfiguration": {
+          "CustomJWTAuthorizer": {
+            "AllowedAudience": [
+              "test-audience"
+            ],
+            "AllowedClients": [
+              "test-client-app"
+            ],
+            "DiscoveryUrl": "https://cognito-idp.test-region.amazonaws.com/test-region_test/.well-known/openid-configuration"
+          }
         },
         "NetworkConfiguration": {
           "NetworkMode": "VPC",
@@ -328,16 +333,18 @@
           }
         },
         "ProtocolConfiguration": "MCP",
-        "AuthorizerConfiguration": {
-          "CustomJWTAuthorizer": {
-            "DiscoveryUrl": "https://cognito-idp.test-region.amazonaws.com/test-region_test/.well-known/openid-configuration",
-            "AllowedAudience": [
-              "test-audience"
-            ],
-            "AllowedClients": [
-              "test-client-app"
-            ]
-          }
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "bedrockagentcoreruntimeRuntimeRole7820E6C7",
+            "Arn"
+          ]
+        },
+        "Tags": {
+          "mdaa_cdk_app": "bedrock-agentcore-runtime",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-bedrock-agentcore-runtime-codepath",
+          "mdaa_org": "test-org"
         }
       }
     },

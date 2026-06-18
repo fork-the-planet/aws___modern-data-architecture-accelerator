@@ -31,13 +31,33 @@
     "bedrockagentcoreruntimeRuntime84537D71": {
       "Type": "AWS::BedrockAgentCore::Runtime",
       "Properties": {
-        "AgentRuntimeName": "test_org_test_env_test_domain_test_bedr__82df822",
         "AgentRuntimeArtifact": {
           "ContainerConfiguration": {
             "ContainerUri": "test-account.dkr.ecr.test-region.amazonaws.com/test-runtime:latest"
           }
         },
-        "RoleArn": "arn:test-partition:iam::test-account:role/test-runtime-role",
+        "AgentRuntimeName": "test_org_test_env_test_domain_test_bedr__82df822",
+        "AuthorizerConfiguration": {
+          "CustomJWTAuthorizer": {
+            "AllowedAudience": [
+              "test-client-id"
+            ],
+            "AllowedClients": [
+              "test-client-app-1",
+              "test-client-app-2"
+            ],
+            "DiscoveryUrl": "https://cognito-idp.test-region.amazonaws.com/test-region_test/.well-known/openid-configuration"
+          }
+        },
+        "Description": "Test agent runtime for unit testing",
+        "EnvironmentVariables": {
+          "ENVIRONMENT": "test",
+          "LOG_LEVEL": "DEBUG"
+        },
+        "LifecycleConfiguration": {
+          "IdleRuntimeSessionTimeout": 3600,
+          "MaxLifetime": 7200
+        },
         "NetworkConfiguration": {
           "NetworkMode": "VPC",
           "NetworkModeConfig": {
@@ -52,33 +72,20 @@
             ]
           }
         },
-        "Description": "Test agent runtime for unit testing",
-        "EnvironmentVariables": {
-          "ENVIRONMENT": "test",
-          "LOG_LEVEL": "DEBUG"
-        },
         "ProtocolConfiguration": "MCP",
-        "LifecycleConfiguration": {
-          "IdleRuntimeSessionTimeout": 3600,
-          "MaxLifetime": 7200
-        },
-        "AuthorizerConfiguration": {
-          "CustomJWTAuthorizer": {
-            "DiscoveryUrl": "https://cognito-idp.test-region.amazonaws.com/test-region_test/.well-known/openid-configuration",
-            "AllowedAudience": [
-              "test-client-id"
-            ],
-            "AllowedClients": [
-              "test-client-app-1",
-              "test-client-app-2"
-            ]
-          }
-        },
         "RequestHeaderConfiguration": {
           "RequestHeaderAllowlist": [
             "X-Custom-Header",
             "X-Request-Id"
           ]
+        },
+        "RoleArn": "arn:test-partition:iam::test-account:role/test-runtime-role",
+        "Tags": {
+          "mdaa_cdk_app": "bedrock-agentcore-runtime",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-bedrock-agentcore-runtime-main",
+          "mdaa_org": "test-org"
         }
       }
     },
@@ -107,9 +114,16 @@
             "AgentRuntimeId"
           ]
         },
-        "Name": "test_org_test_env_test_domain_test_bedr_234a2cb0",
+        "AgentRuntimeVersion": "1.0.0",
         "Description": "Test runtime endpoint",
-        "AgentRuntimeVersion": "1.0.0"
+        "Name": "test_org_test_env_test_domain_test_bedr_234a2cb0",
+        "Tags": {
+          "mdaa_cdk_app": "bedrock-agentcore-runtime",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-bedrock-agentcore-runtime-main",
+          "mdaa_org": "test-org"
+        }
       },
       "DependsOn": [
         "bedrockagentcoreruntimeRuntime84537D71"

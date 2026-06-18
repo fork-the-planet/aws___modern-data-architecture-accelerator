@@ -5,21 +5,12 @@
 
 import { MdaaRoleHelper } from '@aws-mdaa/iam-role-helper';
 import { MdaaTestApp } from '@aws-mdaa/testing';
-import { Annotations, Match } from 'aws-cdk-lib/assertions';
-import { Aspects } from 'aws-cdk-lib';
-import { AwsSolutionsChecks } from 'cdk-nag';
 import { BedrockAgentcoreRuntimeL3Construct, BedrockAgentcoreRuntimeL3ConstructProps } from '../lib';
 
 describe('BedrockAgentcoreRuntimeL3Construct Compliance Tests', () => {
-  let testApp: MdaaTestApp;
-  let roleHelper: MdaaRoleHelper;
-
-  beforeEach(() => {
-    testApp = new MdaaTestApp();
-    roleHelper = new MdaaRoleHelper(testApp.testStack, testApp.naming);
-  });
-
-  test('should pass cdk-nag checks for basic runtime with VPC', () => {
+  describe('Basic runtime with VPC', () => {
+    const testApp = new MdaaTestApp();
+    const stack = testApp.testStack;
     const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
       agentRuntimeName: 'compliant-runtime',
       agentRuntimeArtifact: {
@@ -32,19 +23,17 @@ describe('BedrockAgentcoreRuntimeL3Construct Compliance Tests', () => {
         subnets: ['subnet-12345678'],
       },
       naming: testApp.naming,
-      roleHelper,
+      roleHelper: new MdaaRoleHelper(stack, testApp.naming),
     };
 
-    new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'compliant-runtime-construct', constructProps);
+    new BedrockAgentcoreRuntimeL3Construct(stack, 'compliant-runtime-construct', constructProps);
 
-    Aspects.of(testApp.testStack).add(new AwsSolutionsChecks({ verbose: true }));
-
-    const errors = Annotations.fromStack(testApp.testStack).findError('*', Match.stringLikeRegexp('AwsSolutions-.*'));
-
-    expect(errors).toHaveLength(0);
+    testApp.checkCdkNagCompliance(stack);
   });
 
-  test('should pass cdk-nag checks for runtime with VPC configuration', () => {
+  describe('Runtime with multi-subnet VPC configuration', () => {
+    const testApp = new MdaaTestApp();
+    const stack = testApp.testStack;
     const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
       agentRuntimeName: 'vpc-compliant-runtime',
       agentRuntimeArtifact: {
@@ -57,19 +46,17 @@ describe('BedrockAgentcoreRuntimeL3Construct Compliance Tests', () => {
         subnets: ['subnet-12345678', 'subnet-87654321'],
       },
       naming: testApp.naming,
-      roleHelper,
+      roleHelper: new MdaaRoleHelper(stack, testApp.naming),
     };
 
-    new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'vpc-compliant-runtime-construct', constructProps);
+    new BedrockAgentcoreRuntimeL3Construct(stack, 'vpc-compliant-runtime-construct', constructProps);
 
-    Aspects.of(testApp.testStack).add(new AwsSolutionsChecks({ verbose: true }));
-
-    const errors = Annotations.fromStack(testApp.testStack).findError('*', Match.stringLikeRegexp('AwsSolutions-.*'));
-
-    expect(errors).toHaveLength(0);
+    testApp.checkCdkNagCompliance(stack);
   });
 
-  test('should pass cdk-nag checks for runtime with JWT authorizer', () => {
+  describe('Runtime with JWT authorizer', () => {
+    const testApp = new MdaaTestApp();
+    const stack = testApp.testStack;
     const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
       agentRuntimeName: 'jwt-compliant-runtime',
       agentRuntimeArtifact: {
@@ -88,19 +75,17 @@ describe('BedrockAgentcoreRuntimeL3Construct Compliance Tests', () => {
         },
       },
       naming: testApp.naming,
-      roleHelper,
+      roleHelper: new MdaaRoleHelper(stack, testApp.naming),
     };
 
-    new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'jwt-compliant-runtime-construct', constructProps);
+    new BedrockAgentcoreRuntimeL3Construct(stack, 'jwt-compliant-runtime-construct', constructProps);
 
-    Aspects.of(testApp.testStack).add(new AwsSolutionsChecks({ verbose: true }));
-
-    const errors = Annotations.fromStack(testApp.testStack).findError('*', Match.stringLikeRegexp('AwsSolutions-.*'));
-
-    expect(errors).toHaveLength(0);
+    testApp.checkCdkNagCompliance(stack);
   });
 
-  test('should pass cdk-nag checks for runtime with allowedModelArns', () => {
+  describe('Runtime with allowedModelArns', () => {
+    const testApp = new MdaaTestApp();
+    const stack = testApp.testStack;
     const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
       agentRuntimeName: 'model-scoped-compliant-runtime',
       agentRuntimeArtifact: {
@@ -117,23 +102,17 @@ describe('BedrockAgentcoreRuntimeL3Construct Compliance Tests', () => {
         'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0',
       ],
       naming: testApp.naming,
-      roleHelper,
+      roleHelper: new MdaaRoleHelper(stack, testApp.naming),
     };
 
-    new BedrockAgentcoreRuntimeL3Construct(
-      testApp.testStack,
-      'model-scoped-compliant-runtime-construct',
-      constructProps,
-    );
+    new BedrockAgentcoreRuntimeL3Construct(stack, 'model-scoped-compliant-runtime-construct', constructProps);
 
-    Aspects.of(testApp.testStack).add(new AwsSolutionsChecks({ verbose: true }));
-
-    const errors = Annotations.fromStack(testApp.testStack).findError('*', Match.stringLikeRegexp('AwsSolutions-.*'));
-
-    expect(errors).toHaveLength(0);
+    testApp.checkCdkNagCompliance(stack);
   });
 
-  test('should pass cdk-nag checks for runtime with enforceVpcOnly', () => {
+  describe('Runtime with enforceVpcOnly', () => {
+    const testApp = new MdaaTestApp();
+    const stack = testApp.testStack;
     const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
       agentRuntimeName: 'vpc-enforced-compliant-runtime',
       agentRuntimeArtifact: {
@@ -148,23 +127,17 @@ describe('BedrockAgentcoreRuntimeL3Construct Compliance Tests', () => {
       },
       enforceVpcOnly: true,
       naming: testApp.naming,
-      roleHelper,
+      roleHelper: new MdaaRoleHelper(stack, testApp.naming),
     };
 
-    new BedrockAgentcoreRuntimeL3Construct(
-      testApp.testStack,
-      'vpc-enforced-compliant-runtime-construct',
-      constructProps,
-    );
+    new BedrockAgentcoreRuntimeL3Construct(stack, 'vpc-enforced-compliant-runtime-construct', constructProps);
 
-    Aspects.of(testApp.testStack).add(new AwsSolutionsChecks({ verbose: true }));
-
-    const errors = Annotations.fromStack(testApp.testStack).findError('*', Match.stringLikeRegexp('AwsSolutions-.*'));
-
-    expect(errors).toHaveLength(0);
+    testApp.checkCdkNagCompliance(stack);
   });
 
-  test('should pass cdk-nag checks for runtime with additional data protection identifiers', () => {
+  describe('Runtime with additional data protection identifiers', () => {
+    const testApp = new MdaaTestApp();
+    const stack = testApp.testStack;
     const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
       agentRuntimeName: 'encrypted-log-compliant-runtime',
       agentRuntimeArtifact: {
@@ -181,23 +154,17 @@ describe('BedrockAgentcoreRuntimeL3Construct Compliance Tests', () => {
         additionalIdentifiers: ['DriversLicense-US', 'PassportNumber-US'],
       },
       naming: testApp.naming,
-      roleHelper,
+      roleHelper: new MdaaRoleHelper(stack, testApp.naming),
     };
 
-    new BedrockAgentcoreRuntimeL3Construct(
-      testApp.testStack,
-      'encrypted-log-compliant-runtime-construct',
-      constructProps,
-    );
+    new BedrockAgentcoreRuntimeL3Construct(stack, 'encrypted-log-compliant-runtime-construct', constructProps);
 
-    Aspects.of(testApp.testStack).add(new AwsSolutionsChecks({ verbose: true }));
-
-    const errors = Annotations.fromStack(testApp.testStack).findError('*', Match.stringLikeRegexp('AwsSolutions-.*'));
-
-    expect(errors).toHaveLength(0);
+    testApp.checkCdkNagCompliance(stack);
   });
 
-  test('should pass cdk-nag checks for runtime with managed policies', () => {
+  describe('Runtime with managed policies', () => {
+    const testApp = new MdaaTestApp();
+    const stack = testApp.testStack;
     const constructProps: BedrockAgentcoreRuntimeL3ConstructProps = {
       agentRuntimeName: 'policy-compliant-runtime',
       agentRuntimeArtifact: {
@@ -215,15 +182,11 @@ describe('BedrockAgentcoreRuntimeL3Construct Compliance Tests', () => {
         },
       ],
       naming: testApp.naming,
-      roleHelper,
+      roleHelper: new MdaaRoleHelper(stack, testApp.naming),
     };
 
-    new BedrockAgentcoreRuntimeL3Construct(testApp.testStack, 'policy-compliant-runtime-construct', constructProps);
+    new BedrockAgentcoreRuntimeL3Construct(stack, 'policy-compliant-runtime-construct', constructProps);
 
-    Aspects.of(testApp.testStack).add(new AwsSolutionsChecks({ verbose: true }));
-
-    const errors = Annotations.fromStack(testApp.testStack).findError('*', Match.stringLikeRegexp('AwsSolutions-.*'));
-
-    expect(errors).toHaveLength(0);
+    testApp.checkCdkNagCompliance(stack);
   });
 });

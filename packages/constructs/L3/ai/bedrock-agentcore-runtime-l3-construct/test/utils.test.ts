@@ -22,8 +22,8 @@ describe('bedrock-agentcore-runtime-utils', () => {
       });
 
       expect(result).toEqual({
-        IdleRuntimeSessionTimeout: 300,
-        MaxLifetime: 3600,
+        idleRuntimeSessionTimeout: 300,
+        maxLifetime: 3600,
       });
     });
 
@@ -33,7 +33,7 @@ describe('bedrock-agentcore-runtime-utils', () => {
       });
 
       expect(result).toEqual({
-        IdleRuntimeSessionTimeout: 300,
+        idleRuntimeSessionTimeout: 300,
       });
     });
 
@@ -62,10 +62,10 @@ describe('bedrock-agentcore-runtime-utils', () => {
       });
 
       expect(result).toEqual({
-        NetworkMode: 'VPC',
-        NetworkModeConfig: {
-          SecurityGroups: ['sg-123'],
-          Subnets: ['subnet-123'],
+        networkMode: 'VPC',
+        networkModeConfig: {
+          securityGroups: ['sg-123'],
+          subnets: ['subnet-123'],
         },
       });
     });
@@ -116,10 +116,10 @@ describe('bedrock-agentcore-runtime-utils', () => {
       });
 
       expect(result).toEqual({
-        CustomJWTAuthorizer: {
-          DiscoveryUrl: 'https://example.com/.well-known/openid-configuration',
-          AllowedAudience: ['aud1', 'aud2'],
-          AllowedClients: ['client1'],
+        customJwtAuthorizer: {
+          discoveryUrl: 'https://example.com/.well-known/openid-configuration',
+          allowedAudience: ['aud1', 'aud2'],
+          allowedClients: ['client1'],
         },
       });
     });
@@ -132,8 +132,8 @@ describe('bedrock-agentcore-runtime-utils', () => {
       });
 
       expect(result).toEqual({
-        CustomJWTAuthorizer: {
-          DiscoveryUrl: 'https://example.com/.well-known/openid-configuration',
+        customJwtAuthorizer: {
+          discoveryUrl: 'https://example.com/.well-known/openid-configuration',
         },
       });
     });
@@ -161,7 +161,7 @@ describe('bedrock-agentcore-runtime-utils', () => {
       });
 
       expect(result).toEqual({
-        RequestHeaderAllowlist: ['X-Custom-Header', 'Authorization'],
+        requestHeaderAllowlist: ['X-Custom-Header', 'Authorization'],
       });
     });
 
@@ -171,7 +171,7 @@ describe('bedrock-agentcore-runtime-utils', () => {
       });
 
       expect(result).toEqual({
-        RequestHeaderAllowlist: ['X-Custom-Header'],
+        requestHeaderAllowlist: ['X-Custom-Header'],
       });
     });
 

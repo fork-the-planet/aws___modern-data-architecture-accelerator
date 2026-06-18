@@ -7,7 +7,7 @@ import { MdaaNagSuppressions, MdaaParamAndOutput } from '@aws-mdaa/construct';
 import { MdaaRole } from '@aws-mdaa/iam-constructs';
 import { MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
-import { aws_xray as xray, CfnResource, Stack } from 'aws-cdk-lib';
+import { aws_bedrockagentcore as bedrockagentcore, aws_xray as xray, Stack } from 'aws-cdk-lib';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
 import { MdaaResourceType } from '@aws-mdaa/naming';
 import { createAgentCoreLogProtection, createAgentCoreResourcePolicy } from '@aws-mdaa/agentcore-shared';
@@ -686,8 +686,8 @@ export interface BedrockAgentcoreRuntimeProps {
 export interface BedrockAgentcoreRuntimeL3ConstructProps extends MdaaL3ConstructProps, BedrockAgentcoreRuntimeProps {}
 
 export class BedrockAgentcoreRuntimeL3Construct extends MdaaL3Construct {
-  public readonly runtime: CfnResource;
-  public readonly runtimeEndpoint?: CfnResource;
+  public readonly runtime: bedrockagentcore.CfnRuntime;
+  public readonly runtimeEndpoint?: bedrockagentcore.CfnRuntimeEndpoint;
   public readonly runtimeRole?: MdaaRole;
   private readonly repositoryArn?: string;
   protected readonly props: BedrockAgentcoreRuntimeL3ConstructProps;
@@ -714,43 +714,34 @@ export class BedrockAgentcoreRuntimeL3Construct extends MdaaL3Construct {
       );
     }
 
-    // Build runtime properties for CloudFormation
-    const runtimeProps: Record<string, unknown> = {
-      AgentRuntimeName: sanitizeBedrockAgentcoreName(
+    // Build typed runtime properties for CloudFormation
+    const runtimeProps: bedrockagentcore.CfnRuntimeProps = {
+      agentRuntimeName: sanitizeBedrockAgentcoreName(
         this.props.naming
           .withResourceType(MdaaResourceType.BEDROCK_AGENTCORE_RUNTIME)
           .resourceName(props.agentRuntimeName, 48),
       ),
-      AgentRuntimeArtifact: artifactProperty,
-      RoleArn: roleArn,
-      NetworkConfiguration: buildNetworkConfiguration(props.networkConfiguration),
+      agentRuntimeArtifact: artifactProperty,
+      roleArn: roleArn,
+      networkConfiguration: buildNetworkConfiguration(props.networkConfiguration),
+      // Optional properties — left undefined when not configured so the synthesized
+      // template omits them entirely (matching the prior passthrough behavior).
+      description: props.description,
+      environmentVariables: props.environmentVariables,
+      protocolConfiguration: props.protocolConfiguration,
+      lifecycleConfiguration: props.lifecycleConfiguration
+        ? buildLifecycleConfiguration(props.lifecycleConfiguration)
+        : undefined,
+      authorizerConfiguration: props.authorizerConfiguration
+        ? buildAuthorizerConfiguration(props.authorizerConfiguration)
+        : undefined,
+      requestHeaderConfiguration: props.requestHeaderConfiguration
+        ? buildRequestHeaderConfiguration(props.requestHeaderConfiguration)
+        : undefined,
     };
 
-    // Add optional properties
-    if (props.description) {
-      runtimeProps.Description = props.description;
-    }
-    if (props.environmentVariables) {
-      runtimeProps.EnvironmentVariables = props.environmentVariables;
-    }
-    if (props.protocolConfiguration) {
-      runtimeProps.ProtocolConfiguration = props.protocolConfiguration;
-    }
-    if (props.lifecycleConfiguration) {
-      runtimeProps.LifecycleConfiguration = buildLifecycleConfiguration(props.lifecycleConfiguration);
-    }
-    if (props.authorizerConfiguration) {
-      runtimeProps.AuthorizerConfiguration = buildAuthorizerConfiguration(props.authorizerConfiguration);
-    }
-    if (props.requestHeaderConfiguration) {
-      runtimeProps.RequestHeaderConfiguration = buildRequestHeaderConfiguration(props.requestHeaderConfiguration);
-    }
-
-    // Create the runtime using CfnResource
-    this.runtime = new CfnResource(this, 'Runtime', {
-      type: 'AWS::BedrockAgentCore::Runtime',
-      properties: runtimeProps,
-    });
+    // Create the runtime using the typed CfnRuntime construct
+    this.runtime = new bedrockagentcore.CfnRuntime(this, 'Runtime', runtimeProps);
 
     // Create CloudWatch Logs ResourcePolicy to allow X-Ray to write logs
     // This is required for TransactionSearchConfig to function properly
@@ -808,7 +799,7 @@ export class BedrockAgentcoreRuntimeL3Construct extends MdaaL3Construct {
           'networkConfiguration.vpcId is required when enforceVpcOnly is true. The VPC ID is used to restrict invocations to traffic originating from your VPC.',
         );
       }
-      const runtimeArn = this.runtime.getAtt('AgentRuntimeArn').toString();
+      const runtimeArn = this.runtime.attrAgentRuntimeArn;
       const resourcePolicy = createAgentCoreResourcePolicy(this, 'ResourcePolicy', {
         resourceArn: runtimeArn,
         vpcId: props.networkConfiguration.vpcId,
@@ -840,15 +831,15 @@ export class BedrockAgentcoreRuntimeL3Construct extends MdaaL3Construct {
   }
 
   private buildArtifactProperty(artifactConfig: AgentRuntimeArtifactProperty): {
-    artifactProperty: Record<string, unknown>;
+    artifactProperty: bedrockagentcore.CfnRuntime.AgentRuntimeArtifactProperty;
     repositoryArn?: string;
   } {
     const { containerUri, repositoryArn } = this.resolveContainerConfiguration(artifactConfig.containerConfiguration);
 
     return {
       artifactProperty: {
-        ContainerConfiguration: {
-          ContainerUri: containerUri,
+        containerConfiguration: {
+          containerUri: containerUri,
         },
       },
       repositoryArn,
@@ -1104,30 +1095,26 @@ export class BedrockAgentcoreRuntimeL3Construct extends MdaaL3Construct {
     return `arn:${stack.partition}:ecr:${region}:${account}:repository/${repository}`;
   }
 
-  private createRuntimeEndpoint(endpointConfig: RuntimeEndpointProperty, runtimeName: string): CfnResource {
+  private createRuntimeEndpoint(
+    endpointConfig: RuntimeEndpointProperty,
+    runtimeName: string,
+  ): bedrockagentcore.CfnRuntimeEndpoint {
     // Get endpoint name from config or generate default
-    const endpointProps: Record<string, unknown> = {
-      AgentRuntimeId: this.runtime.getAtt('AgentRuntimeId').toString(),
-      Name: sanitizeBedrockAgentcoreName(
+    const endpointProps: bedrockagentcore.CfnRuntimeEndpointProps = {
+      agentRuntimeId: this.runtime.attrAgentRuntimeId,
+      name: sanitizeBedrockAgentcoreName(
         this.props.naming
           .withResourceType(MdaaResourceType.BEDROCK_AGENTCORE_ENDPOINT)
           .resourceName(endpointConfig.name || `${runtimeName}_endpoint`, 48),
         'endpoint_',
       ),
+      // Optional properties — left undefined when not configured so the synthesized
+      // template omits them entirely (matching the prior passthrough behavior).
+      description: endpointConfig.description,
+      agentRuntimeVersion: endpointConfig.agentRuntimeVersion,
     };
 
-    if (endpointConfig.description) {
-      endpointProps.Description = endpointConfig.description;
-    }
-
-    if (endpointConfig.agentRuntimeVersion) {
-      endpointProps.AgentRuntimeVersion = endpointConfig.agentRuntimeVersion;
-    }
-
-    const endpoint = new CfnResource(this, 'RuntimeEndpoint', {
-      type: 'AWS::BedrockAgentCore::RuntimeEndpoint',
-      properties: endpointProps,
-    });
+    const endpoint = new bedrockagentcore.CfnRuntimeEndpoint(this, 'RuntimeEndpoint', endpointProps);
 
     endpoint.node.addDependency(this.runtime);
 
@@ -1165,7 +1152,7 @@ export class BedrockAgentcoreRuntimeL3Construct extends MdaaL3Construct {
 
     // Create Custom Resource that discovers the service-created log groups
     // and applies CMK encryption, retention, and data protection after the runtime exists
-    const runtimeId = this.runtime.getAtt('AgentRuntimeId').toString();
+    const runtimeId = this.runtime.attrAgentRuntimeId;
     const logProtection = createAgentCoreLogProtection(this, 'LogProtection', {
       runtimeId: runtimeId,
       kmsKey: kmsKey,
@@ -1235,7 +1222,7 @@ export class BedrockAgentcoreRuntimeL3Construct extends MdaaL3Construct {
       resourceType: 'agentRuntime',
       resourceId: runtimeName,
       name: 'arn',
-      value: this.runtime.getAtt('AgentRuntimeArn').toString(),
+      value: this.runtime.attrAgentRuntimeArn,
       ...this.props,
     });
 
@@ -1244,7 +1231,7 @@ export class BedrockAgentcoreRuntimeL3Construct extends MdaaL3Construct {
       resourceType: 'agentRuntime',
       resourceId: runtimeName,
       name: 'id',
-      value: this.runtime.getAtt('AgentRuntimeId').toString(),
+      value: this.runtime.attrAgentRuntimeId,
       ...this.props,
     });
 
@@ -1263,7 +1250,7 @@ export class BedrockAgentcoreRuntimeL3Construct extends MdaaL3Construct {
         resourceType: 'agentRuntimeEndpoint',
         resourceId: runtimeName,
         name: 'arn',
-        value: this.runtimeEndpoint.getAtt('AgentRuntimeEndpointArn').toString(),
+        value: this.runtimeEndpoint.attrAgentRuntimeEndpointArn,
         ...this.props,
       });
 
@@ -1271,7 +1258,7 @@ export class BedrockAgentcoreRuntimeL3Construct extends MdaaL3Construct {
         resourceType: 'agentRuntimeEndpoint',
         resourceId: runtimeName,
         name: 'id',
-        value: this.runtimeEndpoint.getAtt('Id').toString(),
+        value: this.runtimeEndpoint.attrId,
         ...this.props,
       });
     }

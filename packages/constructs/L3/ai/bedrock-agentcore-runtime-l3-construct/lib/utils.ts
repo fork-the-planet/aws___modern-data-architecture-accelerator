@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { aws_bedrockagentcore as bedrockagentcore } from 'aws-cdk-lib';
 import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import {
   AuthorizerConfigurationProperty,
@@ -20,21 +21,23 @@ import {
  * @returns CloudFormation-compatible lifecycle configuration object
  * @throws Error if timeout values are outside valid range
  */
-export function buildLifecycleConfiguration(lifecycleConfig: LifecycleConfigurationProperty): Record<string, unknown> {
-  const config: Record<string, unknown> = {};
+export function buildLifecycleConfiguration(
+  lifecycleConfig: LifecycleConfigurationProperty,
+): bedrockagentcore.CfnRuntime.LifecycleConfigurationProperty {
+  const config: { idleRuntimeSessionTimeout?: number; maxLifetime?: number } = {};
   if (lifecycleConfig.idleRuntimeSessionTimeout !== undefined) {
     const timeout = lifecycleConfig.idleRuntimeSessionTimeout;
     if (timeout < 60 || timeout > 28800) {
       throw new Error('IdleRuntimeSessionTimeout must be between 60 and 28800 seconds');
     }
-    config.IdleRuntimeSessionTimeout = timeout;
+    config.idleRuntimeSessionTimeout = timeout;
   }
   if (lifecycleConfig.maxLifetime !== undefined) {
     const lifetime = lifecycleConfig.maxLifetime;
     if (lifetime < 60 || lifetime > 28800) {
       throw new Error('MaxLifetime must be between 60 and 28800 seconds');
     }
-    config.MaxLifetime = lifetime;
+    config.maxLifetime = lifetime;
   }
   return config;
 }
@@ -47,12 +50,9 @@ export function buildLifecycleConfiguration(lifecycleConfig: LifecycleConfigurat
  * @returns CloudFormation-compatible network configuration object
  * @throws Error if VPC configuration is missing or invalid
  */
-export function buildNetworkConfiguration(networkConfig: NetworkConfigurationProperty): Record<string, unknown> {
-  // MDAA security requirement: Always use VPC mode
-  const config: Record<string, unknown> = {
-    NetworkMode: 'VPC',
-  };
-
+export function buildNetworkConfiguration(
+  networkConfig: NetworkConfigurationProperty,
+): bedrockagentcore.CfnRuntime.NetworkConfigurationProperty {
   // Validate required fields
   if (!networkConfig.securityGroups || networkConfig.securityGroups.length === 0) {
     throw new Error('securityGroups is required in networkConfiguration');
@@ -69,12 +69,14 @@ export function buildNetworkConfiguration(networkConfig: NetworkConfigurationPro
     throw new Error('subnets must be an array with 1-16 items');
   }
 
-  config.NetworkModeConfig = {
-    SecurityGroups: networkConfig.securityGroups,
-    Subnets: networkConfig.subnets,
+  // MDAA security requirement: Always use VPC mode
+  return {
+    networkMode: 'VPC',
+    networkModeConfig: {
+      securityGroups: networkConfig.securityGroups,
+      subnets: networkConfig.subnets,
+    },
   };
-
-  return config;
 }
 
 /**
@@ -87,38 +89,34 @@ export function buildNetworkConfiguration(networkConfig: NetworkConfigurationPro
  */
 export function buildAuthorizerConfiguration(
   authorizerConfig: AuthorizerConfigurationProperty,
-): Record<string, unknown> {
-  const config: Record<string, unknown> = {};
-
+): bedrockagentcore.CfnRuntime.AuthorizerConfigurationProperty {
   // Support both customJwtAuthorizer and jwtAuthorizer (backward compatibility)
   const jwtConfig = authorizerConfig.customJwtAuthorizer || authorizerConfig.jwtAuthorizer; // NOSONAR
 
-  if (jwtConfig) {
-    if (!jwtConfig.discoveryUrl) {
-      throw new Error('DiscoveryUrl is required in CustomJwtAuthorizer (or JwtAuthorizer) configuration');
-    }
-
-    // Validate pattern: must end with /.well-known/openid-configuration
-    if (!/^.+\/\.well-known\/openid-configuration$/.test(jwtConfig.discoveryUrl)) {
-      throw new Error('DiscoveryUrl must match pattern: ^.+/\\.well-known/openid-configuration$');
-    }
-
-    const customJwt: Record<string, unknown> = {
-      DiscoveryUrl: jwtConfig.discoveryUrl,
-    };
-
-    if (jwtConfig.allowedAudience && jwtConfig.allowedAudience.length > 0) {
-      customJwt.AllowedAudience = jwtConfig.allowedAudience;
-    }
-
-    if (jwtConfig.allowedClients && jwtConfig.allowedClients.length > 0) {
-      customJwt.AllowedClients = jwtConfig.allowedClients;
-    }
-
-    config.CustomJWTAuthorizer = customJwt;
+  if (!jwtConfig) {
+    return {};
   }
 
-  return config;
+  if (!jwtConfig.discoveryUrl) {
+    throw new Error('DiscoveryUrl is required in CustomJwtAuthorizer (or JwtAuthorizer) configuration');
+  }
+
+  // Validate pattern: must end with /.well-known/openid-configuration
+  if (!/^.+\/\.well-known\/openid-configuration$/.test(jwtConfig.discoveryUrl)) {
+    throw new Error('DiscoveryUrl must match pattern: ^.+/\\.well-known/openid-configuration$');
+  }
+
+  const customJwtAuthorizer: bedrockagentcore.CfnRuntime.CustomJWTAuthorizerConfigurationProperty = {
+    discoveryUrl: jwtConfig.discoveryUrl,
+    ...(jwtConfig.allowedAudience && jwtConfig.allowedAudience.length > 0
+      ? { allowedAudience: jwtConfig.allowedAudience }
+      : {}),
+    ...(jwtConfig.allowedClients && jwtConfig.allowedClients.length > 0
+      ? { allowedClients: jwtConfig.allowedClients }
+      : {}),
+  };
+
+  return { customJwtAuthorizer };
 }
 
 /**
@@ -131,20 +129,19 @@ export function buildAuthorizerConfiguration(
  */
 export function buildRequestHeaderConfiguration(
   headerConfig: RequestHeaderConfigurationProperty,
-): Record<string, unknown> {
-  const config: Record<string, unknown> = {};
-
+): bedrockagentcore.CfnRuntime.RequestHeaderConfigurationProperty {
   // Support both requestHeaderAllowlist and allowedHeaders (backward compatibility)
   const allowlist = headerConfig.requestHeaderAllowlist || headerConfig.allowedHeaders; // NOSONAR
 
-  if (allowlist) {
-    if (allowlist.length < 1 || allowlist.length > 20) {
-      throw new Error('RequestHeaderAllowlist (or AllowedHeaders) must contain 1-20 items');
-    }
-    config.RequestHeaderAllowlist = allowlist;
+  if (!allowlist) {
+    return {};
   }
 
-  return config;
+  if (allowlist.length < 1 || allowlist.length > 20) {
+    throw new Error('RequestHeaderAllowlist (or AllowedHeaders) must contain 1-20 items');
+  }
+
+  return { requestHeaderAllowlist: allowlist };
 }
 
 /**
