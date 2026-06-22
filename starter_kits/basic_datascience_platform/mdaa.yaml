@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../schemas/@aws-mdaa/cli.json
 # All resources will be deployed to the default region specified in the environment or AWS configurations.
 # Can optional specify a specific AWS Region Name.
 region: default
@@ -6,18 +7,21 @@ region: default
 #naming_module: ../custom-naming
 #naming_class: ExtendedDefaultNaming
 
-# One or more tag files containing tags which will be applied to all deployed resources
-tag_configs:
-  - ./tags.yaml
+# Tags applied to all deployed resources
+tag_config_data:
+  costcentre: '123456'
+  project: data-ecosystem
 
-# TODO: Set an appropriate, unique organization name
 # Failure to do so may resulting in global naming conflicts.
+# TODO: Set a globally unique organization name (used in S3 bucket names and resource prefixes)
 organization: <YOUR_ORG_NAME>
 
-# TODO: Set appropriate context values for your environment.
 context:
+  # TODO: Set your VPC ID
   vpc_id: <YOUR_VPC_ID>
+  # TODO: Set a private subnet ID with AWS service connectivity
   subnet_id: <YOUR_SUBNET_ID>
+  # TODO: Set a name for your data science team
   datascience_team_name: <YOUR_DATASCIENCE_TEAM_NAME>
 
 # One or more domains may be specified. Domain name will be incorporated by default naming implementation

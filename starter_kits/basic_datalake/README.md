@@ -1,182 +1,85 @@
 # Basic Data Lake
 
-This basic S3 Data Lake sample illustrates how to create an S3 data lake on AWS. Access to the data lake may be granted to IAM and federated principals, and is controlled on a coarse-grained basis only (using S3 bucket policies).
+This starter kit deploys a secure, encrypted S3-based data lake on AWS with coarse-grained access control, data cataloging, query capabilities, and audit logging. It provides a foundational data platform suitable for teams that need a governed storage layer without fine-grained column or row-level security.
 
-This architecture may be suitable when:
+> **[Deployment Instructions](#deployment)**
 
-* Data is primarily unstructured and will not be consumed via Athena.
-* User access to the data lake does not need to be governed by fine-grained access controls.
+## Use Cases
+
+- Centralized data storage for unstructured or semi-structured data (logs, documents, media)
+- Data lake foundation for analytics pipelines that don't require fine-grained access control
+- Secure landing zone for ingested data with encryption at rest and in transit
+- Self-service data exploration via Athena for authorized users
+- Audit and compliance tracking via CloudTrail integration
+
+## Capabilities
+
+- KMS-encrypted S3 buckets with enforced SSL-only access and public access blocking
+- IAM-based access control with dedicated admin and user roles
+- Glue Data Catalog with encrypted metadata store
+- Athena workgroup for secure, isolated SQL queries
+- Glue crawlers for automated schema discovery
+- Data quality rules for validation
+- CloudTrail audit trail with dedicated audit bucket
+- Lake Formation settings for IAM-delegated access control
+
+## Architecture
 
 ![Basic Datalake](docs/basic_datalake.png)
 
-***
+## Deployment
 
-## Deployment Instructions
+### Prerequisites and Predeployment
 
-The following instructions assume you have CDK bootstrapped your target account, and that the MDAA source repo is cloned locally.
-More predeployment info and procedures are available in [PREDEPLOYMENT](../../PREDEPLOYMENT.md).
+1. Authenticate to your target AWS account and region. Ensure the authenticated role has permissions to deploy resources via CDK.
+2. [Bootstrap CDK](../../PREDEPLOYMENT.md#single-account-bootstrap) in your target account and region.
 
-1. Deploy sample configurations into the specified directory structure (or obtain from the MDAA repo under `starter_kits/basic_datalake`).
+Additional info: [PREDEPLOYMENT](../../PREDEPLOYMENT.md)
 
-2. Edit the `mdaa.yaml` to specify an organization name. This must be a globally unique name, as it is used in the naming of all deployed resources, some of which are globally named (such as S3 buckets).
+### Configure MDAA
 
-3. If required, edit the `mdaa.yaml` to specify `context:` values specific to your environment.
+1. Address all TODOs in [`mdaa.yaml`](mdaa.yaml), specifically:
+   - Set `organization` to a globally unique name (used in S3 bucket names and all resource prefixes)
 
-4. Ensure you are authenticated to your target AWS account.
+2. Address all TODOs in module configs, specifically:
+   - CDK Nag suppressions in [`roles.yaml`](roles.yaml). Uncomment each suppression only after reviewing the associated permissions and confirming they are acceptable for your environment.
 
-5. Optionally, run `<path_to_mdaa_repo>/bin/mdaa ls` from the directory containing `mdaa.yaml` to understand what stacks will be deployed.
+### Deploy MDAA
 
-6. Optionally, run `<path_to_mdaa_repo>/bin/mdaa synth` from the directory containing `mdaa.yaml` and review the produced templates.
+Run the following from the starter kit directory (containing `mdaa.yaml`):
 
-7. Run `<path_to_mdaa_repo>/bin/mdaa deploy` from the directory containing `mdaa.yaml` to deploy all modules.
+1. Optionally, run `npx @aws-mdaa/cli ls` to understand what stacks will be deployed.
 
-Additional MDAA deployment commands/procedures can be reviewed in [DEPLOYMENT](../../DEPLOYMENT.md).
+2. Optionally, run `npx @aws-mdaa/cli synth` and review the produced templates.
 
-***
+3. Run `npx @aws-mdaa/cli deploy` to deploy all modules.
 
-## Configurations
-
-The sample configurations for this architecture are provided below. They are also available under starter_kits/basic_datalake within the MDAA repo.
-
-### Config Directory Structure
-
-```bash
-basic_datalake
-│   mdaa.yaml
-│   tags.yaml
-│   roles.yaml
-│
-└───datalake
-│    └───datalake.yaml
-│    └───lakeformation-settings.yaml
-│    └───athena.yaml
-│
-└───dataops
-│    └───project.yaml
-│    └───crawler.yaml
-|
-└───governance
-│    └───audit.yaml
-│    └───audit-trail.yaml
-│
-  
-```
-
-***
-
-### mdaa.yaml
-
-This configuration specifies the global, domain, env, and module configurations required to configure and deploy this sample architecture.
-
-*Note* - Before deployment, populate the mdaa.yaml with appropriate organization and context values for your environment
-
-```yaml
-# Contents available in mdaa.yaml
---8<-- "target/docs/starter_kits/basic_datalake/mdaa.yaml"
-```
-
-***
-
-### tags.yaml
-
-This configuration specifies the tags to be applied to all deployed resources.
-
-```yaml
-# Contents available in tags.yaml
---8<-- "target/docs/starter_kits/basic_datalake/tags.yaml"
-```
-
-***
-
-### roles.yaml
-
-This configuration will be used by the MDAA Roles module to deploy IAM roles and Managed Policies required for this sample architecture.
-
-```yaml
-# Contents available in roles.yaml
---8<-- "target/docs/starter_kits/basic_datalake/roles.yaml"
-```
-
-***
-
-### datalake/datalake.yaml
-
-This configuration will be used by the MDAA S3 Data Lake module to deploy KMS Keys, S3 Buckets, and S3 Bucket Policies required for the basic Data Lake.
-
-```yaml
-# Contents available in datalake/datalake.yaml
---8<-- "target/docs/starter_kits/basic_datalake/datalake/datalake.yaml"
-```
-
-***
-
-### athena.yaml
-
-This configuration will create a standalone Athena Workgroup which can be used to securely query the data lake via Glue resources. These Glue resources can be either manually created, created via MDAA DataOps Project module (Glue databases), or MDAA Crawler module (Glue tables).
-
-```yaml
-# Contents available in datalake/athena.yaml
---8<-- "target/docs/starter_kits/basic_datalake/datalake/athena.yaml"
-```
-
-***
-
-### dataops/project.yaml
-
-This configuration will create a DataOps Project which can be used to support a wide variety of data ops activities. Specifically, this configuration will create a number of Glue Catalog databases and apply fine-grained access control to these using basic.
-
-```yaml
-# Contents available in dataops/project.yaml
---8<-- "target/docs/starter_kits/basic_datalake/dataops/project.yaml"
-```
-
-***
-
-### dataops/crawler.yaml
-
-This configuration will create Glue crawlers using the DataOps Crawler module.
-
-```yaml
-# Contents available in dataops/crawler.yaml
---8<-- "target/docs/starter_kits/basic_datalake/dataops/crawler.yaml"
-```
-
-### governance/audit.yaml
-
-This configuration will be used by the MDAA audit module to deploy the resources required to define a secure S3-based bucket on AWS for use as a CloudTrail or S3 Inventory target.
+Additional info: [DEPLOYMENT](../../DEPLOYMENT.md)
 
 
+## Next Steps
 
-```yaml
-# Contents available in governance/audit.yaml
---8<-- "target/docs/starter_kits/basic_datalake/governance/audit.yaml"
-```
+See [USAGE](USAGE.md) for post-deployment instructions.
 
-### governance/audit-trail.yaml
+## Modules Deployed
 
-This configuration will be used by the MDAA S3 Data Lake module to deploy the resources required to define a secure S3-based Audit Trail on AWS.
+| Module | Purpose |
+|--------|---------|
+| `@aws-mdaa/roles` | IAM roles and policies (data-admin, data-user, glue-etl) |
+| `@aws-mdaa/datalake` | KMS keys, S3 buckets, and bucket policies |
+| `@aws-mdaa/glue-catalog` | Glue Catalog KMS encryption (account-level) |
+| `@aws-mdaa/lakeformation-settings` | Lake Formation IAM delegation settings (account-level) |
+| `@aws-mdaa/athena-workgroup` | Athena workgroup with KMS encryption |
+| `@aws-mdaa/audit` | S3 audit bucket for CloudTrail/Inventory |
+| `@aws-mdaa/audit-trail` | CloudTrail audit trail |
+| `@aws-mdaa/dataops-project` | Glue databases with access control |
+| `@aws-mdaa/dataops-crawler` | Glue crawlers for schema discovery |
+| `@aws-mdaa/dataops-data-quality` | Data quality validation rules |
 
-```yaml
-# Contents available in governance/audit-trail.yaml
---8<-- "target/docs/starter_kits/basic_datalake/governance/audit-trail.yaml"
-```
+## Troubleshooting
 
-***
+1. **S3 bucket name conflict**: If deployment fails with `BucketAlreadyExists`, your `organization` value is not globally unique. Change it in `mdaa.yaml` and redeploy.
 
-## Usage Instructions
+2. **Glue Crawler finds no tables**: Ensure data has been uploaded to the correct S3 prefix before running the crawler. Check CloudWatch logs for the crawler's execution details.
 
-Once the MDAA deployment is complete, follow these steps to interact with the data lake.
-
-1. Check the `DATASETS.md` file in the same directory to create a sample_data folder
-
-2. Assume the `data-admin` role created by the MDAA deployment. This role is configured with AssumeRole trust to the local account by default. Note that this role is the only role configured with write access to the data lake. All other roles (including existing administrator roles in the account) will be denied write access.
-
-3. Upload the `./sample_data` folder and contents to `<transformed_bucket>/data/sample_data`
-
-4. In the Glue Console, trigger/run the Glue Crawler. Once successful, view the Crawler's CloudWatch logs to observe that two tables were created.
-
-5. Assume the `data-user` role created by the MDAA deployment. This role is configured with AssumeRole trust to the local account by default.
-
-6. In the Athena Query Editor, select the MDAA-deployed Workgroup from the drop down list.
-
-7. The two tables created by the crawler should be available for query under the MDAA-created Database.
+3. **Athena query returns Access Denied**: Verify you are using the correct IAM role (data-admin for write, data-user for read). Lake Formation permissions govern data access even if S3 bucket policy allows it.

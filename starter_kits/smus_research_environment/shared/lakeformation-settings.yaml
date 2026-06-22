@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/lakeformation-settings.json
 # Lake Formation Admin Roles Configuration
 #
 # Roles are organized by purpose:
@@ -6,8 +7,10 @@ lakeFormationAdminRoles:
   # Data governance administrators
   - id: ssm-domain:/generated-role/data-admin/id
 
-# Disable permission delegation to IAM
+# Disable legacy IAM-based data permissions. When false, all data access must be
+# granted explicitly through LakeFormation — IAM policies alone cannot access Glue tables.
 iamAllowedPrincipalsDefault: false
 
-# Create a role for DZ to administer LF permissions
+# Provision an IAM role for DataZone/SMUS to manage LakeFormation permissions
+# on behalf of projects. Required for SMUS domain integration.
 createDataZoneAdminRole: true

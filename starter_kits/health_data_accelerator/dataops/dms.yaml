@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/dataops-dms.json
 # Name of the DataOps Project 
 projectName: hda-project
 
@@ -6,7 +7,7 @@ dms:
   # The role DMS tasks will run as. This role will require prior access to AWS-service based endpoints.
   # Access to secrets referenced in the config will be granted automatically.
   # Role must also have an assume role trust policy to the regional DMS service name: dms.<region>.amazonaws.com
-  dmsRoleArn: ssm:/{{org}}/shared/generated-role/dms/arn
+  dmsRoleArn: ssm-org:/shared/generated-role/dms/arn
 
   # Replication instances which will be provisioned by the config
   replicationInstances:
@@ -46,7 +47,7 @@ dms:
       endpointType: target
       engineName: s3
       s3Settings:
-        bucketName: ssm:/{{org}}/shared/datalake/bucket/staging/name
+        bucketName: ssm-org:/shared/datalake/bucket/staging/name
         bucketFolder: landing
         includeOpForFullLoad: true
         datePartitionEnabled: true
@@ -55,7 +56,7 @@ dms:
         enableStatistics: true
         addColumnName: true
         parquetVersion: parquet-2-0
-        serverSideEncryptionKmsKeyId: ssm:/{{org}}/shared/datalake/kms/arn
+        serverSideEncryptionKmsKeyId: ssm-org:/shared/datalake/kms/arn
 
   # Replication tasks which will be created by the config.
   replicationTasks:

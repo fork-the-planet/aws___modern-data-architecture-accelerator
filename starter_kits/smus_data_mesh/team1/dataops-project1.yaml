@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/dataops-project.json
 # Team1 DataOps Project Configuration (Cross-Account)
 #
 # DataOps project in team1 account integrated with enterprise SMUS domain.

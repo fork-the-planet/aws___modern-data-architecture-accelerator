@@ -27,20 +27,24 @@ These sample MDAA configurations are provided as a starting point for common ana
 
 ### Starter Kits
 
-Starter kits provide secure, prepackaged foundations for common use cases:
+Starter kits provide secure, prepackaged foundations for common use cases. Copy a starter kit to your own directory:
 
-- [Basic DataLake with Glue](starter_kits/basic_datalake/README.md) - A basic S3 Data Lake with Glue database and crawler
-- [Data Science Platform](starter_kits/basic_datascience_platform/README.md) - A standalone SageMaker Studio Data Science Platform
-- [Governed Lakehouse](starter_kits/governed_lakehouse/README.md) - DataZone-governed Lakehouse with fine-grained access control
-- [Health Data Accelerator](starter_kits/health_data_accelerator/README.md) - Healthcare datalake with DMS integration
-- [SMUS Research Environment](starter_kits/smus_research_environment/README.md) - A SageMaker Unified Studio-enabled architecture for team-based research activities
-- [SMUS Data Mesh](starter_kits/smus_data_mesh/README.md) - Multi-account SageMaker Unified Studio deployment with cross-account data sharing and custom blueprints
+```bash
+cp -r starter_kits/basic_datalake ./my-project
+```
 
-### Sample Configurations
+Available kits:
 
-- [Basic Terraform DataLake](sample_configs/basic_terraform_datalake/README.md) - A basic S3 Data Lake built with the MDAA Terraform module
-- [Basic Terraform Data Science Platform](sample_configs/basic_terraform_datascience_platform/README.md) - A basic Data Science Platform built with the MDAA Terraform module
-- [GenAI Platform (GAIA)](sample_configs/basic_gaia/README.md) - A standalone GAIA GenAI Platform
+- [**Basic DataLake**](starter_kits/basic_datalake/README.md) — S3 data lake with Glue database and crawler
+- [**Data Science Platform**](starter_kits/basic_datascience_platform/README.md) — SageMaker Studio with integrated data lake
+- [**GenAI Foundation**](starter_kits/genai_foundation/README.md) — Enterprise-ready Bedrock Agent with RAG and knowledge bases
+- [**GenAI GAIA Chatbot**](starter_kits/genai_gaia_chatbot/README.md) — RAG chatbot backend with document search, auth, and streaming API
+- [**DataZone Governed Lakehouse**](starter_kits/datazone_governed_lakehouse/README.md) — DataZone-governed lakehouse with fine-grained access control
+- [**Health Data Accelerator**](starter_kits/health_data_accelerator/README.md) — Healthcare data lake with DMS integration
+- [**Minimal**](starter_kits/minimal/README.md) — IAM roles, Glue Catalog encryption, LakeFormation settings
+- [**MLOps Platform**](starter_kits/mlops_platform/README.md) — End-to-end ML lifecycle with training, deployment, and monitoring
+- [**SMUS Research Environment**](starter_kits/smus_research_environment/README.md) — SageMaker Unified Studio for team-based research
+- [**SMUS Data Mesh**](starter_kits/smus_data_mesh/README.md) — Multi-account SageMaker Unified Studio with cross-account data sharing
 
 ### External Sample Configurations
 

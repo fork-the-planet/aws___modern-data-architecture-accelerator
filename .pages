@@ -8,7 +8,6 @@ nav:
                   - Predeployment Preparation: PREDEPLOYMENT.md
                   - DEPLOYMENT.md
         - Starter Kits: starter_kits
-        - Sample DataOps Blueprints: sample_blueprints
         - packages
         - Development:
                   - CONTRIBUTING.md

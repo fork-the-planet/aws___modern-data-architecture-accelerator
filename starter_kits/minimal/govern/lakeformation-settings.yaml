@@ -1,0 +1,10 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/lakeformation-settings.json
+# Roles granted Lake Formation administrator access for managing data permissions.
+# References the data-admin role created by the roles module in this domain.
+lakeFormationAdminRoles:
+  - id: generated-role-id:data-admin
+
+# When true, LakeFormation adds IAM_ALLOWED_PRINCIPALS by default to new databases
+# and tables. This defers access control to IAM policies on Glue catalog resources.
+# When false, all permissions must be explicitly granted via LakeFormation grants.
+iamAllowedPrincipalsDefault: true

@@ -1,167 +1,111 @@
-# Data Mesh with SageMaker Unified Studio - Multi-Account Comprehensive Sample
+# SMUS Data Mesh
 
-This sample demonstrates a production-ready, multi-account SageMaker Unified Studio (SMUS) deployment with cross-account data sharing, custom blueprints, and team-based isolation. It's designed for medium to large organizations who are implementing a data mesh, with multiple business units that need to collaborate on data while maintaining security boundaries and governance controls.
+This starter kit demonstrates a production-ready, multi-account SageMaker Unified Studio (SMUS) deployment with cross-account data sharing, custom blueprints, and team-based isolation. It's designed for medium to large organizations who are implementing a data mesh, with multiple business units that need to collaborate on data while maintaining security boundaries and governance controls.
 
-## Architecture Overview
+> **[Deployment Instructions](#deployment)**
 
-![Simple SageMaker Unified Studio](docs/smus_comprehensive.png)
+## Use Cases
 
-This configuration deploys a comprehensive data platform across three AWS accounts:
+- Multi-account isolation with separate AWS accounts for different business units
+- Centralized governance via a single SMUS domain managing data access across accounts
+- Cross-account data sharing with teams publishing and consuming data across boundaries
+- Custom blueprints for standardized infrastructure patterns deployed via SMUS projects
+- Enterprise data lake with central repository for raw, transformed, and curated data
+- Team autonomy with each team managing their own pipelines under governance policies
+- Centralized user management via IAM Identity Center (SSO)
 
-- **Enterprise Account**: Hosts the SMUS domain, central data lake, and enterprise-wide data operations
-- **Team1 Account**: Isolated environment for team1 team data projects and pipelines
-- **Team2 Account**: Isolated environment for team2 team data consumption and analytics
-
-The architecture implements:
+## Capabilities
 
 - Single SMUS domain with multi-account association for centralized governance
-- Domain units for organizational hierarchy (business-teams/team1, business-teams/team2)
 - Cross-account data sharing via AWS Lake Formation and DataZone
-- Custom DynamoDB blueprint deployed across all accounts
-- Project profiles per account with automated blueprint provisioning
+- Custom DynamoDB blueprint deployed across all accounts via project profiles
 - Three-zone data lake (raw/transformed/curated) in the enterprise account
 - DataOps projects with Glue catalogs, crawlers, and SMUS data sources
+- Domain units for organizational hierarchy
 - IAM Identity Center (SSO) integration for user and group management
 - VPC-based networking with private subnets per account
 
-## When to Use This Sample
+## Architecture
 
-This sample is appropriate when you need:
+![SageMaker Unified Studio Data Mesh](docs/smus_comprehensive.png)
 
-- **Multi-account isolation**: Separate AWS accounts for different business units or teams
-- **Centralized governance**: Single SMUS domain managing data access across accounts
-- **Cross-account data sharing**: Teams publishing and consuming data across account boundaries
-- **Custom blueprints**: Standardized infrastructure patterns (like DynamoDB tables) deployed via SMUS projects
-- **Enterprise data lake**: Central repository for raw, transformed, and curated data
-- **Team autonomy**: Each team manages their own data pipelines while adhering to governance policies
-- **SSO integration**: Centralized user management via IAM Identity Center
+## Deployment
 
-## What This Sample Covers
+### Prerequisites and Predeployment
 
-### 1. Multi-Account Foundation (common modules)
+1. Authenticate to your target AWS account and region. Ensure the authenticated role has permissions to deploy resources via CDK.
+2. [Bootstrap CDK](../../PREDEPLOYMENT.md#multi-account-bootstrap) in all three accounts (enterprise, team1, team2) with cross-account trust.
+3. Configure AWS Organizations:
+   - All three accounts must be members of an AWS Organization
+   - Enable AWS Organizations RAM sharing with automated associations
 
-- Glue Catalog encryption configuration for cross-account access
-- IAM roles per account: data-admin, data-engineer, glue-etl, ddb-bp-prov
-- Lake Formation settings configured for DataZone integration
+4. Enable IAM Identity Center in the target region and create SSO groups for enterprise, team1, and team2.
 
-### 2. SMUS Domain Configuration (enterprise account)
+   > **⚠️ Standalone Account Limitation:** If deploying to an account not part of an AWS Organization, you must deploy in the same region where IAM Identity Center is enabled. Deploying to a different region will fail with: `IDC not enabled (Service: DataZone, Status Code: 400)`.
 
-- DataZone V2 domain with manual user assignment
-- SSO user and group integration (admin, enterprise, team1, team2 groups)
-- Associated accounts (team1, team2) with dedicated VPCs and subnets
-- Domain units for organizational hierarchy
-- Blueprint provisioning roles with domain resource access
+5. Provision VPCs with private subnets in each account. Subnets must have connectivity to AWS service endpoints via public routing or VPC Endpoints.
 
-### 3. Custom Blueprint - DynamoDB Tables
+Additional info: [PREDEPLOYMENT](../../PREDEPLOYMENT.md)
 
-- MDAA DynamoDB module deployed as SMUS custom blueprint
-- Blueprint available in all three accounts
-- Parameterized KMS encryption (configurable per project)
-- Automated provisioning via project profiles
+### Configure MDAA
 
-### 4. Project Profiles
+1. Address all TODOs in [`mdaa.yaml`](mdaa.yaml), specifically:
+   - Set `organization` to a globally unique name
+   - Set `context` values:
+     - `enterprise_account`, `team1_account`, `team2_account` — AWS account IDs
+     - `admin1_user_sso_id` — admin user SSO ID
+     - `enterprise_group_sso_id`, `team1_group_sso_id`, `team2_group_sso_id` — SSO group IDs
+     - `enterprise_vpc_id`, `enterprise_private_subnet_id1`, `enterprise_private_subnet_id2` — enterprise networking
+     - `team1_vpc_id`, `team1_private_subnet_id1`, `team1_private_subnet_id2` — team1 networking
+     - `team2_vpc_id`, `team2_private_subnet_id1`, `team2_private_subnet_id2` — team2 networking
 
-- Account-specific profiles (enterprise, team1, team2)
-- Common environment template with DynamoDB blueprint
-- ON_CREATE deployment mode for automatic provisioning
-- Delegated parameter configuration to projects
 
-### 5. Enterprise Data Operations
 
-- Three-zone data lake (raw/transformed/curated S3 buckets)
-- DataOps project with SMUS integration
-- Glue database with automated crawler
-- SMUS data source for lake database
-- Lake Formation grants for role-based access
-- DynamoDB blueprint instance with project KMS key
+2. Address all TODOs in module configs, specifically:
+   - CDK Nag suppressions in [`common/roles.yaml`](common/roles.yaml). Uncomment each suppression only after reviewing the associated permissions and confirming they are acceptable for your environment.
 
-### 6. Team1 Data Operations
+### Deploy MDAA
 
-- Cross-account DataOps project in team1 account
-- Glue database with crawler and SMUS data source
-- Team1 domain unit membership
-- DynamoDB blueprint instance
-- Lake Formation permissions for team1 roles
 
-### 7. Team2 Analytics Project
+Run the following from the starter kit directory (containing `mdaa.yaml`):
 
-- SMUS project for data consumption (no DataOps components)
-- Team2 domain unit membership
-- DynamoDB blueprint instance with domain KMS key
-- Read-focused access patterns
+1. Optionally, run `npx @aws-mdaa/cli ls` to understand what stacks will be deployed.
 
-## Prerequisites
+2. Optionally, run `npx @aws-mdaa/cli synth` and review the produced templates.
 
-Before deploying this sample, ensure:
+3. Run `npx @aws-mdaa/cli deploy` to deploy all modules in the order they appear in the config.
 
-1. AWS Organizations is configured with all three accounts as members
-2. AWS Organizations RAM sharing with automated associations is enabled
-3. IAM Identity Center is enabled in the target region
-4. SSO groups exist matching the configured group IDs (enterprise, team1, team2)
-5. VPCs and private subnets are configured in each account with AWS service endpoint access
-6. Account IDs, VPC IDs, and subnet IDs are updated in the context section of mdaa.yaml
-7. A unique organization name is set to avoid global naming conflicts
+Additional info: [DEPLOYMENT](../../DEPLOYMENT.md)
 
----
 
-## Important: AWS Organizations and Identity Center Requirements
 
-### Recommended: Deploy to an AWS Organization Account
+## Next Steps
 
-**We strongly recommend deploying SageMaker Unified Studio to an account that belongs to an AWS Organization.** This provides:
+See [USAGE](USAGE.md) for post-deployment instructions.
 
-- Better multi-region support for Identity Center
-- Centralized identity and access management
-- Improved governance and compliance capabilities
+## Modules Deployed
 
-### Standalone Account Limitation
+| Module | Purpose |
+|--------|---------|
+| `@aws-mdaa/glue-catalog` | Glue Catalog KMS encryption (all accounts) |
+| `@aws-mdaa/roles` | IAM roles per account (data-admin, data-engineer, glue-etl, ddb-bp-prov) |
+| `@aws-mdaa/lakeformation-settings` | Lake Formation DataZone integration (all accounts) |
+| `@aws-mdaa/sagemaker` | SMUS domain (DataZone V2) with cross-account associations |
+| `@aws-mdaa/dataops-dynamodb` | DynamoDB custom SMUS blueprint (cross-account) |
+| `@aws-mdaa/sagemaker-project` | SMUS project profiles and team projects |
+| `@aws-mdaa/datalake` | Enterprise three-zone data lake |
+| `@aws-mdaa/dataops-project` | DataOps projects with SMUS integration |
 
-If you must deploy to a **standalone account (not part of an AWS Organization)**, be aware of this critical limitation:
+## Troubleshooting
 
-**⚠️ You must deploy SageMaker Unified Studio in the same AWS region where IAM Identity Center is enabled.**
+1. **`IDC not enabled` error during deployment**: IAM Identity Center must be enabled in the same region as your deployment. For standalone accounts (not in an AWS Organization), deploy in the region where Identity Center is enabled. Check your IDC region in the IAM Identity Center console.
 
-- IAM Identity Center (IDC) can only be enabled in one region per standalone account
-- DataZone requires IDC to be enabled in the deployment region
-- Attempting to deploy in a different region will result in an error: `IDC not enabled (Service: DataZone, Status Code: 400)`
+2. **Cross-account stack deployment fails**: Verify all three accounts are CDK bootstrapped with cross-account trust, and that AWS Organizations RAM sharing with automated associations is enabled.
 
-**Example:**
+3. **SMUS domain association fails**: Ensure the target account IDs in `mdaa.yaml` context are correct and that the accounts are members of the same AWS Organization.
 
-- If you enabled Identity Center in `us-east-1`, you must deploy this configuration in `us-east-1`
-- Deploying to `eu-west-1` will fail with the IDC error
+4. **SSO users cannot access SMUS portal**: Verify the SSO group IDs in `mdaa.yaml` match the groups created in IAM Identity Center. Users must be members of the configured groups.
 
-To check which region your Identity Center is enabled in:
+5. **Domain creation fails with PolicyGrant errors**: Ensure you are authenticated with credentials derived from IAM Identity Center (not static IAM credentials). Use `aws configure sso` to set up SSO-based authentication.
 
-1. Navigate to IAM Identity Center in the AWS Console
-2. The region selector will show your Identity Center's home region
-3. Deploy SageMaker Unified Studio to that same region
-
----
-
-## Deployment Instructions
-
-The following instructions assume you have CDK bootstrapped your target account, and that the MDAA source repo is cloned locally.
-More predeployment info and procedures are available in [PREDEPLOYMENT](../../PREDEPLOYMENT.md).
-
-1. Enable IAM Identity Center in the Account and add users and groups for enterprise and team1
-
-2. Edit the `mdaa.yaml` to specify:
-
-- An organization name. This must be a globally unique name, as it is used in the naming of all deployed resources, some of which are globally named (such as S3 buckets).
-- `context:` values specific to your environment:
-- - VPC Id
-- - Subnet Ids - These should be private subnets with routed connectivity to public service endpoints or via VPC endpoints
-- - Team group SSO ids (`enterprise_group_sso_id`/`team1_group_sso_id`). These will be the names of the SSO groups created in step 1.
-
-3. Ensure you are authenticated to your target AWS account with credentials derived from IAM Identity Center (required for DataZone PolicyGrant operations). These can be SSO credentials configured via `aws configure sso` or temporary credentials provided by your organization's authentication system.
-
-4. Optionally, run `<path_to_mdaa_repo>/bin/mdaa ls` from the directory containing `mdaa.yaml` to understand what stacks will be deployed.
-
-5. Optionally, run `<path_to_mdaa_repo>/bin/mdaa synth` from the directory containing `mdaa.yaml` and review the produced templates.
-
-6. Run `<path_to_mdaa_repo>/bin/mdaa deploy` from the directory containing `mdaa.yaml` to deploy all modules in the order they appear in the config
-
-Additional MDAA deployment commands/procedures can be reviewed in [DEPLOYMENT](../../DEPLOYMENT.md).
-
-## Usage
-
-Once deployed, the SageMaker Unified portal can be launched and should be accessible by SSO users in the enterprise/team1/team2 SSO groups. All core SMUS capabilities provided by the Tooling blueprint should be usable from within the portal.
+6. **Lake Formation permission errors**: Verify the Lake Formation admin roles are correctly configured in `common/lakeformation-settings.yaml` and that the data-admin role has been granted LF admin permissions in each account.

@@ -74,51 +74,33 @@ region = us-east-1
 
 ## Step-by-Step Deployment
 
-This section walks you through deploying MDAA for the first time using the Basic DataLake starter kit. The same steps apply to any starter kit or custom configuration — just point to your own `mdaa.yaml` file.
+This section walks you through deploying MDAA for the first time. The same steps apply to any starter kit or custom configuration.
 
-### 1. Create a Project Directory
+### 1. Create Your Configuration
+
+Copy a starter kit to your own directory:
 
 ```bash
-mkdir my-mdaa-project && cd my-mdaa-project
+cp -r starter_kits/basic_datalake ./my-mdaa-project
+cd ./my-mdaa-project
 ```
 
-### 2. Set Up Your Configuration
+### 2. Configure
 
-Copy or create your `mdaa.yaml` configuration file. You can download a [starter kit configuration](https://github.com/aws/modern-data-architecture-accelerator/tree/main/starter_kits) as a starting point. For example, to use the Basic DataLake starter kit, copy its `mdaa.yaml` and any referenced config files into your project directory.
+Address all TODOs in `mdaa.yaml` (organization name, context values) and review CDK Nag suppressions in the roles yaml file(s).
 
 ### 3. Preview What Will Be Deployed (Optional)
 
-List all configured stacks to see what your configuration will deploy:
-
 ```bash
-npx @aws-mdaa/cli list -c mdaa.yaml
-```
-
-Synthesize CloudFormation templates to inspect the generated resources:
-
-```bash
-npx @aws-mdaa/cli synth -c mdaa.yaml
-```
-
-Review the deployment diff to see what changes will be applied to your account:
-
-```bash
-npx @aws-mdaa/cli diff -c mdaa.yaml
+npx @aws-mdaa/cli list
+npx @aws-mdaa/cli synth
+npx @aws-mdaa/cli diff
 ```
 
 ### 4. Deploy
 
-Using npx (no installation required):
-
 ```bash
-npx @aws-mdaa/cli deploy -c mdaa.yaml
-```
-
-Or install the CLI first, then deploy:
-
-```bash
-npm install -g @aws-mdaa/cli
-mdaa deploy -c mdaa.yaml
+npx @aws-mdaa/cli deploy
 ```
 
 The Basic DataLake starter kit takes approximately 15–20 minutes to deploy. See [Deployment Time Estimates](#deployment-time-estimates) for other starter kits.
@@ -213,8 +195,14 @@ Deployment times vary based on the number of modules and the complexity of the r
 |---|---|---|---|
 | Basic DataLake | ~10 | Low | ~15–20 min |
 | Basic DataScience Platform | ~12 | Medium | ~20–30 min |
-| Governed Lakehouse | ~9 | Medium | ~20–25 min |
+| DataZone Governed Lakehouse | ~9 | Medium | ~20–25 min |
+| GenAI Foundation | ~3 | Medium | ~10–15 min |
+| GenAI GAIA Chatbot | ~4 | Medium | ~10–15 min |
 | Health Data Accelerator | ~15 | High | ~30–45 min |
+| Minimal | ~3 | Low | ~5–10 min |
+| MLOps Platform | ~5 | Medium | ~20–30 min |
+| SMUS Research Environment | ~6 | Medium | ~20–25 min |
+| SMUS Data Mesh | ~10 | High | ~30–45 min |
 
 > **Note:** Times are approximate and depend on your AWS region, account limits, and network conditions. Subsequent deployments (updates) are typically faster since only changed resources are modified.
 
@@ -325,8 +313,14 @@ Each starter kit provides a preconfigured `mdaa.yaml` for a common use case. Ref
 |---|---|---|
 | **Basic DataLake** | Foundational data lake with S3 storage, Glue catalog, and Athena query access | [README](starter_kits/basic_datalake/README.md) |
 | **Basic DataScience Platform** | Data science environment with SageMaker notebooks and shared data access | [README](starter_kits/basic_datascience_platform/README.md) |
-| **Governed Lakehouse** | Lake Formation–governed lakehouse with fine-grained access controls | [README](starter_kits/governed_lakehouse/README.md) |
+| **DataZone Governed Lakehouse** | Lake Formation–governed lakehouse with fine-grained access controls | [README](starter_kits/datazone_governed_lakehouse/README.md) |
+| **GenAI Foundation** | Bedrock Agent with RAG and knowledge bases | [README](starter_kits/genai_foundation/README.md) |
+| **GenAI GAIA Chatbot** | RAG chatbot backend with document search, auth, and streaming API | [README](starter_kits/genai_gaia_chatbot/README.md) |
 | **Health Data Accelerator** | Healthcare-focused data platform with compliance-oriented configurations | [README](starter_kits/health_data_accelerator/README.md) |
+| **Minimal** | Base governance layer — starting point for custom configurations | [README](starter_kits/minimal/README.md) |
+| **MLOps Platform** | Automated train → deploy → monitor pipeline for ML models | [README](starter_kits/mlops_platform/README.md) |
+| **SMUS Research Environment** | SageMaker Unified Studio for team-based research | [README](starter_kits/smus_research_environment/README.md) |
+| **SMUS Data Mesh** | Multi-account SageMaker Unified Studio with cross-account data sharing | [README](starter_kits/smus_data_mesh/README.md) |
 
 > See [Deployment Time Estimates](#deployment-time-estimates) for approximate deployment times per kit.
 

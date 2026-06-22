@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../schemas/@aws-mdaa/cli.json
+# All resources will be deployed to the default region specified in the environment or AWS configurations.
+region: default
+
+# Tags applied to all deployed resources
+tag_config_data:
+  cost-center: '123456'
+  project: mlops-platform
+  environment: dev
+
+## Pre-Deployment Instructions
+#
+# 1. Set 'organization' to a unique name (used as prefix for all resource names)
+# 2. Set context values for your environment (VPC, subnets, project name)
+# 3. Deploy: npx @aws-mdaa/cli deploy
+#
+# The MLOps module deploys a unified training + deployment pipeline.
+# Monitoring is deployed by the deploy seed code alongside the endpoint.
+
+# Failure to do so may result in global naming conflicts.
+# TODO: Set a globally unique organization name (used in S3 bucket names and resource prefixes)
+organization: "<YOUR_ORG_NAME>"
+
+context:
+  # SageMaker project identifiers
+  # TODO: Set your SageMaker project name
+  sagemaker_project_name: "<YOUR_PROJECT_NAME>"
+
+  # VPC and networking
+  # MDAA best practice: run SageMaker jobs inside your VPC for network isolation.
+  # Ensure the VPC has the following endpoints provisioned:
+  #   Gateway:   com.amazonaws.<region>.s3
+  #   Interface: com.amazonaws.<region>.sagemaker.api
+  #              com.amazonaws.<region>.sagemaker.runtime
+  #              com.amazonaws.<region>.sts
+  #              com.amazonaws.<region>.logs
+  # TODO: Set your VPC ID
+  vpc_id: "<YOUR_VPC_ID>"
+  subnet_ids:
+    # TODO: Set private subnet ID 1
+    - "<YOUR_SUBNET_ID_1>"
+    # TODO: Set private subnet ID 2
+    - "<YOUR_SUBNET_ID_2>"
+  security_group_ids:
+    # TODO: Set a security group ID
+    - "<YOUR_SECURITY_GROUP_ID>"
+
+domains:
+  # MLOps domain: unified training → deployment pipeline
+  mlops:
+    environments:
+      dev:
+        account: default
+        modules:
+          # Unified MLOps module: training pipeline + deployment pipeline
+          # Training creates model package group, S3 bucket, CodePipeline
+          # Deploy creates CodeBuild + EventBridge triggered by model approval
+          # Monitoring is deployed by the deploy seed code alongside the endpoint
+          core:
+            module_path: "@aws-mdaa/sagemaker-mlops"
+            module_configs:
+              - ./mlops/mlops.yaml

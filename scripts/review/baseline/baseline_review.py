@@ -186,12 +186,16 @@ def get_module_code_diff(baseline_path: str) -> str:
     except ValueError:
         return "(could not determine module root from baseline path)"
 
-    is_starter_kit = module_root.startswith("starter_kits/")
+    is_starter_kit = module_root.startswith("starter_kits") or module_root == "starter_kits"
 
     if is_starter_kit:
-        # For starter kits: include the kit's own config files and upstream construct code
+        # For starter kit baselines (starter_kits/test/<kit>/baselines/...),
+        # the kit name is the directory AFTER test/. The diff should scope to
+        # that specific kit's config directory, not all starter kits.
+        kit_name = parts[test_idx + 1] if test_idx + 1 < len(parts) else ""
+        kit_config_root = f"starter_kits/{kit_name}" if kit_name else "starter_kits/"
         diff_paths = [
-            f"{module_root}/",
+            f"{kit_config_root}/",
         ]
     else:
         # For regular modules: include the app's own lib/ and sample_configs/
@@ -263,6 +267,17 @@ def get_module_dependency_tree(baseline_path: str) -> str:
 
 
 def extract_module(filepath: str) -> str:
+    """Extract the module/kit identifier from a baseline file path.
+
+    Module baselines: packages/apps/.../test/baselines/foo.baseline.json → app dir name
+    Starter kit baselines: starter_kits/test/<kit>/baselines/foo.baseline.json → starter_kits/<kit>
+    """
+    parts = Path(filepath).parts
+    if "starter_kits" in parts and "test" in parts:
+        # starter_kits/test/<kit>/baselines/... → "starter_kits/<kit>"
+        test_idx = parts.index("test")
+        if test_idx + 1 < len(parts):
+            return f"starter_kits/{parts[test_idx + 1]}"
     if "/test/" in filepath:
         return filepath.split("/test/")[0].split("/")[-1]
     return "unknown"
@@ -501,7 +516,12 @@ def build_report(changed: list[str]) -> list[dict]:
         parts = Path(entry["file"]).parts
         try:
             test_idx = parts.index("test")
-            module_root = str(PROJECT_ROOT / Path(*parts[:test_idx]))
+            # For starter kits, scope the source hash to the specific kit directory
+            if "starter_kits" in parts and test_idx + 1 < len(parts):
+                kit_name = parts[test_idx + 1]
+                module_root = str(PROJECT_ROOT / "starter_kits" / kit_name)
+            else:
+                module_root = str(PROJECT_ROOT / Path(*parts[:test_idx]))
         except ValueError:
             module_root = ""
 

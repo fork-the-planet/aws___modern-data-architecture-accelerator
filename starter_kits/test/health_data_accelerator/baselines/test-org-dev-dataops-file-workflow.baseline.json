@@ -9,14 +9,6 @@
       "Type": "AWS::SSM::Parameter::Value<String>",
       "Default": "/test-org/dataops/generated-role/file-processor-role/arn"
     },
-    "SsmParameterValuetestorgdataopshdafunctionlambdabatchgeneratornameC96584B6F00A464EAD1953AFF4B05118Parameter": {
-      "Type": "AWS::SSM::Parameter::Value<String>",
-      "Default": "/test-org/dataops/hda-function/lambda/batch-generator/name"
-    },
-    "SsmParameterValuetestorgdataopshdafunctionlambdafileprocessortriggernameC96584B6F00A464EAD1953AFF4B05118Parameter": {
-      "Type": "AWS::SSM::Parameter::Value<String>",
-      "Default": "/test-org/dataops/hda-function/lambda/file_processor_trigger/name"
-    },
     "SsmParameterValuetestorgdataopsgeneratedroletransformationrolearnC96584B6F00A464EAD1953AFF4B05118Parameter": {
       "Type": "AWS::SSM::Parameter::Value<String>",
       "Default": "/test-org/dataops/generated-role/transformation-role/arn"
@@ -240,22 +232,7 @@
     "stepfunctionfileprocessorF11EB8CC": {
       "Type": "AWS::StepFunctions::StateMachine",
       "Properties": {
-        "DefinitionString": {
-          "Fn::Join": [
-            "",
-            [
-              "{\"Comment\":\"Raw file processor\",\"StartAt\":\"Batch Generator Lambda\",\"States\":{\"Batch Generator Lambda\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"OutputPath\":\"$.Payload\",\"Parameters\":{\"Payload.$\":\"$\",\"FunctionName\":\"",
-              {
-                "Ref": "SsmParameterValuetestorgdataopshdafunctionlambdabatchgeneratornameC96584B6F00A464EAD1953AFF4B05118Parameter"
-              },
-              "\"},\"Retry\":[{\"ErrorEquals\":[\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":2,\"BackoffRate\":2}],\"Next\":\"File Batches\"},\"File Batches\":{\"Type\":\"Map\",\"End\":true,\"Iterator\":{\"StartAt\":\"File Processor Trigger Lambda\",\"States\":{\"File Processor Trigger Lambda\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"OutputPath\":\"$.Payload\",\"Parameters\":{\"Payload.$\":\"$\",\"FunctionName\":\"",
-              {
-                "Ref": "SsmParameterValuetestorgdataopshdafunctionlambdafileprocessortriggernameC96584B6F00A464EAD1953AFF4B05118Parameter"
-              },
-              "\"},\"Retry\":[{\"ErrorEquals\":[\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":2,\"BackoffRate\":2}],\"End\":true}}},\"ItemsPath\":\"$.Items\",\"MaxConcurrency\":5}}}"
-            ]
-          ]
-        },
+        "DefinitionString": "{\"Comment\":\"Raw file processor\",\"StartAt\":\"Batch Generator Lambda\",\"States\":{\"Batch Generator Lambda\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"OutputPath\":\"$.Payload\",\"Parameters\":{\"Payload.$\":\"$\",\"FunctionName\":\"{{resolve:ssm:/test-org/dataops/hda-function/lambda/batch-generator/name}}\"},\"Retry\":[{\"ErrorEquals\":[\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":2,\"BackoffRate\":2}],\"Next\":\"File Batches\"},\"File Batches\":{\"Type\":\"Map\",\"End\":true,\"Iterator\":{\"StartAt\":\"File Processor Trigger Lambda\",\"States\":{\"File Processor Trigger Lambda\":{\"Type\":\"Task\",\"Resource\":\"arn:aws:states:::lambda:invoke\",\"OutputPath\":\"$.Payload\",\"Parameters\":{\"Payload.$\":\"$\",\"FunctionName\":\"{{resolve:ssm:/test-org/dataops/hda-function/lambda/file_processor_trigger/name}}\"},\"Retry\":[{\"ErrorEquals\":[\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":2,\"BackoffRate\":2}],\"End\":true}}},\"ItemsPath\":\"$.Items\",\"MaxConcurrency\":5}}}",
         "LoggingConfiguration": {
           "Destinations": [
             {

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/dataops-lambda.json
 # The dataops project name is the MDAA module name for the project.
 projectName: hda-project
 
@@ -19,7 +20,7 @@ functions:
     runtime: python3.14
 
     # The role with which the Lambda function will be executed
-    roleArn: ssm:/{{org}}/dataops/generated-role/file-manager-lambda-role/arn
+    roleArn: ssm-org:/dataops/generated-role/file-manager-lambda-role/arn
 
     # Number of times Lambda (0-2) will retry before the invocation event
     # is sent to DLQ.
@@ -59,7 +60,7 @@ functions:
         file-manager-s3-events:
           # The bucket producing event notifications
           buckets:
-            - ssm:/{{org}}/shared/datalake/bucket/staging/name
+            - ssm-org:/shared/datalake/bucket/staging/name
   # batch processor lambda
   - functionName: batch-generator # Function name. Must be unique within the config.
 
@@ -76,7 +77,7 @@ functions:
     runtime: python3.14
 
     # The role with which the Lambda function will be executed
-    roleArn: ssm:/{{org}}/dataops/generated-role/batch-generator-lambda-role/arn
+    roleArn: ssm-org:/dataops/generated-role/batch-generator-lambda-role/arn
 
     # Number of times Lambda (0-2) will retry before the invocation event
     # is sent to DLQ.
@@ -117,7 +118,7 @@ functions:
     runtime: python3.14
 
     # The role with which the Lambda function will be executed
-    roleArn: ssm:/{{org}}/dataops/generated-role/file-processor-trigger-lambda-role/arn
+    roleArn: ssm-org:/dataops/generated-role/file-processor-trigger-lambda-role/arn
 
     # Number of times Lambda (0-2) will retry before the invocation event
     # is sent to DLQ.

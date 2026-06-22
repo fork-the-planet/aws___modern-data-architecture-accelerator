@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/sagemaker-project.json
 # SageMaker Unified Studio Project Profiles Configuration
 #
 # Defines standardized project templates with pre-configured blueprints and settings.

@@ -33,67 +33,67 @@
   },
   {
     "index": 8,
-    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/caef-bootstrap' -c 'org=test-org' -c 'env=dev' -c 'module_name=caef-bootstrap' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/caef-bootstrap' -c 'org=test-org' -c 'env=dev' -c 'module_name=caef-bootstrap' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 9,
-    "command": "cd '/REPO_ROOT/packages/apps/core/bootstrap' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/caef-bootstrap' -c 'org=test-org' -c 'env=dev' -c 'module_name=caef-bootstrap' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "cd '/REPO_ROOT/packages/apps/core/bootstrap' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/caef-bootstrap' -c 'org=test-org' -c 'env=dev' -c 'module_name=caef-bootstrap' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 10,
-    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/roles' -c 'org=test-org' -c 'env=dev' -c 'module_name=roles' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/roles.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/roles' -c 'org=test-org' -c 'env=dev' -c 'module_name=roles' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/roles.yaml\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 11,
-    "command": "cd '/REPO_ROOT/packages/apps/governance/roles-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/roles' -c 'org=test-org' -c 'env=dev' -c 'module_name=roles' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/roles.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "cd '/REPO_ROOT/packages/apps/governance/roles-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/roles' -c 'org=test-org' -c 'env=dev' -c 'module_name=roles' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/roles.yaml\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 12,
-    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/glue-catalog' -c 'org=test-org' -c 'env=dev' -c 'module_name=glue-catalog' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/glue-catalog' -c 'org=test-org' -c 'env=dev' -c 'module_name=glue-catalog' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 13,
-    "command": "cd '/REPO_ROOT/packages/apps/governance/glue-catalog-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/glue-catalog' -c 'org=test-org' -c 'env=dev' -c 'module_name=glue-catalog' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "cd '/REPO_ROOT/packages/apps/governance/glue-catalog-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/glue-catalog' -c 'org=test-org' -c 'env=dev' -c 'module_name=glue-catalog' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 14,
-    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/lakeformation-settings' -c 'org=test-org' -c 'env=dev' -c 'module_name=lakeformation-settings' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/datalake/lakeformation-settings.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/lakeformation-settings' -c 'org=test-org' -c 'env=dev' -c 'module_name=lakeformation-settings' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/datalake/lakeformation-settings.yaml\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 15,
-    "command": "cd '/REPO_ROOT/packages/apps/governance/lakeformation-settings-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/lakeformation-settings' -c 'org=test-org' -c 'env=dev' -c 'module_name=lakeformation-settings' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/datalake/lakeformation-settings.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "cd '/REPO_ROOT/packages/apps/governance/lakeformation-settings-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/lakeformation-settings' -c 'org=test-org' -c 'env=dev' -c 'module_name=lakeformation-settings' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/datalake/lakeformation-settings.yaml\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 16,
-    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/athena' -c 'org=test-org' -c 'env=dev' -c 'module_name=athena' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/datalake/athena.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/athena' -c 'org=test-org' -c 'env=dev' -c 'module_name=athena' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/datalake/athena.yaml\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 17,
-    "command": "cd '/REPO_ROOT/packages/apps/datalake/athena-workgroup-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/athena' -c 'org=test-org' -c 'env=dev' -c 'module_name=athena' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/datalake/athena.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "cd '/REPO_ROOT/packages/apps/datalake/athena-workgroup-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/athena' -c 'org=test-org' -c 'env=dev' -c 'module_name=athena' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/datalake/athena.yaml\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 18,
-    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/audit' -c 'org=test-org' -c 'env=dev' -c 'module_name=audit' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/governance/audit.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/audit' -c 'org=test-org' -c 'env=dev' -c 'module_name=audit' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/governance/audit.yaml\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 19,
-    "command": "cd '/REPO_ROOT/packages/apps/governance/audit-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/audit' -c 'org=test-org' -c 'env=dev' -c 'module_name=audit' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/governance/audit.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "cd '/REPO_ROOT/packages/apps/governance/audit-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/audit' -c 'org=test-org' -c 'env=dev' -c 'module_name=audit' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/governance/audit.yaml\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 20,
-    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/datalake' -c 'org=test-org' -c 'env=dev' -c 'module_name=datalake' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/datalake/datalake.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/datalake' -c 'org=test-org' -c 'env=dev' -c 'module_name=datalake' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/datalake/datalake.yaml\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 21,
-    "command": "cd '/REPO_ROOT/packages/apps/datalake/datalake-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/datalake' -c 'org=test-org' -c 'env=dev' -c 'module_name=datalake' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/datalake/datalake.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "cd '/REPO_ROOT/packages/apps/datalake/datalake-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/datalake' -c 'org=test-org' -c 'env=dev' -c 'module_name=datalake' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/datalake/datalake.yaml\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 22,
-    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/audit-trail' -c 'org=test-org' -c 'env=dev' -c 'module_name=audit-trail' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/governance/audit-trail.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/audit-trail' -c 'org=test-org' -c 'env=dev' -c 'module_name=audit-trail' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/governance/audit-trail.yaml\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 23,
-    "command": "cd '/REPO_ROOT/packages/apps/governance/audit-trail-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/audit-trail' -c 'org=test-org' -c 'env=dev' -c 'module_name=audit-trail' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/governance/audit-trail.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "cd '/REPO_ROOT/packages/apps/governance/audit-trail-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/shared/dev/audit-trail' -c 'org=test-org' -c 'env=dev' -c 'module_name=audit-trail' -c 'domain=shared' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/governance/audit-trail.yaml\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 24,
@@ -113,34 +113,34 @@
   },
   {
     "index": 28,
-    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/caef-bootstrap' -c 'org=test-org' -c 'env=dev' -c 'module_name=caef-bootstrap' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/caef-bootstrap' -c 'org=test-org' -c 'env=dev' -c 'module_name=caef-bootstrap' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 29,
-    "command": "cd '/REPO_ROOT/packages/apps/core/bootstrap' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/caef-bootstrap' -c 'org=test-org' -c 'env=dev' -c 'module_name=caef-bootstrap' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "cd '/REPO_ROOT/packages/apps/core/bootstrap' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/caef-bootstrap' -c 'org=test-org' -c 'env=dev' -c 'module_name=caef-bootstrap' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 30,
-    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/example-project' -c 'org=test-org' -c 'env=dev' -c 'module_name=example-project' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/dataops/project.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/example-project' -c 'org=test-org' -c 'env=dev' -c 'module_name=example-project' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/dataops/project.yaml\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 31,
-    "command": "cd '/REPO_ROOT/packages/apps/dataops/dataops-project-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/example-project' -c 'org=test-org' -c 'env=dev' -c 'module_name=example-project' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/dataops/project.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "cd '/REPO_ROOT/packages/apps/dataops/dataops-project-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/example-project' -c 'org=test-org' -c 'env=dev' -c 'module_name=example-project' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/dataops/project.yaml\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 32,
-    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/example-crawler' -c 'org=test-org' -c 'env=dev' -c 'module_name=example-crawler' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/dataops/crawler.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/example-crawler' -c 'org=test-org' -c 'env=dev' -c 'module_name=example-crawler' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/dataops/crawler.yaml\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 33,
-    "command": "cd '/REPO_ROOT/packages/apps/dataops/dataops-crawler-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/example-crawler' -c 'org=test-org' -c 'env=dev' -c 'module_name=example-crawler' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/dataops/crawler.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "cd '/REPO_ROOT/packages/apps/dataops/dataops-crawler-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/example-crawler' -c 'org=test-org' -c 'env=dev' -c 'module_name=example-crawler' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/dataops/crawler.yaml\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 34,
-    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/example-data-quality' -c 'org=test-org' -c 'env=dev' -c 'module_name=example-data-quality' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/dataops/data-quality.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/example-data-quality' -c 'org=test-org' -c 'env=dev' -c 'module_name=example-data-quality' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/dataops/data-quality.yaml\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   },
   {
     "index": 35,
-    "command": "cd '/REPO_ROOT/packages/apps/dataops/dataops-data-quality-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/example-data-quality' -c 'org=test-org' -c 'env=dev' -c 'module_name=example-data-quality' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/dataops/data-quality.yaml\"' -c 'tag_configs=\"/TEMP_DIR/basic_datalake/tags.yaml\"'"
+    "command": "cd '/REPO_ROOT/packages/apps/dataops/dataops-data-quality-app' && npx  cdk synth  --require-approval never -o '/TEMP_DIR/mdaa_working/cdk.out/test-org/dataops/dev/example-data-quality' -c 'org=test-org' -c 'env=dev' -c 'module_name=example-data-quality' -c 'domain=dataops' -c 'use_bootstrap=\"true\"' -c 'module_configs=\"/TEMP_DIR/basic_datalake/dataops/data-quality.yaml\"' -c 'tag_config_data'=\"{\\\"costcentre\\\":\\\"123456\\\",\\\"project\\\":\\\"data-ecosystem\\\"}\""
   }
 ]

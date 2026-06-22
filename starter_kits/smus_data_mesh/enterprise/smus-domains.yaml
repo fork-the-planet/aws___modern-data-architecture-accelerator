@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/sagemaker.json
 # SageMaker Unified Studio Domain Configuration
 #
 # Creates a DataZone V2 domain spanning multiple AWS accounts with centralized governance,

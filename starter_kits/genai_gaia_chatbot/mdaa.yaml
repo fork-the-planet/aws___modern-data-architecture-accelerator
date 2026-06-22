@@ -1,0 +1,199 @@
+# yaml-language-server: $schema=../../schemas/@aws-mdaa/cli.json
+# =============================================================================
+# GAIA v2 - GenAI Chatbot Deployment Configuration
+# =============================================================================
+# This is the main MDAA configuration file that defines your deployment.
+#
+# QUICK START:
+# TODO: Set a globally unique organization name (used in S3 bucket names and resource prefixes)
+# 1. Replace <YOUR_ORG_NAME> with your organization identifier
+# 2. Update context variables with your VPC/subnet IDs
+# 3. Choose your deployment region and model
+# 4. Run: npx @aws-mdaa/cli deploy
+
+# =============================================================================
+# REGION CONFIGURATION
+# =============================================================================
+# Choose your deployment region based on:
+# - Data residency requirements
+# - Bedrock model availability
+# - Latency to your users
+#
+# Region considerations:
+#   us-east-1:    Full model availability, global WAF supported
+#   us-west-2:    Full model availability, global WAF requires us-east-1
+#   ca-central-1: Limited models (Claude 3 Haiku, Titan), Canadian data residency
+#   eu-west-1:    EU data residency, good model availability
+#
+# For non-us-east-1 regions, set skipGlobalDefaultWaf: true in gaia.yaml
+region: us-east-1
+
+# Tags applied to all deployed resources
+tag_config_data:
+  costcentre: '123456'
+  project: genai_gaia_chatbot
+
+# =============================================================================
+# ORGANIZATION IDENTIFIER
+# =============================================================================
+# Replace with your organization identifier (lowercase, no spaces)
+# This becomes part of all resource names: <org>-<env>-<domain>-<resource>
+# TODO: Set a globally unique organization name (used in S3 bucket names and resource prefixes)
+organization: <YOUR_ORG_NAME>
+
+# =============================================================================
+# CONTEXT VARIABLES
+# =============================================================================
+# These variables can be referenced throughout configs using {{context:variable_name}}
+# Note: MDAA also provides built-in variables: {{account}}, {{region}}, {{partition}}
+context:
+  # ---------------------------------------------------------------------------
+  # VPC CONFIGURATION (Required)
+  # ---------------------------------------------------------------------------
+  # GenAI Accelerator Lambda functions run inside your VPC. They need outbound internet
+  # access to reach AWS services, including AppSync Events for WebSocket responses.
+  #
+  # REQUIREMENT: Subnets with a route to NAT Gateway
+  #
+  # Lambda functions in a VPC do not receive public IP addresses. They require
+  # a NAT Gateway for outbound internet access.
+  # See: https://docs.aws.amazon.com/lambda/latest/dg/configuration-vpc-internet.html
+  #
+  # AppSync Events has no VPC endpoint, so NAT Gateway is mandatory for GenAI Accelerator.
+  #
+  # To find your VPC and subnet IDs:
+  #   aws ec2 describe-vpcs --query 'Vpcs[*].[VpcId,Tags[?Key==`Name`].Value|[0]]' --output table
+  #   aws ec2 describe-subnets --filters "Name=vpc-id,Values=<vpc-id>" \
+  #     --query 'Subnets[*].[SubnetId,AvailabilityZone,Tags[?Key==`Name`].Value|[0]]' --output table
+  #
+  # Verify your subnet's route table has a route to a NAT Gateway (0.0.0.0/0 → nat-xxx)
+  # TODO: Set your VPC ID
+  vpc_id: <YOUR_VPC_ID>
+  # TODO: Set the AWS account ID that owns the VPC. Use your own account ID if the VPC is not shared via RAM.
+  vpc_owner_account_id: <YOUR_VPC_OWNER_ACCOUNT_ID>
+
+  # cidr ranges for WAF, including your local computer, Corporate network, NATGW
+  # see the gaia.yaml for more details
+  # Add or remove entries as needed — gaia.yaml will use the full list automatically
+  waf_allowed_cidrs:
+    # TODO: Set WAF allowed CIDR (your IPv4, e.g. from curl -4 ifconfig.me)
+    - <YOUR_WAF_CIDR_1>
+    # TODO: Set WAF allowed CIDR (your IPv6, e.g. from curl -6 ifconfig.me)
+    - <YOUR_WAF_CIDR_2>
+    # TODO: Set WAF allowed CIDR (NAT Gateway IP)
+    - <YOUR_WAF_CIDR_3>
+
+  # Application subnets - must have a route to NAT Gateway for outbound internet
+  # TODO: Set private subnet ID 1
+  app_subnet_id_1: <YOUR_SUBNET_ID_1>
+  # TODO: Set private subnet ID 2
+  app_subnet_id_2: <YOUR_SUBNET_ID_2>
+
+  # Data subnets - for OpenSearch Serverless (can be same as app subnets)
+  # TODO: Set private subnet ID 1
+  data_subnet_id_1: <YOUR_SUBNET_ID_1>
+  # TODO: Set private subnet ID 2
+  data_subnet_id_2: <YOUR_SUBNET_ID_2>
+
+  # ---------------------------------------------------------------------------
+  # BEDROCK MODEL CONFIGURATION
+  # ---------------------------------------------------------------------------
+  # Choose ONE of the following options for inference_model_arn:
+  #
+  # OPTION 1: US Cross-Region Inference Profile (RECOMMENDED)
+  # Provides higher throughput by routing requests across US regions (us-east-1, us-east-2, us-west-2).
+  # Replace <YOUR_ACCOUNT_ID> with your 12-digit AWS account ID.
+  # See: https://docs.aws.amazon.com/bedrock/latest/userguide/cross-region-inference.html
+  #
+  # Available US inference profiles:
+  #   Claude Sonnet 4.5:  arn:aws:bedrock:us-east-1:<YOUR_ACCOUNT_ID>:inference-profile/us.anthropic.claude-sonnet-4-5-20250929-v1:0
+  #   Claude Sonnet 4:    arn:aws:bedrock:us-east-1:<YOUR_ACCOUNT_ID>:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0
+  #   Claude 3.5 Sonnet:  arn:aws:bedrock:us-east-1:<YOUR_ACCOUNT_ID>:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0
+  #   Claude 3.5 Haiku:   arn:aws:bedrock:us-east-1:<YOUR_ACCOUNT_ID>:inference-profile/us.anthropic.claude-3-5-haiku-20241022-v1:0
+  #
+  # OPTION 2: Direct Foundation Model ARN (single region, simpler permissions)
+  # Use this if you don't need cross-region throughput or want simpler IAM policies.
+  # Note: Update roles.yaml to remove inference profile permissions if using this option.
+  #
+  # Available foundation models (us-east-1):
+  #   Claude 3.5 Sonnet:  arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-5-sonnet-20241022-v2:0
+  #   Claude 3.5 Haiku:   arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-5-haiku-20241022-v1:0
+  #   Claude 3 Sonnet:    arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0
+  #   Claude 3 Haiku:     arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-haiku-20240307-v1:0
+  #
+  # Verify model access in Bedrock console before deploying!
+
+  # US Cross-Region Inference Profile (recommended) - replace <YOUR_ACCOUNT_ID> with your 12-digit AWS account ID
+  # TODO: Replace <YOUR_ACCOUNT_ID> with your 12-digit AWS account ID for the inference profile
+  inference_model_arn: "arn:aws:bedrock:us-east-1:<YOUR_ACCOUNT_ID>:inference-profile/us.anthropic.claude-sonnet-4-5-20250929-v1:0"
+
+  # Direct Foundation Model (alternative) - uncomment to use instead
+  # inference_model_arn: "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-5-sonnet-20241022-v2:0"
+
+  # Embedding model for knowledge base vector generation
+  # Available models:
+  #   amazon.titan-embed-text-v2:0  - Titan Text Embeddings V2
+  #   amazon.titan-embed-text-v1    - Titan Text Embeddings V1
+  #   cohere.embed-english-v3       - Cohere Embed English
+  #   cohere.embed-multilingual-v3  - Cohere Embed Multilingual
+  # See https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html for more.
+  embedding_model: "amazon.titan-embed-text-v2:0"
+# =============================================================================
+# DOMAIN AND ENVIRONMENT CONFIGURATION
+# =============================================================================
+domains:
+  # Domain name - logical grouping for your application
+  # Becomes part of resource names and SSM parameter paths
+  gaia:
+    environments:
+      # Environment name (dev, test, staging, prod, etc.)
+      dev:
+        # Target AWS account ID
+        # Use 'default' to deploy to the account configured in your AWS CLI/environment
+        account: default
+
+        # =====================================================================
+        # DEPLOYMENT MODULES
+        # =====================================================================
+        # Modules deploy in dependency order. Each module creates AWS resources
+        # and exports values via SSM parameters for dependent modules.
+        modules:
+          # IAM roles module - creates all IAM roles and policies
+          # MUST be deployed first as other modules reference these roles
+          roles:
+            module_path: "@aws-mdaa/roles"
+            module_configs:
+              - ./config/roles.yaml
+          
+          # Data lake module - creates S3 buckets with encryption and policies
+          # Stores documents for the knowledge base
+          datalake:
+            module_path: "@aws-mdaa/datalake"
+            module_configs:
+              - ./config/datalake.yaml
+
+          # Bedrock builder module - creates knowledge base and guardrails
+          # Depends on: roles, datalake
+          bedrock-builder:
+            module_path: "@aws-mdaa/bedrock-builder"
+            module_configs:
+              - ./config/bedrock-builder.yaml
+
+          # GenAI chatbot application - creates the full application stack
+          # Depends on: roles, bedrock-builder
+          # Creates: API Gateway, Lambda, Cognito, CloudFront, AppSync
+          gaia-chatbot:
+            module_path: "@aws-mdaa/gaia-v2"
+            module_configs:
+              - ./config/gaia.yaml
+            # CloudFront WAF resources must be deployed in us-east-1. When the
+            # primary deployment region is not us-east-1, the module creates a
+            # cross-region stack in us-east-1 for the WAF. This entry tells MDAA
+            # to provision that stack, and allow_cross_reference_stack enables
+            # CDK's cross-region SSM-backed references between the stacks.
+            # addDependencyMainStack must be false because the main stack
+            # references the WAF ARN from the us-east-1 stack (not vice versa).
+            allow_cross_reference_stack: true
+            additional_stacks:
+              - region: us-east-1
+                addDependencyMainStack: false

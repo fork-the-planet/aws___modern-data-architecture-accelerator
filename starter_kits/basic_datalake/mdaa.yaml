@@ -1,15 +1,17 @@
+# yaml-language-server: $schema=../../schemas/@aws-mdaa/cli.json
 # All resources will be deployed to the default region specified in the environment or AWS configurations.
 # Can optional specify a specific AWS Region Name.
 region: default
 
-# One or more tag files containing tags which will be applied to all deployed resources
-tag_configs:
-  - ./tags.yaml
+# Tags applied to all deployed resources
+tag_config_data:
+  costcentre: '123456'
+  project: data-ecosystem
 
 ## Pre-Deployment Instructions
 
-# TODO: Set an appropriate, unique organization name
 # Failure to do so may result in global naming conflicts.
+# TODO: Set a globally unique organization name (used in S3 bucket names and resource prefixes)
 organization: <YOUR_ORG_NAME>
 
 # Optional: IAM permissions boundary policy ARN.

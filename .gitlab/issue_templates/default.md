@@ -1,7 +1,7 @@
 <!-- 
     Before creating an issue, please read through existing issues to ensure you are not creating a duplicate:
 
-    * https://gitlab.aws.dev/mdaa/caef-/issues
+    * https://github.com/aws/modern-data-architecture-accelerator/issues
 
     Please complete all fields to ensure your submission is properly reviewed and prioritized.
 !-->

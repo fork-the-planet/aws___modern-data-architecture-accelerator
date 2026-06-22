@@ -1636,7 +1636,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] Glue log group name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] Wildcard in log-group ARN (/aws-glue/*) required because Glue dynamically generates log group names at runtime.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -1666,7 +1666,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] Glue log group name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] Wildcard in log-group ARN (/aws-glue/*) required because Glue dynamically generates log group names at runtime.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -1716,7 +1716,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] Glue log group name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] Wildcard in log-group ARN (/aws-glue/*) required because Glue dynamically generates log group names at runtime.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -1765,7 +1765,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] These actions do not accept a resource or resource name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] s3:ListAllMyBuckets, s3:GetAccountPublicAccessBlock, s3:ListAccessPoints, and kms:ListAliases are account-level actions that do not support resource-level permissions.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -1795,7 +1795,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] These actions do not accept a resource or resource name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] s3:ListAllMyBuckets, s3:GetAccountPublicAccessBlock, s3:ListAccessPoints, and kms:ListAliases are account-level actions that do not support resource-level permissions.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -1845,7 +1845,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] These actions do not accept a resource or resource name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] s3:ListAllMyBuckets, s3:GetAccountPublicAccessBlock, s3:ListAccessPoints, and kms:ListAliases are account-level actions that do not support resource-level permissions.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -1905,7 +1905,6 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] These actions do not accept a resource or resource name not known at deployment time.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -1935,7 +1934,6 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] These actions do not accept a resource or resource name not known at deployment time.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -1985,7 +1983,6 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] These actions do not accept a resource or resource name not known at deployment time.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2037,7 +2034,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] These actions do not accept a resource or resource name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] SageMaker admin actions (ListUserProfiles, ListDomains, ListApps), iam:ListRoles, license-manager:ListReceivedLicenses, and servicecatalog:ListAcceptedPortfolioShares are account-level actions that do not support resource-level permissions.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2067,7 +2064,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] These actions do not accept a resource or resource name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] SageMaker admin actions (ListUserProfiles, ListDomains, ListApps), iam:ListRoles, license-manager:ListReceivedLicenses, and servicecatalog:ListAcceptedPortfolioShares are account-level actions that do not support resource-level permissions.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2117,7 +2114,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] These actions do not accept a resource or resource name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] SageMaker admin actions (ListUserProfiles, ListDomains, ListApps), iam:ListRoles, license-manager:ListReceivedLicenses, and servicecatalog:ListAcceptedPortfolioShares are account-level actions that do not support resource-level permissions.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2212,7 +2209,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] These actions do not accept a resource or resource name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] s3:ListAllMyBuckets, kms:ListAliases, athena:ListWorkGroups/ListDataCatalogs, and sagemaker:CreatePresignedDomainUrl are account-level actions that do not support resource-level permissions. Glue database/table wildcards are scoped to the deployment account and region.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2242,7 +2239,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] These actions do not accept a resource or resource name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] s3:ListAllMyBuckets, kms:ListAliases, athena:ListWorkGroups/ListDataCatalogs, and sagemaker:CreatePresignedDomainUrl are account-level actions that do not support resource-level permissions. Glue database/table wildcards are scoped to the deployment account and region.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2292,7 +2289,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] These actions do not accept a resource or resource name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] s3:ListAllMyBuckets, kms:ListAliases, athena:ListWorkGroups/ListDataCatalogs, and sagemaker:CreatePresignedDomainUrl are account-level actions that do not support resource-level permissions. Glue database/table wildcards are scoped to the deployment account and region.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2327,7 +2324,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] SageMaker execution requires access to all user profiles in the domain.",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] sagemaker:CreatePresignedDomainUrl requires Resource:* because the team execution role must generate presigned URLs for any user profile in the SageMaker domain.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2357,7 +2354,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] SageMaker execution requires access to all user profiles in the domain.",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] sagemaker:CreatePresignedDomainUrl requires Resource:* because the team execution role must generate presigned URLs for any user profile in the SageMaker domain.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2407,7 +2404,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] SageMaker execution requires access to all user profiles in the domain.",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] sagemaker:CreatePresignedDomainUrl requires Resource:* because the team execution role must generate presigned URLs for any user profile in the SageMaker domain.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2469,7 +2466,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] AWSGlueServiceRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] AWSGlueServiceRole is required for Glue ETL jobs to access S3, CloudWatch Logs, and EC2 networking for job execution. See https://docs.aws.amazon.com/glue/latest/dg/create-an-iam-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -2502,7 +2499,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] AWSGlueServiceRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] AWSGlueServiceRole is required for Glue ETL jobs to access S3, CloudWatch Logs, and EC2 networking for job execution. See https://docs.aws.amazon.com/glue/latest/dg/create-an-iam-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -2535,7 +2532,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] AWSGlueServiceRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] AWSGlueServiceRole is required for Glue ETL jobs to access S3, CloudWatch Logs, and EC2 networking for job execution. See https://docs.aws.amazon.com/glue/latest/dg/create-an-iam-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -2565,7 +2562,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] AWSGlueServiceRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] AWSGlueServiceRole is required for Glue ETL jobs to access S3, CloudWatch Logs, and EC2 networking for job execution. See https://docs.aws.amazon.com/glue/latest/dg/create-an-iam-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -2679,7 +2676,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] AWSGlueConsoleFullAccess, AWSLakeFormationDataAdmin, AWSLakeFormationCrossAccountManager approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] Data-admin role requires AWSGlueConsoleFullAccess for catalog administration, AWSLakeFormationDataAdmin for permission grants, and AWSLakeFormationCrossAccountManager for cross-account data sharing governance.",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -2712,7 +2709,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] AWSGlueConsoleFullAccess, AWSLakeFormationDataAdmin, AWSLakeFormationCrossAccountManager approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] Data-admin role requires AWSGlueConsoleFullAccess for catalog administration, AWSLakeFormationDataAdmin for permission grants, and AWSLakeFormationCrossAccountManager for cross-account data sharing governance.",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -2745,7 +2742,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] AWSGlueConsoleFullAccess, AWSLakeFormationDataAdmin, AWSLakeFormationCrossAccountManager approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] Data-admin role requires AWSGlueConsoleFullAccess for catalog administration, AWSLakeFormationDataAdmin for permission grants, and AWSLakeFormationCrossAccountManager for cross-account data sharing governance.",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -2775,7 +2772,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] AWSGlueConsoleFullAccess, AWSLakeFormationDataAdmin, AWSLakeFormationCrossAccountManager approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/basic_datascience_platform/roles.yaml\"] Data-admin role requires AWSGlueConsoleFullAccess for catalog administration, AWSLakeFormationDataAdmin for permission grants, and AWSLakeFormationCrossAccountManager for cross-account data sharing governance.",
               "id": "AwsSolutions-IAM4"
             }
           ]

@@ -1,3 +1,6 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/datascience-team.json
+# Top-level team configuration that defines roles, users, and the Studio environment
+# for a single data science team. Each team gets its own SageMaker Studio domain.
 team:
   # List of roles which will be provided admin access to the team resources
   dataAdminRoles:
@@ -15,10 +18,18 @@ team:
 
   # The team Studio Domain config
   studioDomainConfig:
+    # Authentication mode for Studio. IAM uses IAM roles/session names to identify users.
+    # SSO uses IAM Identity Center (formerly AWS SSO) user IDs. (enum: IAM, SSO)
     authMode: IAM
+    # VPC ID where the Studio domain will be created. Studio apps run inside this VPC
+    # for network isolation. Change this to match your environment's VPC.
     vpcId: "{{context:vpc_id}}"
+    # List of private subnet IDs within the VPC for Studio apps. Must have connectivity
+    # to AWS services (via NAT Gateway or VPC endpoints).
     subnetIds:
       - "{{context:subnet_id}}"
+    # S3 prefix where shared notebooks are stored. Team members can share notebooks
+    # with each other via this path in the team's S3 bucket.
     notebookSharingPrefix: sagemaker/notebooks/
 
     # List of Studio user profiles which will be created.

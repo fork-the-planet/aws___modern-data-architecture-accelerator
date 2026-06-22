@@ -1,5 +1,10 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/roles.json
 generatePolicies:
   FileManagerPolicy:
+    # TODO: Review the below policyDocument permissions and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM5"
+    #     reason: "DynamoDB table wildcard required because table names are generated dynamically by MDAA and not known at policy authoring time."
     policyDocument:
       Statement:
         - SID: DynamoDBWriter
@@ -14,10 +19,12 @@ generatePolicies:
             - dynamodb:Scan
             - dynamodb:Query
             - dynamodb:UpdateItem
-    suppressions:
-      - id: "AwsSolutions-IAM5"
-        reason: "DDB table name not known at deployment time."
+
   StepFunctionLogPolicy:
+    # TODO: Review the below policyDocument permissions and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM5"
+    #     reason: "CloudWatch Logs delivery actions (CreateLogDelivery, ListLogDeliveries, DescribeLogGroups, etc.) are account-level operations that do not support resource-level permissions. See https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazoncloudwatchlogs.html"
     policyDocument:
       Statement:
         - SID: GeneralLogging
@@ -40,10 +47,12 @@ generatePolicies:
           Action:
             - logs:CreateLogStream
             - logs:PutLogEvents
-    suppressions:
-      - id: "AwsSolutions-IAM5"
-        reason: "CloudWatch API actions, such as CreateLogDelivery and DescribeLogGroups, do not support Resource types defined by Amazon CloudWatch Logs"
+
   DataOpsGlueJobPolicy:
+    # TODO: Review the below policyDocument permissions and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM5"
+    #     reason: "Glue job wildcard required because job names are generated dynamically by MDAA and not known at policy authoring time."
     policyDocument:
       Statement:
         - SID: GlueInvoker
@@ -53,10 +62,12 @@ generatePolicies:
           Action:
             - glue:StartJobRun
             - glue:GetJobRun
-    suppressions:
-      - id: "AwsSolutions-IAM5"
-        reason: "Glue job name not known at deployment time."
+
   BatchGeneratorDdbPolicy:
+    # TODO: Review the below policyDocument permissions and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM5"
+    #     reason: "DynamoDB table wildcard required because table names are generated dynamically by MDAA and not known at policy authoring time."
     policyDocument:
       Statement:
         - SID: DynamoDBWriter
@@ -66,10 +77,12 @@ generatePolicies:
           Action:
             - dynamodb:GetItem
             - dynamodb:Query
-    suppressions:
-      - id: "AwsSolutions-IAM5"
-        reason: "DDB table name not known at deployment time."
+
   FileProcessorLambdaPolicy:
+    # TODO: Review the below policyDocument permissions and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM5"
+    #     reason: "Lambda function wildcard required because function names are generated dynamically by MDAA and not known at policy authoring time."
     policyDocument:
       Statement:
         - SID: LambdaInvoker
@@ -78,10 +91,12 @@ generatePolicies:
             - "arn:{{partition}}:lambda:{{region}}:{{account}}:function:*"
           Action:
             - lambda:InvokeFunction
-    suppressions:
-      - id: "AwsSolutions-IAM5"
-        reason: "Lambda name not known at deployment time."
+
   FileProcessorLogPolicy:
+    # TODO: Review the below policyDocument permissions and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM5"
+    #     reason: "CloudWatch Logs delivery actions (CreateLogDelivery, ListLogDeliveries, DescribeLogGroups, etc.) are account-level operations that do not support resource-level permissions. See https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazoncloudwatchlogs.html"
     policyDocument:
       Statement:
         - SID: GeneralLogging
@@ -104,46 +119,53 @@ generatePolicies:
           Action:
             - logs:CreateLogStream
             - logs:PutLogEvents
-    suppressions:
-      - id: "AwsSolutions-IAM5"
-        reason: "CloudWatch API actions, such as CreateLogDelivery and DescribeLogGroups, do not support Resource types defined by Amazon CloudWatch Logs"
 
 
 # The list of roles which will be generated
 generateRoles:
   file-manager-lambda-role:
+    # TODO: Review the below awsManagedPolicies and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM4"
+    #     reason: "AWSLambdaBasicExecutionRole provides minimal CloudWatch Logs permissions (CreateLogGroup, CreateLogStream, PutLogEvents) required for Lambda function logging. See https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html"
     trustedPrincipal: service:lambda.amazonaws.com
     # A list of AWS managed policies which will be added to the role
     awsManagedPolicies:
       - service-role/AWSLambdaBasicExecutionRole
     generatedPolicies:
       - FileManagerPolicy
-    suppressions:
-      - id: "AwsSolutions-IAM4"
-        reason: "AWSLambdaBasicExecutionRole approved for usage"
+
   file-processor-role:
     trustedPrincipal: service:states.amazonaws.com
     # A list of AWS managed policies which will be added to the role
     generatedPolicies:
       - FileProcessorLambdaPolicy
       - StepFunctionLogPolicy
+
   transformation-role:
     trustedPrincipal: service:states.amazonaws.com
     # A list of AWS managed policies which will be added to the role
     generatedPolicies:
       - DataOpsGlueJobPolicy
       - StepFunctionLogPolicy
+
   batch-generator-lambda-role:
+    # TODO: Review the below awsManagedPolicies and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM4"
+    #     reason: "AWSLambdaBasicExecutionRole provides minimal CloudWatch Logs permissions (CreateLogGroup, CreateLogStream, PutLogEvents) required for Lambda function logging. See https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html"
     trustedPrincipal: service:lambda.amazonaws.com
     generatedPolicies:
       - BatchGeneratorDdbPolicy
     # A list of AWS managed policies which will be added to the role
     awsManagedPolicies:
       - service-role/AWSLambdaBasicExecutionRole
-    suppressions:
-      - id: "AwsSolutions-IAM4"
-        reason: "AWSLambdaBasicExecutionRole approved for usage"
+
   file-processor-trigger-lambda-role:
+    # TODO: Review the below awsManagedPolicies and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM4"
+    #     reason: "AWSLambdaBasicExecutionRole provides minimal CloudWatch Logs permissions (CreateLogGroup, CreateLogStream, PutLogEvents) required for Lambda function logging. See https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html"
     trustedPrincipal: service:lambda.amazonaws.com
     # A list of AWS managed policies which will be added to the role
     generatedPolicies:
@@ -151,6 +173,3 @@ generateRoles:
     # A list of AWS managed policies which will be added to the role
     awsManagedPolicies:
       - service-role/AWSLambdaBasicExecutionRole
-    suppressions:
-      - id: "AwsSolutions-IAM4"
-        reason: "AWSLambdaBasicExecutionRole approved for usage"

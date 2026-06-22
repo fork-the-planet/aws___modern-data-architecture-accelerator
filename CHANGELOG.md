@@ -2,7 +2,22 @@
 
 ## [NEXT_RELEASE_VERSION] - NEXT_RELEASE_DATE
 
-### New Features
+### New Starter Kits
+
+- **GenAI GAIA Chatbot** — RAG chatbot backend with document search, auth, and streaming API
+- **Minimal** — Starting point for custom configurations with base governance
+- **MLOps Platform** — Automated train → deploy → monitor pipeline for ML models
+
+### Starter Kit Improvements
+
+- Renamed `genai_accelerator` → `genai_foundation`
+- Renamed `governed_lakehouse` → `datazone_governed_lakehouse`
+- Standardized READMEs across all starter kits
+
+### Cleanup
+
+- Removed top-level `sample_blueprints/` and `sample_configs/` directories. Equivalent examples are available in the [external sample configurations repository](https://github.com/aws-samples/sample-config-modern-data-architecture-accelerator).
+- Renamed `sample_code/` → `sample_customizations/`
 
 - **aws-cdk-lib upgrade to 2.258.0**: `aws-cdk-lib` has been updated from 2.192.0 to 2.258.0. This version removes the `lambda.Runtime.PYTHON_3_13` enum value and upgrades it to Runtime.PYTHON_3_14. Any MDAA config that references `python3.13` as a Lambda runtime must be updated to `python3.13t` (thread-based) or another supported runtime (e.g., `python3.14`).
 

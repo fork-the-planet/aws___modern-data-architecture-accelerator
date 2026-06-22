@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=../../schemas/@aws-mdaa/cli.json
+# All resources will be deployed to the default region specified in the environment or AWS configurations.
+# Can optional specify a specific AWS Region Name.
+region: default
+
+# Tags applied to all deployed resources
+tag_config_data:
+  costcentre: '123456'
+  project: genai_foundation
+
+# TODO: Set a globally unique organization name (used in S3 bucket names and resource prefixes)
+organization: <YOUR_ORG_NAME>
+
+context:
+  # TODO: Set your VPC ID (must exist in the deployment account/region)
+  vpc_id: <YOUR_VPC_ID>
+  # TODO: Set your first private subnet ID
+  subnet_id_1: <YOUR_SUBNET_ID_1>
+  # TODO: Set your second private subnet ID
+  subnet_id_2: <YOUR_SUBNET_ID_2>
+  # TODO: Set your third private subnet ID
+  subnet_id_3: <YOUR_SUBNET_ID_3>
+  # TODO: Set your Bedrock LLM model ID (e.g., anthropic.claude-3-5-sonnet-20240620-v1:0 or a cross-region inference profile ARN)
+  llm_model: <YOUR_BEDROCK_MODEL_ID>
+  # TODO: Set your knowledge base embedding model ID (e.g., amazon.titan-embed-text-v2:0)
+  kb_embedding_model: <YOUR_BEDROCK_MODEL_ID_2>
+  # TODO: Set your knowledge base document parsing model ID (e.g., anthropic.claude-3-5-sonnet-20240620-v1:0)
+  kb_parsing_model: <YOUR_BEDROCK_MODEL_ID_3>
+
+# One or more domains may be specified. Domain name will be incorporated by default naming implementation
+# to prefix all resource names.
+domains:
+  # The name of the domain. In this case, we are building a 'shared' domain.
+  shared:
+    # One or more environments may be specified, typically along the lines of 'dev', 'test', and/or 'prod'
+    environments:
+      
+      # The environment name will be incorporated into resource name by the default naming implementation.
+      dev:
+        # The list of modules which will be deployed. A module points to a specific MDAA CDK App, and
+        # specifies a deployment configuration file if required.
+        modules:
+          # This module will create all the roles required for the Bedrock Builder
+          roles:
+            module_path: "@aws-mdaa/roles"
+            module_configs:
+              - ./roles.yaml
+          
+          # Data Lake module for creating S3 buckets needed by Bedrock Knowledge Base
+          datalake:
+            module_path: "@aws-mdaa/datalake"
+            module_configs:
+              - ./datalake/datalake.yaml
+
+   # The name of the domain. In this case, we are building a 'genai' domain.
+  genai:
+    environments:
+      dev:
+        # One or more environments may be specified, typically along the lines of 'dev', 'test', and/or 'prod'
+        modules:
+          # Bedrock Builder module for deploying Bedrock Agents and Knowledge Bases
+          customer-support-agent:
+            module_path: "@aws-mdaa/bedrock-builder"
+            module_configs:
+              - ./ai/bedrock-builder.yaml

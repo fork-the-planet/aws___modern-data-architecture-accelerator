@@ -70,6 +70,7 @@ Each agent uses a domain-specific label that describes what the finding is:
 | Module Quality | `## {icon} Quality Concern: {LEVEL}` | `## Module Quality Review Summary` |
 | Code Architecture | `## {icon} Architecture Misalignment: {LEVEL}` | `## Architecture Review Summary` |
 | Documentation Quality | `## {icon} Documentation Gap: {LEVEL}` | `## Documentation Quality Review Summary` |
+| Starter Kit Quality | `## {icon} Quality Concern: {LEVEL}` | `## Starter Kit Quality Review Summary` |
 
 Icons: ❌ BLOCKING, ⚠️ HIGH/MEDIUM, ✅ LOW, ❓ UNKNOWN
 
@@ -85,6 +86,7 @@ Each agent uses distinct HTML comment markers to identify its threads. Markers m
 | Module Quality | `<!-- module-quality-pkg:{name} -->` | `<!-- module-quality-summary -->` |
 | Architecture | `<!-- architecture-source:{file}:{hash} -->` | `<!-- architecture-summary -->` |
 | Documentation | `<!-- docs-quality-file:{path} -->` | `<!-- docs-quality-summary -->` |
+| Starter Kit Quality | `<!-- starter-kit-quality-kit:{name} -->` | `<!-- starter-kit-quality-summary -->` |
 
 ## Two-Tier Thread Model
 

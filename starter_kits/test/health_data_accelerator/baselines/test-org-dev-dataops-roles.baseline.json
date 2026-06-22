@@ -1639,7 +1639,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] DDB table name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] DynamoDB table wildcard required because table names are generated dynamically by MDAA and not known at policy authoring time.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -1669,7 +1669,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] DDB table name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] DynamoDB table wildcard required because table names are generated dynamically by MDAA and not known at policy authoring time.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -1719,7 +1719,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] DDB table name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] DynamoDB table wildcard required because table names are generated dynamically by MDAA and not known at policy authoring time.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -1773,7 +1773,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] CloudWatch API actions, such as CreateLogDelivery and DescribeLogGroups, do not support Resource types defined by Amazon CloudWatch Logs",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] CloudWatch Logs delivery actions (CreateLogDelivery, ListLogDeliveries, DescribeLogGroups, etc.) are account-level operations that do not support resource-level permissions. See https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazoncloudwatchlogs.html",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -1803,7 +1803,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] CloudWatch API actions, such as CreateLogDelivery and DescribeLogGroups, do not support Resource types defined by Amazon CloudWatch Logs",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] CloudWatch Logs delivery actions (CreateLogDelivery, ListLogDeliveries, DescribeLogGroups, etc.) are account-level operations that do not support resource-level permissions. See https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazoncloudwatchlogs.html",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -1853,7 +1853,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] CloudWatch API actions, such as CreateLogDelivery and DescribeLogGroups, do not support Resource types defined by Amazon CloudWatch Logs",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] CloudWatch Logs delivery actions (CreateLogDelivery, ListLogDeliveries, DescribeLogGroups, etc.) are account-level operations that do not support resource-level permissions. See https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazoncloudwatchlogs.html",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -1893,7 +1893,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] Glue job name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] Glue job wildcard required because job names are generated dynamically by MDAA and not known at policy authoring time.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -1923,7 +1923,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] Glue job name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] Glue job wildcard required because job names are generated dynamically by MDAA and not known at policy authoring time.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -1973,7 +1973,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] Glue job name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] Glue job wildcard required because job names are generated dynamically by MDAA and not known at policy authoring time.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2010,7 +2010,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] DDB table name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] DynamoDB table wildcard required because table names are generated dynamically by MDAA and not known at policy authoring time.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2040,7 +2040,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] DDB table name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] DynamoDB table wildcard required because table names are generated dynamically by MDAA and not known at policy authoring time.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2090,7 +2090,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] DDB table name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] DynamoDB table wildcard required because table names are generated dynamically by MDAA and not known at policy authoring time.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2124,7 +2124,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] Lambda name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] Lambda function wildcard required because function names are generated dynamically by MDAA and not known at policy authoring time.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2154,7 +2154,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] Lambda name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] Lambda function wildcard required because function names are generated dynamically by MDAA and not known at policy authoring time.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2204,7 +2204,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] Lambda name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] Lambda function wildcard required because function names are generated dynamically by MDAA and not known at policy authoring time.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2250,7 +2250,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] CloudWatch API actions, such as CreateLogDelivery and DescribeLogGroups, do not support Resource types defined by Amazon CloudWatch Logs",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] CloudWatch Logs delivery actions (CreateLogDelivery, ListLogDeliveries, DescribeLogGroups, etc.) are account-level operations that do not support resource-level permissions. See https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazoncloudwatchlogs.html",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2280,7 +2280,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] CloudWatch API actions, such as CreateLogDelivery and DescribeLogGroups, do not support Resource types defined by Amazon CloudWatch Logs",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] CloudWatch Logs delivery actions (CreateLogDelivery, ListLogDeliveries, DescribeLogGroups, etc.) are account-level operations that do not support resource-level permissions. See https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazoncloudwatchlogs.html",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2330,7 +2330,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] CloudWatch API actions, such as CreateLogDelivery and DescribeLogGroups, do not support Resource types defined by Amazon CloudWatch Logs",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] CloudWatch Logs delivery actions (CreateLogDelivery, ListLogDeliveries, DescribeLogGroups, etc.) are account-level operations that do not support resource-level permissions. See https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazoncloudwatchlogs.html",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -2392,7 +2392,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole provides minimal CloudWatch Logs permissions (CreateLogGroup, CreateLogStream, PutLogEvents) required for Lambda function logging. See https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -2425,7 +2425,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole provides minimal CloudWatch Logs permissions (CreateLogGroup, CreateLogStream, PutLogEvents) required for Lambda function logging. See https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -2458,7 +2458,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole provides minimal CloudWatch Logs permissions (CreateLogGroup, CreateLogStream, PutLogEvents) required for Lambda function logging. See https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -2488,7 +2488,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole provides minimal CloudWatch Logs permissions (CreateLogGroup, CreateLogStream, PutLogEvents) required for Lambda function logging. See https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -2946,7 +2946,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole provides minimal CloudWatch Logs permissions (CreateLogGroup, CreateLogStream, PutLogEvents) required for Lambda function logging. See https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -2979,7 +2979,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole provides minimal CloudWatch Logs permissions (CreateLogGroup, CreateLogStream, PutLogEvents) required for Lambda function logging. See https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -3012,7 +3012,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole provides minimal CloudWatch Logs permissions (CreateLogGroup, CreateLogStream, PutLogEvents) required for Lambda function logging. See https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -3042,7 +3042,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole provides minimal CloudWatch Logs permissions (CreateLogGroup, CreateLogStream, PutLogEvents) required for Lambda function logging. See https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -3154,7 +3154,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole provides minimal CloudWatch Logs permissions (CreateLogGroup, CreateLogStream, PutLogEvents) required for Lambda function logging. See https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -3187,7 +3187,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole provides minimal CloudWatch Logs permissions (CreateLogGroup, CreateLogStream, PutLogEvents) required for Lambda function logging. See https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -3220,7 +3220,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole provides minimal CloudWatch Logs permissions (CreateLogGroup, CreateLogStream, PutLogEvents) required for Lambda function logging. See https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -3250,7 +3250,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/health_data_accelerator/dataops/roles.yaml\"] AWSLambdaBasicExecutionRole provides minimal CloudWatch Logs permissions (CreateLogGroup, CreateLogStream, PutLogEvents) required for Lambda function logging. See https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]

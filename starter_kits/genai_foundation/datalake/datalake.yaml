@@ -1,0 +1,97 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/datalake.json
+# A list of Logical Config Roles which can be referenced in Access Policies.
+# Each role maps a logical name to a generated role ID from the roles module.
+roles:
+  DataAdminRole:
+    - id: generated-role-id:data-admin
+  DataUserRole:
+    - id: generated-role-id:data-user
+  AgentRole:
+    - id: generated-role-id:agent-execution-role
+  KnowledgeBaseRole:
+    - id: generated-role-id:kb-execution-role
+  AgentLambdaRole:
+    - id: generated-role-id:agent-lambda-role
+
+# Definitions of access policies which grant access to S3 paths for specified Logical Config Roles.
+# Each policy defines a rule with a path prefix and the roles that receive access.
+accessPolicies:
+  # Full read/write/delete access for data administrators at the bucket root
+  AdminPolicy:
+    rule:
+      # S3 key prefix this policy applies to (/ means the entire bucket)
+      prefix: /
+      # Roles granted full read, write, and delete permissions on this prefix
+      ReadWriteSuperRoles:
+        - DataAdminRole
+    
+  # Read-only access for data users at the bucket root
+  DataReadPolicy:
+    rule:
+      # S3 key prefix this policy applies to (/ means the entire bucket)
+      prefix: /
+      # Roles granted read-only permissions on this prefix
+      ReadRoles:
+        - DataUserRole
+
+  # Access policy for Bedrock Knowledge Base operations — full read/write for ingestion,
+  # read access for agent retrieval
+  KnowledgeBasePolicy:
+    rule:
+      # S3 key prefix this policy applies to (/ means the entire bucket)
+      prefix: /
+      # Roles granted full read, write, and delete permissions (for KB ingestion)
+      ReadWriteSuperRoles:
+        - KnowledgeBaseRole
+      # Roles granted read-only permissions (for agent retrieval from KB data sources)
+      ReadRoles:
+        - KnowledgeBaseRole
+        - AgentRole
+
+  # Access policy for Lambda functions backing Bedrock Agent action groups
+  AgentPolicy:
+    rule:
+      # S3 key prefix this policy applies to (/ means the entire bucket)
+      prefix: /
+      # Roles granted full read, write, and delete permissions
+      ReadWriteSuperRoles:
+        - AgentLambdaRole
+
+# The set of S3 buckets which will be created, and the access policies which will be applied.
+# Each bucket name will be prefixed with the organization name at deployment time.
+buckets:
+  # Bucket for customer support documents used as a Bedrock Knowledge Base data source
+  customer-support-docs:
+    # Enable EventBridge notifications so S3 events trigger the KB sync Lambda for auto-ingestion
+    enableEventBridgeNotifications: true
+    # Access policies applied to this bucket (references policies defined above)
+    accessPolicies:
+      - AdminPolicy
+      - DataReadPolicy
+      - KnowledgeBasePolicy
+    
+  # Bucket for product documentation used as a Bedrock Knowledge Base data source
+  product-docs:
+    # Enable EventBridge notifications so S3 events trigger the KB sync Lambda for auto-ingestion
+    enableEventBridgeNotifications: true
+    # Access policies applied to this bucket (references policies defined above)
+    accessPolicies:
+      - AdminPolicy
+      - DataReadPolicy
+      - KnowledgeBasePolicy
+    
+  # Bucket for supplemental images referenced by Knowledge Base multimodal parsing
+  customer-support-supplemental-images:
+    # Access policies applied to this bucket (references policies defined above)
+    accessPolicies:
+      - AdminPolicy
+      - DataReadPolicy
+      - KnowledgeBasePolicy
+    
+  # Bucket for intermediate storage used during custom Knowledge Base transformations
+  custom-transform-intermediate:
+    # Access policies applied to this bucket (references policies defined above)
+    accessPolicies:
+      - AdminPolicy
+      - KnowledgeBasePolicy
+      - AgentPolicy

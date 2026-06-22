@@ -13,10 +13,6 @@
       "Type": "AWS::SSM::Parameter::Value<String>",
       "Default": "/test-org/dataops/example-project/databaseName/sample-database"
     },
-    "SsmParameterValuetestorgshareddatalakebuckettransformednameC96584B6F00A464EAD1953AFF4B05118Parameter": {
-      "Type": "AWS::SSM::Parameter::Value<String>",
-      "Default": "/test-org/shared/datalake/bucket/transformed/name"
-    },
     "SsmParameterValuetestorgdataopsexampleprojectsecurityConfigurationdefaultC96584B6F00A464EAD1953AFF4B05118Parameter": {
       "Type": "AWS::SSM::Parameter::Value<String>",
       "Default": "/test-org/dataops/example-project/securityConfiguration/default"
@@ -92,18 +88,7 @@
         "Targets": {
           "S3Targets": [
             {
-              "Path": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "s3://",
-                    {
-                      "Ref": "SsmParameterValuetestorgshareddatalakebuckettransformednameC96584B6F00A464EAD1953AFF4B05118Parameter"
-                    },
-                    "/data/sample_data"
-                  ]
-                ]
-              }
+              "Path": "s3://{{resolve:ssm:/test-org/shared/datalake/bucket/transformed/name}}/data/sample_data"
             }
           ]
         }

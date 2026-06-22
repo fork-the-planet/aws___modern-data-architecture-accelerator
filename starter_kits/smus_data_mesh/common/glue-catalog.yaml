@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/glue-catalog.json
 # Glue Catalog Cross-Account Access Configuration
 #
 # Configures Glue Catalog KMS encryption keys for cross-account access,

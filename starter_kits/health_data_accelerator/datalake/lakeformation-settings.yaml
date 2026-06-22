@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/lakeformation-settings.json
 # The list of Lake Formation Admin role references
 lakeFormationAdminRoles: []
 

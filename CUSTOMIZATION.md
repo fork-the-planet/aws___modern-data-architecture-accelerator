@@ -4,7 +4,7 @@ MDAA can optionally be customized using code-based extension points/escape hatch
 
 ## Custom Naming Implementation
 
-Custom naming modules can be implemented through implementation of the *IMdaaResourceNaming* interface located in the @aws-mdaa/naming npm package. Sample code is available below and also in the `./sample_code/custom-naming` subdirectory of the MDAA repo (along with full package structure).
+Custom naming modules can be implemented through implementation of the *IMdaaResourceNaming* interface located in the @aws-mdaa/naming npm package. Sample code is available below and also in the `./sample_customizations/custom-naming` subdirectory of the MDAA repo (along with full package structure).
 
 Custom naming implementations can be used in MDAA via the following config in the mdaa.yaml. This config can be applied globally, per domain, environment, or module
 
@@ -211,7 +211,7 @@ This produces names like:
 
 ## Custom Aspects
 
-CDK [Custom Aspects](https://docs.aws.amazon.com/cdk/v2/guide/aspects.html) can be used to customize the stacks and resources MDAA produces before they are deployed. Custom aspects use the visitor pattern to 'visit' each resource, the properties of which can be modified as required. Sample code is available below and also in the ./samples/sample-code/custom-aspects subdirectory of the MDAA repo.
+CDK [Custom Aspects](https://docs.aws.amazon.com/cdk/v2/guide/aspects.html) can be used to customize the stacks and resources MDAA produces before they are deployed. Custom aspects use the visitor pattern to 'visit' each resource, the properties of which can be modified as required. Sample code is available below and also in the `./sample_customizations/custom-aspects` subdirectory of the MDAA repo.
 
 Custom aspects implementations can be used in MDAA via the following config in the mdaa.yaml. This config can be applied globally, per domain, environment, or module
 

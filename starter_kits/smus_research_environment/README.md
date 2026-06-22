@@ -1,69 +1,97 @@
 # SageMaker Unified Studio Research Environment
 
-This is a starter MDAA configuration for deploying a SageMaker Unified Studio-based Research Environment. This architecture is appropriate for organizations with multiple teams operating within a single AWS account, and where data assets will be created and consumed entirely within SageMaker Unified Studio. For more complex organizations with teams operating across multiple accounts, and/or with custom research compute needs (via SMUS custom blueprints), see the SMUS Data Mesh sample configs.
+This starter kit deploys a SageMaker Unified Studio (SMUS) environment for organizations with multiple research teams operating within a single AWS account. It provides a governed ML platform where teams can collaborate on data and ML projects through the SMUS portal, with centralized identity management via IAM Identity Center.
+
+> **[Deployment Instructions](#deployment)**
+
+## Use Cases
+
+- Multi-team research environments with shared governance in a single account
+- Self-service ML platform access via SageMaker Unified Studio portal
+- Team-based project isolation with SSO group membership
+- Data science experimentation with integrated data governance via DataZone
+- Rapid onboarding of research teams with standardized project profiles
+
+## Capabilities
+
+- SageMaker Unified Studio domain (DataZone V2) with SSO integration
+- Project profiles for standardized team environments
+- Team-based access control via IAM Identity Center groups
+- Lake Formation governance for fine-grained data access
+- Glue Catalog encryption for metadata security
+- IAM roles for domain and data administration
+
+## Architecture
 
 ![SageMaker Unified Studio Research Environment](docs/smus_research_environment.png)
 
----
+## Deployment
 
-## Important: AWS Organizations and Identity Center Requirements
+### Prerequisites and Predeployment
 
-### Recommended: Deploy to an AWS Organization Account
+1. Authenticate to your target AWS account and region. Ensure the authenticated role has permissions to deploy resources via CDK.
+2. [Bootstrap CDK](../../PREDEPLOYMENT.md#single-account-bootstrap) in your target account and region. The account should be part of an AWS Organization for full Identity Center support.
+3. Enable IAM Identity Center in the deployment region and create SSO groups for team1 and team2.
 
-**We strongly recommend deploying SageMaker Unified Studio to an account that belongs to an AWS Organization.** This provides:
+   > **⚠️ Standalone Account Limitation:** If deploying to an account not part of an AWS Organization, you must deploy in the same region where IAM Identity Center is enabled. Deploying to a different region will fail with: `IDC not enabled (Service: DataZone, Status Code: 400)`.
 
-- Better multi-region support for Identity Center
-- Centralized identity and access management
-- Improved governance and compliance capabilities
+4. Provision a VPC with at least 2 private subnets. Subnets must have connectivity to AWS service endpoints, either via:
+   - NAT Gateway for outbound internet access, OR
+   - VPC Endpoints for:
+     - SageMaker API
+     - DataZone
+     - STS
+     - S3
+     - CloudWatch Logs
 
-### Standalone Account Limitation
+Additional info: [PREDEPLOYMENT](../../PREDEPLOYMENT.md)
 
-If you must deploy to a **standalone account (not part of an AWS Organization)**, be aware of this critical limitation:
+### Configure MDAA
 
-**⚠️ You must deploy SageMaker Unified Studio in the same AWS region where IAM Identity Center is enabled.**
+1. Address all TODOs in [`mdaa.yaml`](mdaa.yaml), specifically:
+   - Set `organization` to a globally unique name
+   - Set `context` values:
+     - `team1-group-sso-id` — SSO group name for team1
+     - `team2-group-sso-id` — SSO group name for team2
+     - `vpc_id` — VPC ID
+     - `private_subnet_id1`, `private_subnet_id2` — private subnet IDs with AWS service connectivity
 
-- IAM Identity Center (IDC) can only be enabled in one region per standalone account
-- DataZone requires IDC to be enabled in the deployment region
-- Attempting to deploy in a different region will result in an error: `IDC not enabled (Service: DataZone, Status Code: 400)`
+2. Address all TODOs in module configs, specifically:
+   - CDK Nag suppressions in [`shared/roles.yaml`](shared/roles.yaml). Uncomment each suppression only after reviewing the associated permissions and confirming they are acceptable for your environment.
 
-**Example:**
+### Deploy MDAA
 
-- If you enabled Identity Center in `us-east-1`, you must deploy this configuration in `us-east-1`
-- Deploying to `eu-west-1` will fail with the IDC error
 
-To check which region your Identity Center is enabled in:
+Run the following from the starter kit directory (containing `mdaa.yaml`):
 
-1. Navigate to IAM Identity Center in the AWS Console
-2. The region selector will show your Identity Center's home region
-3. Deploy SageMaker Unified Studio to that same region
+1. Optionally, run `npx @aws-mdaa/cli ls` to understand what stacks will be deployed.
 
----
+2. Optionally, run `npx @aws-mdaa/cli synth` and review the produced templates.
 
-## Deployment Instructions
+3. Run `npx @aws-mdaa/cli deploy` to deploy all modules in the order they appear in the config.
 
-The following instructions assume you have CDK bootstrapped your target account, and that the MDAA source repo is cloned locally.
-More predeployment info and procedures are available in [PREDEPLOYMENT](../../PREDEPLOYMENT.md).
+Additional info: [DEPLOYMENT](../../DEPLOYMENT.md)
 
-1. Enable IAM Identity Center in the Account and add users and groups for team1 and team2
+## Next Steps
 
-2. Edit the `mdaa.yaml` to specify:
+See [USAGE](USAGE.md) for post-deployment instructions.
 
-- An organization name. This must be a globally unique name, as it is used in the naming of all deployed resources, some of which are globally named (such as S3 buckets).
-- `context:` values specific to your environment:
-- - VPC Id
-- - Subnet Ids - These should be private subnets with routed connectivity to public service endpoints or via VPC endpoints
-- - Team group SSO ids (`team1-group-sso-id`/`team2-group-sso-id`). These will be the names of the SSO groups created in step 1.
+## Modules Deployed
 
-3. Ensure you are authenticated to your target AWS account with credentials derived from IAM Identity Center (required for DataZone PolicyGrant operations). These can be SSO credentials configured via `aws configure sso` or temporary credentials provided by your organization's authentication system.
+| Module | Purpose |
+|--------|---------|
+| `@aws-mdaa/glue-catalog` | Glue Catalog KMS encryption (account-level) |
+| `@aws-mdaa/roles` | IAM roles for data and domain administration |
+| `@aws-mdaa/lakeformation-settings` | Lake Formation settings (account-level) |
+| `@aws-mdaa/sagemaker` | SMUS domain (DataZone V2) with SSO integration |
+| `@aws-mdaa/sagemaker-project` | SMUS project profiles and team projects |
 
-4. Optionally, run `<path_to_mdaa_repo>/bin/mdaa ls` from the directory containing `mdaa.yaml` to understand what stacks will be deployed.
+## Troubleshooting
 
-5. Optionally, run `<path_to_mdaa_repo>/bin/mdaa synth` from the directory containing `mdaa.yaml` and review the produced templates.
+1. **`IDC not enabled` error during deployment**: IAM Identity Center must be enabled in the same region as your deployment. For standalone accounts, deploy in the region where Identity Center is enabled. Check your IDC region in the IAM Identity Center console.
 
-6. Run `<path_to_mdaa_repo>/bin/mdaa deploy` from the directory containing `mdaa.yaml` to deploy all modules in the order they appear in the config
+2. **SSO users cannot access SMUS portal**: Verify the SSO group IDs in `mdaa.yaml` match the groups created in IAM Identity Center. Users must be members of the configured groups.
 
-Additional MDAA deployment commands/procedures can be reviewed in [DEPLOYMENT](../../DEPLOYMENT.md).
+3. **Domain creation fails with PolicyGrant errors**: Ensure you are authenticated with credentials derived from IAM Identity Center (not static IAM credentials). Use `aws configure sso` to set up SSO-based authentication.
 
-## Usage
-
-Once deployed, the SageMaker Unified portal can be launched and should be accessible by SSO users in the team1/team2 SSO groups. All core SMUS capabilities provided by the Tooling blueprint should be usable from within the portal.
+4. **Lake Formation permission errors**: Verify the Lake Formation admin roles are correctly configured in `shared/lakeformation-settings.yaml` and that the data-admin role has been granted LF admin permissions.

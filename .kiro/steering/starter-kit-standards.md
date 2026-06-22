@@ -123,7 +123,7 @@ The naming convention automatically prefixes config names with `<org>-<env>-<dom
   ```yaml
   # crawler.yaml — referencing a bucket from the datalake module
   targets:
-    - path: s3://{{resolve:ssm-org:/shared/datalake/bucket/transformed/name}}/data/
+    - path: s3://{{ssm-org:/shared/datalake/bucket/transformed/name}}/data/
   ```
 
 - **Referencing a role from the roles module**: Use `generated-role-id:<role-name>` (same domain) or `ssm-org:/<domain>/generated-role/<role-name>/id` (cross-domain).
@@ -216,6 +216,7 @@ generateRoles:
 - Must include a TODO comment for setting `organization`
 - All placeholder values that require customer input must use the `<YOUR_...>` pattern (uppercase, underscores). This enables `create-mdaa-config` to discover and prompt for them automatically.
 - Every placeholder line must have a `# TODO:` comment on the line immediately above it describing what the customer needs to provide. This description is used as the prompt label in `create-mdaa-config`.
+- Tags must be specified using `tag_config_data` (inline in mdaa.yaml), NOT `tag_configs` (file references). The inline form keeps all deployment configuration in a single file and avoids an extra file the customer must locate and edit.
 - Examples:
   ```yaml
   # TODO: Set a globally unique organization name (used in S3 bucket names and resource prefixes)
@@ -223,6 +224,63 @@ generateRoles:
   # TODO: Set your VPC ID
   vpc_id: <YOUR_VPC_ID>
   ```
+
+## Domain, Module, and Directory Structure
+
+Kits must separate concerns into distinct domains rather than lumping all modules into a single domain. Domains provide logical boundaries that map to deployment scope, IAM isolation, and team ownership.
+
+### Domain Naming
+
+- Use short, descriptive names that convey the domain's purpose: `shared`, `dataops`, `govern`, `gaia`, `mlops`
+- Multi-account or multi-team kits should use distinct domains per account/team boundary: `ent-com`, `team1-com`, `team2-com`
+- Avoid generic catch-all domain names like `main`, `default`, or `app` — they signal the kit isn't properly decomposed
+- A single-domain kit is acceptable only when the kit deploys a tightly coupled set of resources with no natural separation (e.g., a single-module kit like `minimal`)
+
+### When to split into multiple domains
+
+Split into multiple domains when:
+- Modules serve different personas (governance/admin vs. data engineering vs. data science)
+- Modules deploy to different accounts (cross-account patterns)
+- Modules have fundamentally different lifecycle or deployment cadence (infrastructure vs. workloads)
+- There are more than ~5 modules in a single domain
+
+Example of good domain decomposition (basic_datalake):
+- `shared` — foundational infrastructure (roles, datalake, glue-catalog, lakeformation, athena, audit)
+- `dataops` — data engineering workloads (project, crawler)
+
+Example of bad decomposition:
+- `shared` — roles, datalake, glue-catalog, lakeformation, athena, audit, project, crawler, jobs, lambda, stepfunction (everything in one domain)
+
+### Module Naming
+
+- Use lowercase kebab-case: `glue-catalog`, `bedrock-builder`, `file-workflow`
+- Names should describe what the module deploys, not the underlying AWS service alone: `hda-project` (not just `project`), `example-crawler` (not just `crawler`)
+- Avoid generic names that don't distinguish the module from others: `module1`, `stack1`
+
+### Directory Structure
+
+Module config files must be organized in subdirectories that mirror the domain structure:
+
+```
+starter_kits/<kit>/
+├── mdaa.yaml                  # Top-level config (domains, context, org)
+├── roles.yaml                 # Shared-domain roles (if shared domain exists)
+├── README.md
+├── USAGE.md
+├── datalake/                  # Configs for datalake-related modules in shared domain
+│   └── datalake.yaml
+├── governance/                # Configs for governance modules
+│   └── audit-trail.yaml
+└── dataops/                   # Configs for dataops domain modules
+    ├── project.yaml
+    ├── crawler.yaml
+    └── jobs.yaml
+```
+
+Rules:
+- Config files for a domain's modules should live in a subdirectory named after their functional area (not necessarily the domain name itself, but something descriptive)
+- A flat kit root with many YAML files is acceptable only for kits with ≤3 config files
+- The `mdaa.yaml` module_configs paths must match the actual file locations: `module_configs: [./dataops/crawler.yaml]`
 
 ## Placeholder Resolution in Tests
 
@@ -472,7 +530,7 @@ outside the JSON. The file must contain ONLY valid JSON.
 ### Severity Classification
 
 - **HIGH:** Missing README sections (Title, Description, Deployment, Modules Deployed), YAML config file missing `# yaml-language-server: $schema=` directive on line 1, schema directive referencing a schema file that does not exist in the repo, CDK Nag suppressions with generic/empty reasons, missing TODO for organization in mdaa.yaml, placeholder values without `<YOUR_...>` pattern, config files referenced in mdaa.yaml that don't exist in the kit, environment-specific values (account IDs, VPC IDs, subnet IDs) hardcoded or placed as placeholders in module config files instead of mdaa.yaml context, CDK Nag suppressions that should be commented out for customer review but are uncommented, missing USAGE.md entirely (no post-deployment guidance for customers), SSM cross-module reference (`ssm-org:`, `ssm-domain:`, `domainConfigSSMParam`, `{{resolve:ssm:...}}`, `generated-role-id:`) whose producing module/path cannot be located among the kit's deployed modules (dangling reference — passes schema validation but fails at synth/deploy)
-- **MEDIUM:** README sections out of order, deployment section missing subsections, CDK Nag suppressions not placed first under parent, missing Troubleshooting section, CLI commands not using `npx @aws-mdaa/cli`, README contains prohibited content (directory listings, config descriptions, deep-dives), ambiguous TODOs that don't tell the customer what to provide, deployment steps that require undocumented prerequisites, context values used in module configs via `{{context:key}}` but not defined in mdaa.yaml, duplicated environment values across multiple config files that should be a single context entry, README content that contradicts the actual config (e.g., claims a resource exists that isn't configured), CDK Nag suppression reasons that are factually incorrect (reference policies not attached), customer-decision properties with no preceding comment where the purpose is non-obvious, USAGE.md exists but is a stub (no deployed resources orientation or only generic instructions like "launch the console")
+- **MEDIUM:** README sections out of order, deployment section missing subsections, CDK Nag suppressions not placed first under parent, missing Troubleshooting section, CLI commands not using `npx @aws-mdaa/cli`, README contains prohibited content (directory listings, config descriptions, deep-dives), ambiguous TODOs that don't tell the customer what to provide, deployment steps that require undocumented prerequisites, context values used in module configs via `{{context:key}}` but not defined in mdaa.yaml, duplicated environment values across multiple config files that should be a single context entry, README content that contradicts the actual config (e.g., claims a resource exists that isn't configured), CDK Nag suppression reasons that are factually incorrect (reference policies not attached), customer-decision properties with no preceding comment where the purpose is non-obvious, USAGE.md exists but is a stub (no deployed resources orientation or only generic instructions like "launch the console"), using `tag_configs` (file reference) instead of `tag_config_data` (inline) for tags in mdaa.yaml, all modules lumped into a single domain when the kit has natural separation boundaries (>5 modules with distinct personas/lifecycles), generic or non-descriptive domain names (`main`, `default`, `app`), config files scattered flat in the kit root when there are >3 config files (should use subdirectories)
 - **LOW:** Minor formatting issues, missing shortcut link, missing architecture image, Troubleshooting section empty but present, opportunities to reduce customer friction (e.g., too many TODOs, steps that could have defaults), context key naming that is unclear without reading module docs
 
 ### Rules for CI Agent Findings

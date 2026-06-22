@@ -1,175 +1,112 @@
 # Modern Data Architecture Accelerator (MDAA)
 
+![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
+
 **Note:** All documentation in this repo is available as rendered/searchable HTML [here](https://aws.github.io/modern-data-architecture-accelerator/).
 
-The Modern Data Architecture Accelerator (MDAA) helps organizations deploy secure, compliant data analytics and AI environments on Amazon Web Services (AWS) through simple YAML configuration files. Whether you need a basic data lake, a full data science platform, SageMaker Unified Studio or a generative AI solution, MDAA provides prepackaged starter kits and reusable infrastructure components that handle security compliance out of the box. It supports teams of all sizes, from small organizations looking for code-free deployment to large enterprises building complex Lake House or Data Mesh architectures.
-
-![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
-![Version](https://img.shields.io/badge/version-1.6.0-green.svg)
-![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)
+The Modern Data Architecture Accelerator (MDAA) deploys secure, compliant modern Data and AI architectures on AWS in minutes. Pick a starter kit, fill in your environment details, and deploy — MDAA handles security compliance, encryption, and IAM best practices automatically.
 
 ## Table of Contents
 
-- [Who Is This For?](#who-is-this-for)
+- [Why MDAA](#why-mdaa)
+- [Uses](#uses)
 - [Key Features](#key-features)
-- [Architecture](#architecture)
-- [Security](#security)
 - [Quick Start](#quick-start)
-- [Implementation Guide](#implementation-guide)
-- [Workshops and Learning Resources](#workshops-and-learning-resources)
-- [Starter Kits](#starter-kits)
-- [Sample Configurations](#sample-configurations)
 - [Available Modules](#available-modules)
+- [Security](#security)
+- [Workshops and Learning Resources](#workshops-and-learning-resources)
 - [Using and Extending MDAA](#using-and-extending-mdaa)
 - [For Developers](#for-developers)
 - [Contributing](#contributing)
 - [License](#license)
 
-## Who Is This For?
+## Why MDAA
 
-- **Data and Cloud Architects**: Design and govern enterprise data platforms with standardized, compliance-ready building blocks.
-- **Data Engineers**: Build and manage data pipelines, lakes, and warehouses with pre-configured, compliant infrastructure.
-- **Data Scientists and ML Engineers**: Get a ready-to-use SageMaker Unified Studio environment with governed data access so you can focus on models, not infrastructure.
-- **Business Analysts**: Access governed data through Athena, QuickSight, and other analytics tools deployed by your platform team.
-- **Compliance Officers**: Gain confidence that deployed infrastructure aligns with NIST 800-53, HIPAA, and PCI-DSS security control requirements.
+Building a secure, compliant data and AI platform on AWS typically takes months of architecture design, security reviews, and infrastructure coding. MDAA compresses that into minutes. You get production-ready infrastructure that passes compliance audits on day one — not after weeks of remediation.
+
+- **Minutes, not months**: Deploy a complete data lake, ML platform, or GenAI backend in 15–45 minutes instead of building from scratch.
+- **Compliance without compromise**: Every module enforces encryption, least-privilege IAM, and audit logging by default. No shortcuts, no security debt.
+- **Focus on your problem, not plumbing**: Spend time on data, models, and business logic — not on writing CloudFormation, debugging IAM policies, or passing security reviews.
+
+![MDAA Business Value](docs/mdaa_business_value.png)
+
+## Uses
+
+MDAA can be used to build an architecture to solve any variety of data or AI problem, including:
+
+![Modern Data Architecture Examples](docs/mda_examples.png)
+
+Additionally, MDAA can be used to build complex, multi-domain and multi-account data and AI architectures:
+
+![Modern Data Architecture Examples](docs/mda_data_mesh.png)
 
 ## Key Features
 
-- **Security compliance built in**: Modules are designed for compliance with AWS Solutions, NIST 800-53 Rev5, HIPAA, PCI-DSS, and ITSG-33 CDK Nag rulesets.
-- **Configuration-driven deployment**: Define your entire modern data and analytics environment in YAML files and deploy with a single CLI command. No custom code required.
-- **Starter kits for common use cases**: Prepackaged configurations for data lakes, data science platforms, generative AI, governed lakehouses, and healthcare data.
-- **Multi-account and multi-region**: Deploy across multiple AWS accounts and regions with built-in cross-account trust and governance.
-- **Multi-language support**: Reusable CDK L2 constructs available in TypeScript, Python, Java, and .NET via JSII (JavaScript Interop Interface). L3 constructs are currently TypeScript-only.
+- **Deploy in minutes, not months**: Starter kits go from zero to a working environment in 15–45 minutes. No custom code required.
+- **Security and compliance built in**: All modules enforce encryption, least-privilege IAM, and audit logging. Validated against AWS Solutions, NIST 800-53, HIPAA, and PCI-DSS rulesets.
+- **Configuration-driven**: Define your environment in YAML files. Change what you need, leave the rest as secure defaults.
+- **Extend as you grow**: Start with a kit, then add modules for analytics, AI, governance, or data pipelines as your needs evolve.
+- **Multi-account and multi-region**: Deploy across accounts and regions with built-in cross-account trust.
 
-## Architecture
-
-MDAA is designed as a set of modules. Each module configures and deploys a set of resources which constitute the data analytics environment. Modules may have dependencies on each other, and may also leverage non-MDAA resources deployed within the environment.
-
-While MDAA can be used to implement a comprehensive, end-to-end modern data architecture, it does not result in a closed system. MDAA may be freely integrated with non-MDAA deployed platform elements and data capabilities. Any individual module of MDAA can be replaced by a non-MDAA component, and the remaining modules will continue to function.
-
-![MDAA Architecture](docs/MDAA-Logical.png)
-
-### Code Architecture
-
-![MDAA Code Architecture](docs/MDAA-Code-Architecture.png)
-
-## Security
-
-See [SECURITY.md](SECURITY.md) for details on MDAA's security design principles and compliance approach.
-
-See [CONTRIBUTING.md](CONTRIBUTING.md#security-issue-notifications) for information on reporting security issues.
+| Without MDAA | With MDAA |
+|---|---|
+| ![From Scratch](docs/mda_from_scratch.png) | ![With MDAA](docs/mda_with_mdaa.png) |
 
 ## Quick Start
-
-Deploy your first data lake in minutes using the Basic DataLake starter kit. Alternatively, quickly deploy [one of these other starter kits](#starter-kits)
 
 ### Prerequisites
 
 - [Node.js 22.x](https://nodejs.org/) and [npm 10.x](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - AWS credentials configured with appropriate permissions ([AWS CLI setup](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html))
-- AWS CDK (Cloud Development Kit) bootstrapped in your target account ([CDK bootstrap guide](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html))
 
-### Steps
+### 1. Pick a Starter Kit
 
-1. Clone the repo and navigate to the Basic DataLake starter kit:
+Start by identifying the business problem you need to solve, then select the starter kit that provides the best coverage of required capabilities. Starter kits are just starting points — deploy as-is or modify and extend with additional [modules](#available-modules) and configurations to match your requirements. If necessary, MDAA deployments can be further customized through [code-level escape hatches](CUSTOMIZATION.md).
 
-```bash
-git clone https://github.com/aws/modern-data-architecture-accelerator.git
-cd modern-data-architecture-accelerator/starter_kits/basic_datalake
-```
+![MDAA Working Backwards](docs/working_backwards_starter_kit.png)
 
-2. Edit `mdaa.yaml` to specify an organization name. This must be globally unique, as it is used in the naming of all deployed resources (including globally named resources such as S3 buckets).
+| Starter Kit | What you get | Est. Deploy Time |
+|---|---|---|
+| [Minimal](starter_kits/minimal/README.md) | IAM roles, Glue Catalog encryption, LakeFormation settings — build from scratch | ~5–10 min |
+| [GenAI Foundation](starter_kits/genai_foundation/README.md) | Enterprise-ready Bedrock Agent with RAG and knowledge bases | ~10–15 min |
+| [GenAI GAIA Chatbot](starter_kits/genai_gaia_chatbot/README.md) | RAG chatbot backend with document search, auth, and streaming API | ~10–15 min |
+| [Basic DataLake](starter_kits/basic_datalake/README.md) | Encrypted S3 storage, data catalog, SQL queries, audit trail | ~15–20 min |
+| [Basic DataScience Platform](starter_kits/basic_datascience_platform/README.md) | Notebook environment with shared data lake and team isolation | ~20–30 min |
+| [MLOps Platform](starter_kits/mlops_platform/README.md) | Automated train → deploy → monitor pipeline for ML models | ~20–30 min |
+| [DataZone Governed Lakehouse](starter_kits/datazone_governed_lakehouse/README.md) | Data lake with row/column-level security and a data product catalog | ~20–25 min |
+| [SMUS Research Environment](starter_kits/smus_research_environment/README.md) | Self-service ML platform for multiple research teams | ~20–25 min |
+| [Health Data Accelerator](starter_kits/health_data_accelerator/README.md) | Automated pipeline from source databases to a curated data lake | ~30–45 min |
+| [SMUS Data Mesh](starter_kits/smus_data_mesh/README.md) | Multi-account data platform with cross-team data sharing | ~30–45 min |
 
-3. If required, edit `mdaa.yaml` to specify `context:` values specific to your environment.
+### 2. Copy the starter kit configs to your own directory:
 
-4. Ensure you are authenticated to your target AWS account.
-
-5. Bootstrap your AWS account for CDK (if not already done):
-
-```bash
-npx cdk bootstrap
-```
-
-6. Deploy using npx (no installation required):
-
-```bash
-npx @aws-mdaa/cli deploy -c mdaa.yaml
-```
-
-Or install the CLI globally and then deploy:
+Copy the contents of your chosen starter kit from `starter_kits/<kit-name>/` into your own project directory. These are plain YAML files — no build tools or dependencies required.
 
 ```bash
-npm install -g @aws-mdaa/cli
-mdaa deploy -c mdaa.yaml
+cp -r starter_kits/basic_datalake ./my-project
+cd ./my-project
 ```
 
-> **Estimated deployment time:** ~15–20 minutes
+Address the `# TODO:` comments in the config files (org name, account details, CDK Nag suppressions).
 
-For full deployment details, see the [Basic DataLake starter kit README](starter_kits/basic_datalake/README.md).
+### 3. Follow the starter kit's README
 
-### What You Just Deployed
+Each kit includes a Deployment section with prerequisites, configuration steps, and deploy commands. See the [starter kit's README](#1-pick-a-starter-kit) for details (README will also be in the created starter config directory).
 
-The Basic DataLake starter kit creates a secure, encrypted Amazon S3 data lake with AWS Glue databases and crawlers, AWS Identity and Access Management (IAM) roles with least-privilege policies, and AWS Key Management Service (KMS) encryption keys, all configured for compliance with standard security rulesets.
+For general deployment guidance, see [PREDEPLOYMENT](PREDEPLOYMENT.md) and [DEPLOYMENT](DEPLOYMENT.md).
 
-Looking for a different starting point? See [Starter Kits](#starter-kits) for other prepackaged options including data science platforms, generative AI, and more.
+### 4. Use and extend
 
-## Implementation Guide
-
-MDAA follows a five-phase deployment lifecycle: Architecture (define your target platform design), Configuration (author YAML config files for each module), Customization (optionally extend via code-based escape hatches), Predeployment (bootstrap AWS accounts), and Deployment (deploy via the MDAA CLI). Each phase builds on the previous one, and starter kits can accelerate the first two phases significantly.
-
-| Phase         | Description                                           | Time Estimate   |
-| ------------- | ----------------------------------------------------- | --------------- |
-| Architecture  | Define your target platform design and select modules | 1–2 days        |
-| Configuration | Author YAML config files for each module              | 1–3 days        |
-| Customization | Optionally extend via code-based escape hatches       | 0–2 days        |
-| Predeployment | Bootstrap AWS accounts with CDK                       | 2 - 10 mins     |
-| Deployment    | Deploy via the MDAA CLI                               | 15 min – 1 hour |
-
-For the full step-by-step guide, see the [MDAA Implementation Guide](https://docs.aws.amazon.com/solutions/latest/modern-data-architecture-accelerator/solution-overview.html). Starter kits and [sample configurations](https://github.com/aws-samples/sample-config-modern-data-architecture-accelerator) provide ready-made configurations that can accelerate the early phases significantly.
-
-## Workshops and Learning Resources
-
-### Self-Paced Workshops
-
-- [MDAA Hands-On Workshop](https://catalog.us-east-1.prod.workshops.aws/workshops/6e7289c7-5662-494d-8b56-b8706412c3a6): A guided, hands-on workshop that walks you through deploying and configuring MDAA from scratch.
-
-### Sample Configurations and Starter Kits
-
-- [External Sample Configurations](https://github.com/aws-samples/sample-config-modern-data-architecture-accelerator): A community-maintained repository of additional MDAA configurations for various use cases and architectures.
-- [Starter Kits](#starter-kits): Prepackaged, secure MDAA configurations for common use cases, included in this repository.
-
-### Documentation
-
-Browse the full documentation, module references, and configuration schemas at [aws.github.io/modern-data-architecture-accelerator](https://aws.github.io/modern-data-architecture-accelerator/).
-
-- [Architecture and Design Guide](ARCHITECTURES.md): Reference architectures and design patterns for MDAA deployments.
-- [Configuration Guide](CONFIGURATION.md): How to author MDAA YAML configuration files.
-- [Customization Guide](CUSTOMIZATION.md): How to extend MDAA modules with code-based escape hatches.
-- [Predeployment Guide](PREDEPLOYMENT.md): How to prepare your AWS accounts for MDAA deployment.
-- [Deployment Guide](DEPLOYMENT.md): Step-by-step deployment instructions using the MDAA CLI.
-
-## Starter Kits
-
-Starter kits provide secure, prepackaged foundations for common use cases:
-
-| Starter Kit                                                                     | Description                                                                                              | Est. Deploy Time |
-| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ---------------- |
-| [Basic DataLake](starter_kits/basic_datalake/README.md)                         | A secure S3 data lake with Glue databases and crawlers                                                   | ~15–20 min       |
-| [Basic DataScience Platform](starter_kits/basic_datascience_platform/README.md) | A standalone SageMaker AI Studio data science environment                                                | ~20–30 min       |
-| [Governed Lakehouse](starter_kits/governed_lakehouse/README.md)                 | DataZone-governed lakehouse with fine-grained access control                                             | ~20–25 min       |
-| [Health Data Accelerator](starter_kits/health_data_accelerator/README.md)       | Healthcare data lake with DMS (Database Migration Service) integration                                   | ~30–45 min       |
-| [SMUS Research Environment](starter_kits/smus_research_environment/README.md)   | A SageMaker Unified Studio-enabled architecture suitable for facilitating team-based research activities | ~20–25 min       |
-| [SMUS Data Mesh](starter_kits/smus_data_mesh/README.md)                         | Multi-account SageMaker Unified Studio deployment with cross-account data sharing and custom blueprints  | ~30–45 min       |
-
-## Sample Configurations
-
-Additional sample configurations are available in a [dedicated repository](https://github.com/aws-samples/sample-config-modern-data-architecture-accelerator) for easier community contribution and faster updates.
+Once deployed, start using your new architecture (see the kit's USAGE.md) or enhance it with additional capabilities from the [available modules](#available-modules).
 
 ## Available Modules
 
-MDAA is implemented as a set of compliant modules deployed via a unified orchestration layer. For detailed module documentation, configuration schemas, and API references, see the [MDAA Documentation Site](https://aws.github.io/modern-data-architecture-accelerator/).
+MDAA includes 40+ modules for governance, data lakes, pipelines, analytics, AI, and utilities. Browse the full list with documentation at [aws.github.io/modern-data-architecture-accelerator](https://aws.github.io/modern-data-architecture-accelerator/).
 
-### Governance Modules
+![MDAA Capabilities and Services](docs/mdaa_capabilities_services.png)
+
+<details>
+<summary>Governance Modules</summary>
 
 - [**SageMaker Unified Studio**](packages/apps/governance/sagemaker-app/README.md) - Deploy SageMaker Unified Studio domains and associated resources.
 - [**DataZone**](packages/apps/governance/datazone-app/README.md) - Deploy DataZone domains and environment blueprints.
@@ -177,18 +114,24 @@ MDAA is implemented as a set of compliant modules deployed via a unified orchest
 - [**LakeFormation Data Lake Settings**](packages/apps/governance/lakeformation-settings-app/README.md) - Administer LakeFormation settings using IaC.
 - [**LakeFormation Access Controls**](packages/apps/governance/lakeformation-access-control-app/README.md) - Administer LakeFormation access controls using IaC.
 - [**Glue Catalog**](packages/apps/governance/glue-catalog-app/README.md) - Configure Glue Catalog encryption and cross-account access.
-- [**IAM Roles and Policies**](packages/apps/governance/roles-app/README.md) - Generate IAM roles for the data environment.
+- [**IAM Roles and Policies**](packages/apps/governance/roles-app/README.md) - Generate IAM roles for the data and AI environment.
 - [**Audit**](packages/apps/governance/audit-app/README.md) - Generate audit resources for data capture and Athena querying.
 - [**Audit Trail**](packages/apps/governance/audit-trail-app/README.md) - Generate CloudTrail for S3 data events.
 - [**Service Catalog**](packages/apps/governance/service-catalog-app/README.md) - Deploy Service Catalog portfolios and grant access.
 - [**SageMaker Projects**](packages/apps/governance/sagemaker-project-app/README.md) - Deploy SageMaker Unified Studio projects and associated resources.
 
-### Data Lake Modules
+</details>
+
+<details>
+<summary>Data Lake Modules</summary>
 
 - [**Datalake KMS and Buckets**](packages/apps/datalake/datalake-app/README.md) - Generate encrypted data lake buckets with compliant policies.
 - [**Athena Workgroup**](packages/apps/datalake/athena-workgroup-app/README.md) - Generate Athena workgroups for data lake querying.
 
-### Data Ops Modules
+</details>
+
+<details>
+<summary>Data Ops Modules</summary>
 
 - [**Data Ops Project**](packages/apps/dataops/dataops-project-app/README.md) - Shared secure resources for data ops pipelines.
 - [**Data Ops Crawlers**](packages/apps/dataops/dataops-crawler-app/README.md) - Glue crawlers for data ops pipelines.
@@ -203,7 +146,10 @@ MDAA is implemented as a set of compliant modules deployed via a unified orchest
 - [**Data Ops Data Quality**](packages/apps/dataops/dataops-data-quality-app/README.md) - Glue Data Quality rulesets for automated data validation.
 - [**Data Ops DynamoDB**](packages/apps/dataops/dataops-dynamodb-app/README.md) - DynamoDB tables for data operations.
 
-### Data Analytics Modules
+</details>
+
+<details>
+<summary>Data Analytics Modules</summary>
 
 - [**Redshift Data Warehouse**](packages/apps/analytics/datawarehouse-app/README.md) - Secure Redshift data warehouse clusters.
 - [**OpenSearch Domain**](packages/apps/analytics/opensearch-app/README.md) - Secure OpenSearch domains and dashboards.
@@ -211,7 +157,10 @@ MDAA is implemented as a set of compliant modules deployed via a unified orchest
 - [**QuickSight Namespace**](packages/apps/analytics/quicksight-namespace-app/README.md) - QuickSight namespaces for multi-tenancy.
 - [**QuickSight Project**](packages/apps/analytics/quicksight-project-app/README.md) - QuickSight shared folders and permissions.
 
-### AI / Data Science Modules
+</details>
+
+<details>
+<summary>AI / Data Science Modules</summary>
 
 - [**SageMaker Unified Studio**](packages/apps/ai/sm-studio-domain-app/README.md) - Secured SageMaker Unified Studio.
 - [**SageMaker Notebooks**](packages/apps/ai/sm-notebook-app/README.md) - Secured SageMaker notebooks.
@@ -227,7 +176,10 @@ MDAA is implemented as a set of compliant modules deployed via a unified orchest
 - [**Bedrock Builder**](packages/apps/ai/bedrock-builder-app/README.md) - Deploy secure Bedrock Agents, Knowledge Bases, and associated resources.
 - [**Bedrock Settings**](packages/apps/ai/bedrock-settings-app/README.md) - Configure Bedrock model invocation audit logging to S3 and CloudWatch.
 
-### Core / Utility Modules
+</details>
+
+<details>
+<summary>Core / Utility Modules</summary>
 
 - [**EC2**](packages/apps/utility/ec2-app/README.md) - Secure EC2 instances and security groups.
 - [**SFTP Transfer Family Server**](packages/apps/utility/sftp-server-app/README.md) - SFTP Transfer Family for data lake ingestion.
@@ -236,17 +188,41 @@ MDAA is implemented as a set of compliant modules deployed via a unified orchest
 - [**EventBridge**](packages/apps/utility/eventbridge-app/README.md) - EventBridge resources such as event buses.
 - [**Machine to Machine API**](packages/apps/utility/m2m-api-app/README.md) - REST API for programmatic data lake interaction.
 
+</details>
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for details on MDAA's security design principles and compliance approach.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md#security-issue-notifications) for information on reporting security issues.
+
+## Workshops and Learning Resources
+
+### Self-Paced Workshops
+
+- [MDAA Hands-On Workshop](https://catalog.us-east-1.prod.workshops.aws/workshops/6e7289c7-5662-494d-8b56-b8706412c3a6): A guided, hands-on workshop that walks you through deploying and configuring MDAA from scratch.
+
+### Documentation
+
+Browse the full documentation, module references, and configuration schemas at [aws.github.io/modern-data-architecture-accelerator](https://aws.github.io/modern-data-architecture-accelerator/).
+
+- [Architecture and Design Guide](ARCHITECTURES.md): Reference architectures and design patterns for MDAA deployments.
+- [Configuration Guide](CONFIGURATION.md): How to author MDAA YAML configuration files.
+- [Customization Guide](CUSTOMIZATION.md): How to extend MDAA modules with code-based escape hatches.
+- [Predeployment Guide](PREDEPLOYMENT.md): How to prepare your AWS accounts for MDAA deployment.
+- [Deployment Guide](DEPLOYMENT.md): Step-by-step deployment instructions using the MDAA CLI.
+
 ## Using and Extending MDAA
 
 MDAA can be used and extended in three ways:
 
 ### Configuration-Driven Deployment
 
-Deploy compliant, end-to-end analytics environments using YAML config files and the MDAA CLI. No code required - accessible to all roles, from simple to complex deployments with high compliance assurance.
+Deploy compliant, end-to-end data and AI environments using YAML config files and the MDAA CLI. No code required - accessible to all roles, from simple to complex deployments with high compliance assurance.
 
 ### Code-Driven Custom Environments
 
-Build custom analytics environments using MDAA's reusable CDK constructs. Multi-language support (TypeScript, Python, Java, .NET) for L2 constructs; L3 constructs are currently TypeScript-only.
+Build custom data and AI environments using MDAA's reusable CDK constructs. Multi-language support (TypeScript, Python, Java, .NET) for L2 constructs; L3 constructs are currently TypeScript-only.
 
 ### Workload Integration
 

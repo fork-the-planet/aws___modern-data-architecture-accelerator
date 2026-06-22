@@ -111,7 +111,7 @@ def run_kiro_assessment(prompt: str, validate_json: bool = False) -> str:
                 [
                     "kiro-cli", "chat",
                     "--no-interactive",
-                    "--trust-tools=read,write",
+                    "--trust-tools=read,write,shell",
                     f"Read and follow the instructions in {prompt_path}",
                 ],
                 capture_output=True,
@@ -125,6 +125,11 @@ def run_kiro_assessment(prompt: str, validate_json: bool = False) -> str:
                 if "database is locked" in stderr and attempt < max_retries - 1:
                     wait = (attempt + 1) * 5
                     print(f"  Database locked, retrying in {wait}s (attempt {attempt + 1}/{max_retries})...")
+                    time.sleep(wait)
+                    continue
+                if ("rate limit" in stderr.lower() or "quota exceeded" in stderr.lower()) and attempt < max_retries - 1:
+                    wait = (attempt + 1) * 30
+                    print(f"  Rate limited, retrying in {wait}s (attempt {attempt + 1}/{max_retries})...")
                     time.sleep(wait)
                     continue
                 raise KiroError(f"kiro-cli failed (exit code {result.returncode}): {stderr}")

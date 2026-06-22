@@ -33,6 +33,10 @@ For construct and utility packages, only README structural presence is checked. 
 
 ### Out of Scope
 
+Documentation outside `packages/` is NOT reviewed by this agent — that is handled by the Documentation Quality Review agent. Do NOT review or flag issues in:
+- `starter_kits/*/README.md`
+- Root-level docs (`README.md`, `CONTRIBUTING.md`, `DEPLOYMENT.md`, etc.)
+
 Prose quality (spelling, grammar, language clarity) and cross-reference validity are handled by the Documentation Quality agent. Do NOT review or flag:
 - Spelling and grammar mistakes
 - Cross-reference / link validity

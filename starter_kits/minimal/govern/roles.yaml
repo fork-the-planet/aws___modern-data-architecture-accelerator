@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/roles.json
+# Minimal roles configuration — add roles as you add modules.
+# See CONFIGURATION.md for role reference options (name, arn, id).
+generateRoles:
+  data-admin:
+    # TODO: Review the below awsManagedPolicies and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM4"
+    #     reason: "ReadOnlyAccess is required for data administrators to inspect resources across services for troubleshooting and governance. See https://docs.aws.amazon.com/aws-managed-policy/latest/reference/ReadOnlyAccess.html"
+    awsManagedPolicies:
+      - ReadOnlyAccess
+    trustedPrincipal: this_account

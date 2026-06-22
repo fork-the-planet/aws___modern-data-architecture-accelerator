@@ -856,7 +856,7 @@ export class MdaaDeploy {
   }
 
   private createCdkCommand(moduleEffectiveConfig: ModuleEffectiveConfig, localModule: boolean): string {
-    const action = this.action == 'deploy' ? `${this.action} --all` : this.action;
+    const action = this.action == 'deploy' || this.action == 'destroy' ? `${this.action} --all` : this.action;
 
     const cdkEnv: string[] = this.createCdkCommandEnv(moduleEffectiveConfig);
     const cdkCmd: string[] = [];

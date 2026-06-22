@@ -1,28 +1,39 @@
+# yaml-language-server: $schema=../../schemas/@aws-mdaa/cli.json
 # All resources will be deployed to the default region specified in the environment or AWS configurations.
 # Can optional specify a specific AWS Region Name.
 region: default
 
-# One or more tag files containing tags which will be applied to all deployed resources
-tag_configs:
-  - ./tags.yaml
+# Tags applied to all deployed resources
+tag_config_data:
+  costcentre: '123456'
+  project: data-ecosystem
 
 ## Pre-Deployment Instructions
 
-# TODO: Set an appropriate, unique organization name
 # Failure to do so may result in global naming conflicts.
+# TODO: Set a globally unique organization name (used in S3 bucket names and resource prefixes)
 organization: <YOUR_ORG_NAME>
 
-# TODO: Set appropriate context values for your environment.
 context:
+  # TODO: Set the source relational database name for DMS
   dms-source-db: <YOUR_DMS_SOURCE_DB>
+  # TODO: Set the ARN of the Secrets Manager secret containing RDS credentials
   dms-rds-secrets-arn: <YOUR_SECRET_ARN>
+  # TODO: Set the ARN of the KMS key used to encrypt the secret
   dms-rds-secrets-kms-arn: <YOUR_KMS_ARN>
+  # TODO: Set your VPC ID
   vpc_id: <YOUR_VPC_ID>
+  # TODO: Set private subnet ID 1
   subnet_id1: <YOUR_SUBNET_ID_1>
+  # TODO: Set private subnet ID 2
   subnet_id2: <YOUR_SUBNET_ID_2>
+  # TODO: Set the hour (0-23) for file processor EventBridge trigger
   file_processor_event_bridge_trigger_hour: <YOUR_HOUR>
+  # TODO: Set the rate in days for file processor runs
   file_processor_event_bridge_trigger_rate: <YOUR_INT>
+  # TODO: Set the rate in days for transformation runs
   transformation_event_bridge_trigger_rate: <YOUR_INT_2>
+  # TODO: Set the hour (0-23) for transformation EventBridge trigger
   transformation_event_bridge_trigger_hour: <YOUR_HOUR_2>
 
 # One or more domains may be specified. Domain name will be incorporated by default naming implementation

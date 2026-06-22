@@ -1,10 +1,18 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/dataops-crawler.json
+# OPTIONAL: This crawler is not deployed by default. To enable it, add a module
+# entry to mdaa.yaml under the dataops domain:
+#   crawler:
+#     module_path: "@aws-mdaa/dataops-crawler"
+#     module_configs:
+#       - ./dataops/crawler.yaml
+#
 # The name of the dataops project this crawler will be created within.
 # The dataops project name is the MDAA module name for the project.
 projectName: hda-project
 
 crawlers:
   crawler1:
-    executionRoleArn: ssm:/{{org}}/shared/generated-role/glue-etl/arn
+    executionRoleArn: ssm-org:/shared/generated-role/glue-etl/arn
     # (required) Reference back to the database name in the 'databases:' section of the crawler.yaml
     databaseName: project:databaseName/sample-database
     # (required) Description of the crawler
@@ -13,4 +21,4 @@ crawlers:
     targets:
       # (at least one).  S3 Target.  See: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-s3target.html
       s3Targets:
-        - path: s3://{{resolve:ssm:/{{org}}/shared/datalake/bucket/curated/name}}/data/sample_data
+        - path: s3://{{ssm-org:/shared/datalake/bucket/curated/name}}/data/sample_data

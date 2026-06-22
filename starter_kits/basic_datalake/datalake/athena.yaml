@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/athena-workgroup.json
 # Arns for IAM roles which will be provided to the Workgroup's resources (IE results bucket)
 dataAdminRoles:
   - id: generated-role-id:data-admin

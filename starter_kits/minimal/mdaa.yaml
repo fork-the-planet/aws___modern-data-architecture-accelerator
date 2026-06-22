@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../schemas/@aws-mdaa/cli.json
+# All resources will be deployed to the default region specified in the environment or AWS configurations.
+region: default
+
+# Tags applied to all deployed resources
+tag_config_data:
+  project: mdaa
+  environment: dev
+
+# TODO: Set a globally unique organization name (used in S3 bucket names and resource prefixes)
+organization: <YOUR_ORG_NAME>
+
+# One or more domains may be specified.
+domains:
+  # Governance domain — account-level modules deployed once
+  govern:
+    environments:
+      dev:
+        account: default
+        modules:
+          # IAM roles for the data environment
+          roles:
+            module_path: "@aws-mdaa/roles"
+            module_configs:
+              - ./govern/roles.yaml
+
+          # Ensure the Glue Catalog is KMS encrypted
+          # NOTE: Account-level module — can only be deployed once per AWS account.
+          glue-catalog:
+            module_path: "@aws-mdaa/glue-catalog"
+
+          # Configure LakeFormation to delegate access controls to IAM
+          # NOTE: Account-level module — can only be deployed once per AWS account.
+          lakeformation-settings:
+            module_path: "@aws-mdaa/lakeformation-settings"
+            module_configs:
+              - ./govern/lakeformation-settings.yaml
+
+  # TODO: Add additional domains below. Each domain groups related modules
+  # (e.g., datalake, analytics, dataops). Modules within a domain share
+  # naming prefixes and can reference each other via ssm-domain:/ paths.
+  # See ../../README.md#available-modules for the full module catalog.
+  #
+  # new-domain:
+  #   environments:
+  #     dev:
+  #       account: default
+  #       modules:
+  #         my-module:
+  #           module_path: "@aws-mdaa/module-name"
+  #           module_configs:
+  #             - ./new-domain/my-module.yaml

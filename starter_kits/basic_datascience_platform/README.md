@@ -1,198 +1,100 @@
-# Basic Data Science/AI/ML Platform
+# Basic Data Science Platform
 
-This is a sample basic Data Science Platform architecture which can be implemented using MDAA. This platform is centered around the Data Science Team concept. Each team is provided with their own SageMaker Studio Domain, team-specific Athena Workgroup, and KMS-encrypted S3-based 'mini data lake'--which is used to store all team-specific data and files, as well as act as scratch-space for their data science activities.
+This starter kit deploys a team-based data science platform centered around SageMaker Studio, with an integrated data lake, query capabilities, and governed access control. Each data science team gets their own SageMaker Studio Domain, team-specific Athena Workgroup, and KMS-encrypted S3 storage for data and experimentation.
+
+> **[Deployment Instructions](#deployment)**
+
+## Use Cases
+
+- Self-service data science environments for ML experimentation and model development
+- Team-isolated notebook environments with shared data lake access
+- Governed data exploration combining Athena queries with notebook-based analysis
+- Collaborative data science with role-based access (admin, user, scientist)
+- Secure ML workflows with encrypted storage and network-isolated compute
+
+## Capabilities
+
+- SageMaker Studio Domain with team-specific user profiles
+- KMS-encrypted S3 data lake with multi-zone storage (raw, transformed)
+- Fine-grained access control via Lake Formation
+- Athena workgroups for SQL-based data exploration
+- Glue Data Catalog with automated schema discovery via crawlers
+- IAM roles with separation of duties (data-admin, data-user, data-scientist, team-execution)
+- CloudTrail audit trail for compliance
+
+## Architecture
 
 ![DataScience](docs/datascience.png)
 
-***
+## Deployment
 
-## Deployment Instructions
+### Prerequisites and Predeployment
 
-The following instructions assume you have CDK bootstrapped your target account, and that the MDAA source repo is cloned locally.
-More predeployment info and procedures are available in [PREDEPLOYMENT](../../PREDEPLOYMENT.md).
+1. Authenticate to your target AWS account and region. Ensure the authenticated role has permissions to deploy resources via CDK.
+2. [Bootstrap CDK](../../PREDEPLOYMENT.md#single-account-bootstrap) in your target account and region.
+3. Provision a VPC with at least 1 private subnet. Subnets must have connectivity to AWS service endpoints, either via:
+   - NAT Gateway for outbound internet access, OR
+   - VPC Endpoints for:
+     - SageMaker API
+     - SageMaker Runtime
+     - S3
+     - STS
+     - CloudWatch Logs
 
-1. Deploy sample configurations into the specified directory structure (or obtain from the MDAA repo under `starter_kits/basic_datascience_platform`).
+Additional info: [PREDEPLOYMENT](../../PREDEPLOYMENT.md)
 
-2. Edit the `mdaa.yaml` to specify an organization name. This must be a globally unique name, as it is used in the naming of all deployed resources, some of which are globally named (such as S3 buckets).
+### Configure MDAA
 
-3. If required, edit the `mdaa.yaml` to specify `context:` values specific to your environment.
+1. Address all TODOs in [`mdaa.yaml`](mdaa.yaml), specifically:
+   - Set `organization` to a globally unique name (used in S3 bucket names and all resource prefixes)
+   - Set `context` values:
+     - `vpc_id` — your VPC ID
+     - `subnet_id` — a private subnet ID with AWS service connectivity
+     - `datascience_team_name` — name for your data science team
 
-4. Ensure you are authenticated to your target AWS account.
 
-5. Optionally, run `<path_to_mdaa_repo>/bin/mdaa ls` from the directory containing `mdaa.yaml` to understand what stacks will be deployed.
 
-6. Optionally, run `<path_to_mdaa_repo>/bin/mdaa synth` from the directory containing `mdaa.yaml` and review the produced templates.
+2. Address all TODOs in module configs, specifically:
+   - CDK Nag suppressions in [`roles.yaml`](roles.yaml). Uncomment each suppression only after reviewing the associated permissions and confirming they are acceptable for your environment.
+### Deploy MDAA
 
-7. Run `<path_to_mdaa_repo>/bin/mdaa deploy` from the directory containing `mdaa.yaml` to deploy all modules.
 
-Additional MDAA deployment commands/procedures can be reviewed in [DEPLOYMENT](../../DEPLOYMENT.md).
+Run the following from the starter kit directory (containing `mdaa.yaml`):
 
-***
+1. Optionally, run `npx @aws-mdaa/cli ls` to understand what stacks will be deployed.
 
-## Configurations
+2. Optionally, run `npx @aws-mdaa/cli synth` and review the produced templates.
 
-The sample configurations for this architecture are provided below. They are also available under starter_kits/basic_datascience_platform within the MDAA repo.
+3. Run `npx @aws-mdaa/cli deploy` to deploy all modules.
 
-### Config Directory Structure
+Additional info: [DEPLOYMENT](../../DEPLOYMENT.md)
 
-```bash
-basic_datascience_platform
-│   mdaa.yaml
-│   tags.yaml
-│   roles.yaml
-|
-└───datalake
-│    └───datalake.yaml
-│    └───lakeformation-settings.yaml
-│    └───athena.yaml
-│
-└───dataops
-│    └───project.yaml
-│    └───crawler.yaml
-|
-└───governance
-│    └───audit.yaml
-│    └───audit-trail.yaml
-|
-└───datascience
-    └───datascience-team.yaml
-```
 
-***
 
-### mdaa.yaml
 
-This configuration specifies the global, domain, env, and module configurations required to configure and deploy this sample architecture.
+## Next Steps
 
-*Note* - Before deployment, populate the mdaa.yaml with appropriate organization and context values for your environment
+See [USAGE](USAGE.md) for post-deployment instructions.
 
-```yaml
-# Contents available in mdaa.yaml
---8<-- "target/docs/starter_kits/basic_datascience_platform/mdaa.yaml"
-```
+## Modules Deployed
 
-***
+| Module | Purpose |
+|--------|---------|
+| `@aws-mdaa/roles` | IAM roles and policies for all personas |
+| `@aws-mdaa/datalake` | KMS keys, S3 buckets, and bucket policies |
+| `@aws-mdaa/glue-catalog` | Glue Catalog KMS encryption (account-level) |
+| `@aws-mdaa/lakeformation-settings` | Lake Formation settings (account-level) |
+| `@aws-mdaa/athena-workgroup` | Athena workgroup with KMS encryption |
+| `@aws-mdaa/audit` | S3 audit bucket for CloudTrail/Inventory |
+| `@aws-mdaa/audit-trail` | CloudTrail audit trail |
+| `@aws-mdaa/dataops-project` | Glue databases with access control |
+| `@aws-mdaa/dataops-crawler` | Glue crawlers for schema discovery |
+| `@aws-mdaa/datascience-team` | SageMaker Studio Domain, team bucket, Athena workgroup |
 
-### tags.yaml
+## Troubleshooting
 
-This configuration specifies the tags to be applied to all deployed resources.
+1. **SageMaker Studio fails to launch**: Verify the VPC subnet has connectivity to SageMaker API endpoints (via NAT Gateway or VPC Endpoint). Check that the subnet ID in `mdaa.yaml` is a private subnet.
 
-```yaml
-# Contents available in tags.yaml
---8<-- "target/docs/starter_kits/basic_datascience_platform/tags.yaml"
-```
+2. **User profile not accessible**: The user profile's `userid` tag must match the session name of the IAM role being assumed. Verify the role session name matches the configured userid.
 
-***
-
-### roles.yaml
-
-This configuration will be used by the MDAA roles module to deploy data science and admin roles. These roles will be granted access to the Data Science team resources within the Data Science Team module config.
-
-```yaml
-# Contents available in roles.yaml
---8<-- "target/docs/starter_kits/basic_datascience_platform/roles.yaml"
-```
-
-***
-
-### datalake/datalake.yaml
-
-This configuration will be used by the MDAA S3 Data Lake module to deploy KMS Keys, S3 Buckets, and S3 Bucket Policies required for the basic Data Lake.
-
-```yaml
-# Contents available in datalake/datalake.yaml
---8<-- "target/docs/starter_kits/basic_datascience_platform/datalake/datalake.yaml"
-```
-
-***
-
-### athena.yaml
-
-This configuration will create a standalone Athena Workgroup which can be used to securely query the data lake via Glue resources. These Glue resources can be either manually created, created via MDAA DataOps Project module (Glue databases), or MDAA Crawler module (Glue tables).
-
-```yaml
-# Contents available in datalake/athena.yaml
---8<-- "target/docs/starter_kits/basic_datascience_platform/datalake/athena.yaml"
-```
-
-***
-
-### dataops/project.yaml
-
-This configuration will create a DataOps Project which can be used to support a wide variety of data ops activities. Specifically, this configuration will create a number of Glue Catalog databases and apply fine-grained access control to these using basic.
-
-```yaml
-# Contents available in dataops/project.yaml
---8<-- "target/docs/starter_kits/basic_datascience_platform/dataops/project.yaml"
-```
-
-***
-
-### dataops/crawler.yaml
-
-This configuration will create Glue crawlers using the DataOps Crawler module.
-
-```yaml
-# Contents available in dataops/crawler.yaml
---8<-- "target/docs/starter_kits/basic_datascience_platform/dataops/crawler.yaml"
-```
-
-***
-
-### datascience/datascience-team.yaml
-
-This configuration will be used by the MDAA Data Science Team module to deploy the Data Science Team Platform, including SageMaker Studio Domain, Team KMS Key and Bucket, Athena Workgroup.
-
-Ensure to modify the user profile config to specify an appropriate userid. This userid should match the session name of the user who will later assume the Data Scientist role.
-
-```yaml
-# Contents available in datascience/datascience-team.yaml
---8<-- "target/docs/starter_kits/basic_datascience_platform/datascience/datascience-team.yaml"
-```
-***
-
-### governance/audit.yaml
-
-This configuration will be used by the MDAA audit module to deploy the resources required to define a secure S3-based bucket on AWS for use as a CloudTrail or S3 Inventory target.
-
-
-
-```yaml
-# Contents available in governance/audit.yaml
---8<-- "target/docs/starter_kits/basic_datascience_platform/governance/audit.yaml"
-```
-
-### governance/audit-trail.yaml
-
-This configuration will be used by the MDAA Audit trail module to deploy the resources required to define a secure S3-based Audit Trail on AWS.
-
-```yaml
-# Contents available in governance/audit-trail.yaml
---8<-- "target/docs/starter_kits/basic_datascience_platform/governance/audit-trail.yaml"
-```
-
-***
-
-## Usage Instructions
-
-Once the MDAA deployment is complete, follow these steps to interact with the data lake.
-
-1. Check the `DATASETS.md` file in the same directory to create a sample_data folder
-
-2. Assume the `shared-roles-data-admin` role created by the MDAA deployment. This role is configured with AssumeRole trust to the local account by default. Note that this role is the only role configured with write access to the data lake. All other roles (including existing administrator roles in the account) will be denied write access.
-
-3. Upload the `./sample_data` folder and contents to `<transformed_bucket>/data/sample_data`
-
-4. In the Glue Console, trigger/run the Glue Crawler. Once successful, view the Crawler's CloudWatch logs to observe that two tables were created.
-
-5. Assume the `data-user` role created by the MDAA deployment. This role is configured with AssumeRole trust to the local account by default.
-
-6. In the Athena Query Editor, select the MDAA-deployed Workgroup from the drop down list.
-
-7. The two tables created by the crawler should be available for query under the MDAA-created Database.
-
-8. Assume the `data-scientist` role created by the MDAA deployment. This role is configured with AssumeRole trust to the local account by default.
-
-9. In the SageMaker AI, Go to Domain console, launch the user profile matching your role session name/userid.
-
-10. SageMaker Studio should launch, and the Studio Notebooks/Kernels should be usable.
+3. **Athena query returns Access Denied**: Verify you are using the correct IAM role. Lake Formation permissions govern data access even if S3 bucket policy allows it.

@@ -1,5 +1,10 @@
+# yaml-language-server: $schema=../../schemas/@aws-mdaa/roles.json
 generatePolicies:
   GlueJobLogPolicy:
+    # TODO: Review the below policyDocument permissions and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM5"
+    #     reason: "Wildcard in log-group ARN (/aws-glue/*) required because Glue dynamically generates log group names at runtime."
     policyDocument:
       Statement:
         - SID: GlueCloudwatch
@@ -11,11 +16,12 @@ generatePolicies:
             - logs:AssociateKmsKey
             - logs:CreateLogGroup
             - logs:PutLogEvents
-    suppressions:
-      - id: "AwsSolutions-IAM5"
-        reason: "Glue log group name not known at deployment time."
 
   DataAdminPolicy:
+    # TODO: Review the below policyDocument permissions and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM5"
+    #     reason: "s3:ListAllMyBuckets, s3:GetAccountPublicAccessBlock, s3:ListAccessPoints, and kms:ListAliases are account-level actions that do not support resource-level permissions."
     policyDocument:
       Statement:
         - Sid: BasicS3Access
@@ -37,11 +43,11 @@ generatePolicies:
             - kms:ListAliases
           Resource: "*"
 
-    suppressions:
-      - id: "AwsSolutions-IAM5"
-        reason: "These actions do not accept a resource or resource name not known at deployment time."
-
   DataUserPolicy:
+    # TODO: Review the below policyDocument permissions and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM5"
+    #     reason: "Glue database/table wildcards are intentional — fine-grained data access is governed by Lake Formation grants, not IAM resource ARNs. athena:ListWorkGroups does not support resource-level permissions."
     policyDocument:
       Statement:
         # This statement allows coarse-grained access to Glue catalog resources, but does not itself grant any access to data.
@@ -71,10 +77,11 @@ generatePolicies:
             - athena:ListWorkGroups
           Resource: "*"
 
-    suppressions:
-      - id: "AwsSolutions-IAM5"
-        reason: "These actions do not accept a resource or resource name not known at deployment time."
   FileProcessorDdbPolicy:
+    # TODO: Review the below policyDocument permissions and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM5"
+    #     reason: "DynamoDB table wildcard required because table names are generated dynamically by MDAA and not known at policy authoring time."
     policyDocument:
       Statement:
         - SID: DynamoDBWriter
@@ -88,13 +95,14 @@ generatePolicies:
             - dynamodb:Scan
             - dynamodb:Query
             - dynamodb:UpdateItem
-    suppressions:
-      - id: "AwsSolutions-IAM5"
-        reason: "DDB table name not known at deployment time."
 
 # The list of roles which will be generated
 generateRoles:
   transformation-glue-job-role:
+    # TODO: Review the below awsManagedPolicies and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM4"
+    #     reason: "AWSGlueServiceRole is required for Glue ETL jobs to access S3, CloudWatch Logs, and EC2 networking. AmazonEC2ContainerRegistryReadOnly provides read access to ECR for custom Glue container images."
     trustedPrincipal: service:glue.amazonaws.com
     # A list of AWS managed policies which will be added to the role
     awsManagedPolicies:
@@ -102,10 +110,12 @@ generateRoles:
       - service-role/AWSGlueServiceRole
     generatedPolicies:
       - GlueJobLogPolicy
-    suppressions:
-      - id: "AwsSolutions-IAM4"
-        reason: "AWSGlueServiceRole approved for usage"
+
   file-processor-glue-job-role:
+    # TODO: Review the below awsManagedPolicies and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM4"
+    #     reason: "AWSGlueServiceRole is required for Glue ETL jobs to access S3, CloudWatch Logs, and EC2 networking. AmazonEC2ContainerRegistryReadOnly provides read access to ECR for custom Glue container images."
     trustedPrincipal: service:glue.amazonaws.com
     # A list of AWS managed policies which will be added to the role
     awsManagedPolicies:
@@ -114,9 +124,7 @@ generateRoles:
     generatedPolicies:
       - FileProcessorDdbPolicy
       - GlueJobLogPolicy
-    suppressions:
-      - id: "AwsSolutions-IAM4"
-        reason: "AWSGlueServiceRole approved for usage"
+
   dms:
     trustedPrincipal: service:dms.{{region}}.amazonaws.com
     generatedPolicies:
@@ -124,26 +132,28 @@ generateRoles:
       - DataAdminPolicy
 
   glue-etl:
+    # TODO: Review the below awsManagedPolicies and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM4"
+    #     reason: "AWSGlueServiceRole is required for Glue ETL jobs to access S3, CloudWatch Logs, and EC2 networking for job execution. See https://docs.aws.amazon.com/glue/latest/dg/create-an-iam-role.html"
     trustedPrincipal: service:glue.amazonaws.com
     # A list of AWS managed policies which will be added to the role
     awsManagedPolicies:
       - service-role/AWSGlueServiceRole
     generatedPolicies:
       - GlueJobLogPolicy
-    suppressions:
-      - id: "AwsSolutions-IAM4"
-        reason: "AWSGlueServiceRole approved for usage"
 
   data-admin:
+    # TODO: Review the below awsManagedPolicies and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM4"
+    #     reason: "AWSGlueConsoleFullAccess provides the data-admin role with full Glue console access for managing ETL jobs, crawlers, and catalog resources. See https://docs.aws.amazon.com/glue/latest/dg/security-iam-awsmanpol.html"
     trustedPrincipal: this_account
     awsManagedPolicies:
       - AWSGlueConsoleFullAccess
     generatedPolicies:
       - DataUserPolicy
       - DataAdminPolicy
-    suppressions:
-      - id: "AwsSolutions-IAM4"
-        reason: "AWSGlueConsoleFullAccess approved for usage"
 
   data-user:
     trustedPrincipal: this_account

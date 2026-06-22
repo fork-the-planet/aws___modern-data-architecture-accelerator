@@ -25,6 +25,9 @@ Review documentation quality across the entire repository — prose quality, spe
 - Compliance controls, encryption, IAM policies → Compliance agent
 - Test coverage, baseline gaps, test standards → Test Standards agent
 
+**Shared scope with Starter Kit Quality agent** (review only grammar, spelling, and links — NOT structure):
+- `starter_kits/**/README.md` — the Starter Kit Quality agent checks section structure and ordering; this agent checks spelling, grammar, link validity, and cross-references
+
 ## What to Review
 
 ### Spelling and Grammar

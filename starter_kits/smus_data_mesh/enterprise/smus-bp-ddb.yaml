@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/dataops-dynamodb.json
 # Custom SMUS Blueprint - DynamoDB Table
 #
 # Deploys the MDAA DynamoDB module as a reusable SMUS blueprint with configurable KMS encryption.

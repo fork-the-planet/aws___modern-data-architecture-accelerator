@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/roles.json
 # Common IAM Roles Configuration
 #
 # Creates a standard set of IAM roles and policies deployed to each AWS account.
@@ -12,6 +13,10 @@ createPersonaManagedPolicies: false
 generatePolicies:
   # Basic S3 read-only policy for data discovery and bucket exploration
   BasicDataPolicy:
+    # TODO: Review the below policyDocument permissions and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: 'AwsSolutions-IAM5'
+    #     reason: 's3:ListAllMyBuckets, s3:GetAccountPublicAccessBlock, and s3:ListAccessPoints are account-level actions that do not support resource-level permissions.'
     policyDocument:
       Statement:
         # Allows listing and viewing S3 bucket configurations without modifying data
@@ -27,13 +32,12 @@ generatePolicies:
             - s3:GetBucketLocation # Get the region where bucket is located
           Resource: '*'
 
-    # TODO: Review and uncomment below suppression(s).
-    # suppressions:
-    #   - id: 'AwsSolutions-IAM5'
-    #     reason: 'These actions do not accept a resource or resource name not known at deployment time.'
-
   # Policy for managing DynamoDB tables in DataZone blueprint provisioning
   ddb-bp-provisioning:
+    # TODO: Review the below policyDocument permissions and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: 'AwsSolutions-IAM5'
+    #     reason: 'DynamoDB table ARN wildcard required because full table names include SMUS Project and Environment IDs that are generated dynamically and not known at policy authoring time.'
     policyDocument:
       Statement:
         # Allows full lifecycle management of DynamoDB tables scoped to *ddb-table-t1
@@ -59,26 +63,24 @@ generatePolicies:
             - dynamodb:ListTables # List all tables in the account
           Resource: '*'
 
-    # TODO: Review and uncomment below suppression(s).
-    # suppressions:
-    #   - id: 'AwsSolutions-IAM5'
-    #     reason: 'DynamoDB table operations require wildcard in resource as full table names (SMUS Project and Env Ids) are not known at deployment time.'
-
 # IAM roles that will be created for various data platform personas and services
 generateRoles:
   # Role for AWS Glue ETL jobs to process and transform data
   glue-etl:
+    # TODO: Review the below awsManagedPolicies and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: 'AwsSolutions-IAM4'
+    #     reason: 'AWSGlueServiceRole is required for Glue ETL jobs to access S3, CloudWatch Logs, and EC2 networking for job execution. See https://docs.aws.amazon.com/glue/latest/dg/create-an-iam-role.html'
     trustedPrincipal: service:glue.amazonaws.com # Only Glue service can assume this role
     awsManagedPolicies:
       - service-role/AWSGlueServiceRole # Provides Glue with access to S3, CloudWatch, and other required services
 
-    # TODO: Review and uncomment below suppression(s).
-    # suppressions:
-    #   - id: 'AwsSolutions-IAM4'
-    #     reason: 'AWSGlueServiceRole approved for usage'
-
   # Administrative role for managing the entire data platform
   data-admin:
+    # TODO: Review the below awsManagedPolicies and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: 'AwsSolutions-IAM4'
+    #     reason: 'Data-admin role requires AmazonDataZoneFullAccess for domain management, AWSGlueConsoleFullAccess for catalog administration, AWSLakeFormationDataAdmin for permission grants, and AWSLakeFormationCrossAccountManager for cross-account data sharing.'
     trustedPrincipal: this_account # Can be assumed by users/roles in this AWS account
     awsManagedPolicies:
       - AmazonDataZoneFullAccess # Full control over DataZone domains, projects, and assets
@@ -88,23 +90,17 @@ generateRoles:
     generatedPolicies:
       - BasicDataPolicy # Add S3 discovery capabilities
 
-    # TODO: Review and uncomment below suppression(s).
-    # suppressions:
-    #   - id: 'AwsSolutions-IAM4'
-    #     reason: 'AWSGlueConsoleFullAccess, AmazonDataZoneFullAccess, AWSLakeFormationDataAdmin, AWSLakeFormationCrossAccountManager approved for usage'
-
   # Role for data engineers to build and manage data pipelines
   data-engineer:
+    # TODO: Review the below awsManagedPolicies and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: 'AwsSolutions-IAM4'
+    #     reason: 'Data-engineer role requires AWSGlueConsoleFullAccess for building and managing ETL pipelines, crawlers, and data catalogs.'
     trustedPrincipal: this_account # Can be assumed by users/roles in this AWS account
     awsManagedPolicies:
       - AWSGlueConsoleFullAccess # Full access to create and manage Glue jobs, crawlers, and catalogs
     generatedPolicies:
       - BasicDataPolicy # Add S3 discovery capabilities
-
-    # TODO: Review and uncomment below suppression(s).
-    # suppressions:
-    #   - id: 'AwsSolutions-IAM4'
-    #     reason: 'AWSGlueConsoleFullAccess, AmazonDataZoneFullUserAccessapproved for usage'
 
   # Role for DataZone blueprint provisioning to create DynamoDB resources
   # This role is assumed by DataZone when provisioning the custom DDB blueprint

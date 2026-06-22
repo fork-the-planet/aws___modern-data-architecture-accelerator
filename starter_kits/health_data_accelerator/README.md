@@ -1,223 +1,126 @@
 # Health Data Accelerator (HDA)
 
-This HDA configuration illustrates how to create a healthcare datalake on AWS. Access to the data lake may be granted to IAM and federated principals, and is controlled on a coarse-grained basis only (using S3 bucket policies).
+This starter kit deploys a healthcare-focused data lake with automated data ingestion pipelines using AWS Database Migration Service (DMS), Glue ETL, Lambda, and Step Functions. It provides end-to-end data processing from source relational databases through staging, transformation, and curation layers.
+
+> **[Deployment Instructions](#deployment)**
+
+## Use Cases
+
+- Healthcare data lake for clinical, operational, and research data
+- Automated CDC (Change Data Capture) ingestion from relational databases via DMS
+- Multi-stage data transformation pipelines (raw → transformed → curated)
+- Batch file processing with configurable scheduling
+- Data quality validation and monitoring for healthcare compliance
+
+## Capabilities
+
+- DMS replication from source databases with table-level mapping control
+- Three-zone S3 data lake (raw, transformed, curated) with KMS encryption
+- Glue ETL jobs for data transformation (file processing, surveys, vitals)
+- Lambda-based file management and batch generation
+- Step Functions orchestration for multi-step processing workflows
+- DynamoDB tables for pipeline state and configuration management
+- EventBridge-scheduled triggers for automated pipeline execution
+- Athena workgroup for ad-hoc querying of curated data
+- CloudTrail audit trail for compliance
+
+## Architecture
 
 ![HDA](docs/hda.png)
 
-***
+## Deployment
 
-## Deployment Instructions
+### Prerequisites and Predeployment
 
-### Prerequisites
-1. Secrets Manager secret for storing the source database credentials.
-2. KMS key that this secret is using to encrypt the secrets.
-3. VPC for hosting the DMS task instances. For best practices on what VPC to deploy, consider using the [Landing Zone Accelerator](https://aws.amazon.com/solutions/implementations/landing-zone-accelerator-on-aws/).
-4. The source database server must allow connection from DMS.
+1. Authenticate to your target AWS account and region. Ensure the authenticated role has permissions to deploy resources via CDK.
+2. [Bootstrap CDK](../../PREDEPLOYMENT.md#single-account-bootstrap) in your target account and region.
+3. Provision a VPC with at least 2 private subnets (required for DMS replication instances). Subnets must have connectivity to:
+   - The source database (network path from DMS replication instance to source DB)
+   - AWS service endpoints, either via NAT Gateway or VPC Endpoints for:
+     - S3
+     - Glue
+     - DynamoDB
+     - Lambda
+     - Step Functions
+     - Secrets Manager
+     - CloudWatch Logs
 
-Update `dataops/dms.yaml` with information from items 1 to 3 from above. 
+4. Prepare the source database:
+   - Create an AWS Secrets Manager secret containing the source database credentials
+   - Note the KMS key ARN used to encrypt the secret
 
-The following instructions assume you have CDK bootstrapped your target account, and that the MDAA source repo is cloned locally.
-More predeployment info and procedures are available in [PREDEPLOYMENT](../../PREDEPLOYMENT.md).
+Additional info: [PREDEPLOYMENT](../../PREDEPLOYMENT.md)
 
-1. Deploy the configurations into the specified directory structure (or obtain from the MDAA repo under `starter_kits/health_data_accelerator`).
+### Configure MDAA
 
-2. Edit the `mdaa.yaml` to specify an organization name. This must be a globally unique name, as it is used in the naming of all deployed resources, some of which are globally named (such as S3 buckets).
+1. Address all TODOs in [`mdaa.yaml`](mdaa.yaml), specifically:
+   - Set `organization` to a globally unique name
+   - Set `context` values:
+     - `dms-source-db` — source relational database name
+     - `dms-rds-secrets-arn` — ARN of the Secrets Manager secret with DB credentials
+     - `dms-rds-secrets-kms-arn` — ARN of the KMS key encrypting the secret
+     - `vpc_id` — VPC ID with connectivity to the source database
+     - `subnet_id1`, `subnet_id2` — private subnet IDs for DMS instances
+     - `file_processor_event_bridge_trigger_hour` — hour for file processor schedule
+     - `file_processor_event_bridge_trigger_rate` — days between file processing runs
+     - `transformation_event_bridge_trigger_hour` — hour for transformation schedule
+     - `transformation_event_bridge_trigger_rate` — days between transformation runs
+   - Update `dataops/dms.yaml` if you need to change the DMS instance class for your workload (default: `dms.c5.large`)
 
-3. Edit the `mdaa.yaml` to specify `context:` values specific to your environment. All fields require a value in order for the deployment to succeed.
+2. Review and update [`dataops/scripts/table_config.json`](dataops/scripts/table_config.json) with your source database table definitions. This file is loaded into DynamoDB automatically during deploy (predeploy hook on `dms-shared`) and controls DMS task table mappings.
 
-4. Ensure you are authenticated to your target AWS account.
+3. Address all TODOs in module configs, specifically:
+   - CDK Nag suppressions in [`roles.yaml`](roles.yaml) and [`dataops/roles.yaml`](dataops/roles.yaml). Uncomment each suppression only after reviewing the associated permissions and confirming they are acceptable for your environment.
 
-5. Optionally, run `<path_to_mdaa_repo>/bin/mdaa ls` from the directory containing `mdaa.yaml` to understand what stacks will be deployed.
+### Deploy MDAA
 
-6. Optionally, run `<path_to_mdaa_repo>/bin/mdaa synth` from the directory containing `mdaa.yaml` and review the produced templates.
+Run the following from the starter kit directory (containing `mdaa.yaml`):
 
-7. Run `<path_to_mdaa_repo>/bin/mdaa deploy` from the directory containing `mdaa.yaml` to deploy all modules.
+1. Optionally, run `npx @aws-mdaa/cli ls` to understand what stacks will be deployed.
 
-Additional MDAA deployment commands/procedures can be reviewed in [DEPLOYMENT](../../DEPLOYMENT.md).
+2. Optionally, run `npx @aws-mdaa/cli synth` and review the produced templates.
 
-***
+3. Run `npx @aws-mdaa/cli deploy` to deploy all modules.
 
-## Configurations
+Additional info: [DEPLOYMENT](../../DEPLOYMENT.md)
 
-The configurations for this architecture are provided below. They are also available under starter_kits/health_data_accelerator within the MDAA repo.
+## Next Steps
 
-### Config Directory Structure
+See [USAGE](USAGE.md) for post-deployment instructions.
 
-```text
-health_data_accelerator
-├── README.md
-├── datalake
-│         ├── athena.yaml
-│         ├── datalake.yaml
-│         └── lakeformation-settings.yaml
-├── dataops
-│         ├── crawler.yaml
-│         ├── dms-shared.yaml
-│         ├── dms.yaml
-│         ├── dynamodb.yaml
-│         ├── jobs.yaml
-│         ├── lambda.yaml
-│         ├── mappings
-│         │         ├── example_table_mappings.yaml
-│         │         ├── orgs_table_mappings.yaml
-│         │         ├── patients_mappings.yaml
-│         │         ├── surveys_table_mappings.yaml
-│         │         └── vitals_table_mappings.yaml
-│         ├── package.json
-│         ├── project.yaml
-│         ├── python-tests
-│         │         ├── conftest.py
-│         │         ├── pytest.ini
-│         │         ├── pyproject.toml
-│         │         ├── test_file_manager_simple.py
-│         │         └── test_setup.py
-│         ├── roles.yaml
-│         ├── scripts
-│         │         ├── load_batch_config.sh
-│         │         ├── load_table_info.sh
-│         │         └── table_config.json
-│         ├── src
-│         │         ├── glue
-│         │         │         ├── file_processor
-│         │         │         │         └── odpf_file_processor.py
-│         │         │         └── transformation
-│         │         │             ├── surveys_transformation_job.py
-│         │         │             └── vitals_transformation_job.py
-│         │         └── lambda
-│         │             ├── file_manager
-│         │             │         └── odpf_file_manager.py
-│         │             └── file_processor
-│         │                 ├── odpf_batch_generator_lambda.py
-│         │                 └── odpf_file_processor_trigger_lambda.py
-│         └── stepfunction.yaml
-├── docs
-│         ├── hda.drawio
-│         └── hda.png
-├── governance
-│         ├── audit-trail.yaml
-│         └── audit.yaml
-├── mdaa.yaml
-├── roles.yaml
-└── tags.yaml
-```
+## Modules Deployed
 
-### Post infrastructure deployment
-Several Dynamodb tables need to be prepopulated. See the [scripts](dataops/scripts). The shell scripts only work for this set of configurations. You should review the scripts carefully and make the relevant updates.
-
-***
-
-### mdaa.yaml
-
-This configuration specifies the global, domain, env, and module configurations required to configure and deploy this HDA architecture.
-
-*Note* - Before deployment, populate the mdaa.yaml with appropriate organization and context values for your environment
-
-```yaml
-# Contents available in mdaa.yaml
---8<-- "target/docs/starter_kits/health_data_accelerator/mdaa.yaml"
-```
-
-***
-
-### tags.yaml
-
-This configuration specifies the tags to be applied to all deployed resources.
-
-```yaml
-# Contents available in tags.yaml
---8<-- "target/docs/starter_kits/health_data_accelerator/tags.yaml"
-```
-
-***
-
-### roles.yaml
-
-This configuration will be used by the MDAA Roles module to deploy IAM roles and Managed Policies required for this HDA architecture.
-
-```yaml
-# Contents available in roles.yaml
---8<-- "target/docs/starter_kits/health_data_accelerator/roles.yaml"
-```
-
-***
-
-### datalake/datalake.yaml
-
-This configuration will be used by the MDAA S3 Data Lake module to deploy KMS Keys, S3 Buckets, and S3 Bucket Policies required for the Health Data Lake.
-
-```yaml
-# Contents available in datalake/datalake.yaml
---8<-- "target/docs/starter_kits/health_data_accelerator/datalake/datalake.yaml"
-```
-
-***
-
-### athena.yaml
-
-This configuration will create a standalone Athena Workgroup which can be used to securely query the data lake via Glue resources. These Glue resources can be either manually created, created via MDAA DataOps Project module (Glue databases), or MDAA Crawler module (Glue tables).
-
-```yaml
-# Contents available in datalake/athena.yaml
---8<-- "target/docs/starter_kits/health_data_accelerator/datalake/athena.yaml"
-```
-
-***
-
-### dataops/project.yaml
-
-This configuration will create a DataOps Project which can be used to support a wide variety of data ops activities. Specifically, this configuration will create a number of Glue Catalog databases and apply fine-grained access control to these.
-
-```yaml
-# Contents available in dataops/project.yaml
---8<-- "target/docs/starter_kits/health_data_accelerator/dataops/project.yaml"
-```
-
-***
-
-### dataops/crawler.yaml
-
-This configuration will create Glue crawlers using the DataOps Crawler module.
-
-```yaml
-# Contents available in dataops/crawler.yaml
---8<-- "target/docs/starter_kits/health_data_accelerator/dataops/crawler.yaml"
-```
-
-## Usage Instructions
-
-Once the HDA deployment is complete, follow these steps to interact with the data lake.
-
-1. Go to the DMS Console page
-   - Ensure that the status for the source endpoint connection is "Successful"
-   - Start the task
-2. Wait until the file processor and the transformer step function are complete. They are run at 3AM and 4AM, respectively.
-3. If all run as expected, you should see your data in the curated bucket.
-
-***
+| Module | Purpose |
+|--------|---------|
+| `@aws-mdaa/roles` | IAM roles for data lake and dataops personas |
+| `@aws-mdaa/datalake` | KMS keys, S3 buckets, and bucket policies |
+| `@aws-mdaa/lakeformation-settings` | Lake Formation settings (account-level) |
+| `@aws-mdaa/athena-workgroup` | Athena workgroup for querying |
+| `@aws-mdaa/audit` | S3 audit bucket for CloudTrail |
+| `@aws-mdaa/audit-trail` | CloudTrail audit trail |
+| `@aws-mdaa/glue-catalog` | Glue Catalog KMS encryption (account-level) |
+| `@aws-mdaa/dataops-project` | Glue databases with access control |
+| `@aws-mdaa/dataops-dynamodb` | DynamoDB tables for pipeline state |
+| `@aws-mdaa/dataops-job` | Glue ETL jobs |
+| `@aws-mdaa/dataops-lambda` | Lambda functions (file manager, batch generator) |
+| `@aws-mdaa/dataops-stepfunction` | Step Functions workflows |
+| `@aws-mdaa/dataops-dms` | DMS replication instances and tasks |
 
 ## Troubleshooting
 
 ### Common Issues
 
 1. **Invalid ReplicationInstance class error during DMS deployment**:
-   - Error: `Invalid ReplicationInstance class (Service: AWSDatabaseMigrationService; Status Code: 400; Error Code: InvalidParameterValueException)`
-   - Cause: The DMS instance class specified in `dataops/dms.yaml` is not available in your target region. Instance availability varies by region.
-   - Solution: Check available instance classes in your region:
-     ```bash
-     aws dms describe-orderable-replication-instances \
-       --region <your-region> \
-       --no-paginate \
-       --query "OrderableReplicationInstances[].ReplicationInstanceClass" \
-       --output text | tr '\t' '\n' | sort -u
-     ```
-   - Update the `instanceClass` in `dataops/dms.yaml` to an available type. `dms.c5.large` is widely available across regions.
+   - The DMS instance class may not be available in your region
+   - Check available classes: `aws dms describe-orderable-replication-instances --region <region> --query "OrderableReplicationInstances[].ReplicationInstanceClass" --output text`
+   - Update `instanceClass` in [`dataops/dms.yaml`](dataops/dms.yaml) (`dms.c5.large` is widely available)
 
 2. **DMS source endpoint connection failure**:
-   - Verify the source database allows connections from the DMS replication instance VPC/subnets
-   - Check that the Secrets Manager secret ARN and KMS key ARN in `mdaa.yaml` context are correct
-   - Ensure the DMS role has permissions to access the secret and decrypt with the KMS key
+   - Verify the source database allows connections from the DMS VPC/subnets
+   - Check that the Secrets Manager secret ARN and KMS key ARN are correct
+   - Ensure the DMS role has permissions to access the secret
 
 3. **Step function execution failures**:
    - Check CloudWatch logs for the specific Lambda or Glue job that failed
-   - Verify DynamoDB tables are populated with required configuration (see `dataops/scripts/`)
-   - Ensure IAM roles have necessary permissions for all resources
+   - Verify DynamoDB tables are populated (see `dataops/scripts/`)
+   - Ensure IAM roles have necessary permissions

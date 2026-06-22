@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../schemas/@aws-mdaa/cli.json
 # MDAA Root Configuration
 #
 # This file orchestrates the deployment of a multi-account SageMaker Unified Studio
@@ -25,60 +26,71 @@
 
 # Pre-deployment Steps:
 # 1. Address all TODOs below to set appropriate context values
-# 2. Address TODOs to review/uncomment suppressions in ./common/roles.yaml
+# 2. Review and address all commented suppression TODOs in ./common/roles.yaml prior to deployment
 
 # All resources will be deployed to the default region specified in the environment or AWS configurations.
 # Can optional specify a specific AWS Region Name.
 region: default
 
 ## Pre-Deployment Instructions
-# TODO: Set an appropriate, unique organization name
 # Failure to do so may result in global naming conflicts for S3 buckets and other global resources.
+# TODO: Set a globally unique organization name (used in S3 bucket names and resource prefixes)
 organization: <YOUR_ORG_NAME>
 
 # Context values set here can be referenced throughout module configs using {{context:key}} syntax
 context:
-  # TODO: Configure account numbers for enterprise and team accounts
   # Note that these accounts should be:
   # - Members of an AWS Organization
   # - Have AWS Organizations RAM sharing with automated associations enabled
   #   (required for cross-account resource sharing)
+  # TODO: Set the enterprise AWS account ID
   enterprise_account: '<YOUR_ACCOUNT_ID>'
+  # TODO: Set the team1 AWS account ID
   team1_account: '<YOUR_ACCOUNT_ID_2>'
+  # TODO: Set the team2 AWS account ID
   team2_account: '<YOUR_ACCOUNT_ID_3>'
 
-  # TODO: Configure to match SSO group IDs for your teams
   # Note that IAM Identity Center (IAM IDC) should be:
   # - Enabled in the same region targeted for MDAA deployment
   # - Have these groups created (or create them in IAM IDC)
   # - Group IDs can be found in IAM Identity Center console
+  # TODO: Set the admin user SSO ID
   admin1_user_sso_id: '<YOUR_ADMIN_USER_SSO_ID>'
+  # TODO: Set the enterprise SSO group ID
   enterprise_group_sso_id: '<YOUR_ENTERPRISE_GROUP_SSO_ID>'
+  # TODO: Set the team1 SSO group ID
   team1_group_sso_id: '<YOUR_TEAM1_GROUP_SSO_ID>'
+  # TODO: Set the team2 SSO group ID
   team2_group_sso_id: '<YOUR_TEAM2_GROUP_SSO_ID>'
 
-  # TODO: Configure to match networking for your enterprise/main account
   # where the SageMaker domain and enterprise projects will be deployed.
   # Note that configured subnets should have access to AWS Service endpoints
   # via public routing or via VPC Endpoints (recommended for production).
+  # TODO: Set the enterprise account VPC ID
   enterprise_vpc_id: '<YOUR_ENTERPRISE_VPC_ID>'
+  # TODO: Set enterprise private subnet ID 1
   enterprise_private_subnet_id1: '<YOUR_ENTERPRISE_PRIVATE_SUBNET_ID_1>'
+  # TODO: Set enterprise private subnet ID 2
   enterprise_private_subnet_id2: '<YOUR_ENTERPRISE_PRIVATE_SUBNET_ID_2>'
 
-  # TODO: Configure to match networking for your team1 account
   # where team1 projects will be deployed.
   # Note that configured subnets should have access to AWS Service endpoints
   # via public routing or via VPC Endpoints.
+  # TODO: Set the team1 account VPC ID
   team1_vpc_id: '<YOUR_TEAM1_VPC_ID>'
+  # TODO: Set team1 private subnet ID 1
   team1_private_subnet_id1: '<YOUR_TEAM1_PRIVATE_SUBNET_ID_1>'
+  # TODO: Set team1 private subnet ID 2
   team1_private_subnet_id2: '<YOUR_TEAM1_PRIVATE_SUBNET_ID_2>'
 
-  # TODO: Configure to match networking for your team2 account
   # where team2 projects will be deployed.
   # Note that configured subnets should have access to AWS Service endpoints
   # via public routing or via VPC Endpoints.
+  # TODO: Set the team2 account VPC ID
   team2_vpc_id: '<YOUR_TEAM2_VPC_ID>'
+  # TODO: Set team2 private subnet ID 1
   team2_private_subnet_id1: '<YOUR_TEAM2_PRIVATE_SUBNET_ID_1>'
+  # TODO: Set team2 private subnet ID 2
   team2_private_subnet_id2: '<YOUR_TEAM2_PRIVATE_SUBNET_ID_2>'
 
 # Forces modules to deploy in the order they are listed in the config. This is important to ensure
@@ -182,8 +194,8 @@ domains:
           # Deploys a basic three-zone data lake for the enterprise
           # Zones: raw (landing), transformed (processed), curated (business-ready)
           lake:
-            cdk_app: '@aws-caef/datalake'
-            app_configs:
+            module_path: '@aws-mdaa/datalake'
+            module_configs:
               - ./enterprise/datalake.yaml
 
           # Deploys a data operations project for enterprise data pipelines

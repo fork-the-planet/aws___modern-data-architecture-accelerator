@@ -27,7 +27,7 @@ log_warn() {
 # Check arguments
 if [ $# -lt 2 ]; then
     log_error "Usage: $0 <org> <region>"
-    log_error "Example: $0 basic-datalake-eu-north-1-471341001955 eu-north-1"
+    log_error "Example: $0 my-org us-east-1"
     exit 1
 fi
 

@@ -35,9 +35,7 @@ dist_dir="$source_template_dir/open-source"
 source_dir="$source_template_dir/../packages"
 github_dir="$source_template_dir/../.github"
 deployment_dir="$source_template_dir/../deployment"
-sample_configs_dir="$source_template_dir/../sample_configs"
-sample_code_dir="$source_template_dir/../sample_code"
-sample_blueprints_dir="$source_template_dir/../sample_blueprints"
+sample_customizations_dir="$source_template_dir/../sample_customizations"
 
 echo "------------------------------------------------------------------------------"
 echo "[Init] Remove any old dist files from previous runs"
@@ -77,17 +75,11 @@ echo "cp $deployment_dir/build-s3-dist.sh $dist_dir/deployment/"
 cp $deployment_dir/build-s3-dist.sh $dist_dir/deployment/
 
 echo "------------------------------------------------------------------------------"
-echo "[Packing] Reference folder"
+echo "[Packing] Sample customizations"
 echo "------------------------------------------------------------------------------"
 
-echo "cp -r $sample_configs_dir $dist_dir/sample_configs"
-cp -r $sample_configs_dir $dist_dir/sample_configs
-
-echo "cp -r $sample_code_dir $dist_dir/sample_code"
-cp -r $sample_code_dir $dist_dir/sample_code
-
-echo "cp -r $sample_blueprints_dir $dist_dir/sample_blueprints"
-cp -r $sample_blueprints_dir $dist_dir/sample_blueprints
+echo "cp -r $sample_customizations_dir $dist_dir/sample_customizations"
+cp -r $sample_customizations_dir $dist_dir/sample_customizations
 
 echo "------------------------------------------------------------------------------"
 echo "[Packing] Files from the root level of the project"
@@ -110,9 +102,6 @@ cp $source_template_dir/../CONTRIBUTING.md $dist_dir
 
 echo "cp $source_template_dir/../CHANGELOG.md $dist_dir"
 cp $source_template_dir/../CHANGELOG.md $dist_dir
-
-echo "cp $source_template_dir/../FAQ.md $dist_dir"
-cp $source_template_dir/../FAQ.md $dist_dir
 
 echo "cp $source_template_dir/../SECURITY.md $dist_dir"
 cp $source_template_dir/../SECURITY.md $dist_dir

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/datalake.json
 # Enterprise Data Lake Configuration
 #
 # Three-zone data lake architecture (raw/transformed/curated) with S3 bucket policies
@@ -72,8 +73,14 @@ buckets:
   transformed:
     # Register the data/ prefix with Lake Formation for governance
     # This enables fine-grained access control at the table/column level
+    # Register S3 prefixes with Lake Formation for fine-grained access control.
+    # Each key is a logical name for the location registration.
     lakeFormationLocations:
+      # Logical name for this Lake Formation location. Used as an identifier
+      # when referencing this location in Lake Formation permissions.
       all-data:
+        # S3 prefix to register. Lake Formation will govern access to all objects
+        # under this prefix, enabling table/column-level permissions.
         prefix: data
     
     accessPolicies:
@@ -84,10 +91,12 @@ buckets:
   # A 'curated' bucket/zone for business-ready data products
   # Data here is optimized for analytics and ready for consumption
   curated:
-    # Register the data/ prefix with Lake Formation for governance
-    # This enables cross-account sharing and fine-grained access control
+    # Register S3 prefixes with Lake Formation for fine-grained access control.
+    # Enables cross-account sharing and table/column-level permissions.
     lakeFormationLocations:
+      # Logical name for this Lake Formation location.
       all-data:
+        # S3 prefix to register with Lake Formation governance.
         prefix: data
     
     accessPolicies:

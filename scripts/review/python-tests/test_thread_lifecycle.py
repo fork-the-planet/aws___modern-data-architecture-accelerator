@@ -94,7 +94,7 @@ class TestPostDetailThreads:
     @patch("review.lib.thread_lifecycle.add_note_to_discussion")
     @patch("review.lib.thread_lifecycle.edit_note")
     def test_updates_changed_thread(self, mock_edit, mock_add_note, mock_resolve):
-        # Thread is currently unresolved — drift should update body and post reopen note
+        # Thread is currently unresolved — drift should update body only (no reopen note)
         discussions = [{"id": "d1", "notes": [{
             "id": "n1",
             "body": "<!-- test-pkg:pkg-a -->\n<!-- test-hash:oldhash -->\nOld",
@@ -108,12 +108,9 @@ class TestPostDetailThreads:
         )
         assert keys == {"pkg-a"}
         mock_edit.assert_called_once()
-        mock_add_note.assert_called_once()
-        call_args = mock_add_note.call_args[0]
-        assert call_args[0:4] == ("1", "10", "d1", "tok")
-        assert "Findings have changed since last review" in call_args[4]
-        assert "Thread reopened" in call_args[4]
-        mock_resolve.assert_called_once_with("1", "10", "d1", "tok", resolved=False)
+        # No "reopened" reply or unresolve call — thread was already unresolved
+        mock_add_note.assert_not_called()
+        mock_resolve.assert_not_called()
 
     @patch("review.lib.thread_lifecycle.resolve_discussion")
     @patch("review.lib.thread_lifecycle.add_note_to_discussion")

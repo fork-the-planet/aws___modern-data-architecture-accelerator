@@ -70,7 +70,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] These actions do not accept a resource or resource name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] s3:ListAllMyBuckets, s3:GetAccountPublicAccessBlock, and s3:ListAccessPoints are account-level actions that do not support resource-level permissions.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -98,7 +98,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] These actions do not accept a resource or resource name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] s3:ListAllMyBuckets, s3:GetAccountPublicAccessBlock, and s3:ListAccessPoints are account-level actions that do not support resource-level permissions.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -146,7 +146,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] These actions do not accept a resource or resource name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] s3:ListAllMyBuckets, s3:GetAccountPublicAccessBlock, and s3:ListAccessPoints are account-level actions that do not support resource-level permissions.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -199,7 +199,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] DynamoDB table operations require wildcard in resource as full table names (SMUS Project and Env Ids) are not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] DynamoDB table ARN wildcard required because full table names include SMUS Project and Environment IDs that are generated dynamically and not known at policy authoring time.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -227,7 +227,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] DynamoDB table operations require wildcard in resource as full table names (SMUS Project and Env Ids) are not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] DynamoDB table ARN wildcard required because full table names include SMUS Project and Environment IDs that are generated dynamically and not known at policy authoring time.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -275,7 +275,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] DynamoDB table operations require wildcard in resource as full table names (SMUS Project and Env Ids) are not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] DynamoDB table ARN wildcard required because full table names include SMUS Project and Environment IDs that are generated dynamically and not known at policy authoring time.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -329,7 +329,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] AWSGlueServiceRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] AWSGlueServiceRole is required for Glue ETL jobs to access S3, CloudWatch Logs, and EC2 networking for job execution. See https://docs.aws.amazon.com/glue/latest/dg/create-an-iam-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -360,7 +360,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] AWSGlueServiceRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] AWSGlueServiceRole is required for Glue ETL jobs to access S3, CloudWatch Logs, and EC2 networking for job execution. See https://docs.aws.amazon.com/glue/latest/dg/create-an-iam-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -391,7 +391,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] AWSGlueServiceRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] AWSGlueServiceRole is required for Glue ETL jobs to access S3, CloudWatch Logs, and EC2 networking for job execution. See https://docs.aws.amazon.com/glue/latest/dg/create-an-iam-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -419,7 +419,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] AWSGlueServiceRole approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] AWSGlueServiceRole is required for Glue ETL jobs to access S3, CloudWatch Logs, and EC2 networking for job execution. See https://docs.aws.amazon.com/glue/latest/dg/create-an-iam-role.html",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -522,7 +522,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] AWSGlueConsoleFullAccess, AmazonDataZoneFullAccess, AWSLakeFormationDataAdmin, AWSLakeFormationCrossAccountManager approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] Data-admin role requires AmazonDataZoneFullAccess for domain management, AWSGlueConsoleFullAccess for catalog administration, AWSLakeFormationDataAdmin for permission grants, and AWSLakeFormationCrossAccountManager for cross-account data sharing.",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -553,7 +553,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] AWSGlueConsoleFullAccess, AmazonDataZoneFullAccess, AWSLakeFormationDataAdmin, AWSLakeFormationCrossAccountManager approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] Data-admin role requires AmazonDataZoneFullAccess for domain management, AWSGlueConsoleFullAccess for catalog administration, AWSLakeFormationDataAdmin for permission grants, and AWSLakeFormationCrossAccountManager for cross-account data sharing.",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -584,7 +584,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] AWSGlueConsoleFullAccess, AmazonDataZoneFullAccess, AWSLakeFormationDataAdmin, AWSLakeFormationCrossAccountManager approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] Data-admin role requires AmazonDataZoneFullAccess for domain management, AWSGlueConsoleFullAccess for catalog administration, AWSLakeFormationDataAdmin for permission grants, and AWSLakeFormationCrossAccountManager for cross-account data sharing.",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -612,7 +612,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] AWSGlueConsoleFullAccess, AmazonDataZoneFullAccess, AWSLakeFormationDataAdmin, AWSLakeFormationCrossAccountManager approved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] Data-admin role requires AmazonDataZoneFullAccess for domain management, AWSGlueConsoleFullAccess for catalog administration, AWSLakeFormationDataAdmin for permission grants, and AWSLakeFormationCrossAccountManager for cross-account data sharing.",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -712,7 +712,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] AWSGlueConsoleFullAccess, AmazonDataZoneFullUserAccessapproved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] Data-engineer role requires AWSGlueConsoleFullAccess for building and managing ETL pipelines, crawlers, and data catalogs.",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -743,7 +743,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] AWSGlueConsoleFullAccess, AmazonDataZoneFullUserAccessapproved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] Data-engineer role requires AWSGlueConsoleFullAccess for building and managing ETL pipelines, crawlers, and data catalogs.",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -774,7 +774,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] AWSGlueConsoleFullAccess, AmazonDataZoneFullUserAccessapproved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] Data-engineer role requires AWSGlueConsoleFullAccess for building and managing ETL pipelines, crawlers, and data catalogs.",
               "id": "AwsSolutions-IAM4"
             }
           ]
@@ -802,7 +802,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] AWSGlueConsoleFullAccess, AmazonDataZoneFullUserAccessapproved for usage",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_data_mesh/common/roles.yaml\"] Data-engineer role requires AWSGlueConsoleFullAccess for building and managing ETL pipelines, crawlers, and data catalogs.",
               "id": "AwsSolutions-IAM4"
             }
           ]

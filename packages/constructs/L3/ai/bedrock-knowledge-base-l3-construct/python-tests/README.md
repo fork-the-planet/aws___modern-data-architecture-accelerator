@@ -39,7 +39,7 @@ uv run pytest test_cfnresponse.py
 ### Run from Project Root
 
 ```bash
-# From the CAEF project root
+# From the MDAA project root
 ./scripts/test.sh
 ```
 

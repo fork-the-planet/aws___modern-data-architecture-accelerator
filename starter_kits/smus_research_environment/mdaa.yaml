@@ -1,20 +1,25 @@
+# yaml-language-server: $schema=../../schemas/@aws-mdaa/cli.json
 # All resources will be deployed to the default region specified in the environment or AWS configurations.
 # Can optional specify a specific AWS Region Name.
 region: default
 
 ## Pre-Deployment Instructions
 # 1. Address all TODOs below to set appropriate context values
-# 2. Address TODOs to review/uncomment suppressions in ./shared/roles.yaml
+# 2. Review and address all commented suppression TODOs in ./shared/roles.yaml prior to deployment
 
-# TODO: Set an appropriate, unique organization name
 # Failure to do so may result in global naming conflicts.
+# TODO: Set a globally unique organization name (used in S3 bucket names and resource prefixes)
 organization: <YOUR_ORG_NAME>
-# TODO: Set appropriate context values
 context:
+  # TODO: Set the IAM Identity Center group ID for team1
   team1-group-sso-id: <YOUR_TEAM1_SSO_GROUP_ID>
+  # TODO: Set the IAM Identity Center group ID for team2
   team2-group-sso-id: <YOUR_TEAM2_SSO_GROUP_ID>
+  # TODO: Set your VPC ID
   vpc_id: <YOUR_VPC_ID>
+  # TODO: Set private subnet ID 1
   private_subnet_id1: <YOUR_SUBNET_ID_1>
+  # TODO: Set private subnet ID 2
   private_subnet_id2: <YOUR_SUBNET_ID_2>
 
 # This configuration deploys SageMaker Unified Studio (SMUS) domains using DataZone V2

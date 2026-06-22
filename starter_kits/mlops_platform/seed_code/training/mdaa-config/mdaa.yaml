@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=../../../../../schemas/@aws-mdaa/cli.json
+organization: "{{env_var:MDAA_ORG}}"
+
+domains:
+  mlops:
+    environments:
+      dev:
+        account: default
+        modules:
+          pipeline:
+            module_path: "@aws-mdaa/sagemaker-pipeline"
+            module_configs:
+              - ./pipeline.yaml

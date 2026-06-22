@@ -1,5 +1,10 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/roles.json
 generatePolicies:
   data-admin:
+    # TODO: Review the below policyDocument permissions and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM5"
+    #     reason: "s3:ListAllMyBuckets, kms:ListAliases, sagemaker:ListDomains, and datazone:ListDomains are account-level actions that do not support resource-level permissions."
     policyDocument:
       Statement:
         - Sid: BasicS3Access
@@ -33,12 +38,11 @@ generatePolicies:
             - datazone:PutEnvironmentBlueprintConfiguration
           Resource: '*'
 
-    # TODO: Review and uncomment below suppression(s).
+  domain-admin:
+    # TODO: Review the below policyDocument permissions and suppression. Uncomment the suppression prior to deployment.
     # suppressions:
     #   - id: "AwsSolutions-IAM5"
-    #     reason: "These actions do not accept a resource or resource name not known at deployment time."
-
-  domain-admin:
+    #     reason: "DataZone/SageMaker domain management APIs do not support resource-level permissions. iam:PassRole is scoped to SMUS domain roles with iam:PassedToService condition."
     policyDocument:
       Statement:
         # SageMaker Unified Studio domain management permissions
@@ -97,11 +101,6 @@ generatePolicies:
           Condition:
             StringEquals:
               iam:PassedToService: datazone.amazonaws.com
-
-    # TODO: Review and uncomment below suppression(s).
-    # suppressions:
-    #   - id: "AwsSolutions-IAM5"
-    #     reason: "DataZone/SageMaker domain management APIs do not support resource-level permissions. iam:PassRole is scoped to SMUS domain roles with iam:PassedToService condition."
 
 # The list of roles which will be generated
 generateRoles:

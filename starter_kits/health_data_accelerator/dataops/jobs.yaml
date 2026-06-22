@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/dataops-job.json
 # The name of the dataops project this crawler will be created within.
 # The dataops project name is the MDAA module name for the project.
 projectName: hda-project
@@ -19,9 +20,9 @@ templates:
       --enable-glue-catalog: "True"
       --datalake-formats: "iceberg"
       --input_params:
-        raw_bucket_name: ssm:/{{org}}/shared/datalake/bucket/raw/name
+        raw_bucket_name: ssm-org:/shared/datalake/bucket/raw/name
         raw_catalog_name: project:databaseName/raw_db
-        curated_bucket_name: ssm:/{{org}}/shared/datalake/bucket/curated/name
+        curated_bucket_name: ssm-org:/shared/datalake/bucket/curated/name
         curated_catalog_name: project:databaseName/curated_db
     # (optional) maximum concurrent runs.  See: https://docs.aws.amazon.com/glue/latest/dg/aws-glue-api-jobs-job.html#aws-glue-api-jobs-job-ExecutionProperty
     executionProperty:
@@ -53,19 +54,19 @@ jobs:
       scriptLocation: ./src/glue/file_processor/odpf_file_processor.py
       name: glueetl
     allocatedCapacity: 2
-    executionRoleArn: ssm:/{{org}}/shared/generated-role/file-processor-glue-job-role/arn
+    executionRoleArn: ssm-org:/shared/generated-role/file-processor-glue-job-role/arn
     description: Job for transforming staging data into data in raw bucket
   vitals-transformation-glue-job:
     template: "hda-glue-template" # Reference a job template.
     command:
       scriptLocation: ./src/glue/transformation/vitals_transformation_job.py
       name: glueetl
-    executionRoleArn: ssm:/{{org}}/shared/generated-role/transformation-glue-job-role/arn
+    executionRoleArn: ssm-org:/shared/generated-role/transformation-glue-job-role/arn
     description: Job for transforming raw data to vitals tables in curated bucket
   surveys-transformation-glue-job:
     template: "hda-glue-template" # Reference a job template.
     command:
       scriptLocation: ./src/glue/transformation/surveys_transformation_job.py
       name: glueetl
-    executionRoleArn: ssm:/{{org}}/shared/generated-role/transformation-glue-job-role/arn
+    executionRoleArn: ssm-org:/shared/generated-role/transformation-glue-job-role/arn
     description: Job for transforming raw data to survey tables in curated bucket

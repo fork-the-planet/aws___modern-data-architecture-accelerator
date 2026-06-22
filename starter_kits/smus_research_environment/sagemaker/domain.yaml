@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/sagemaker.json
 # SageMaker Unified Studio (SMUS) Domain Configuration
 # This configuration creates DataZone V2 domains for SageMaker Unified Studio
 
@@ -12,7 +13,7 @@ domains:
     userAssignment: MANUAL
 
     # Data admin role for the domain - reference role from roles module
-    # This role will be provided access to
+    # This role will be granted administrator access to the SageMaker Unified Studio domain
     dataAdminRole:
       id: ssm-org:/shared/generated-role/data-admin/id
 

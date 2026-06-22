@@ -1625,7 +1625,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_research_environment/shared/roles.yaml\"] These actions do not accept a resource or resource name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_research_environment/shared/roles.yaml\"] s3:ListAllMyBuckets, kms:ListAliases, sagemaker:ListDomains, and datazone:ListDomains are account-level actions that do not support resource-level permissions.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -1653,7 +1653,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_research_environment/shared/roles.yaml\"] These actions do not accept a resource or resource name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_research_environment/shared/roles.yaml\"] s3:ListAllMyBuckets, kms:ListAliases, sagemaker:ListDomains, and datazone:ListDomains are account-level actions that do not support resource-level permissions.",
               "id": "AwsSolutions-IAM5"
             }
           ]
@@ -1701,7 +1701,7 @@
         "cdk_nag": {
           "rules_to_suppress": [
             {
-              "reason": "[CONFIG:\"/TEMP_DIR/smus_research_environment/shared/roles.yaml\"] These actions do not accept a resource or resource name not known at deployment time.",
+              "reason": "[CONFIG:\"/TEMP_DIR/smus_research_environment/shared/roles.yaml\"] s3:ListAllMyBuckets, kms:ListAliases, sagemaker:ListDomains, and datazone:ListDomains are account-level actions that do not support resource-level permissions.",
               "id": "AwsSolutions-IAM5"
             }
           ]

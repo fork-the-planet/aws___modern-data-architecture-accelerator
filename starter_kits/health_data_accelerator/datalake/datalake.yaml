@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/datalake.json
 # A list of Logical Config Roles which can be referenced in Access Policies. Each Logical Config Role can have one or more IAM role Arns bound to it.
 roles:
   DataAdminRole:

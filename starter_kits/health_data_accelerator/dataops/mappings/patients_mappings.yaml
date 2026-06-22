@@ -1,32 +1,48 @@
-# Name of the DataOps Project 
+# yaml-language-server: $schema=../../../../schemas/@aws-mdaa/dataops-dms.json
+# Name of the DataOps Project this DMS task belongs to
 projectName: hda-project
 
+# DMS (Database Migration Service) configuration for replicating patient data
 dms:
+  # Defines one or more replication tasks that move data from source to target
   replicationTasks:
     test-task:
+      # Table mappings control which tables are replicated and how they are transformed.
+      # See: https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Tasks.CustomizingTasks.TableMapping.html
       tableMappings:
+        # Rules are evaluated in order. Selection rules pick which tables to replicate,
+        # and transformation rules modify schema/table/column names or add computed columns.
         rules: [
           {
+            # "selection" rules define which source tables to include or exclude from replication
             "rule-type": "selection",
+            # Unique numeric identifier for this rule within the task
             "rule-id": "1",
+            # Human-readable name for this rule (for logging and debugging)
             "rule-name": "patients",
+            # Identifies the source schema and table to act on. Use "%" as wildcard.
             "object-locator": {
               "schema-name": "hda",
               "table-name": "patients"
             },
+            # "include" to replicate matching tables, "exclude" to skip them
             "rule-action": "include"
           },
           {
+            # "transformation" rules modify data during replication (rename, add columns, convert case, etc.)
             "rule-type": "transformation",
             "rule-id": "2",
             "rule-name": "cdc timestamp seq",
+            # Target of the transformation: "column", "table", "schema", or "table-tablespace"
             "rule-target": "column",
             "object-locator": {
               "schema-name": "%",
               "table-name": "%"
             },
+            # "add-column" appends a new computed column to every replicated row
             "rule-action": "add-column",
             "value": "CDC_TIMESTAMP_SEQ",
+            # $AR_H_TIMESTAMP is a DMS header variable containing the change timestamp
             "expression": "$AR_H_TIMESTAMP",
             "data-type": {
               "type": "datetime",
@@ -44,6 +60,7 @@ dms:
             },
             "rule-action": "add-column",
             "value": "CDC_OPERATION",
+            # $AR_H_OPERATION is a DMS header variable containing the CDC operation type (INSERT, UPDATE, DELETE)
             "expression": "$AR_H_OPERATION",
             "data-type": {
               "type": "string",
@@ -54,6 +71,7 @@ dms:
             "rule-type": "transformation",
             "rule-id": "4",
             "rule-name": "convert column names to uppercase",
+            # "convert-uppercase" normalizes column names for consistent downstream processing
             "rule-action": "convert-uppercase",
             "rule-target": "column",
             "object-locator": {

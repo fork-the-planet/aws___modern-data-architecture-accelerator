@@ -4,13 +4,7 @@
 
 Predeployment prepares your AWS accounts for MDAA (Modern Data Architecture Accelerator) deployment by bootstrapping the AWS CDK (Cloud Development Kit) toolkit stack into each target account and region. This step is required before any MDAA modules can be deployed and only needs to be performed once per account/region combination.
 
-You should complete predeployment if:
-
-- You are deploying MDAA for the first time in an AWS account
-- You are deploying to a new region within an existing account
-- You are adding a new target account in a multi-account setup
-
-![MDAA Pre-Deployment](docs/MDAA-Predeployment.png)
+You should complete predeployment only if your accounts have not already been CDK bootstrapped.
 
 ---
 

@@ -386,11 +386,16 @@ def post_detail_threads(
             edit_note(project_id, mr_iid, discussion_id, first_note_id, token, body)
         else:
             add_note_to_discussion(project_id, mr_iid, discussion_id, token, body)
-        add_note_to_discussion(
-            project_id, mr_iid, discussion_id, token,
-            f"_Findings have changed since last review. Thread reopened for re-acknowledgment._ {_action_context()}",
-        )
-        resolve_discussion(project_id, mr_iid, discussion_id, token, resolved=False)
+
+        if is_currently_resolved:
+            # Thread was resolved (either auto-resolved or human-resolved that we
+            # already handled above — this path is only reached for auto-resolved).
+            # Unresolve and notify.
+            add_note_to_discussion(
+                project_id, mr_iid, discussion_id, token,
+                f"_Findings have changed since last review. Thread reopened for re-acknowledgment._ {_action_context()}",
+            )
+            resolve_discussion(project_id, mr_iid, discussion_id, token, resolved=False)
 
     return processed_keys
 

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/dataops-dms.json
 # Name of the DataOps Project 
 projectName: hda-project
 
