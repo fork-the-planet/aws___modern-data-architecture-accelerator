@@ -75,6 +75,47 @@ export class CommonDomainHelper {
   }
 
   /**
+   * Serializes `AWS::DataZone::Owner` creation to avoid a DataZone service race.
+   * `AddEntityOwner` mutates the target domain unit's ownership record inside a
+   * conditional DynamoDB transaction, so two owners created concurrently against
+   * the *same* domain unit collide — surfaced as
+   * `Transaction cancelled ... ConditionalCheckFailed ... AlreadyExists`.
+   *
+   * Owners are therefore grouped by their target entity (domain unit) and chained
+   * with linear CFN `DependsOn` *within each group only*. Owners on different
+   * domain units never contend, so they are left to deploy in parallel.
+   *
+   * Within a group the chain order is derived from each owner's construct id
+   * (a name, e.g. `owner-user-data-user2`), not its position in the config list.
+   * This keeps the synthesized chain stable when the config's owner list is
+   * reordered (zero template diff) and localizes the diff when an owner is
+   * added or removed.
+   */
+  public static chainOwnersSequentially(owners: CfnOwner[]): void {
+    // Group by the target domain unit. entityIdentifier is a CFN token whose
+    // string form is stable per source attribute, so two owners on the same
+    // domain unit share a key.
+    const groups = new Map<string, CfnOwner[]>();
+    for (const owner of owners) {
+      const key = owner.entityIdentifier;
+      const group = groups.get(key);
+      if (group) {
+        group.push(owner);
+      } else {
+        groups.set(key, [owner]);
+      }
+    }
+
+    for (const group of groups.values()) {
+      // Stable, name-derived ordering so reordering the config is a no-op.
+      group.sort((a, b) => a.node.id.localeCompare(b.node.id));
+      for (let i = 1; i < group.length; i++) {
+        group[i].addDependency(group[i - 1]);
+      }
+    }
+  }
+
+  /**
    * Builds the version-appropriate project creation policy
    * (CREATE_PROJECT for V1, CREATE_PROJECT_FROM_PROJECT_PROFILE for V2)
    * with includeChildDomainUnits enabled.
@@ -276,6 +317,7 @@ export class CommonDomainHelper {
     domainProps: BaseDomainProps,
     domain: CfnDomain,
     domainVersion: 'V1' | 'V2',
+    ownersCollector?: CfnOwner[],
   ): ProfileManagementConstruct {
     // Map users to their identifiers (IAM role ARN or SSO ID)
     const users = Object.fromEntries(
@@ -327,7 +369,8 @@ export class CommonDomainHelper {
           },
         },
       };
-      new CfnOwner(domain, `owner-user-${ownerName}`, cfnOwnerProps);
+      const ownerUserCfn = new CfnOwner(domain, `owner-user-${ownerName}`, cfnOwnerProps);
+      ownersCollector?.push(ownerUserCfn);
       const userPrincipal: PolicyPrincipal = { userIdentifier: { name: ownerName, identifier: ownerUser.attrId } };
       this.createAuthorizationPolicies(
         `owner-auths-${ownerName}`,
@@ -355,7 +398,8 @@ export class CommonDomainHelper {
           },
         },
       };
-      new CfnOwner(domain, `owner-group-${ownerName}`, cfnOwnerProps);
+      const ownerGroupCfn = new CfnOwner(domain, `owner-group-${ownerName}`, cfnOwnerProps);
+      ownersCollector?.push(ownerGroupCfn);
       const groupPrincipal: PolicyPrincipal = { groupIdentifier: { name: ownerName, identifier: ownerGroup.attrId } };
       this.createAuthorizationPolicies(
         `owner-auths-${ownerName}`,
@@ -709,6 +753,7 @@ export class CommonDomainHelper {
     domainProps: DataZoneDomainProps,
     domain: CfnDomain,
     domainVersion: 'V1' | 'V2',
+    ownersCollector?: CfnOwner[],
   ): { [name: string]: CfnUserProfile } {
     if (domainProps.associatedAccounts) {
       // Select RAM permission ARN based on domain version
@@ -775,7 +820,8 @@ export class CommonDomainHelper {
             },
           },
         };
-        new CfnOwner(domain, `owner-cdk-user-${ownerName}`, cfnOwnerProps);
+        const ownerCdkUserCfn = new CfnOwner(domain, `owner-cdk-user-${ownerName}`, cfnOwnerProps);
+        ownersCollector?.push(ownerCdkUserCfn);
         const accountPrincipal: PolicyPrincipal = {
           userIdentifier: { name: ownerName, identifier: ownerUser.attrId },
         };
@@ -1160,11 +1206,23 @@ export class CommonDomainHelper {
     domainProps: BaseDomainProps,
     domain: CfnDomain,
     domainVersion: 'V1' | 'V2',
-    dataAdminUserProfile: CfnUserProfile,
-    associatedAccountCdkUserProfiles: { [name: string]: CfnUserProfile },
+    governanceContext: {
+      dataAdminUserProfile: CfnUserProfile;
+      associatedAccountCdkUserProfiles: { [name: string]: CfnUserProfile };
+      ownersCollector?: CfnOwner[];
+    },
   ) {
+    const { dataAdminUserProfile, associatedAccountCdkUserProfiles, ownersCollector } = governanceContext;
+
     // Create user and group profiles with ownership
-    const profileManagement = this.createDomainUsersGroupsOwners(scope, domainName, domainProps, domain, domainVersion);
+    const profileManagement = this.createDomainUsersGroupsOwners(
+      scope,
+      domainName,
+      domainProps,
+      domain,
+      domainVersion,
+      ownersCollector,
+    );
 
     // Build cfn-exec role principal — the service auto-creates this user profile,
     // but it has no authorization policies by default
@@ -1215,6 +1273,7 @@ export class CommonDomainHelper {
         associatedAccountCdkUserProfiles: associatedAccountCdkUserProfiles || {},
       },
       domainProps.domainUnits,
+      ownersCollector,
     );
 
     // Apply authorization policies if any are defined

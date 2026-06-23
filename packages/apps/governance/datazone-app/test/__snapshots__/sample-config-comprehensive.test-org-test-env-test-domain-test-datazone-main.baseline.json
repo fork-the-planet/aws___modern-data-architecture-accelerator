@@ -699,7 +699,10 @@
             }
           }
         }
-      }
+      },
+      "DependsOn": [
+        "datazonetestdomaindomainownergrouptestssogroup10759A270"
+      ]
     },
     "datazonetestdomaindomaindomainbucket6FF3AD26": {
       "Type": "AWS::S3::Bucket",
@@ -1141,7 +1144,10 @@
             }
           }
         }
-      }
+      },
+      "DependsOn": [
+        "datazonetestdomaindomainowneruserdataadmin18C198D0"
+      ]
     },
     "datazonetestdomaindomainownerauthsssousernamepolicygrantprojectmembershipssousername6D862CE7": {
       "Type": "AWS::DataZone::PolicyGrant",
@@ -1247,7 +1253,10 @@
             }
           }
         }
-      }
+      },
+      "DependsOn": [
+        "datazonetestdomaindomainownercdkuserassociatedaccountname1975E41B0"
+      ]
     },
     "datazonetestdomaindomainownerauthstestssogroup1policygrantprojectmembershiptestssogroup146AEA5F7": {
       "Type": "AWS::DataZone::PolicyGrant",
@@ -2796,7 +2805,10 @@
             }
           }
         }
-      }
+      },
+      "DependsOn": [
+        "datazonetestdomaindomaindomainunittestunit1owneraccountassociatedaccountname26BFBE861"
+      ]
     },
     "datazonetestdomaindomaindomainunittestunit1owneraccountassociatedaccountname26BFBE861": {
       "Type": "AWS::DataZone::Owner",
@@ -2852,7 +2864,10 @@
             }
           }
         }
-      }
+      },
+      "DependsOn": [
+        "datazonetestdomaindomaindomainunittestunit1owneruserdataadmin811C539C"
+      ]
     },
     "datazonetestdomaindomaindomainunittestunit1parentdomainunittestunit2authorizationpoliciespolicygrantownergrouptestssogroup2projectmembershiptestssogroup21994179F": {
       "Type": "AWS::DataZone::PolicyGrant",
@@ -3147,7 +3162,10 @@
             }
           }
         }
-      }
+      },
+      "DependsOn": [
+        "datazonetestdomaindomaindomainunittestunit1domainunittestunit2ownergrouptestssogroup27EA7C447"
+      ]
     },
     "datazonetestdomaindomaindomainunittestunit1domainunittestunit2ownergrouptestssogroup27EA7C447": {
       "Type": "AWS::DataZone::Owner",

@@ -54,6 +54,7 @@
 #### DataZone/SMUS Modules
 
 - Added `kms:GenerateDataKey` permission to the domain config custom resource handler policy, fixing cross-account `ListDomainUnitsForParent`, adapting to SMUS service changes
+- Fixed intermittent deployment failures caused by concurrent `AWS::DataZone::Owner` creation triggering DynamoDB transaction collisions (`Transaction cancelled ... ConditionalCheckFailed ... AlreadyExists`). `CfnOwner` resources that target the same domain unit are now chained sequentially via CloudFormation `DependsOn`, eliminating the race; owners on different domain units remain parallel. The chain order is derived from the owner construct id, so reordering a config's owner list produces no template change.
 
 ## [1.6.0] - 2026-05-22
 

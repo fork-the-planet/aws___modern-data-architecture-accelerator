@@ -999,6 +999,9 @@
           }
         }
       },
+      "DependsOn": [
+        "datazonedomain1domainowneruserdataadmin39E81327"
+      ],
       "Metadata": {
         "aws:cdk:path": "test-org-dev-govern1-datazone/datazone/domain1-domain/owner-user-data-engineer"
       }
@@ -1358,6 +1361,9 @@
           }
         }
       },
+      "DependsOn": [
+        "datazonedomain1domaindomainunitunit1owneruserdataadminF616CF79"
+      ],
       "Metadata": {
         "aws:cdk:path": "test-org-dev-govern1-datazone/datazone/domain1-domain/domain-unit-unit1/owner-user-data-user1"
       }
@@ -1522,6 +1528,9 @@
           }
         }
       },
+      "DependsOn": [
+        "datazonedomain1domaindomainunitunit2owneruserdataadmin60341E84"
+      ],
       "Metadata": {
         "aws:cdk:path": "test-org-dev-govern1-datazone/datazone/domain1-domain/domain-unit-unit2/owner-user-data-user2"
       }
@@ -1686,6 +1695,9 @@
           }
         }
       },
+      "DependsOn": [
+        "datazonedomain1domaindomainunitunit3owneruserdataadminC394D5AE"
+      ],
       "Metadata": {
         "aws:cdk:path": "test-org-dev-govern1-datazone/datazone/domain1-domain/domain-unit-unit3/owner-user-data-user3"
       }

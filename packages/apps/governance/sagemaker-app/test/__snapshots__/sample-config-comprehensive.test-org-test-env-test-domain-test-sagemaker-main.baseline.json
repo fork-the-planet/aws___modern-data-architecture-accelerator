@@ -1459,6 +1459,9 @@
           }
         }
       },
+      "DependsOn": [
+        "datazonetestdomaindomainownergrouptestssogroup1CDA884B6"
+      ],
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -2681,6 +2684,9 @@
           }
         }
       },
+      "DependsOn": [
+        "datazonetestdomaindomainowneruserdataadmin9138A2BE"
+      ],
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -2921,6 +2927,9 @@
           }
         }
       },
+      "DependsOn": [
+        "datazonetestdomaindomainownercdkuserassociatedaccountname166ACFE14"
+      ],
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -4250,6 +4259,9 @@
           }
         }
       },
+      "DependsOn": [
+        "datazonetestdomaindomaindomainunittestunit1domainunitowneraccountassociatedaccountname22FC5AEEA"
+      ],
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -4398,6 +4410,9 @@
           }
         }
       },
+      "DependsOn": [
+        "datazonetestdomaindomaindomainunittestunit1domainunitowneruserdataadmin17C9A3C0"
+      ],
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -4537,6 +4552,9 @@
           }
         }
       },
+      "DependsOn": [
+        "datazonetestdomaindomaindomainunittestunit1domainunitdomainunittestunit2domainunitownergrouptestssogroup2AF3744CA"
+      ],
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [

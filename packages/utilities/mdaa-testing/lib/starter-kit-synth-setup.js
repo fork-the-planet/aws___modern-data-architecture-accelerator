@@ -1,3 +1,8 @@
+/*!
+ * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 /**
  * Starter kit synth setup — injected into the CDK child processes spawned during
  * starter kit baseline/diff tests via NODE_OPTIONS=--require.

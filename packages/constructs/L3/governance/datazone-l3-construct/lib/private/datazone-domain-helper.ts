@@ -7,7 +7,7 @@ import { DataZoneDomainConstruct, DomainConfig } from '@aws-mdaa/datazone-constr
 import { MdaaBucket } from '@aws-mdaa/s3-constructs';
 
 import { MdaaManagedPolicy } from '@aws-mdaa/iam-constructs';
-import { CfnDomain } from 'aws-cdk-lib/aws-datazone';
+import { CfnDomain, CfnOwner } from 'aws-cdk-lib/aws-datazone';
 import { IRole, Role } from 'aws-cdk-lib/aws-iam';
 import { IKey } from 'aws-cdk-lib/aws-kms';
 import { IBucket } from 'aws-cdk-lib/aws-s3';
@@ -65,6 +65,11 @@ export class DataZoneDomainHelper extends CommonDomainHelper {
     lakeformationManageAccessRole.addManagedPolicy(policies.domainKmsUsagePolicy);
     executionRole.addManagedPolicy(policies.domainKmsUsagePolicy);
 
+    // Collect all CfnOwner resources to chain them sequentially and avoid
+    // DataZone DynamoDB transaction collisions. The data admin root owner is
+    // created inside DataZoneDomainConstruct, so it seeds the chain head.
+    const allOwners: CfnOwner[] = [domainConstruct.dataAdminRootOwner];
+
     // Create user/group profiles, domain units, and authorization policies
     const associatedAccountCdkUserProfiles = this.createAccountAssociations(
       scope,
@@ -72,16 +77,15 @@ export class DataZoneDomainHelper extends CommonDomainHelper {
       domainProps,
       domain,
       'V1',
+      allOwners,
     );
-    const { createdDomainUnits } = this.setupDomainGovernance(
-      scope,
-      domainName,
-      domainProps,
-      domain,
-      'V1',
+    const { createdDomainUnits } = this.setupDomainGovernance(scope, domainName, domainProps, domain, 'V1', {
       dataAdminUserProfile,
       associatedAccountCdkUserProfiles,
-    );
+      ownersCollector: allOwners,
+    });
+
+    CommonDomainHelper.chainOwnersSequentially(allOwners);
 
     // Prepare domain config data and create DataZone-specific resources
     const { domainUnitIds, glueCatalogArns } = this.prepareDomainConfigData(domain, createdDomainUnits, domainProps);

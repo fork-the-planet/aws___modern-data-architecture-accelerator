@@ -162,6 +162,7 @@ describe('DataZoneDomainConstruct', () => {
     expect(construct.domainId).toBeDefined();
     expect(construct.rootDomainUnitId).toBeDefined();
     expect(construct.dataAdminUserProfile).toBeDefined();
+    expect(construct.dataAdminRootOwner).toBeDefined();
   });
 
   it('should use parent scope and prefix ids when domainVersion is V1', () => {

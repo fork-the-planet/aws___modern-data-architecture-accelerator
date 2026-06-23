@@ -34,6 +34,8 @@ export class DataZoneDomainConstruct extends Construct {
   public readonly domainId: string;
   public readonly rootDomainUnitId: string;
   public readonly dataAdminUserProfile: CfnUserProfile;
+  /** Root domain unit ownership for the data admin. Seeds the sequential owner chain in the L3 helpers. */
+  public readonly dataAdminRootOwner: CfnOwner;
 
   constructor(scope: Construct, id: string, props: DataZoneDomainConstructProps) {
     super(scope, id);
@@ -83,6 +85,6 @@ export class DataZoneDomainConstruct extends Construct {
         },
       },
     };
-    new CfnOwner(this.domain, 'owner-user-data-admin', adminOwnerProps);
+    this.dataAdminRootOwner = new CfnOwner(this.domain, 'owner-user-data-admin', adminOwnerProps);
   }
 }

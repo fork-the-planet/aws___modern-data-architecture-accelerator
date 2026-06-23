@@ -10,6 +10,77 @@ import { Match, Template } from 'aws-cdk-lib/assertions';
 import { Stack } from 'aws-cdk-lib';
 import { DataZoneL3Construct, DataZoneL3ConstructProps } from '../lib';
 
+interface OwnerResource {
+  Type: string;
+  DependsOn?: string[];
+  Properties: { EntityIdentifier?: unknown };
+}
+
+/**
+ * Asserts the `AWS::DataZone::Owner` serialization invariants:
+ *  - owners are grouped by their target domain unit (EntityIdentifier);
+ *  - within each group the owners form a single linear DependsOn chain
+ *    (exactly one head, every other owner depends on exactly one predecessor,
+ *    and no owner is depended on by more than one successor);
+ *  - the data-admin root owner is part of its group's chain — never a second,
+ *    un-serialized writer on the root domain unit (the original race).
+ */
+function assertOwnersChainedPerEntity(template: Template): void {
+  const json = template.toJSON() as { Resources: Record<string, OwnerResource> };
+  const owners = Object.entries(json.Resources).filter(([, res]) => res.Type === 'AWS::DataZone::Owner');
+  const ownerIds = new Set(owners.map(([id]) => id));
+  expect(owners.length).toBeGreaterThan(1);
+
+  // Group owner logical ids by their target entity (domain unit).
+  const groups = new Map<string, string[]>();
+  for (const [id, res] of owners) {
+    const key = JSON.stringify(res.Properties.EntityIdentifier);
+    (groups.get(key) ?? groups.set(key, []).get(key)!).push(id);
+  }
+
+  const ownerDeps = (id: string): string[] => (json.Resources[id].DependsOn ?? []).filter(dep => ownerIds.has(dep));
+
+  // Every owner-to-owner dependency must stay within a single entity group —
+  // cross-entity chaining would needlessly serialize independent domain units.
+  const groupOf = new Map<string, string>();
+  for (const [key, ids] of groups) ids.forEach(id => groupOf.set(id, key));
+
+  for (const [key, ids] of groups) {
+    // In-degree: how many owners depend on each owner (within the group).
+    const inDegree = new Map<string, number>(ids.map(id => [id, 0]));
+    let edges = 0;
+    for (const id of ids) {
+      const deps = ownerDeps(id);
+      expect(deps.length).toBeLessThanOrEqual(1); // out-degree ≤ 1
+      deps.forEach(dep => {
+        expect(groupOf.get(dep)).toBe(key); // dependency stays in this group
+        inDegree.set(dep, (inDegree.get(dep) ?? 0) + 1);
+        edges += 1;
+      });
+    }
+    // Single linear path: N owners → N-1 edges, exactly one head, in-degree ≤ 1.
+    expect(edges).toBe(ids.length - 1);
+    const heads = ids.filter(id => ownerDeps(id).length === 0);
+    expect(heads).toHaveLength(1);
+    ids.forEach(id => expect(inDegree.get(id)).toBeLessThanOrEqual(1));
+  }
+
+  // Regression: the data-admin root owner (created inside DataZoneDomainConstruct)
+  // must be part of a multi-owner chain, not an isolated writer.
+  const dataAdminRootOwnerId = [...ownerIds].find(
+    id => id.includes('owneruserdataadmin') && !id.includes('domainunit'),
+  );
+  expect(dataAdminRootOwnerId).toBeDefined();
+  const rootGroupKey = groupOf.get(dataAdminRootOwnerId!)!;
+  const rootGroup = groups.get(rootGroupKey)!;
+  if (rootGroup.length > 1) {
+    const isConnected =
+      ownerDeps(dataAdminRootOwnerId!).length > 0 ||
+      rootGroup.some(id => ownerDeps(id).includes(dataAdminRootOwnerId!));
+    expect(isConnected).toBe(true);
+  }
+}
+
 describe('DataZone L3 Construct Tests', () => {
   let testApp: MdaaTestApp;
   let stack: Stack;
@@ -236,7 +307,12 @@ describe('DataZone L3 Construct Tests', () => {
       });
       const template = Template.fromStack(stack);
       expect(template).toBeDefined();
-      expect(template).toBeDefined();
+
+      // Verify owners are chained sequentially via DependsOn to avoid the
+      // DataZone DynamoDB transaction race that produces ConditionalCheckFailed.
+      // The chain is per target domain unit: owners on the same entity are
+      // serialized, owners on different entities stay parallel.
+      assertOwnersChainedPerEntity(template);
     });
 
     test('domain with domain units and owners', () => {
@@ -1663,6 +1739,10 @@ describe('DataZone L3 Construct Tests', () => {
       });
       const template = Template.fromStack(stack);
       expect(template).toBeDefined();
+
+      // Verify owners are chained per target domain unit via DependsOn
+      // (SageMaker V2 path).
+      assertOwnersChainedPerEntity(template);
     });
 
     test('domain with domain units and owners', () => {

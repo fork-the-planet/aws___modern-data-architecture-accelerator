@@ -855,6 +855,9 @@
           }
         }
       },
+      "DependsOn": [
+        "datazonedomain1domainowneruseradmin1D9008997"
+      ],
       "Metadata": {
         "aws:cdk:path": "test-org-dev-ent-data-smus-dom/datazone/domain1-domain/domain/owner-user-data-admin"
       }
@@ -1688,6 +1691,9 @@
           }
         }
       },
+      "DependsOn": [
+        "datazonedomain1domaindomainunitbusinessteamsdomainunitdomainunitteam1domainunitowneraccountteam1AE93AF8C"
+      ],
       "Metadata": {
         "aws:cdk:path": "test-org-dev-ent-data-smus-dom/datazone/domain1-domain/domain/domain-unit-business-teams/domain-unit/domain-unit-team1/domain-unit/owner-user-data-admin"
       }
@@ -1887,6 +1893,9 @@
           }
         }
       },
+      "DependsOn": [
+        "datazonedomain1domaindomainunitbusinessteamsdomainunitdomainunitteam2domainunitowneraccountteam2257EFC72"
+      ],
       "Metadata": {
         "aws:cdk:path": "test-org-dev-ent-data-smus-dom/datazone/domain1-domain/domain/domain-unit-business-teams/domain-unit/domain-unit-team2/domain-unit/owner-user-data-admin"
       }

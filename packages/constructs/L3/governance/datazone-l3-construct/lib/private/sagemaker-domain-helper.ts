@@ -18,7 +18,7 @@ import { DECRYPT_ACTIONS, ENCRYPT_ACTIONS, MdaaKmsKey, USER_ACTIONS } from '@aws
 import { MdaaBucket } from '@aws-mdaa/s3-constructs';
 import { Stack } from 'aws-cdk-lib';
 
-import { CfnDomain, CfnEnvironmentBlueprintConfiguration, CfnUserProfile } from 'aws-cdk-lib/aws-datazone';
+import { CfnDomain, CfnEnvironmentBlueprintConfiguration, CfnOwner, CfnUserProfile } from 'aws-cdk-lib/aws-datazone';
 import {
   ArnPrincipal,
   Conditions,
@@ -161,6 +161,11 @@ export class SageMakerDomainHelper extends CommonDomainHelper {
       this.createBaseBlueprintProvisioningPolicy(domain, 'bp-provisioning', resolvedBpRoles, this.props.account);
     }
 
+    // Collect all CfnOwner resources to chain them sequentially and avoid
+    // DataZone DynamoDB transaction collisions. The data admin root owner is
+    // created inside DataZoneDomainConstruct, so it seeds the chain head.
+    const allOwners: CfnOwner[] = [domainConstruct.dataAdminRootOwner];
+
     // Create user/group profiles, domain units, and authorization policies
     const associatedAccountCdkUserProfiles = this.createAccountAssociations(
       scope,
@@ -168,16 +173,15 @@ export class SageMakerDomainHelper extends CommonDomainHelper {
       domainProps,
       domain,
       'V2',
+      allOwners,
     );
-    const { createdDomainUnits } = this.setupDomainGovernance(
-      scope,
-      domainName,
-      domainProps,
-      domain,
-      'V2',
+    const { createdDomainUnits } = this.setupDomainGovernance(scope, domainName, domainProps, domain, 'V2', {
       dataAdminUserProfile,
       associatedAccountCdkUserProfiles,
-    );
+      ownersCollector: allOwners,
+    });
+
+    CommonDomainHelper.chainOwnersSequentially(allOwners);
 
     // Prepare domain config data and create SageMaker-specific resources
     const { domainUnitIds, glueCatalogArns } = this.prepareDomainConfigData(domain, createdDomainUnits, domainProps);
