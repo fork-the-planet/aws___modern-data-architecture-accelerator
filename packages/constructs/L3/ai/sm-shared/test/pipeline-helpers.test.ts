@@ -89,7 +89,36 @@ describe('addPipelineSourceStage', () => {
       expect(typeof repoName).toBe('string');
     });
 
-    it('uses empty string fallback when seedCodePath is undefined', () => {
+    it('seeds the repository from a directory path', () => {
+      const { stack, pipeline } = createPipelineStack();
+      const sourceArtifact = new Artifact('SourceOutput');
+
+      const repoName = addPipelineSourceStage({
+        scope: stack,
+        pipeline,
+        sourceArtifact,
+        sourceType: SourceType.CODECOMMIT,
+        repoConstructId: 'test-repo',
+        repoName: 'my-repo',
+        repoDescription: 'Test repository',
+        // The test dir itself is a valid directory to stage as seed code.
+        seedCodePath: __dirname,
+      });
+
+      pipeline.addStage({
+        stageName: 'Approve',
+        actions: [new ManualApprovalAction({ actionName: 'Approve' })],
+      });
+
+      const template = Template.fromStack(stack);
+      template.resourceCountIs('AWS::CodeCommit::Repository', 1);
+      template.hasResourceProperties('AWS::CodeCommit::Repository', {
+        RepositoryName: 'my-repo',
+      });
+      expect(typeof repoName).toBe('string');
+    });
+
+    it('throws when seedCodePath is undefined', () => {
       const { stack, pipeline } = createPipelineStack();
       const sourceArtifact = new Artifact('SourceOutput');
 
@@ -103,7 +132,7 @@ describe('addPipelineSourceStage', () => {
           repoName: 'my-repo',
           repoDescription: 'Test repository',
         }),
-      ).toThrow(/does not exist/);
+      ).toThrow('seedCodePath is required when sourceType is CODECOMMIT');
     });
   });
 

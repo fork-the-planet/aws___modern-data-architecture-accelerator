@@ -763,4 +763,25 @@ describe('SageMaker Model Deploy L3 Construct', () => {
       }).toThrow('seedCodePath is required when sourceType is CODECOMMIT');
     });
   });
+
+  describe('Directory Seed Code', () => {
+    const testApp = new MdaaTestApp();
+    const stack = testApp.testStack;
+    const constructProps: SageMakerModelDeployL3ConstructProps = {
+      naming: testApp.naming,
+      roleHelper: new MdaaRoleHelper(stack, testApp.naming),
+      projectName: 'test-deploy',
+      // Directory path (not a .zip) exercises the Code.fromDirectory branch
+      seedCodePath: __dirname,
+      modelPackageGroupName: 'test-mpg',
+      modelBucketName: 'test-model-bucket',
+    };
+    new SageMakerModelDeployL3Construct(stack, 'model-deploy', constructProps);
+    testApp.checkCdkNagCompliance(stack);
+    const template = Template.fromStack(stack);
+
+    test('Creates CodeCommit Repository from a directory seed code path', () => {
+      template.resourceCountIs('AWS::CodeCommit::Repository', 1);
+    });
+  });
 });

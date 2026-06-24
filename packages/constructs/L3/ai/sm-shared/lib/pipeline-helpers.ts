@@ -10,7 +10,7 @@ import { CodeCommitSourceAction, CodeStarConnectionsSourceAction } from 'aws-cdk
 import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { PipelineProject } from 'aws-cdk-lib/aws-codebuild';
 import { MdaaNagSuppressions } from '@aws-mdaa/construct'; //NOSONAR
-import { SourceType, CodeStarConnectionConfig, SeedCodeHelper } from './sm-shared';
+import { SourceType, CodeStarConnectionConfig } from './sm-shared';
 import { CODEBUILD_SOURCE_SUPPRESSIONS, S3_REPLICATION_SUPPRESSIONS } from './nag-constants';
 
 export interface AddPipelineSourceStageProps {
@@ -58,10 +58,22 @@ export function addPipelineSourceStage(props: AddPipelineSourceStageProps): stri
     return `${conn.owner}/${conn.repo}`;
   }
 
+  // Seed the repo from the seed code path. A .zip path is used as-is; a directory
+  // is handed to CDK's asset staging, which zips it deterministically (normalized
+  // timestamps, stable entry ordering) so the asset hash — and therefore the
+  // repository's Code.S3.Key — is stable across synths of identical content.
+  if (!props.seedCodePath) {
+    throw new Error('seedCodePath is required when sourceType is CODECOMMIT');
+  }
+  const seedCodePath = props.seedCodePath;
+  const repoCode = seedCodePath.endsWith('.zip')
+    ? Code.fromZipFile(seedCodePath, 'main')
+    : Code.fromDirectory(seedCodePath, 'main');
+
   const repo = new Repository(scope, props.repoConstructId, {
     repositoryName: props.repoName,
     description: props.repoDescription,
-    code: Code.fromZipFile(SeedCodeHelper.resolveSeedCodeZip(props.seedCodePath ?? ''), 'main'),
+    code: repoCode,
   });
 
   pipeline.addStage({

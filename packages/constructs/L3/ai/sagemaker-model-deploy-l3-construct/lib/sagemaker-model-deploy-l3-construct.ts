@@ -29,7 +29,6 @@ import {
   S3_REPLICATION_SUPPRESSIONS,
   validateProjectName,
   throwConfigValidationError,
-  SeedCodeHelper,
   addEcrReadPolicy,
   addCloudWatchLogsPolicy,
   addSageMakerTags,
@@ -498,26 +497,41 @@ export class SageMakerModelDeployL3Construct extends MdaaL3Construct {
     if (props.preProdEnvironment) this.addDeployEnvVars(envVars, 'PRE_PROD', props.preProdEnvironment);
     if (props.prodEnvironment) this.addDeployEnvVars(envVars, 'PROD', props.prodEnvironment);
 
-    let repoName: string;
-    let codeCommitRepo: Repository | undefined;
-
-    if (sourceType === SourceType.CODESTAR_CONNECTIONS) {
-      const conn = props.codeStarConnection!;
-      repoName = `${conn.owner}/${conn.repo}`;
-    } else {
-      codeCommitRepo = new Repository(this, 'deploy-source-repo', {
-        repositoryName: props.naming
-          .withResourceType(MdaaResourceType.CODECOMMIT_REPO)
-          .resourceName(`${projectName}-deploy`, MAX_REPO_NAME_LENGTH),
-        description: `Model deployment pipeline for ${projectName}`,
-        code: Code.fromZipFile(SeedCodeHelper.resolveSeedCodeZip(props.seedCodePath!), 'main'),
-      });
-      repoName = codeCommitRepo.repositoryName;
-    }
-
+    const { repoName, codeCommitRepo } = this.resolveSourceRepo(sourceType);
     envVars['DEPLOY_REPO_NAME'] = { value: repoName };
 
     return { envVars, repoName, codeCommitRepo };
+  }
+
+  private resolveSourceRepo(sourceType: SourceType): {
+    repoName: string;
+    codeCommitRepo: Repository | undefined;
+  } {
+    const props = this.props;
+
+    if (sourceType === SourceType.CODESTAR_CONNECTIONS) {
+      const conn = props.codeStarConnection!;
+      return { repoName: `${conn.owner}/${conn.repo}`, codeCommitRepo: undefined };
+    }
+
+    // A .zip seed path is used as-is; a directory is handed to CDK's asset
+    // staging, which zips it deterministically so the repository's Code.S3.Key
+    // is stable across synths of identical content.
+    if (!props.seedCodePath) {
+      throw new Error('seedCodePath is required when sourceType is CODECOMMIT');
+    }
+    const seedCodePath = props.seedCodePath;
+    const repoCode = seedCodePath.endsWith('.zip')
+      ? Code.fromZipFile(seedCodePath, 'main')
+      : Code.fromDirectory(seedCodePath, 'main');
+    const codeCommitRepo = new Repository(this, 'deploy-source-repo', {
+      repositoryName: props.naming
+        .withResourceType(MdaaResourceType.CODECOMMIT_REPO)
+        .resourceName(`${props.projectName}-deploy`, MAX_REPO_NAME_LENGTH),
+      description: `Model deployment pipeline for ${props.projectName}`,
+      code: repoCode,
+    });
+    return { repoName: codeCommitRepo.repositoryName, codeCommitRepo };
   }
 
   private createPipeline(

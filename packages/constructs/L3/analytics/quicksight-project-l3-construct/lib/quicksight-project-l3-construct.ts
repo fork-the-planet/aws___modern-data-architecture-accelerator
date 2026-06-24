@@ -344,7 +344,7 @@ export interface QuickSightProjectL3ConstructProps extends MdaaL3ConstructProps 
 export class QuickSightProjectL3Construct extends MdaaL3Construct {
   protected readonly props: QuickSightProjectL3ConstructProps;
 
-  public static sharedFoldersActions: { [key: string]: string[] } = {
+  public static readonly sharedFoldersActions: { [key: string]: string[] } = {
     READER_FOLDER: ['quicksight:DescribeFolder'],
     AUTHOR_FOLDER: [
       'quicksight:CreateFolder',
@@ -358,7 +358,7 @@ export class QuickSightProjectL3Construct extends MdaaL3Construct {
       'quicksight:UpdateFolderPermissions',
     ],
   };
-  public static dataSourceActions: { [key: string]: string[] } = {
+  public static readonly dataSourceActions: { [key: string]: string[] } = {
     READER_DATA_SOURCE: [
       'quicksight:DescribeDataSource',
       'quicksight:DescribeDataSourcePermissions',
