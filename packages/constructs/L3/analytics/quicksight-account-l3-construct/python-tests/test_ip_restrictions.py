@@ -9,7 +9,7 @@ from botocore.exceptions import ClientError
 # Import the module under test
 import ip_restrictions
 
-test_account_id = "111111111111"
+from constants import test_account_id
 
 class TestIPRestrictions:
     """Test cases for ip_restrictions.py module."""

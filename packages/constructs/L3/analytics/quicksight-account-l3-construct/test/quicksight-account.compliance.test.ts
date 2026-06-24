@@ -61,6 +61,7 @@ describe('QS Account Mandatory Tests', () => {
           cidr: '2.2.2.2/2',
         },
       ],
+      groups: ['readers', 'authors'],
     },
     naming: testApp.naming,
 
@@ -89,6 +90,13 @@ describe('QS Account Mandatory Tests', () => {
         '1.1.1.1/1': 'testing1',
         '2.2.2.2/2': 'Restriction for 2.2.2.2/2',
       },
+    });
+  });
+
+  test('QuickSight Groups', () => {
+    template.hasResourceProperties('Custom::qs-groups', {
+      accountId: 'test-account',
+      groups: ['readers', 'authors'],
     });
   });
 
@@ -239,5 +247,89 @@ describe('QS Account Name Validity Tests', () => {
         accountName: 'test-very-very-very-long-org-test-env-test-do-5d64fc24',
       }),
     });
+  });
+});
+
+describe('QS Default Resource Access Role Tests', () => {
+  const testApp = new MdaaTestApp();
+  const constructProps: QuickSightAccountL3ConstructProps = {
+    qsAccount: {
+      edition: 'ENTERPRISE',
+      authenticationMethod: 'IAM_AND_QUICKSIGHT',
+      notificationEmail: 'test@example.com',
+      vpcId: 'vpc-abcd1234',
+      subnetIds: ['test-subnet-id1', 'test-subnet-id2'],
+    },
+    naming: testApp.naming,
+    roleHelper: new MdaaRoleHelper(testApp.testStack, testApp.naming),
+  };
+
+  new QuickSightAccountL3Construct(testApp.testStack, 'test-stack', constructProps);
+  testApp.checkCdkNagCompliance(testApp.testStack);
+  const template = Template.fromStack(testApp.testStack);
+
+  test('Creates verbatim aws-quicksight-service-role-v0 with QuickSight trust and no data policies', () => {
+    template.hasResourceProperties('AWS::IAM::Role', {
+      RoleName: 'aws-quicksight-service-role-v0',
+      Path: '/service-role/',
+      AssumeRolePolicyDocument: {
+        Statement: Match.arrayWith([
+          Match.objectLike({
+            Action: 'sts:AssumeRole',
+            Effect: 'Allow',
+            Principal: { Service: 'quicksight.amazonaws.com' },
+          }),
+        ]),
+      },
+    });
+  });
+
+  test('Resource-access role carries no managed or inline data-access policies', () => {
+    const roles = template.findResources('AWS::IAM::Role', {
+      Properties: { RoleName: 'aws-quicksight-service-role-v0' },
+    });
+    const [role] = Object.values(roles);
+    expect(role.Properties.ManagedPolicyArns).toBeUndefined();
+    expect(role.Properties.Policies).toBeUndefined();
+  });
+});
+
+describe('QS Resource Access Role Managed-Policy-Only Tests', () => {
+  const testApp = new MdaaTestApp();
+  const constructProps: QuickSightAccountL3ConstructProps = {
+    qsAccount: {
+      edition: 'ENTERPRISE',
+      authenticationMethod: 'IAM_AND_QUICKSIGHT',
+      notificationEmail: 'test@example.com',
+      vpcId: 'vpc-abcd1234',
+      subnetIds: ['test-subnet-id1', 'test-subnet-id2'],
+      resourceAccessRolePermissions: {
+        awsManagedPolicies: ['service-role/AWSQuicksightAthenaAccess'],
+      },
+    },
+    naming: testApp.naming,
+    roleHelper: new MdaaRoleHelper(testApp.testStack, testApp.naming),
+  };
+
+  new QuickSightAccountL3Construct(testApp.testStack, 'test-stack', constructProps);
+  testApp.checkCdkNagCompliance(testApp.testStack);
+  const template = Template.fromStack(testApp.testStack);
+
+  test('Attaches the configured AWS-managed policy ARNs to the resource-access role', () => {
+    template.hasResourceProperties('AWS::IAM::Role', {
+      RoleName: 'aws-quicksight-service-role-v0',
+      ManagedPolicyArns: Match.arrayWith(['arn:test-partition:iam::aws:policy/service-role/AWSQuicksightAthenaAccess']),
+    });
+  });
+
+  test('Does not create a data-access managed policy (S3/KMS grants are attached by the project module)', () => {
+    const policies = template.findResources('AWS::IAM::ManagedPolicy', {
+      Properties: {
+        ManagedPolicyName: testApp.naming
+          .withResourceType(MdaaResourceType.IAM_POLICY)
+          .resourceName('qs-resource-access'),
+      },
+    });
+    expect(Object.keys(policies)).toHaveLength(0);
   });
 });

@@ -193,6 +193,10 @@ describe('resolvePlaceholder', () => {
     expect(resolvePlaceholder('cidr_2', {})).toBe('10.2.0.0/16');
   });
 
+  test('resolves vpc_cidr to a valid CIDR (not the generic test-<token> fallback)', () => {
+    expect(resolvePlaceholder('vpc_cidr', {})).toBe('10.1.0.0/16');
+  });
+
   test('generates KMS and Secrets Manager ARNs', () => {
     expect(resolvePlaceholder('kms_arn', {})).toMatch(/^arn:test-partition:kms:test-region:\d{12}:key\/test-key-1$/);
     expect(resolvePlaceholder('secret_arn', {})).toMatch(

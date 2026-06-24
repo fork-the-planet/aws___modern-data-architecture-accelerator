@@ -420,3 +420,179 @@ describe('MDAA Compliance Stack Tests', () => {
     });
   });
 });
+
+describe('Security Group Rules (existing SGs) Tests', () => {
+  const testApp = new MdaaTestApp();
+  const stack = testApp.testStack;
+
+  // 'rules' adds ingress/egress to security groups that already exist (created by other
+  // modules), referenced by id. No security group is created here. Verifies the QuickSight<->
+  // Redshift wiring pattern: egress on group A to group B, ingress on group B from group A.
+  const constructProps: Ec2L3ConstructProps = {
+    adminRoles: [{ id: 'admin-role-id' }],
+    rules: {
+      'qs-to-redshift-egress': {
+        securityGroupId: 'sg-quicksight',
+        egressRules: {
+          sg: [{ sgId: 'sg-redshift', port: 5440, protocol: 'tcp' }],
+        },
+      },
+      'redshift-from-qs-ingress': {
+        securityGroupId: 'sg-redshift',
+        ingressRules: {
+          sg: [{ sgId: 'sg-quicksight', port: 5440, protocol: 'tcp' }],
+        },
+      },
+    },
+    naming: testApp.naming,
+    roleHelper: new MdaaRoleHelper(stack, testApp.naming),
+  };
+
+  new Ec2L3Construct(stack, 'instances', constructProps);
+  testApp.checkCdkNagCompliance(testApp.testStack);
+  const template = Template.fromStack(testApp.testStack);
+
+  test('No security group is created for rules', () => {
+    template.resourceCountIs('AWS::EC2::SecurityGroup', 0);
+  });
+
+  test('Egress rule added to existing QuickSight SG towards Redshift SG', () => {
+    template.resourceCountIs('AWS::EC2::SecurityGroupEgress', 1);
+    template.hasResourceProperties('AWS::EC2::SecurityGroupEgress', {
+      GroupId: 'sg-quicksight',
+      DestinationSecurityGroupId: 'sg-redshift',
+      FromPort: 5440,
+      ToPort: 5440,
+      IpProtocol: 'tcp',
+    });
+  });
+
+  test('Ingress rule added to existing Redshift SG from QuickSight SG', () => {
+    template.resourceCountIs('AWS::EC2::SecurityGroupIngress', 1);
+    template.hasResourceProperties('AWS::EC2::SecurityGroupIngress', {
+      GroupId: 'sg-redshift',
+      SourceSecurityGroupId: 'sg-quicksight',
+      FromPort: 5440,
+      ToPort: 5440,
+      IpProtocol: 'tcp',
+    });
+  });
+
+  test('No KMS key is created for a rules-only deployment', () => {
+    template.resourceCountIs('AWS::KMS::Key', 0);
+  });
+});
+
+describe('Security Group Rules (existing SGs) ipv4 and prefixList Tests', () => {
+  const testApp = new MdaaTestApp();
+  const stack = testApp.testStack;
+
+  // Exercises the ipv4 (CIDR) and prefixList rule paths on existing security groups, for both
+  // ingress and egress. Complements the sg-based suite above.
+  const constructProps: Ec2L3ConstructProps = {
+    adminRoles: [{ id: 'admin-role-id' }],
+    rules: {
+      'ipv4-and-prefixlist-rules': {
+        securityGroupId: 'sg-existing',
+        ingressRules: {
+          ipv4: [{ cidr: '10.0.0.0/28', port: 443, protocol: 'tcp' }],
+          prefixList: [{ prefixList: 'pl-ingress01', port: 443, protocol: 'tcp' }],
+        },
+        egressRules: {
+          ipv4: [{ cidr: '10.0.1.0/28', port: 443, protocol: 'tcp' }],
+          prefixList: [{ prefixList: 'pl-egress01', port: 443, protocol: 'tcp' }],
+        },
+      },
+    },
+    naming: testApp.naming,
+    roleHelper: new MdaaRoleHelper(stack, testApp.naming),
+  };
+
+  new Ec2L3Construct(stack, 'instances', constructProps);
+  testApp.checkCdkNagCompliance(testApp.testStack);
+  const template = Template.fromStack(testApp.testStack);
+
+  test('Ingress ipv4 rule added with the expected CidrIp', () => {
+    template.hasResourceProperties('AWS::EC2::SecurityGroupIngress', {
+      GroupId: 'sg-existing',
+      CidrIp: '10.0.0.0/28',
+      FromPort: 443,
+      ToPort: 443,
+      IpProtocol: 'tcp',
+    });
+  });
+
+  test('Ingress prefixList rule added referencing the expected prefix list id', () => {
+    template.hasResourceProperties('AWS::EC2::SecurityGroupIngress', {
+      GroupId: 'sg-existing',
+      SourcePrefixListId: 'pl-ingress01',
+      FromPort: 443,
+      ToPort: 443,
+      IpProtocol: 'tcp',
+    });
+  });
+
+  test('Egress ipv4 rule added with the expected CidrIp', () => {
+    template.hasResourceProperties('AWS::EC2::SecurityGroupEgress', {
+      GroupId: 'sg-existing',
+      CidrIp: '10.0.1.0/28',
+      FromPort: 443,
+      ToPort: 443,
+      IpProtocol: 'tcp',
+    });
+  });
+
+  test('Egress prefixList rule added referencing the expected prefix list id', () => {
+    template.hasResourceProperties('AWS::EC2::SecurityGroupEgress', {
+      GroupId: 'sg-existing',
+      DestinationPrefixListId: 'pl-egress01',
+      FromPort: 443,
+      ToPort: 443,
+      IpProtocol: 'tcp',
+    });
+  });
+});
+
+describe('Security Group Rules (existing SGs) per-rule suppressions Tests', () => {
+  const testApp = new MdaaTestApp();
+  const stack = testApp.testStack;
+
+  // A rule with a per-rule CDK Nag suppression. The rules-on-existing-SG path must carry the
+  // suppression onto the emitted CfnSecurityGroupIngress so intentionally broad rules can pass nag.
+  const constructProps: Ec2L3ConstructProps = {
+    adminRoles: [{ id: 'admin-role-id' }],
+    rules: {
+      'broad-ingress': {
+        securityGroupId: 'sg-existing',
+        ingressRules: {
+          ipv4: [
+            {
+              cidr: '0.0.0.0/0',
+              port: 443,
+              protocol: 'tcp',
+              description: 'Public HTTPS ingress',
+              suppressions: [{ id: 'AwsSolutions-EC23', reason: 'Public HTTPS endpoint is intentional for this kit.' }],
+            },
+          ],
+        },
+      },
+    },
+    naming: testApp.naming,
+    roleHelper: new MdaaRoleHelper(stack, testApp.naming),
+  };
+
+  new Ec2L3Construct(stack, 'instances', constructProps);
+  const template = Template.fromStack(testApp.testStack);
+
+  test('Applies the per-rule CDK Nag suppression to the emitted ingress rule', () => {
+    const ingressRules = template.findResources('AWS::EC2::SecurityGroupIngress', {
+      Properties: { GroupId: 'sg-existing', CidrIp: '0.0.0.0/0' },
+    });
+    const entries = Object.values(ingressRules);
+    expect(entries).toHaveLength(1);
+    const suppressions = (entries[0] as { Metadata?: { cdk_nag?: { rules_to_suppress?: Array<{ id: string }> } } })
+      .Metadata?.cdk_nag?.rules_to_suppress;
+    expect(suppressions).toBeDefined();
+    expect(suppressions?.some(s => s.id === 'AwsSolutions-EC23')).toBe(true);
+  });
+});

@@ -485,6 +485,7 @@
             },
             "required": [
                 "_cfnProperties",
+                "_crossStackReferenceStrengthOverride",
                 "cfnOptions",
                 "cfnProperties",
                 "cfnPropertyNames",

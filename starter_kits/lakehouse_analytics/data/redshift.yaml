@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/datawarehouse.json
+# Redshift data warehouse with multi-AZ and cross-region snapshots.
+# Provides a managed analytics database for BI and reporting workloads.
+
+# Admin username for the Redshift cluster
+adminUsername: admin
+
+# Number of days between admin password rotation
+adminPasswordRotationDays: 30
+
+# Admin roles granted full access to cluster resources
+dataAdminRoles:
+  - id: ssm:/{{org}}/governance/generated-role/data-admin/id
+
+# Enable audit logging to a dedicated S3 bucket
+enableAuditLoggingToS3: true
+
+# Redshift node type and cluster size
+nodeType: RA3_XLPLUS
+numberOfNodes: 2
+
+# Weekly maintenance window (UTC)
+preferredMaintenanceWindow: Sun:23:45-Mon:00:15
+
+# Security group ingress rules for cluster access.
+# QuickSight->Redshift access is wired by the consumption-domain sg-rules module
+# (it adds the ingress from the QuickSight SG), keeping this module QuickSight-agnostic.
+securityGroupIngress:
+  ipv4:
+    - '{{context:vpc_cidr}}'
+
+# VPC and subnet IDs are sourced from the context block in mdaa.yaml
+vpcId: '{{context:vpc_id}}'
+subnetIds:
+  - '{{context:subnet_id_1}}'
+  - '{{context:subnet_id_2}}'
+  - '{{context:subnet_id_3}}'
+
+# Multi-AZ for high availability
+multiAz: true
+
+# Cross-region snapshot copy for disaster recovery.
+# Uses the backup_region context value set in mdaa.yaml.
+backupRegion: '{{context:backup_region}}'
+
+# Database users with Secrets Manager credential rotation.
+#
+# This block is ONLY for the SECRET-BASED QuickSight Redshift path. The starter kit
+# defaults to IAM-based auth instead (see quicksight-redshift.yaml -> iamParameters),
+# which needs no Secrets Manager and no manual console step.
+#
+# To use the secret-based path instead, uncomment this block (it creates the Redshift
+# user) and configure credentials.secretArn in quicksight-redshift.yaml. 
+# The quicksight-redshift module grants QuickSight read access to this secret,
+# redshift.yaml does not need to know about QuickSight. See the README "QuickSight Redshift authentication" section.
+# databaseUsers:
+#   - userName: 'serviceuserquicksight'
+#     dbName: 'default_db'
+#     secretRotationDays: 90

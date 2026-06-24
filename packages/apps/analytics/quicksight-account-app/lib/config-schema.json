@@ -33,6 +33,13 @@
                     },
                     "type": "array"
                 },
+                "groups": {
+                    "description": "Names of QuickSight groups (in the default namespace) to create. Groups are the\nQuickSight identity construct referenced when granting access to data sources, datasets,\nand folders. Created idempotently (existing groups are left as-is); not deleted on stack\nremoval. Add users to these groups separately (the console or `quicksight create-group-membership`).\n\nUse cases: Reader/Author access tiers referenced by data source and folder permissions\n\nAWS: QuickSight groups in the default namespace\n\nValidation: Optional; array of group names",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
                 "ipRestrictions": {
                     "description": "IP CIDR restrictions for QuickSight console access. When specified, only\nrequests from these IP ranges can access the QuickSight interface.\n\nUse cases: Corporate network restrictions; IP allowlisting; Compliance access control\n\nAWS: QuickSight IP restriction rules\n\nValidation: Optional; array of IpRestrictionProps with valid CIDR blocks",
                     "items": {
@@ -47,6 +54,10 @@
                 "notificationEmail": {
                     "description": "Email address for QuickSight account notifications including billing and service alerts.\n\nUse cases: Account alerts; Billing notifications; Service communications\n\nAWS: QuickSight account notification email\n\nValidation: Required; valid email format",
                     "type": "string"
+                },
+                "resourceAccessRolePermissions": {
+                    "$ref": "#/definitions/ResourceAccessRolePermissionsProps",
+                    "description": "Permissions to attach to the account-level QuickSight resource-access role\n(`aws-quicksight-service-role-v0`) created by this module, so QuickSight data sources can\nreach the underlying AWS resources (Athena/S3/KMS). This module owns the role, so it\nattaches both the AWS-managed policies and the customer-managed S3/KMS policy here in one\nplace. See {@link ResourceAccessRolePermissionsProps}.\n\nUse cases: Granting an Athena data source the AWS-managed Athena policy plus scoped access\nto its workgroup results bucket and the KMS-encrypted data lake it queries\n\nAWS: AWS-managed policies plus an IAM ManagedPolicy attached to the QuickSight resource-access role\n\nValidation: Optional; all sub-properties optional"
                 },
                 "securityGroupAccess": {
                     "$ref": "#/definitions/MdaaSecurityGroupRuleProps",
@@ -2639,6 +2650,20 @@
             "required": [
                 "regex"
             ],
+            "type": "object"
+        },
+        "ResourceAccessRolePermissionsProps": {
+            "additionalProperties": false,
+            "description": "Permissions to attach to QuickSight's account-level resource-access service role so that\nQuickSight data sources can reach the underlying AWS resources (Athena, S3, KMS).\n\nQuickSight assumes a single account-wide role (`aws-quicksight-service-role-v0`, created by\nthis module) to access AWS services on your behalf. Because this module owns the role, it\nattaches both the AWS-managed policies (e.g. AWSQuicksightAthenaAccess) and a dedicated\ncustomer-managed policy scoping S3/KMS access to the configured resources.\n\nUse cases: Granting an Athena data source access to its workgroup results bucket and the\nKMS-encrypted data lake it queries\n\nAWS: AWS-managed policies plus an IAM ManagedPolicy attached to the QuickSight resource-access role\n\nValidation: all sub-properties optional",
+            "properties": {
+                "awsManagedPolicies": {
+                    "description": "AWS managed policy names to attach (e.g. `service-role/AWSQuicksightAthenaAccess` for Athena\nconnectivity). Names are used rather than full ARNs because AWS-managed policies live in the\n`aws` account and are never cross-account, matching the `awsManagedPolicies` convention in the\nroles module. Only this module can attach AWS-managed policies, since it owns the role.\n\nData-source-specific S3/KMS grants are NOT configured here — those reference resources\n(e.g. the Athena results bucket and its KMS key) that are created by other modules which\ndeploy after this one, so they are attached by the consuming data source module\n(`@aws-mdaa/quicksight-project`) instead.\n\nUse cases: Athena API + query-results access via the AWS-managed policy\n\nAWS: AWS managed policies attached to the QuickSight resource-access role\n\nValidation: Optional; array of AWS managed policy names",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                }
+            },
             "type": "object"
         },
         "ResourceEnvironment": {

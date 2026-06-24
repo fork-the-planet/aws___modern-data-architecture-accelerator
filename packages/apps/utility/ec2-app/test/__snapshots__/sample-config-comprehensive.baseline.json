@@ -9,6 +9,10 @@
       "Type": "AWS::SSM::Parameter::Value<String>",
       "Default": "/ml/sm/sg/id"
     },
+    "SsmParameterValueanothermodulesgidC96584B6F00A464EAD1953AFF4B05118Parameter": {
+      "Type": "AWS::SSM::Parameter::Value<String>",
+      "Default": "/another/module/sg/id"
+    },
     "BootstrapVersion": {
       "Type": "AWS::SSM::Parameter::Value<String>",
       "Default": "/cdk-bootstrap/hnb659fds/version",
@@ -832,6 +836,74 @@
             "GroupId"
           ]
         }
+      }
+    },
+    "instancesrulesexamplerulesetingress1000028tcpPORT443660B695A": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "CidrIp": "10.0.0.0/28",
+        "Description": "HTTPS from internal subnet",
+        "FromPort": 443,
+        "GroupId": "sg-existingtarget",
+        "IpProtocol": "tcp",
+        "ToPort": 443
+      }
+    },
+    "instancesrulesexamplerulesetingresssgingresssourcetcpPORT8080094E27A2": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "Description": "Ingress from app tier SG",
+        "FromPort": 8080,
+        "GroupId": "sg-existingtarget",
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": "sg-ingresssource",
+        "ToPort": 8080
+      }
+    },
+    "instancesrulesexamplerulesetingresspl4ea54027tcpPORT443A9475D25": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "Description": "prefix list for DynamoDB endpoint",
+        "FromPort": 443,
+        "GroupId": "sg-existingtarget",
+        "IpProtocol": "tcp",
+        "SourcePrefixListId": "pl-4ea54027",
+        "ToPort": 443
+      }
+    },
+    "instancesrulesexamplerulesetegress1000028tcpPORT44372D6A4BA": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "CidrIp": "10.0.0.0/28",
+        "Description": "HTTPS to internal subnet",
+        "FromPort": 443,
+        "GroupId": "sg-existingtarget",
+        "IpProtocol": "tcp",
+        "ToPort": 443
+      }
+    },
+    "instancesrulesexamplerulesetegresssgref0tcpPORT544003EDC873": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "Description": "Egress to peer module SG on cluster port",
+        "DestinationSecurityGroupId": {
+          "Ref": "SsmParameterValueanothermodulesgidC96584B6F00A464EAD1953AFF4B05118Parameter"
+        },
+        "FromPort": 5440,
+        "GroupId": "sg-existingtarget",
+        "IpProtocol": "tcp",
+        "ToPort": 5440
+      }
+    },
+    "instancesrulesexamplerulesetegresspl7da54014tcpPORT443D081AE87": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "Description": "prefix list for S3 endpoint",
+        "DestinationPrefixListId": "pl-7da54014",
+        "FromPort": 443,
+        "GroupId": "sg-existingtarget",
+        "IpProtocol": "tcp",
+        "ToPort": 443
       }
     },
     "instancesroleforinstance1PolicyB4205D20": {

@@ -5,7 +5,7 @@
 
 import { MdaaCustomResource, MdaaCustomResourceProps } from '@aws-mdaa/custom-constructs';
 import { MdaaSecurityGroup, MdaaSecurityGroupRuleProps } from '@aws-mdaa/ec2-constructs';
-import { MdaaRole } from '@aws-mdaa/iam-constructs';
+import { MdaaManagedPolicy, MdaaRole } from '@aws-mdaa/iam-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
 import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaBoto3LayerVersion, MdaaLambdaFunction, MdaaLambdaRole } from '@aws-mdaa/lambda-constructs';
@@ -164,6 +164,71 @@ export interface AccountProps {
    * Validation: Optional; array of Glue resource patterns (e.g., 'database/my-db*')
    */
   readonly glueResourceAccess?: string[];
+  /**
+   * Permissions to attach to the account-level QuickSight resource-access role
+   * (`aws-quicksight-service-role-v0`) created by this module, so QuickSight data sources can
+   * reach the underlying AWS resources (Athena/S3/KMS). This module owns the role, so it
+   * attaches both the AWS-managed policies and the customer-managed S3/KMS policy here in one
+   * place. See {@link ResourceAccessRolePermissionsProps}.
+   *
+   * Use cases: Granting an Athena data source the AWS-managed Athena policy plus scoped access
+   * to its workgroup results bucket and the KMS-encrypted data lake it queries
+   *
+   * AWS: AWS-managed policies plus an IAM ManagedPolicy attached to the QuickSight resource-access role
+   *
+   * Validation: Optional; all sub-properties optional
+   */
+  readonly resourceAccessRolePermissions?: ResourceAccessRolePermissionsProps;
+  /**
+   * Names of QuickSight groups (in the default namespace) to create. Groups are the
+   * QuickSight identity construct referenced when granting access to data sources, datasets,
+   * and folders. Created idempotently (existing groups are left as-is); not deleted on stack
+   * removal. Add users to these groups separately (the console or `quicksight create-group-membership`).
+   *
+   * Use cases: Reader/Author access tiers referenced by data source and folder permissions
+   *
+   * AWS: QuickSight groups in the default namespace
+   *
+   * Validation: Optional; array of group names
+   */
+  readonly groups?: string[];
+}
+
+/**
+ * Permissions to attach to QuickSight's account-level resource-access service role so that
+ * QuickSight data sources can reach the underlying AWS resources (Athena, S3, KMS).
+ *
+ * QuickSight assumes a single account-wide role (`aws-quicksight-service-role-v0`, created by
+ * this module) to access AWS services on your behalf. Because this module owns the role, it
+ * attaches both the AWS-managed policies (e.g. AWSQuicksightAthenaAccess) and a dedicated
+ * customer-managed policy scoping S3/KMS access to the configured resources.
+ *
+ * Use cases: Granting an Athena data source access to its workgroup results bucket and the
+ * KMS-encrypted data lake it queries
+ *
+ * AWS: AWS-managed policies plus an IAM ManagedPolicy attached to the QuickSight resource-access role
+ *
+ * Validation: all sub-properties optional
+ */
+export interface ResourceAccessRolePermissionsProps {
+  /**
+   * AWS managed policy names to attach (e.g. `service-role/AWSQuicksightAthenaAccess` for Athena
+   * connectivity). Names are used rather than full ARNs because AWS-managed policies live in the
+   * `aws` account and are never cross-account, matching the `awsManagedPolicies` convention in the
+   * roles module. Only this module can attach AWS-managed policies, since it owns the role.
+   *
+   * Data-source-specific S3/KMS grants are NOT configured here — those reference resources
+   * (e.g. the Athena results bucket and its KMS key) that are created by other modules which
+   * deploy after this one, so they are attached by the consuming data source module
+   * (`@aws-mdaa/quicksight-project`) instead.
+   *
+   * Use cases: Athena API + query-results access via the AWS-managed policy
+   *
+   * AWS: AWS managed policies attached to the QuickSight resource-access role
+   *
+   * Validation: Optional; array of AWS managed policy names
+   */
+  readonly awsManagedPolicies?: string[];
 }
 
 /**
@@ -217,9 +282,16 @@ export class QuickSightAccountL3Construct extends MdaaL3Construct {
     const managedPolicy = this.createServiceManagedPolicy(serviceRole);
     const accountCr = this.createAccount();
 
+    this.buildDefaultResourceAccessRole();
+
     if (this.props.qsAccount.ipRestrictions) {
       const ipRestrictionsCr = this.createIpRestrictions(this.props.qsAccount.ipRestrictions);
       ipRestrictionsCr.node.addDependency(accountCr);
+    }
+
+    if (this.props.qsAccount.groups && this.props.qsAccount.groups.length > 0) {
+      const groupsCr = this.createGroups(this.props.qsAccount.groups);
+      groupsCr.node.addDependency(accountCr);
     }
 
     const vpcConnection = this.createVpcConnection(serviceRole);
@@ -281,6 +353,54 @@ export class QuickSightAccountL3Construct extends MdaaL3Construct {
       },
     };
     return new MdaaCustomResource(this, 'update-ip-restrictions-cr', crProps);
+  }
+
+  // Creates the configured QuickSight groups (idempotently) via a custom resource.
+  private createGroups(groups: string[]): MdaaCustomResource {
+    // The group names are known at synth time and created in the 'default' namespace, so
+    // CreateGroup can be scoped to their ARNs. The region segment is wildcarded because the
+    // handler resolves the QuickSight identity region at runtime (it may differ from this stack's
+    // region). DescribeAccountSettings does not support resource-level permissions.
+    const createGroupStatement: PolicyStatement = new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ['quicksight:CreateGroup'],
+      resources: groups.map(
+        groupName => `arn:${this.partition}:quicksight:*:${this.account}:group/default/${groupName}`,
+      ),
+    });
+    const describeStatement: PolicyStatement = new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ['quicksight:DescribeAccountSettings'],
+      resources: ['*'],
+    });
+
+    const crProps: MdaaCustomResourceProps = {
+      resourceType: 'qs-groups',
+      code: Code.fromAsset(`${__dirname}/../src/python/groups`),
+      runtime: Runtime.PYTHON_3_14,
+      handler: 'groups.lambda_handler',
+      handlerRolePolicyStatements: [createGroupStatement, describeStatement],
+      handlerPolicySuppressions: [
+        {
+          id: 'AwsSolutions-IAM5',
+          reason:
+            'quicksight:DescribeAccountSettings does not support resource-level permissions ' +
+            '(see https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazonquicksight.html). ' +
+            'quicksight:CreateGroup is scoped to the specific group ARNs but uses a region-segment wildcard ' +
+            'because the QuickSight identity region is resolved by the handler at runtime.',
+        },
+      ],
+      handlerProps: {
+        accountId: this.account,
+        groups: groups,
+      },
+      naming: this.props.naming,
+      handlerLayers: [this.boto3Layer],
+      environment: {
+        LOG_LEVEL: 'INFO',
+      },
+    };
+    return new MdaaCustomResource(this, 'qs-groups-cr', crProps);
   }
 
   // Creates Custom Resource to Manage Quicksight Account - Handles OnCreate, OnUpdate, OnDelete Stack Events
@@ -583,6 +703,76 @@ export class QuickSightAccountL3Construct extends MdaaL3Construct {
       roleName: `service-role`,
       naming: this.props.naming,
     });
+  }
+
+  /**
+   * Creates QuickSight's account-level resource-access service role using the verbatim name
+   * `aws-quicksight-service-role-v0` that QuickSight discovers by convention. This mirrors the
+   * role the QuickSight console creates under "Security & permissions -> AWS resources", so
+   * data sources can be deployed without the manual console step.
+   *
+   * The role is created with only the QuickSight trust policy and no data-access permissions.
+   * Consuming data source modules (e.g. `@aws-mdaa/quicksight-project`) attach the policies
+   * their data sources require, since only they know which AWS resources are needed.
+   *
+   * This module is only deployed onto accounts that do not already have a QuickSight account
+   * (and therefore cannot already have this console-managed role), so creating it
+   * unconditionally is safe.
+   */
+  private buildDefaultResourceAccessRole(): IRole {
+    const role = new MdaaRole(this, 'default-resource-access-role', {
+      assumedBy: new ServicePrincipal('quicksight.amazonaws.com'),
+      description: 'QuickSight default resource-access service role',
+      // QuickSight discovers this role by its fixed name and path; do not apply MDAA naming.
+      roleName: 'aws-quicksight-service-role-v0',
+      verbatimRoleName: true,
+      path: '/service-role/',
+      naming: this.props.naming,
+    });
+
+    if (this.props.qsAccount.resourceAccessRolePermissions) {
+      this.attachResourceAccessRolePermissions(role, this.props.qsAccount.resourceAccessRolePermissions);
+    }
+
+    return role;
+  }
+
+  /**
+   * Attaches AWS-managed policies (e.g. AWSQuicksightAthenaAccess) to the account-level
+   * resource-access role. Only this module can attach AWS-managed policies, since it owns the
+   * role. Data-source-specific S3/KMS grants are attached by the consuming data source module
+   * (`@aws-mdaa/quicksight-project`), because those resources are created by modules that deploy
+   * after this one.
+   */
+  private attachResourceAccessRolePermissions(role: IRole, config: ResourceAccessRolePermissionsProps): void {
+    // Attach AWS-managed policies by name (e.g. service-role/AWSQuicksightAthenaAccess). Only this
+    // module can do this, since it owns the role; attaching them to an imported role elsewhere is a
+    // CDK no-op. Names (not full ARNs) are used because AWS-managed policies are never cross-account,
+    // matching the awsManagedPolicies convention in the roles module. The construct ID is derived
+    // from a sanitized fragment of the name (not the array index) so reordering the config does not
+    // change CloudFormation logical IDs.
+    const awsManagedPolicies = config.awsManagedPolicies || [];
+    awsManagedPolicies.forEach(policyName => {
+      role.addManagedPolicy(MdaaManagedPolicy.fromAwsManagedPolicyNameWithPartition(this, policyName));
+    });
+
+    if (awsManagedPolicies.length > 0) {
+      MdaaNagSuppressions.addCodeResourceSuppressions(
+        role,
+        [
+          {
+            id: 'AwsSolutions-IAM4',
+            reason:
+              'AWS-managed policies (e.g. AWSQuicksightAthenaAccess, see ' +
+              'https://docs.aws.amazon.com/aws-managed-policy/latest/reference/AWSQuicksightAthenaAccess.html) ' +
+              'are explicitly configured for the QuickSight resource-access role to grant data sources access to ' +
+              'their underlying services.',
+            appliesTo: awsManagedPolicies.map(name => `Policy::arn:${this.partition}:iam::aws:policy/${name}`),
+          },
+        ],
+        true,
+      );
+    }
   }
 
   private createServiceManagedPolicy(role: IRole): IManagedPolicy {

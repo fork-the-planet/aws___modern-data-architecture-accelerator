@@ -1041,6 +1041,105 @@
       "UpdateReplacePolicy": "Delete",
       "DeletionPolicy": "Delete"
     },
+    "accountdefaultresourceaccessroleFC978C6D": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "quicksight.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Description": "QuickSight default resource-access service role",
+        "Path": "/service-role/",
+        "RoleName": "aws-quicksight-service-role-v0",
+        "Tags": [
+          {
+            "Key": "mdaa_cdk_app",
+            "Value": "quicksight-account"
+          },
+          {
+            "Key": "mdaa_domain",
+            "Value": "test-domain"
+          },
+          {
+            "Key": "mdaa_env",
+            "Value": "test-env"
+          },
+          {
+            "Key": "mdaa_module_name",
+            "Value": "test-quicksight-account-enterprise-q"
+          },
+          {
+            "Key": "mdaa_org",
+            "Value": "test-org"
+          }
+        ]
+      }
+    },
+    "accountdefaultresourceaccessroleroleawsquicksightservicerolev0arnssmC68B5A11": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-quicksight-account-enterprise-q/role/aws-quicksight-service-role-v0/arn",
+        "Tags": {
+          "mdaa_cdk_app": "quicksight-account",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-quicksight-account-enterprise-q",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::GetAtt": [
+            "accountdefaultresourceaccessroleFC978C6D",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "accountdefaultresourceaccessroleroleawsquicksightservicerolev0idssmFC4B409B": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-quicksight-account-enterprise-q/role/aws-quicksight-service-role-v0/id",
+        "Tags": {
+          "mdaa_cdk_app": "quicksight-account",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-quicksight-account-enterprise-q",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::GetAtt": [
+            "accountdefaultresourceaccessroleFC978C6D",
+            "RoleId"
+          ]
+        }
+      }
+    },
+    "accountdefaultresourceaccessroleroleawsquicksightservicerolev0namessm988F235C": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-quicksight-account-enterprise-q/role/aws-quicksight-service-role-v0/name",
+        "Tags": {
+          "mdaa_cdk_app": "quicksight-account",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-quicksight-account-enterprise-q",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Ref": "accountdefaultresourceaccessroleFC978C6D"
+        }
+      }
+    },
     "accountquicksightsg81C82445": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -1225,6 +1324,36 @@
       },
       "Export": {
         "Name": "test-org:test-domain:test-quicksight-account-enterprise-q:lambda:qsaccountcrfunc:log-group"
+      }
+    },
+    "accountdefaultresourceaccessroleroleawsquicksightservicerolev0arnout64E736E7": {
+      "Value": {
+        "Fn::GetAtt": [
+          "accountdefaultresourceaccessroleFC978C6D",
+          "Arn"
+        ]
+      },
+      "Export": {
+        "Name": "test-org:test-domain:test-quicksight-account-enterprise-q:role:awsquicksightservicerolev0:arn"
+      }
+    },
+    "accountdefaultresourceaccessroleroleawsquicksightservicerolev0idout2D580F64": {
+      "Value": {
+        "Fn::GetAtt": [
+          "accountdefaultresourceaccessroleFC978C6D",
+          "RoleId"
+        ]
+      },
+      "Export": {
+        "Name": "test-org:test-domain:test-quicksight-account-enterprise-q:role:awsquicksightservicerolev0:id"
+      }
+    },
+    "accountdefaultresourceaccessroleroleawsquicksightservicerolev0nameout92B05F64": {
+      "Value": {
+        "Ref": "accountdefaultresourceaccessroleFC978C6D"
+      },
+      "Export": {
+        "Name": "test-org:test-domain:test-quicksight-account-enterprise-q:role:awsquicksightservicerolev0:name"
       }
     },
     "accountquicksightsgsecuritygroupquicksightsgidout97B25F5F": {

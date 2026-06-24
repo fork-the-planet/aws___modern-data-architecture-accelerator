@@ -119,6 +119,7 @@
         "AlternateDataSourceParameters": [
           {
             "AthenaParameters": {
+              "RoleArn": "arn:test-partition:iam::test-account:role/service-role/aws-quicksight-service-role-v0",
               "WorkGroup": "sample-workgroup"
             }
           }
@@ -127,6 +128,7 @@
         "DataSourceId": "test-org-test-env-test-domain-test-quicksight-project-main-sample-athena",
         "DataSourceParameters": {
           "AthenaParameters": {
+            "RoleArn": "arn:test-partition:iam::test-account:role/service-role/aws-quicksight-service-role-v0",
             "WorkGroup": "sample-workgroup"
           }
         },
@@ -1892,6 +1894,174 @@
       },
       "UpdateReplacePolicy": "Delete",
       "DeletionPolicy": "Delete"
+    },
+    "projectresourceaccessdatapolicyC746D811": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Properties": {
+        "Description": "",
+        "ManagedPolicyName": "test-org-test-env-test-domain-test-quicksight-project---2981eb0f",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:ListAllMyBuckets",
+              "Effect": "Allow",
+              "Resource": "arn:test-partition:s3:::*",
+              "Sid": "S3ListAllBuckets"
+            },
+            {
+              "Action": [
+                "s3:ListBucket",
+                "s3:GetBucketLocation",
+                "s3:ListBucketMultipartUploads"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                "arn:test-partition:s3:::sample-datalake-bucket",
+                "arn:test-partition:s3:::sample-athena-results-bucket"
+              ],
+              "Sid": "S3BucketAccess"
+            },
+            {
+              "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:PutObject",
+                "s3:AbortMultipartUpload",
+                "s3:ListMultipartUploadParts"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                "arn:test-partition:s3:::sample-datalake-bucket/*",
+                "arn:test-partition:s3:::sample-athena-results-bucket/*"
+              ],
+              "Sid": "S3ObjectAccess"
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:GenerateDataKey",
+                "kms:DescribeKey"
+              ],
+              "Effect": "Allow",
+              "Resource": "arn:test-partition:kms:test-region:test-account:key/sample-data-lake-key-id",
+              "Sid": "KmsDataAccess"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Roles": [
+          "aws-quicksight-service-role-v0"
+        ]
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/quicksight-project-l3-construct/lib/quicksight-project-l3-construct.ts] s3:ListAllMyBuckets does not support resource-level permissions and requires a wildcard resource (see https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazons3.html). Object-level actions are scoped to the configured bucket ARNs, where bucket/* is the narrowest scope possible.",
+              "id": "AwsSolutions-IAM5",
+              "applies_to": [
+                {
+                  "regex": "/^Resource::arn:.*:s3:::\\*$/"
+                },
+                {
+                  "regex": "/^Resource::.*\\/\\*$/"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "projectresourceaccessdatapolicymanagedpolicyqsresourceaccessarnssm05394557": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-quicksight-project-main/managed-policy/qs-resource-access/arn",
+        "Tags": {
+          "mdaa_cdk_app": "quicksight-project",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-quicksight-project-main",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Ref": "projectresourceaccessdatapolicyC746D811"
+        }
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/quicksight-project-l3-construct/lib/quicksight-project-l3-construct.ts] s3:ListAllMyBuckets does not support resource-level permissions and requires a wildcard resource (see https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazons3.html). Object-level actions are scoped to the configured bucket ARNs, where bucket/* is the narrowest scope possible.",
+              "id": "AwsSolutions-IAM5",
+              "applies_to": [
+                {
+                  "regex": "/^Resource::arn:.*:s3:::\\*$/"
+                },
+                {
+                  "regex": "/^Resource::.*\\/\\*$/"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "projectresourceaccessdatapolicymanagedpolicyqsresourceaccessnamessm41BAF0FA": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-quicksight-project-main/managed-policy/qs-resource-access/name",
+        "Tags": {
+          "mdaa_cdk_app": "quicksight-project",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-quicksight-project-main",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::Split": [
+                "/",
+                {
+                  "Fn::Select": [
+                    5,
+                    {
+                      "Fn::Split": [
+                        ":",
+                        {
+                          "Ref": "projectresourceaccessdatapolicyC746D811"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/analytics/quicksight-project-l3-construct/lib/quicksight-project-l3-construct.ts] s3:ListAllMyBuckets does not support resource-level permissions and requires a wildcard resource (see https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazons3.html). Object-level actions are scoped to the configured bucket ARNs, where bucket/* is the narrowest scope possible.",
+              "id": "AwsSolutions-IAM5",
+              "applies_to": [
+                {
+                  "regex": "/^Resource::arn:.*:s3:::\\*$/"
+                },
+                {
+                  "regex": "/^Resource::.*\\/\\*$/"
+                }
+              ]
+            }
+          ]
+        }
+      }
     }
   },
   "Outputs": {
@@ -1928,6 +2098,42 @@
       },
       "Export": {
         "Name": "test-org:test-domain:test-quicksight-project-main:lambda:qsfolderscrfunc:log-group"
+      }
+    },
+    "projectresourceaccessdatapolicymanagedpolicyqsresourceaccessarnoutBA902724": {
+      "Value": {
+        "Ref": "projectresourceaccessdatapolicyC746D811"
+      },
+      "Export": {
+        "Name": "test-org:test-domain:test-quicksight-project-main:managed-policy:qsresourceaccess:arn"
+      }
+    },
+    "projectresourceaccessdatapolicymanagedpolicyqsresourceaccessnameout467559B0": {
+      "Value": {
+        "Fn::Select": [
+          1,
+          {
+            "Fn::Split": [
+              "/",
+              {
+                "Fn::Select": [
+                  5,
+                  {
+                    "Fn::Split": [
+                      ":",
+                      {
+                        "Ref": "projectresourceaccessdatapolicyC746D811"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "Export": {
+        "Name": "test-org:test-domain:test-quicksight-project-main:managed-policy:qsresourceaccess:name"
       }
     }
   },

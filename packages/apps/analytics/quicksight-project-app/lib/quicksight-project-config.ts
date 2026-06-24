@@ -7,6 +7,7 @@ import { MdaaAppConfigParser, MdaaAppConfigParserProps, MdaaBaseConfigContents }
 import {
   DataSourceProps,
   DataSourceWithIdAndTypeProps,
+  ResourceAccessRolePermissionsProps,
   SharedFoldersProps,
 } from '@aws-mdaa/quicksight-project-l3-construct';
 import { Schema } from 'ajv';
@@ -50,12 +51,28 @@ export interface QuickSightProjectConfigContents extends MdaaBaseConfigContents 
    * Validation: Optional; map of string keys to SharedFoldersProps
    */
   readonly sharedFolders?: { [key: string]: SharedFoldersProps };
+
+  /**
+   * Optional S3/KMS permissions to attach to QuickSight's account-level resource-access role
+   * (created by the quicksight-account module) so this project's data sources can read the data
+   * they query. Because the queried resources (e.g. the Athena results bucket and its KMS key)
+   * are created by modules that deploy before this one, the grants are attached here on the
+   * consumer side rather than by quicksight-account.
+   *
+   * Use cases: Granting QuickSight Athena data sources S3/KMS access to data lake and results buckets
+   *
+   * AWS: IAM S3/KMS permissions on the QuickSight resource-access role
+   *
+   * Validation: Optional; see ResourceAccessRolePermissionsProps
+   */
+  readonly resourceAccessRolePermissions?: ResourceAccessRolePermissionsProps;
 }
 
 export class QuickSightProjectConfigParser extends MdaaAppConfigParser<QuickSightProjectConfigContents> {
   public readonly principals: { [key: string]: string };
   public readonly sharedFolders: { [key: string]: SharedFoldersProps };
   public readonly dataSources: DataSourceWithIdAndTypeProps[];
+  public readonly resourceAccessRolePermissions?: ResourceAccessRolePermissionsProps;
   constructor(scope: Stack, props: MdaaAppConfigParserProps) {
     super(scope, props, configSchema as Schema);
     const dataSourceArr: DataSourceWithIdAndTypeProps[] = [];
@@ -71,5 +88,6 @@ export class QuickSightProjectConfigParser extends MdaaAppConfigParser<QuickSigh
     this.dataSources = dataSourceArr;
     this.principals = this.configContents.principals;
     this.sharedFolders = this.configContents.sharedFolders ? this.configContents.sharedFolders : {};
+    this.resourceAccessRolePermissions = this.configContents.resourceAccessRolePermissions;
   }
 }

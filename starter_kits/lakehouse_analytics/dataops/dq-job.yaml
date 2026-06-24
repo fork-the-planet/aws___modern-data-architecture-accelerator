@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/dataops-job.json
+# Data Quality evaluation job using the pre-built DQ script.
+# Runs Glue Data Quality evaluation against configured rulesets
+# and publishes results to CloudWatch metrics.
+
+projectName: example-project
+
+jobs:
+  DqEvaluationJob:
+    executionRoleArn: ssm:/{{org}}/governance/generated-role/glue-etl/arn
+    command:
+      name: 'glueetl'
+      pythonVersion: '3'
+      # Pre-built DQ evaluation script shipped with the dataops-job-app.
+      # The asset: prefix resolves to the bundled assets directory.
+      scriptLocation: asset:dq-main.py
+    description: Data quality evaluation using pre-built DQ script
+    glueVersion: '4.0'
+    workerType: G.1X
+    numberOfWorkers: 2
+    timeout: 60

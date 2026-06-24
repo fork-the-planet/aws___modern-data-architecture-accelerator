@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/dataops-workflow.json
+# Data Quality pipeline workflow.
+# Triggers the DQ evaluation job after the crawler completes successfully.
+
+projectName: example-project
+
+workflowDefinitions:
+  - rawWorkflowDef:
+      Workflow:
+        Name: dq-pipeline
+        DefaultRunProperties: {}
+        Graph:
+          Nodes:
+            - Type: TRIGGER
+              Name: on-crawler-complete
+              TriggerDetails:
+                Trigger:
+                  Name: on-crawler-complete
+                  WorkflowName: dq-pipeline
+                  Type: CONDITIONAL
+                  State: ACTIVATED
+                  Actions:
+                    - JobName: ssm:/{{org}}/dataops/example-project/job/name/DqEvaluationJob
+                  Predicate:
+                    Logical: ANY
+                    Conditions:
+                      - LogicalOperator: EQUALS
+                        CrawlerName: ssm:/{{org}}/dataops/example-project/crawler/name/crawler1
+                        CrawlState: SUCCEEDED

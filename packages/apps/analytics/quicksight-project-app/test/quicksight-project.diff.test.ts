@@ -76,6 +76,28 @@ describe('Quicksight Project Baseline Diff Tests', () => {
   );
 
   baselineDiffTestApp(
+    'Quicksight Project Secretsmanager',
+    Create.appProvider(
+      context => {
+        const moduleApp = new QuickSightProjectCDKApp({
+          context: {
+            ...context,
+            module_configs: path.join(__dirname, '..', 'sample_configs', 'sample-config-secretsmanager.yaml'),
+          },
+        });
+        moduleApp.generateStack();
+        return moduleApp;
+      },
+      {
+        module_name: 'test-quicksight-project-secretsmanager',
+        org: 'test-org',
+        env: 'test-env',
+        domain: 'test-domain',
+      },
+    ),
+  );
+
+  baselineDiffTestApp(
     'Quicksight Project Minimal',
     Create.appProvider(
       context => {

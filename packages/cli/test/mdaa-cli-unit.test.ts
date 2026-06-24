@@ -503,6 +503,25 @@ describe('MdaaDeploy.deployModule', () => {
 
       expect(() => mdaaDeploy.deployModule(moduleConfig)).toThrow('postdeploy hook defined but no command specified');
     });
+
+    it('should resolve context variables in postdeploy hook command', () => {
+      const postdeployHook: HookConfig = {
+        command: './scripts/setup.sh {{context:my_group}} {{context:my_region}}',
+      };
+
+      const moduleConfig = createMockModuleConfig({
+        postdeploy: postdeployHook,
+        moduleCmds: ['main-command'],
+        effectiveContext: {
+          my_group: 'readers',
+          my_region: 'us-west-2',
+        },
+      });
+
+      mdaaDeploy.deployModule(moduleConfig);
+
+      expect(mockExecCmd).toHaveBeenNthCalledWith(2, './scripts/setup.sh readers us-west-2');
+    });
   });
 
   describe('combined hook functionality', () => {

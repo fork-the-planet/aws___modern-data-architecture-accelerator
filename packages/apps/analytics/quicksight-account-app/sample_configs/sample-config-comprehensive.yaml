@@ -42,6 +42,13 @@ account:
     - test-subnet-id1
     - test-subnet-id2
 
+  # (Optional) QuickSight groups (default namespace) to create. Groups are
+  # referenced when granting access to data sources, datasets, and folders.
+  # Created idempotently; not deleted on stack removal. Add users separately.
+  groups:
+    - readers
+    - authors
+
   # (Optional) IP CIDR restrictions for QuickSight console access. When
   # specified, only requests from these IP ranges can access the
   # QuickSight interface.
@@ -120,3 +127,14 @@ account:
   # role read access to data catalog databases and tables
   glueResourceAccess:
     - database/some-database-name*
+
+  # (Optional) AWS-managed policies to attach to the account-level QuickSight
+  # resource-access role (aws-quicksight-service-role-v0) so data sources can
+  # reach their underlying AWS resources. This module owns the role, so only it
+  # can attach AWS-managed policies. Data-source-specific S3/KMS grants are
+  # attached by the consuming quicksight-project module instead.
+  resourceAccessRolePermissions:
+    # AWS-managed policy names (e.g. Athena connectivity). Names are used rather than full
+    # ARNs because AWS-managed policies are never cross-account.
+    awsManagedPolicies:
+      - 'service-role/AWSQuicksightAthenaAccess'

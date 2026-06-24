@@ -13,6 +13,7 @@ This module deploys and integrates the following resources:
 - **KMS CMK**: Customer-managed KMS key created if an existing key is not provided. Used to encrypt instance EBS volumes and key pair secrets.
 - **EC2 Key Pairs**: Created for use by EC2 instances, with private key material stored in Secrets Manager. Key pairs and secrets are retained post stack deletion.
 - **EC2 Security Groups**: Controls network access for instances. Supports CIDR, prefix list, and security group-based rules.
+- **EC2 Security Group Rules** (via `rules`): Standalone ingress/egress rules added to pre-existing (externally-owned) security groups referenced by id. No security group is created; each rule renders to a standalone `SecurityGroupIngress`/`SecurityGroupEgress` resource. Use this to wire connectivity between two security groups owned by different modules without creating a circular cross-stack dependency.
 - **EC2 Instances**: Instances with termination protection enabled and retained post stack deletion. AMI-configured volumes should be accounted for in config to support encryption.
 - **CloudFormation Init**: Bootstrap configurations for package installation, file creation, command execution, and service management on both Linux and Windows instances.
 

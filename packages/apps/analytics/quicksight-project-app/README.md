@@ -33,6 +33,12 @@ This module deploys and integrates the following resources:
 
 **QuickSight Data Sources** - QS data sources which can be used within QS Datasets and Analysis
 
+**IAM Managed Policy** - When `resourceAccessRolePermissions` is configured, attaches a data-source-specific managed policy (AWS managed policies plus S3/KMS permissions) to the account-level QuickSight resource-access role so data sources can reach their underlying AWS resources (Athena/S3/KMS)
+
+**Redshift IAM Auth Role** - For a Redshift data source configured with `iamParameters`, creates a QuickSight-assumable IAM role scoped to the cluster (`redshift:GetClusterCredentials`) so the data source authenticates without Secrets Manager
+
+**Secrets Manager Grant** - When a data source is configured with `secretsManager`, attaches a managed policy granting the account-level QuickSight Secrets Manager role (`aws-quicksight-secretsmanager-role-v0`) read access to the secret (and decrypt on its KMS key)
+
 ---
 
 ## Related Modules
@@ -115,6 +121,17 @@ Uses direct username/password credentials for data source connectivity instead o
 ```yaml
 # Contents available via above link
 --8<-- "target/docs/packages/apps/analytics/quicksight-project-app/sample_configs/sample-config-credentialpair.yaml"
+```
+
+#### Secrets Manager Configuration
+
+Authenticates a Redshift data source with a Secrets Manager secret. Setting `secretsManager` wires the secret as the data source credentials and grants the account-level QuickSight Secrets Manager role read access to it. Choose this variant for secret-based authentication with rotation support.
+
+[sample-config-secretsmanager.yaml](sample_configs/sample-config-secretsmanager.yaml)
+
+```yaml
+# Contents available via above link
+--8<-- "target/docs/packages/apps/analytics/quicksight-project-app/sample_configs/sample-config-secretsmanager.yaml"
 ```
 
 ---

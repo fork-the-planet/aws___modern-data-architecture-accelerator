@@ -1625,6 +1625,23 @@
           ]
         }
       }
+    },
+    "clusterclusteridentifierssm98F51867": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-datawarehouse-public-access-block-external/cluster/identifier",
+        "Tags": {
+          "mdaa_cdk_app": "datawarehouse",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-datawarehouse-public-access-block-external",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Ref": "cluster611F8AFF"
+        }
+      }
     }
   },
   "Outputs": {
@@ -1770,21 +1787,29 @@
       "Export": {
         "Name": "test-org:test-domain:test-datawarehouse-public-access-block-external:cluster:security-group-id"
       }
+    },
+    "clusterclusteridentifieroutAA34BF4C": {
+      "Value": {
+        "Ref": "cluster611F8AFF"
+      },
+      "Export": {
+        "Name": "test-org:test-domain:test-datawarehouse-public-access-block-external:cluster:identifier"
+      }
     }
   },
   "Mappings": {
     "clusterRotationSingleUserSARMappingC73F9A4D": {
       "aws": {
         "applicationId": "arn:aws:serverlessrepo:us-east-1:297356227824:applications/SecretsManagerRedshiftRotationSingleUser",
-        "semanticVersion": "1.1.618"
+        "semanticVersion": "1.1.671"
       },
       "aws-cn": {
         "applicationId": "arn:aws-cn:serverlessrepo:cn-north-1:193023089310:applications/SecretsManagerRedshiftRotationSingleUser",
-        "semanticVersion": "1.1.237"
+        "semanticVersion": "1.1.441"
       },
       "aws-us-gov": {
         "applicationId": "arn:aws-us-gov:serverlessrepo:us-gov-west-1:023102451235:applications/SecretsManagerRedshiftRotationSingleUser",
-        "semanticVersion": "1.1.213"
+        "semanticVersion": "1.1.398"
       }
     }
   },

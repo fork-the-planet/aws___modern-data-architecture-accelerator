@@ -1,0 +1,71 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/datalake.json
+# A list of Logical Config Roles which can be referenced in Access Policies. Each Logical Config Role can have one or more IAM role Arns bound to it.
+# The roles module is in the 'governance' domain (this datalake module is in 'data'), so these are
+# cross-domain references and must use explicit SSM paths rather than the same-domain
+# 'generated-role-id:' shorthand: ssm:/{{org}}/governance/generated-role/<name>/id
+roles:
+  DataAdminRole:
+    - id: ssm:/{{org}}/governance/generated-role/data-admin/id
+  DataUserRole:
+    - id: ssm:/{{org}}/governance/generated-role/data-user/id
+  GlueETLRole:
+    - id: ssm:/{{org}}/governance/generated-role/glue-etl/id
+  # The QuickSight resource-access role (created by the quicksight-account module).
+  # QuickSight runs Athena queries as this role, so it must be allowlisted for read
+  # access to the data lake buckets. Adding it to a read access policy below also grants
+  # it use of the data lake KMS key (the datalake module derives key users from the
+  # access-policy roles). Without this, QuickSight can read table metadata but not the
+  # underlying data. Referenced by static ARN because QuickSight discovers this role by
+  # its fixed name.
+  QuickSightRole:
+    - arn: 'arn:{{partition}}:iam::{{account}}:role/service-role/aws-quicksight-service-role-v0'
+
+# Definitions of access policies which grant access to S3 paths for specified Logical Config Roles.
+# These Access Policies can then be applied to Data Lake buckets (they will be injected into the corresponding bucket policies.)
+accessPolicies:
+  RootPolicy: # A friendly name for the access policy
+    rule:
+      # The S3 prefix path to which policy will be applied in the bucket policies.
+      prefix: /
+      # A list of Logical Config Roles which will be provided ReadWriteSuper access.
+      # ReadWriteSuper access allows reading, writing, and permanent data deletion.
+      ReadWriteSuperRoles:
+        - DataAdminRole
+
+  # This policy grants read access to the raw bucket for Glue Crawler and data users.
+  # QuickSightRole is included so QuickSight (which queries Athena as that role) can read
+  # the data lake objects its datasets are built on.
+  DataReadPolicy:
+    rule:
+      prefix: data/
+      ReadRoles:
+        - GlueETLRole
+        - DataUserRole
+        - QuickSightRole
+
+  # This policy grants read-write access to the transformed bucket for ETL pipelines.
+  # GlueETLRole needs write access to persist processed/transformed data.
+  DataWritePolicy:
+    rule:
+      prefix: data/
+      ReadWriteRoles:
+        - GlueETLRole
+
+# The set of S3 buckets which will be created, and the access policies which will be applied.
+buckets:
+  # A 'raw' bucket/zone
+  raw:
+    # The list of access policies which will be applied to the bucket
+    accessPolicies:
+      - RootPolicy
+      - DataReadPolicy
+
+  # A 'transformed' bucket/zone — ETL writes processed data here
+  transformed:
+    accessPolicies:
+      - RootPolicy
+      - DataReadPolicy
+      - DataWritePolicy
+
+# Enable S3 Storage Lens for visibility into bucket size, object counts, and access patterns.
+storageLensEnabled: true

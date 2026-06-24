@@ -41,6 +41,9 @@
       "path": "../../../L2/construct"
     },
     {
+      "path": "../../../L2/iam-constructs"
+    },
+    {
       "path": "../../../../utilities/iam-role-helper"
     },
     {

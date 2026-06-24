@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/athena-workgroup.json
+# Arns for IAM roles which will be provided to the Workgroup's resources (IE results bucket).
+# The roles module is in the 'governance' domain (this athena module is in 'data'), so roles are
+# referenced via explicit cross-domain SSM paths rather than the same-domain 'generated-role-id:'
+# shorthand.
+dataAdminRoles:
+  - id: ssm:/{{org}}/governance/generated-role/data-admin/id
+
+# List of roles which will be provided usage access to the Workgroup Resources
+athenaUserRoles:
+  - id: ssm:/{{org}}/governance/generated-role/data-user/id
+  # The QuickSight resource-access role (created by the quicksight-account module, which
+  # deploys before this one). Adding it here allowlists the role in the Athena results-bucket
+  # policy and KMS key policy, which the workgroup enforces with an explicit Deny on any role
+  # not listed. Required for QuickSight Athena data sources to read/write query results.
+  # Referenced by static name because QuickSight discovers this role by its fixed name.
+  #
+  # immutable: true tells MDAA not to modify the referenced IAM role itself (do not attach the
+  # workgroup-usage policy to it); MDAA still adds the role to the bucket and KMS resource
+  # policies. It is a general MdaaRoleRef flag for protecting roles MDAA does not own. We use it
+  # here for two reasons specific to the QuickSight role: (1) it already gets Athena query
+  # permissions from AWSQuicksightAthenaAccess elsewhere, so the workgroup policy is redundant,
+  # and (2) leaving the role free of MDAA-attached policies lets the QuickSight console manage it
+  # when the manual Secrets Manager path requires a bare role.
+  - arn: 'arn:{{partition}}:iam::{{account}}:role/service-role/aws-quicksight-service-role-v0'
+    immutable: true

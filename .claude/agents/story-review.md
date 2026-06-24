@@ -7,6 +7,8 @@ model: opus
 
 You are a senior reviewer orchestrating a comprehensive pre-push review. You assess story alignment yourself, then delegate deep steering-file reviews to focused sub-agents (like CI does).
 
+**Emulate the CI reviewers directly — never invoke kiro-cli.** The CI review jobs (and the scripts under `scripts/review/`) drive `kiro-cli` headless to do the actual reading and judgment. Locally you do not need it: you and your sub-agents are coding agents just like kiro-cli, so you perform the review yourself by reading the steering file and the changed files. Do NOT run the `scripts/review/*` Python scripts or `kiro-cli` to reproduce a CI reviewer — they require `KIRO_API_KEY` and add nothing over doing the review directly. The only authoritative scripts you do run are the deterministic test/lint/synth commands in Phase 1 (they are not reviewers).
+
 ## Process
 
 ### Phase 1: Setup (you do this)
@@ -16,7 +18,8 @@ You are a senior reviewer orchestrating a comprehensive pre-push review. You ass
 3. **Get the full diff** — run `git diff origin/main` to get the complete diff content.
 4. **Run linting** — for each changed package, run `npm run lint` in that package directory. Report any failures as blocking issues.
 5. **Run tests** — for each changed package, run `npm test` in that package directory. Report any failures as blocking issues. This catches unit test regressions, compliance (cdk-nag) failures, and baseline diff mismatches before push.
-6. **Check for rebase** — run `git log HEAD..origin/main --oneline`. If there are new commits on main, flag that a rebase is needed before pushing.
+6. **Run starter kit synth/baseline tests** — only if files under `starter_kits/` changed. This reproduces the CI `sk_<kit>` child jobs locally and is deterministic (synth + diff against committed baselines). For each affected kit, run from the `starter_kits/` directory: `python3 ../scripts/test/test_starter_kit.py --kit <kit>` (or omit `--kit` to cover all changed kits). Report any synth or baseline-diff failure as a blocking issue. Do NOT edit `.baseline.json` files to make these pass — a real diff means a config change must be reflected by regenerating baselines through the proper update command.
+7. **Check for rebase** — run `git log HEAD..origin/main --oneline`. If there are new commits on main, flag that a rebase is needed before pushing.
 
 ### Phase 2: Story alignment (you do this, skip if no story found)
 
@@ -41,6 +44,7 @@ Spawn these in parallel using the Agent tool:
 | Diff Risk | `.kiro/steering/diff-risk-assessment.md` | Baseline `.json` files |
 | Coding Standards | `.kiro/steering/coding-standards.md` | All changed `.ts`, `.py`, `requirements.txt`, `package.json` files |
 | Code Review | `.kiro/steering/code-review.md` + language-specific file (see below) | All changed `.ts`, `.py` files |
+| Starter Kit Quality | `.kiro/steering/starter-kit-standards.md` | Changed files under `starter_kits/<kit>/` (README, mdaa.yaml, roles config, all kit YAML) |
 
 **Sub-agent prompt template:**
 
@@ -84,6 +88,14 @@ The Code Review sub-agent prompt should be:
 > You are reviewing code for quality issues. Read these steering files completely: {list of applicable code-review steering files}. Then read each of these changed files: {file_list}. Also read the git diff with `git diff origin/main -- {files}`. Additionally, run `uv run --project scripts/review/python-tests pytest --cov=.. --cov-report=term-missing -q` to check test coverage for Python changes.
 >
 > Apply the rules from ALL the steering files you read. Report findings as a list with: risk level (HIGH/MEDIUM/LOW), file path, line number if possible, and one-sentence detail. Only flag issues in changed code, not pre-existing issues. If no issues found, say "No findings."
+
+**Starter Kit Quality sub-agent:** Spawn one per changed starter kit (a subdirectory of `starter_kits/` with an `mdaa.yaml` that has changed files). This mirrors the CI `feature_merge_starter_kit_quality_review` job, which reviews kit standards compliance against the same steering file. Its prompt should be:
+
+> You are reviewing starter kit quality for the kit `starter_kits/{kit_name}/`. Read the steering file at `.kiro/steering/starter-kit-standards.md` completely. Then read the kit's `README.md`, `USAGE.md` (check the kit root and `docs/`), `mdaa.yaml`, roles config, and every YAML file in the kit directory. Also read the git diff with `git diff origin/main -- starter_kits/{kit_name}/`.
+>
+> Review with a customer-first mindset and apply ONLY the rules from the steering file. In particular: (1) README sections match the required order; (2) every config file path referenced in `mdaa.yaml` exists in the kit; (3) every `# yaml-language-server: $schema=` directive is on line 1 of each YAML file and points to a schema file that exists under `schemas/`; (4) environment-specific values (account/VPC/subnet IDs) are centralized in `mdaa.yaml` context, not scattered across module configs; (5) every customer-decision config property has a preceding explanatory comment; (6) TODOs and `<YOUR_...>` placeholders clearly state what the customer must provide; (7) SSM cross-module references (`ssm-org:`, `ssm-domain:`, `domainConfigSSMParam`, `{{resolve:ssm:...}}`, `generated-role-id:`) have a producing module deployed in this kit's `mdaa.yaml` — flag dangling references, but when the producer mapping is ambiguous from the YAML alone, do not flag (the synth-time baseline tests are the authoritative gate).
+>
+> Do NOT flag spelling/grammar/prose, general markdown link validity, broken images, module-level doc gaps, or code architecture — those are owned by other sub-agents. Report findings as a list with: risk level (HIGH/MEDIUM/LOW), file path, line number if possible, and one-sentence detail. Only flag issues in changed kits. If no issues found, say "No findings."
 
 Only spawn sub-agents for review areas that have relevant changed files. Skip areas with no applicable changes — **except** for the Documentation sub-agent, which must always be spawned when there are user-impacting code changes (new config properties, new app modules, bug fixes, breaking changes). Its job includes checking for *missing* documentation updates (e.g., CHANGELOG.md not updated), not just reviewing changes to documentation files already in the diff.
 

@@ -5,6 +5,7 @@
 ### New Starter Kits
 
 - **GenAI GAIA Chatbot** — RAG chatbot backend with document search, auth, and streaming API
+- **Lakehouse Analytics** — End-to-end lakehouse spanning data lake, governance, dataops, and consumption (Athena + Redshift QuickSight data sources) with sample ETL/crawler dataops and a full deploy walkthrough
 - **Minimal** — Starting point for custom configurations with base governance
 - **MLOps Platform** — Automated train → deploy → monitor pipeline for ML models
 
@@ -22,6 +23,14 @@
 - **aws-cdk-lib upgrade to 2.258.0**: `aws-cdk-lib` has been updated from 2.192.0 to 2.258.0. This version removes the `lambda.Runtime.PYTHON_3_13` enum value and upgrades it to Runtime.PYTHON_3_14. Any MDAA config that references `python3.13` as a Lambda runtime must be updated to `python3.13t` (thread-based) or another supported runtime (e.g., `python3.14`).
 
 - **Naming**: Added `MdaaResourceType` enum and `withResourceType()` method to `IMdaaResourceNaming` interface, enabling custom naming modules to inject service-type abbreviations of the implementer's choosing into resource names (the abbreviations themselves are not produced by the enum). The default implementation is unchanged — no impact on existing deployments.
+
+- **EC2**: Added optional `rules` configuration to the `ec2` module to authorize additional ingress/egress rules on pre-existing (externally-owned) security groups referenced by id (supports `ssm:` references). Unlike `securityGroups`, it creates no security group; each rule renders to a standalone `SecurityGroupIngress`/`SecurityGroupEgress` resource, enabling connectivity between two security groups owned by different modules without a circular cross-stack dependency.
+
+- **QuickSight**: Added optional `resourceAccessRolePermissions` to grant the QuickSight resource-access role (`aws-quicksight-service-role-v0`) the AWS-managed policies and S3/KMS access its data sources need; the `quicksight-account` module owns the role while `quicksight-project` attaches data-source-specific grants. The `quicksight-project` module also gained optional `secretsManager` authentication for data sources.
+
+- **CLI**: Module deployment hook commands now resolve `{{context:<key>}}` references against the module's effective context.
+
+- **CLI**: The `mdaa` CLI now validates `--domain`, `--env`, and `--module` filter values against the loaded config and fails fast with an error listing the unknown value(s) and the valid options, instead of silently matching nothing.
 
 ### Data Science/AI/ML Changes
 

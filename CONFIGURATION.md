@@ -823,6 +823,8 @@ The command to execute. This can be:
 
 You can provide template variables as arguments to the script: `{{org}}`, `{{domain}}`, `{{env}}`, `{{module_name}}`, `{{region}}`, `{{account}}`, and `{{partition}}`
 
+You can also reference values from the module's effective context using `{{context:<key>}}`, for example `"./scripts/setup.sh {{context:my_group}} {{context:my_region}}"`. These resolve against the same context used elsewhere in the config (see the Context section above).
+
 #### `exit_if_fail` (optional, default: false)
 
 If `true`, the deployment will stop if the hook command fails (exits with non-zero code).

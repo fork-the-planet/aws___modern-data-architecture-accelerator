@@ -1,0 +1,227 @@
+# yaml-language-server: $schema=../../schemas/@aws-mdaa/cli.json
+# All resources will be deployed to the default region specified in the environment or AWS configurations.
+# Can optional specify a specific AWS Region Name.
+region: default
+
+# Tags applied to all deployed resources.
+tag_config_data:
+  costcentre: '123456'
+  project: lakehouse-analytics
+
+## Pre-Deployment Instructions
+
+# TODO: Set an appropriate, unique organization name
+# Failure to do so may result in global naming conflicts.
+organization: <YOUR_ORG_NAME>
+
+# (Optional) IAM permissions boundary policy name.
+# When set, all IAM roles created by MDAA modules will have this policy attached as a permissions boundary.
+# permissions_boundary_name: <YOUR_BOUNDARY_POLICY_NAME>
+
+# Context values specific to your environment.
+# These are passed through to CDK apps and can be referenced in module configs.
+context:
+  # Required for the consumption layer (Redshift + QuickSight).
+  # Provide a VPC with at least 3 subnets across 3 AZs for Redshift multi-AZ.
+  # TODO: Set your VPC ID (must exist in the deployment account/region)
+  vpc_id: '<YOUR_VPC_ID>'
+  # TODO: Set your first private subnet ID
+  subnet_id_1: '<YOUR_SUBNET_ID_1>'
+  # TODO: Set your second private subnet ID
+  subnet_id_2: '<YOUR_SUBNET_ID_2>'
+  # TODO: Set your third private subnet ID
+  subnet_id_3: '<YOUR_SUBNET_ID_3>'
+  # TODO: Set the email address for QuickSight account notifications (billing and service alerts)
+  notification_email: '<YOUR_NOTIFICATION_EMAIL>'
+  # TODO: Set the CIDR of the VPC above; used for Redshift security group ingress rules
+  vpc_cidr: '<YOUR_VPC_CIDR>'
+  # TODO: Set the region for Redshift cross-region snapshot copy (disaster recovery); must differ from the deployment region
+  backup_region: '<YOUR_BACKUP_REGION>'
+  # TODO: Set the region where QuickSight was originally subscribed (the QuickSight "identity region"),
+  # which may differ from the deployment region. Often the same as the deployment region; set it to
+  # whichever region your QuickSight account was registered in.
+  qs_identity_region: '<YOUR_QS_IDENTITY_REGION>'
+  qs_readers_group: 'readers'
+  qs_authors_group: 'authors'
+
+# One or more domains may be specified. Domain name will be incorporated by default naming implementation
+# to prefix all resource names.
+#
+# Domains deploy in the order listed here, each fully before the next:
+#   governance -> data -> dataops -> consumption
+#
+# 'governance' deploys first. Besides identity and governance (roles, Glue Catalog encryption,
+# Lake Formation settings, audit), it includes the account-level quicksight-account module, which
+# creates the QuickSight resource-access service role (aws-quicksight-service-role-v0). Because the
+# whole governance domain completes before 'data', that role exists before the data domain's
+# datalake and athena modules allowlist it in their bucket/KMS policies, and before the consumption
+# domain's data sources run queries as it.
+domains:
+  # The 'governance' domain: account-level identity, catalog, and governance setup. Deploys first
+  # because everything else builds on the roles, Glue Catalog, and Lake Formation configuration it
+  # creates, and because quicksight-account's service role must exist before the data domain runs.
+  governance:
+    environments:
+      dev:
+        account: default
+        modules:
+          # This module will create all the roles required for the datalake, as well as dataops layers running on top
+          roles: # The module name (ie 'roles') will be incorporated into resource name by the default naming implementation.
+            module_path: "@aws-mdaa/roles"
+            module_configs:
+              - ./governance/roles.yaml
+
+          # This module will ensure the Glue Catalog is KMS encrypted.
+          # Comment this out if there are multiple MDAA deployments into an account.
+          glue-catalog:
+            module_path: "@aws-mdaa/glue-catalog"
+
+          # This module will ensure that LakeFormation is configured to
+          # automatically generate IAMAllowedPrincipal grants on new databases and tables.
+          # This effectively delegates all Glue resource access controls
+          # to IAM.
+          lakeformation-settings:
+            module_path: "@aws-mdaa/lakeformation-settings"
+            module_configs:
+              - ./governance/lakeformation-settings.yaml
+
+          # Account-level QuickSight setup: subscription, service role
+          # (aws-quicksight-service-role-v0), VPC connection security group, and the QuickSight
+          # groups referenced by the data source and folder permissions. Lives in governance as an
+          # account-level settings module; deploying it here ensures the service role exists before
+          # the data domain's datalake/athena modules allowlist it and before the consumption data
+          # sources use it.
+          quicksight-account:
+            module_path: "@aws-mdaa/quicksight-account"
+            module_configs:
+              - ./governance/quicksight-account.yaml
+
+          # This module will create a secure S3-based bucket for use as a Cloudtrail Inventory target.
+          audit:
+            module_path: "@aws-mdaa/audit"
+            module_configs:
+              - ./governance/audit.yaml
+
+          # This module will create a secure S3-based Audit Trail.
+          audit-trail:
+            module_path: "@aws-mdaa/audit-trail"
+            module_configs:
+              - ./governance/audit-trail.yaml
+
+  # The 'data' domain: the lakehouse storage and query/serve surfaces (S3 data lake, Athena
+  # workgroup, Redshift warehouse). Deploys after governance, so the roles, Glue Catalog, Lake
+  # Formation settings, and QuickSight service role it depends on already exist.
+  data:
+    environments:
+      dev:
+        account: default
+        modules:
+          # This module will deploy the S3 data lake buckets.
+          # Coarse grained access may be granted directly to S3 for certain roles.
+          datalake:
+            module_path: "@aws-mdaa/datalake"
+            module_configs:
+              - ./data/datalake.yaml
+
+          # This module will create an Athena Workgroup which can be used to query
+          # the data lake.
+          athena:
+            module_path: "@aws-mdaa/athena-workgroup"
+            module_configs:
+              - ./data/athena.yaml
+
+          # Redshift data warehouse (multi-AZ, cross-region snapshots). A query/serve surface over
+          # the data lake alongside the Athena workgroup. The QuickSight<->Redshift security group
+          # wiring is handled by the sg-rules module in the consumption domain, which deploys after
+          # both this cluster's security group and the QuickSight security group already exist.
+          redshift:
+            module_path: "@aws-mdaa/datawarehouse"
+            module_configs:
+              - ./data/redshift.yaml
+
+  # The named of the domain. In this case, we are building a 'dataops' domain.
+  dataops:
+    # One or more environments may be specified, typically along the lines of 'dev', 'test', and/or 'prod'
+    environments:
+      # The environment name will be incorporated into resource name by the default naming implementation.
+      dev:
+        # The target deployment account can be specified per environment.
+        # If 'default' or not specified, the account configured in the environment will be assumed.
+        account: default
+        # The list of modules which will be deployed. A module points to a specific MDAA CDK App, and
+        # specifies a deployment configuration file if required.
+        modules:
+          # This module will create DataOps Project resources which can be shared
+          # across multiple
+          example-project:
+            module_path: "@aws-mdaa/dataops-project"
+            module_configs:
+              - ./dataops/project.yaml
+          example-crawler:
+            module_path: "@aws-mdaa/dataops-crawler"
+            module_configs:
+              - ./dataops/crawler.yaml
+            postdeploy:
+              command: "./dataops/create_table.sh {{org}} {{region}}"
+              exit_if_fail: true
+          example-data-quality:
+            module_path: "@aws-mdaa/dataops-data-quality"
+            module_configs:
+              - ./dataops/data-quality.yaml
+
+          # This module deploys a Glue ETL job for data transformation
+          etl-job:
+            module_path: "@aws-mdaa/dataops-job"
+            module_configs:
+              - ./dataops/etl-job.yaml
+
+          # This module deploys a DQ evaluation job using a pre-built script
+          dq-job:
+            module_path: "@aws-mdaa/dataops-job"
+            module_configs:
+              - ./dataops/dq-job.yaml
+
+          # This module creates a Glue workflow that triggers the DQ job after the crawler completes
+          dq-workflow:
+            module_path: "@aws-mdaa/dataops-workflow"
+            module_configs:
+              - ./dataops/dq-workflow.yaml
+
+  # The consumption domain provides the QuickSight BI data sources on top of the data lake and
+  # warehouse. It deploys last, so the QuickSight account/service role (governance domain) and the
+  # Athena workgroup + Redshift cluster (data domain) all exist when these data source modules
+  # reference them. If you need to manually enable QuickSight's access to AWS services in the
+  # console (e.g. for Secrets Manager Redshift auth), deploy this domain in a second pass after
+  # that step (see "Enabling Secrets Manager for QuickSight" in the README).
+  consumption:
+    environments:
+      dev:
+        account: default
+        modules:
+          # QuickSight data source connected to Athena for ad-hoc querying.
+          # Attaches the S3/KMS data-access grants to the QuickSight resource-access role here
+          # (rather than in quicksight-account), since the Athena results bucket and KMS key are
+          # created by the athena module, which deploys before this one.
+          quicksight-athena:
+            module_path: "@aws-mdaa/quicksight-project"
+            module_configs:
+              - ./consumption/quicksight-athena.yaml
+
+          # Wires the QuickSight<->Redshift security group connectivity (egress on the QuickSight SG
+          # to the Redshift SG, ingress on the Redshift SG from the QuickSight SG, on the cluster
+          # port) so the quicksight-redshift data source can reach the cluster. Both security groups
+          # already exist by now (QuickSight SG from the governance domain, Redshift SG from data),
+          # and are referenced by id from SSM, so this adds standalone rules without creating a
+          # circular dependency between the QuickSight and Redshift modules. Deploys before
+          # quicksight-redshift so the connectivity is in place when the data source is created.
+          sg-rules:
+            module_path: "@aws-mdaa/ec2"
+            module_configs:
+              - ./consumption/sg-rules.yaml
+
+          # QuickSight data source connected to Redshift for BI dashboards. Reaches the cluster via
+          # the security group connectivity wired by the sg-rules module above.
+          quicksight-redshift:
+            module_path: "@aws-mdaa/quicksight-project"
+            module_configs:
+              - ./consumption/quicksight-redshift.yaml

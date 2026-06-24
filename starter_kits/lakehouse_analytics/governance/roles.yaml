@@ -1,0 +1,113 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/roles.json
+generatePolicies:
+  GlueJobPolicy:
+    # TODO: Review the below policyDocument permissions and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM5"
+    #     reason: "Glue log group name not known at deployment time."
+    policyDocument:
+      Statement:
+        - Sid: GlueCloudwatch
+          Effect: Allow
+          Resource:
+            - "arn:{{partition}}:logs:{{region}}:{{account}}:log-group:/aws-glue/*"
+          Action:
+            - logs:CreateLogStream
+            - logs:AssociateKmsKey
+            - logs:CreateLogGroup
+            - logs:PutLogEvents
+
+  DataAdminPolicy:
+    # TODO: Review the below policyDocument permissions and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM5"
+    #     reason: "S3 account-level and KMS list actions do not support resource-level restrictions."
+    policyDocument:
+      Statement:
+        - Sid: BasicS3Access
+          Effect: Allow
+          Action:
+            - s3:ListAllMyBuckets
+            - s3:GetAccountPublicAccessBlock
+            - s3:GetBucketPublicAccessBlock
+            - s3:GetBucketPolicyStatus
+            - s3:GetBucketAcl
+            - s3:ListAccessPoints
+            - s3:GetBucketLocation
+          Resource: "*"
+
+        # Allows basic listing of KMS keys (required for up)
+        - Sid: BasicKMSAccess
+          Effect: Allow
+          Action:
+            - kms:ListAliases
+          Resource: "*"
+
+  DataUserPolicy:
+    # TODO: Review the below policyDocument permissions and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM5"
+    #     reason: "Glue catalog database/table wildcards required for cross-database discovery. Athena ListWorkGroups does not support resource-level restrictions."
+    policyDocument:
+      Statement:
+        # This statement allows coarse-grained access to Glue catalog resources, but does not itself grant any access to data.
+        # Effective permissions are the intersection between IAM Glue Permissions and LF Grants. By establishing broad, coarse-grained permissions here,
+        # we are effectively concentrating effective permissions management in LF Grants.
+        - Sid: GlueCoarseGrainedAccess
+          Effect: Allow
+          Resource:
+            - arn:{{partition}}:glue:{{region}}:{{account}}:catalog
+            - arn:{{partition}}:glue:{{region}}:{{account}}:database/*
+            - arn:{{partition}}:glue:{{region}}:{{account}}:table/*
+          Action:
+            - glue:GetDatabase
+            - glue:GetDatabases
+            - glue:GetCatalogImportStatus
+            - glue:GetTable
+            - glue:GetTables
+            - glue:GetPartition
+            - glue:GetPartitions
+            - glue:SearchTables
+
+        # This statement allows the basic listing of Athena workgroups
+        # Specific Athena accesses are granted by the Athena Workgroup module itself.
+        - Sid: BasicAthenaAccess
+          Effect: Allow
+          Action:
+            - athena:ListWorkGroups
+          Resource: "*"
+
+# The list of roles which will be generated
+generateRoles:
+  glue-etl:
+    # TODO: Review the below awsManagedPolicies and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM4"
+    #     reason: "AWSGlueServiceRole is required for Glue ETL jobs to access S3, CloudWatch Logs, and EC2 networking during job execution. See https://docs.aws.amazon.com/glue/latest/dg/create-an-iam-role.html"
+    trustedPrincipal: service:glue.amazonaws.com
+    # A list of AWS managed policies which will be added to the role
+    awsManagedPolicies:
+      - service-role/AWSGlueServiceRole
+    generatedPolicies:
+      - GlueJobPolicy
+
+  data-admin:
+    # TODO: Review the below awsManagedPolicies and suppression. Uncomment the suppression prior to deployment.
+    # suppressions:
+    #   - id: "AwsSolutions-IAM4"
+    #     reason: "AWSGlueConsoleFullAccess grants the data-admin persona the broad Glue/S3/CloudWatch/CloudWatch Logs access needed to administer Glue databases, tables, crawlers, and jobs from the console in this reference kit. It is intentionally broad for a dev/reference deployment; scope it down for production. See https://docs.aws.amazon.com/glue/latest/dg/console-iam-policy.html"
+    trustedPrincipal: this_account
+    additionalTrustedActions:
+      - "sts:TagSession"
+    # NOTE: AWSGlueConsoleFullAccess is broad (glue:*, s3:* on Glue paths, logs:*, cloudwatch:*).
+    # Consider replacing with a scoped policy for production deployments.
+    awsManagedPolicies:
+      - AWSGlueConsoleFullAccess
+    generatedPolicies:
+      - DataUserPolicy
+      - DataAdminPolicy
+
+  data-user:
+    trustedPrincipal: this_account
+    generatedPolicies:
+      - DataUserPolicy

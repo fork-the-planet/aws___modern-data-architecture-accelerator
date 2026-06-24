@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/quicksight-account.json
+# QuickSight account configuration.
+# Creates the QuickSight account, service role, VPC connection security group,
+# and service managed policy for Glue/Athena/Redshift access.
+
+account:
+  edition: 'ENTERPRISE'
+  authenticationMethod: 'IAM_AND_QUICKSIGHT'
+  notificationEmail: '{{context:notification_email}}'
+
+  # VPC for QuickSight VPC connection (same VPC as Redshift).
+  # Values sourced from the context block in mdaa.yaml.
+  vpcId: '{{context:vpc_id}}'
+  subnetIds:
+    - '{{context:subnet_id_1}}'
+    - '{{context:subnet_id_2}}'
+    - '{{context:subnet_id_3}}'
+
+  # QuickSight groups to create. These are referenced by the data source and folder
+  # permissions in the quicksight-athena/quicksight-redshift configs. Created
+  # idempotently; not deleted on stack removal. After deployment, add your QuickSight
+  # users to these groups (the console or `quicksight create-group-membership`) — see
+  # Deployment Instructions in the README.
+  groups:
+    - '{{context:qs_readers_group}}'
+    - '{{context:qs_authors_group}}'
+
+  # AWS-managed policies to attach to the QuickSight service role
+  # (aws-quicksight-service-role-v0) so QuickSight data sources can reach the
+  # underlying services (here, Athena).
+  #
+  # IMPORTANT: comment this block out if you need to manually enable QuickSight's
+  # access to AWS services in the console (e.g. for Secrets Manager Redshift auth).
+  # The console refuses to manage the role while MDAA-attached policies are present
+  # ("unknown policies attached to aws-quicksight-service-role-v0"), so the role must
+  # be bare for that step. See "Enabling QuickSight access to AWS services manually"
+  # in the README.
+  resourceAccessRolePermissions:
+    # AWS-managed policy granting Athena API + query-results S3 access. Referenced by
+    # name (not full ARN) since AWS-managed policies are never cross-account.
+    awsManagedPolicies:
+      - 'service-role/AWSQuicksightAthenaAccess'

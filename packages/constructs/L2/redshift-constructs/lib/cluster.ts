@@ -271,5 +271,17 @@ export class MdaaRedshiftCluster extends Cluster {
       },
       scope,
     );
+
+    new MdaaParamAndOutput(
+      this,
+      {
+        resourceType: 'cluster',
+        resourceId: props.clusterName,
+        name: 'identifier',
+        value: this.clusterName,
+        ...props,
+      },
+      scope,
+    );
   }
 }

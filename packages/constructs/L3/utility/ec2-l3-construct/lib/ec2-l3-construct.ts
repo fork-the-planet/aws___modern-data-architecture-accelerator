@@ -37,10 +37,15 @@ import {
   Instance,
   InstanceType,
   ISecurityGroup,
+  CfnSecurityGroupEgress,
+  CfnSecurityGroupIngress,
+  IPeer,
   LocationPackageOptions,
   MachineImageConfig,
   NamedPackageOptions,
   OperatingSystemType,
+  Peer,
+  Port,
   SecurityGroup,
   Subnet,
   UserData,
@@ -51,7 +56,8 @@ import { IKey, Key } from 'aws-cdk-lib/aws-kms';
 import { Construct } from 'constructs';
 import { readFileSync } from 'fs';
 import { MdaaNagSuppressions } from '@aws-mdaa/construct'; //NOSONAR
-import { Duration } from 'aws-cdk-lib';
+import { NagPackSuppression } from 'cdk-nag';
+import { Duration, Token } from 'aws-cdk-lib';
 import { MdaaConfigRefValueTransformer, MdaaConfigRefValueTransformerProps } from '@aws-mdaa/config';
 
 /**
@@ -107,6 +113,54 @@ export interface SecurityGroupProps {
    * Validation: Optional; boolean
    */
   readonly addSelfReferenceRule?: boolean;
+}
+/**
+ * Map of rule-set names to ingress/egress rules added to a pre-existing security group.
+ */
+export interface NamedSecurityGroupRulesProps {
+  /** @jsii ignore */
+  readonly [name: string]: SecurityGroupRulesProps;
+}
+/**
+ * Ingress/egress rules added to a security group that already exists (created by another
+ * module). Unlike securityGroups, this does not create a security group; it only authorizes
+ * additional rules on an existing one referenced by id. This is the declarative way to wire
+ * connectivity between two security groups owned by different modules without creating a
+ * circular cross-stack dependency, since each rule references the peer group only by id.
+ */
+export interface SecurityGroupRulesProps {
+  /**
+   * Id of the existing security group to which the rules will be added.
+   *
+   * Use cases: Cross-module security group wiring; Connectivity to externally-owned groups
+   *
+   * AWS: EC2 SecurityGroupIngress/SecurityGroupEgress GroupId
+   *
+   * Validation: Required; existing security group id (supports ssm: references)
+   */
+  readonly securityGroupId: string;
+  /**
+   * Inbound traffic rules added to the existing security group. Supports ipv4 CIDR, prefix
+   * list, and security group sources.
+   *
+   * Use cases: Allowing an externally-owned peer group to reach this group
+   *
+   * AWS: EC2 SecurityGroupIngress
+   *
+   * Validation: Optional; valid MdaaSecurityGroupRuleProps
+   */
+  readonly ingressRules?: MdaaSecurityGroupRuleProps;
+  /**
+   * Outbound traffic rules added to the existing security group. Supports ipv4 CIDR, prefix
+   * list, and security group destinations.
+   *
+   * Use cases: Allowing this group to reach an externally-owned peer group
+   *
+   * AWS: EC2 SecurityGroupEgress
+   *
+   * Validation: Optional; valid MdaaSecurityGroupRuleProps
+   */
+  readonly egressRules?: MdaaSecurityGroupRuleProps;
 }
 /**
  * EC2 key pair configuration with optional KMS encryption for the private key secret.
@@ -1019,12 +1073,26 @@ export interface Ec2L3ConstructProps extends MdaaL3ConstructProps {
   readonly adminRoles: MdaaRoleRef[];
   /** Security group configurations by name. */
   readonly securityGroups?: NamedSecurityGroupProps;
+  /** Rules added to pre-existing (externally-owned) security groups, by rule-set name. */
+  readonly rules?: NamedSecurityGroupRulesProps;
   /** Key pair configurations by name. */
   readonly keyPairs?: NamedKeyPairProps;
   /** CloudFormation Init configurations by name. */
   readonly cfnInit?: NamedInitProps;
   /** EC2 instance configurations by name. */
   readonly instances?: NamedInstanceProps;
+}
+
+/**
+ * Stable, token-free label for a security-group peer used when building a rule's logical id.
+ * When the source id is a concrete value (e.g. a literal sg-... id) it is used directly. When it
+ * is an unresolved CDK token (e.g. an ssm: reference resolved to ${Token[TOKEN.NN]}, whose index
+ * varies between synths) we fall back to a deterministic positional placeholder so the logical id
+ * stays stable across synths, mirroring how CDK's own SecurityGroup.renderPeer substitutes
+ * {IndirectPeer} for token peers.
+ */
+function sgPeerLabel(sgId: string, index: number): string {
+  return Token.isUnresolved(sgId) ? `sgref-${index}` : sgId;
 }
 
 //This stack creates and manages an EC2 instance
@@ -1054,6 +1122,7 @@ export class Ec2L3Construct extends MdaaL3Construct {
 
     this.createKeyPairs(props.keyPairs || {});
     this.createSecurityGroups(props.securityGroups || {});
+    this.createSecurityGroupRules(props.rules || {});
     this.cfnInit = this.createInit(props.cfnInit || {});
     this.createInstances(props.instances || {});
   }
@@ -1462,6 +1531,121 @@ export class Ec2L3Construct extends MdaaL3Construct {
 
       this.securityGroups[securityGroupName] = new MdaaSecurityGroup(this, securityGroupName, securityGroupCreateProps);
     });
+  }
+
+  /**
+   * Adds ingress/egress rules to pre-existing (externally-owned) security groups referenced by
+   * id. Does not create any security group. Each rule renders to a standalone
+   * SecurityGroupIngress/SecurityGroupEgress resource referencing both groups by id, which is how
+   * connectivity between two groups owned by different modules is wired without a circular
+   * cross-stack dependency. The group is imported with allowAllOutbound=false so that egress rules
+   * are emitted (CDK silently drops egress rules on an imported group when allowAllOutbound=true).
+   */
+  private createSecurityGroupRules(rules: NamedSecurityGroupRulesProps) {
+    Object.entries(rules).forEach(entry => {
+      const ruleSetName = entry[0];
+      const ruleSetProps = entry[1];
+      const securityGroupId = ruleSetProps.securityGroupId;
+
+      ruleSetProps.ingressRules?.ipv4?.forEach(rule => {
+        this.addSuppressableRule(ruleSetName, securityGroupId, 'ingress', Peer.ipv4(rule.cidr), rule.cidr, rule);
+      });
+      ruleSetProps.ingressRules?.sg?.forEach((rule, index) => {
+        this.addSuppressableRule(
+          ruleSetName,
+          securityGroupId,
+          'ingress',
+          Peer.securityGroupId(rule.sgId),
+          sgPeerLabel(rule.sgId, index),
+          rule,
+        );
+      });
+      ruleSetProps.ingressRules?.prefixList?.forEach(rule => {
+        this.addSuppressableRule(
+          ruleSetName,
+          securityGroupId,
+          'ingress',
+          Peer.prefixList(rule.prefixList),
+          rule.prefixList,
+          rule,
+        );
+      });
+
+      ruleSetProps.egressRules?.ipv4?.forEach(rule => {
+        this.addSuppressableRule(ruleSetName, securityGroupId, 'egress', Peer.ipv4(rule.cidr), rule.cidr, rule);
+      });
+      ruleSetProps.egressRules?.sg?.forEach((rule, index) => {
+        this.addSuppressableRule(
+          ruleSetName,
+          securityGroupId,
+          'egress',
+          Peer.securityGroupId(rule.sgId),
+          sgPeerLabel(rule.sgId, index),
+          rule,
+        );
+      });
+      ruleSetProps.egressRules?.prefixList?.forEach(rule => {
+        this.addSuppressableRule(
+          ruleSetName,
+          securityGroupId,
+          'egress',
+          Peer.prefixList(rule.prefixList),
+          rule.prefixList,
+          rule,
+        );
+      });
+    });
+  }
+
+  /**
+   * Adds a single ingress/egress rule to an externally-owned security group (referenced by id).
+   * Emits a CfnSecurityGroupIngress/Egress directly (rather than the plain CDK
+   * addIngressRule/addEgressRule on an imported group) so that per-rule CDK Nag suppressions
+   * configured on the rule can be applied, mirroring MdaaSecurityGroup.addSuppressable*Rule.
+   */
+  private addSuppressableRule(
+    ruleSetName: string,
+    securityGroupId: string,
+    direction: 'ingress' | 'egress',
+    peer: IPeer,
+    peerSource: string,
+    rule: {
+      port?: number;
+      toPort?: number;
+      protocol: string;
+      description?: string;
+      suppressions?: NagPackSuppression[];
+    },
+  ) {
+    const connection: Port = MdaaSecurityGroup.resolvePeerToPort(rule);
+    const verb = direction === 'ingress' ? 'from' : 'to';
+    // peer.uniqueId for a security-group peer sourced from an unresolved reference (e.g. an
+    // ssm: lookup) is a CDK token like ${Token[TOKEN.42]} whose index varies between synths,
+    // which would make both the description and the logical id non-deterministic. Fall back to
+    // the raw config source string (e.g. the ssm path) for the stable part of those.
+    const peerLabel = Token.isUnresolved(peer.uniqueId) ? peerSource : peer.uniqueId;
+    const description = rule.description ?? `${verb} ${peerLabel}:${connection}`;
+    // Deterministic, collision-free logical id per rule set + direction + peer + port.
+    const id = `rules-${ruleSetName}-${direction}-${peerLabel}-${connection}`.replace(/[^a-zA-Z0-9-]/g, '-');
+
+    const cfnRule =
+      direction === 'ingress'
+        ? new CfnSecurityGroupIngress(this, id, {
+            groupId: securityGroupId,
+            ...peer.toIngressRuleConfig(),
+            ...connection.toRuleJson(),
+            description,
+          })
+        : new CfnSecurityGroupEgress(this, id, {
+            groupId: securityGroupId,
+            ...peer.toEgressRuleConfig(),
+            ...connection.toRuleJson(),
+            description,
+          });
+
+    if (rule.suppressions) {
+      MdaaNagSuppressions.addConfigResourceSuppressions(cfnRule, rule.suppressions, true);
+    }
   }
 
   private getKmsKey(): IKey {

@@ -82,6 +82,62 @@ securityGroups:
           port: 5472
           protocol: tcp
 
+# (Optional) Map of rule-set names to rules added to pre-existing security
+# groups. Unlike securityGroups above, this does NOT create a security group;
+# it only authorizes additional ingress/egress rules on a group referenced by
+# id. Use this to wire connectivity between two security groups owned by
+# different modules without creating a circular cross-stack dependency, since
+# each rule references the peer group only by id.
+rules:
+  example-rule-set:
+    # ID of the existing security group to which the rules are added.
+    # Often created by another module/stack.
+    # Example SSM: ssm:/path/to/security-group/id
+    securityGroupId: sg-existingtarget
+    # (Optional) Inbound traffic rules added to the existing group
+    ingressRules:
+      # Rules for IPv4 CIDR-based ingress
+      ipv4:
+        - cidr: 10.0.0.0/28
+          port: 443
+          protocol: tcp
+          # (Optional) Description for the rule
+          description: HTTPS from internal subnet
+          # (Optional) Ending port for a port range
+          toPort: 443
+      # Rules for prefix list-based ingress
+      prefixList:
+        - prefixList: pl-4ea54027
+          description: prefix list for DynamoDB endpoint
+          protocol: tcp
+          port: 443
+          toPort: 443
+      # Rules for security group-based ingress
+      sg:
+        - sgId: sg-ingresssource
+          port: 8080
+          protocol: tcp
+          description: Ingress from app tier SG
+          toPort: 8080
+    # (Optional) Outbound traffic rules added to the existing group
+    egressRules:
+      ipv4:
+        - cidr: 10.0.0.0/28
+          port: 443
+          protocol: tcp
+          description: HTTPS to internal subnet
+          toPort: 443
+      prefixList:
+        - prefixList: pl-7da54014
+          description: prefix list for S3 endpoint
+          protocol: tcp
+          port: 443
+      sg:
+        - sgId: ssm:/another/module/sg/id
+          port: 5440
+          protocol: tcp
+          description: Egress to peer module SG on cluster port
+
 # (Optional) Map of named CloudFormation Init configurations.
 # Referenced by instances via initName.
 cfnInit:

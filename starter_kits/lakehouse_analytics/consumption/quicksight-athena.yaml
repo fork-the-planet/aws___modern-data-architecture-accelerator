@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/quicksight-project.json
+# QuickSight project with Athena data source.
+# Connects QuickSight to the Athena workgroup for ad-hoc querying of the data lake.
+
+principals:
+  Readers: 'arn:{{partition}}:quicksight:{{context:qs_identity_region}}:{{account}}:group/default/{{context:qs_readers_group}}'
+  Authors: 'arn:{{partition}}:quicksight:{{context:qs_identity_region}}:{{account}}:group/default/{{context:qs_authors_group}}'
+
+dataSources:
+  ATHENA:
+    datalake-athena:
+      dataSourceSpecificParameters:
+        athenaParameters:
+          # References the Athena workgroup created by the athena module in the data domain.
+          # The quicksight-project module automatically sets roleArn to the QuickSight
+          # resource-access role created by quicksight-account, so it is not specified here.
+          workGroup: ssm:/{{org}}/data/athena/workgroup/name
+      displayName: 'DataLakeAthena'
+      permissions:
+        - actions: 'READER_DATA_SOURCE'
+          principal: 'Readers'
+        - actions: 'AUTHOR_DATA_SOURCE'
+          principal: 'Authors'
+
+sharedFolders:
+  athena-analytics:
+    permissions:
+      - principal: Readers
+        actions: 'READER_FOLDER'
+      - principal: Authors
+        actions: 'AUTHOR_FOLDER'
+
+# Grants the QuickSight service role read access to the data lake and read/write
+# access to Athena query results (plus the KMS keys protecting them), so this Athena
+# data source can run queries. Keep this block even if you manually enable QuickSight
+# access in the console — the console's own Athena enablement omits KMS decrypt and
+# S3 PutObject, and these grants fill that gap.
+resourceAccessRolePermissions:
+  # Data lake (raw + transformed) and Athena results buckets.
+  s3BucketArns:
+    - 'ssm:/{{org}}/data/datalake/bucket/raw/arn'
+    - 'ssm:/{{org}}/data/datalake/bucket/transformed/arn'
+    - 'ssm:/{{org}}/data/athena/bucket/arn'
+  # KMS keys protecting the data lake objects and Athena query results.
+  kmsKeyArns:
+    - 'ssm:/{{org}}/data/datalake/kms/arn'
+    - 'ssm:/{{org}}/data/athena/kms/key/arn'

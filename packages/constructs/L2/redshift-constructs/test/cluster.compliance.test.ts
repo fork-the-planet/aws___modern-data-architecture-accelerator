@@ -5,7 +5,7 @@
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
 import { MdaaResourceType } from '@aws-mdaa/naming';
-import { Template } from 'aws-cdk-lib/assertions';
+import { Match, Template } from 'aws-cdk-lib/assertions';
 import { MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { ClusterSubnetGroup } from '@aws-cdk/aws-redshift-alpha';
 import { SecurityGroup, Subnet, Vpc } from 'aws-cdk-lib/aws-ec2';
@@ -132,6 +132,14 @@ describe('MDAA Construct Compliance Tests', () => {
         BucketName: 'test-logging-bucket',
         S3KeyPrefix: '/testing',
       },
+    });
+  });
+
+  test('Publishes the cluster identifier to SSM', () => {
+    template.hasResourceProperties('AWS::SSM::Parameter', {
+      Name: '/test-org/test-domain/test-module/cluster/test-cluster/identifier',
+      Type: 'String',
+      Value: Match.anyValue(),
     });
   });
 });

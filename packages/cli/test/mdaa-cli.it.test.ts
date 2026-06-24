@@ -4,6 +4,7 @@
  */
 
 import { MdaaDeploy } from '../lib/mdaa-cli';
+import { ModuleDeploymentConfig } from '../lib/config-types';
 import { itintegration } from './testing_utils';
 import { DuplicateAccountLevelModulesException } from '../lib/exceptions';
 
@@ -78,6 +79,36 @@ describe('MdaaDeploy.execCmd integration tests', () => {
 
     // The enhanced error reporting will show details in console.error
     // but we're not mocking anything - this is a real integration test
+  });
+
+  itintegration('should resolve context variables in postdeploy hook commands', () => {
+    const moduleConfig: ModuleDeploymentConfig = {
+      domainName: 'test-domain',
+      envName: 'test-env',
+      moduleName: 'test-module',
+      modulePath: '/tmp',
+      moduleCmds: ["echo 'main-cmd'"],
+      localModule: false,
+      useBootstrap: true,
+      effectiveContext: {
+        qs_readers_group: 'my-readers',
+        qs_authors_group: 'my-authors',
+      },
+      effectiveTagConfig: {},
+      tagConfigFiles: [],
+      customAspects: [],
+      deployAccount: '111111111111',
+      deployRegion: 'us-east-1',
+      moduleType: 'cdk',
+      effectiveModuleConfig: {},
+      postdeploy: {
+        command: 'echo "{{context:qs_readers_group}} {{context:qs_authors_group}}"',
+      },
+    } as ModuleDeploymentConfig;
+
+    expect(() => {
+      mdaaDeploy.deployModule(moduleConfig);
+    }).not.toThrow();
   });
 
   itintegration('should pass environment variables to executed commands', () => {

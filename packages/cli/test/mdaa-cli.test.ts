@@ -774,6 +774,20 @@ describe('Hook Execution', () => {
       expect(() => mdaa.deploy()).not.toThrow();
     });
 
+    test('should resolve context variables in postdeploy hook command', () => {
+      const configContents = {
+        ...createConfigWithHooks(undefined, {
+          command: 'echo "group={{context:qs_readers_group}}"',
+        }),
+        context: {
+          qs_readers_group: 'readers',
+        },
+      };
+
+      const mdaa = new MdaaDeploy(baseOptions, undefined, configContents);
+      expect(() => mdaa.deploy()).not.toThrow();
+    });
+
     test('should skip postdeploy hook with after_success when deployment fails', () => {
       // In test mode, deployment doesn't actually fail, so we just verify the config is accepted
       const configContents = createConfigWithHooks(undefined, {

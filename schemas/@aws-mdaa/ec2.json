@@ -393,6 +393,7 @@
             },
             "required": [
                 "_cfnProperties",
+                "_crossStackReferenceStrengthOverride",
                 "cfnOptions",
                 "cfnProperties",
                 "cfnPropertyNames",
@@ -2786,6 +2787,13 @@
             "description": "Map of security group names to their configurations.",
             "type": "object"
         },
+        "NamedSecurityGroupRulesProps": {
+            "additionalProperties": {
+                "$ref": "#/definitions/SecurityGroupRulesProps"
+            },
+            "description": "Map of rule-set names to ingress/egress rules added to a pre-existing security group.",
+            "type": "object"
+        },
         "NamedServiceProps": {
             "additionalProperties": {
                 "$ref": "#/definitions/ServiceProps"
@@ -3142,6 +3150,28 @@
             "properties": {
                 "securityGroupId": {
                     "description": "The Id of the SecurityGroup resource.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "securityGroupId"
+            ],
+            "type": "object"
+        },
+        "SecurityGroupRulesProps": {
+            "additionalProperties": false,
+            "description": "Ingress/egress rules added to a security group that already exists (created by another\nmodule). Unlike securityGroups, this does not create a security group; it only authorizes\nadditional rules on an existing one referenced by id. This is the declarative way to wire\nconnectivity between two security groups owned by different modules without creating a\ncircular cross-stack dependency, since each rule references the peer group only by id.",
+            "properties": {
+                "egressRules": {
+                    "$ref": "#/definitions/MdaaSecurityGroupRuleProps",
+                    "description": "Outbound traffic rules added to the existing security group. Supports ipv4 CIDR, prefix\nlist, and security group destinations.\n\nUse cases: Allowing this group to reach an externally-owned peer group\n\nAWS: EC2 SecurityGroupEgress\n\nValidation: Optional; valid MdaaSecurityGroupRuleProps"
+                },
+                "ingressRules": {
+                    "$ref": "#/definitions/MdaaSecurityGroupRuleProps",
+                    "description": "Inbound traffic rules added to the existing security group. Supports ipv4 CIDR, prefix\nlist, and security group sources.\n\nUse cases: Allowing an externally-owned peer group to reach this group\n\nAWS: EC2 SecurityGroupIngress\n\nValidation: Optional; valid MdaaSecurityGroupRuleProps"
+                },
+                "securityGroupId": {
+                    "description": "Id of the existing security group to which the rules will be added.\n\nUse cases: Cross-module security group wiring; Connectivity to externally-owned groups\n\nAWS: EC2 SecurityGroupIngress/SecurityGroupEgress GroupId\n\nValidation: Required; existing security group id (supports ssm: references)",
                     "type": "string"
                 }
             },
@@ -3719,6 +3749,10 @@
         "nag_suppressions": {
             "$ref": "#/definitions/MdaaNagSuppressionConfigs",
             "description": "Q-ENHANCED-PROPERTY\nOptional CDK Nag suppression configurations for compliance rule management enabling controlled security rule exceptions and compliance documentation. Provides structured approach to managing security rule suppressions with proper justification and documentation for compliance auditing.\n\nUse cases: Compliance management; Security rule exceptions; Audit documentation; Controlled suppressions\n\nAWS: CDK Nag suppressions for compliance rule management and security exception documentation\n\nValidation: Must be valid MdaaNagSuppressionConfigs if provided; enables structured compliance rule management"
+        },
+        "rules": {
+            "$ref": "#/definitions/NamedSecurityGroupRulesProps",
+            "description": "Rules added to pre-existing (externally-owned) security groups, keyed by rule-set name.\nUnlike securityGroups, this does not create any security group; it only authorizes\nadditional ingress/egress rules on a group referenced by id (supports ssm: references).\nUse this to wire connectivity between two security groups owned by different modules\nwithout creating a circular cross-stack dependency.\n\nUse cases: QuickSight<->Redshift connectivity; Cross-module security group wiring\n\nAWS: EC2 SecurityGroupIngress/SecurityGroupEgress\n\nValidation: Optional; map of rule-set name to SecurityGroupRulesProps"
         },
         "sagemakerBlueprint": {
             "$ref": "#/definitions/MdaaSageMakerCustomBluePrintConfig",

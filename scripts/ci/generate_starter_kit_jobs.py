@@ -98,9 +98,18 @@ before_script:
     KUBERNETES_EPHEMERAL_STORAGE_REQUEST: 8Gi
 """
 
+# Per-kit memory overrides (Gi). The base sizing (8Gi) suits most kits, which
+# synth a handful of modules sequentially. Larger kits — lakehouse_analytics
+# synths ~21 modules including QuickSight modules that bundle Python Lambda
+# assets — exceed 8Gi and get OOMKilled, so they are bumped here. Kits not
+# listed use the base sizing from .starter_kit_test_base.
+KIT_MEMORY_OVERRIDES_GI = {
+    "lakehouse_analytics": 16,
+}
+
 JOB_BLOCK = """\
 sk_{kit}:
-  extends: .starter_kit_test_base
+  extends: .starter_kit_test_base{memory_override}
   script:
     # Bootstrap like bin/mdaa: install deps, then build only the CLI plus the
     # @aws-mdaa/testing harness (jest loads its compiled lib). The CLI builds
@@ -110,6 +119,14 @@ sk_{kit}:
     - npm install --no-save --quiet
     - MDAA_BUILD_CODE_ONLY=true npx lerna run build --scope @aws-mdaa/cli --scope @aws-mdaa/testing --loglevel warn
     - cd starter_kits && python3 {runner} --kit {kit}
+"""
+
+# Appended to a job's `extends:` line when the kit needs more memory than the
+# base. Overrides only the memory request/limit; CPU and storage stay at base.
+MEMORY_OVERRIDE_BLOCK = """
+  variables:
+    KUBERNETES_MEMORY_REQUEST: {mem}Gi
+    KUBERNETES_MEMORY_LIMIT: {mem}Gi\
 """
 
 NOOP_BLOCK = """\
@@ -146,7 +163,9 @@ def generate(kits: list[str]) -> str:
         return NOOP_BLOCK
     parts = [HEADER, ""]
     for kit in kits:
-        parts.append(JOB_BLOCK.format(kit=kit, runner=RUNNER_REL))
+        mem = KIT_MEMORY_OVERRIDES_GI.get(kit)
+        memory_override = MEMORY_OVERRIDE_BLOCK.format(mem=mem) if mem else ""
+        parts.append(JOB_BLOCK.format(kit=kit, runner=RUNNER_REL, memory_override=memory_override))
         parts.append("")
     return "\n".join(parts)
 

@@ -254,3 +254,19 @@ sharedFolders:
     permissions:
       - principal: Lob2_ALLUSERS_GROUP
         actions: 'READER_FOLDER'
+
+# (Optional) S3/KMS permissions to attach to QuickSight's account-level
+# resource-access role (aws-quicksight-service-role-v0, created by the
+# quicksight-account module) so this project's data sources can read the data they
+# query. Attached here on the consumer side because the queried resources (e.g. the
+# Athena results bucket and its KMS key) are created by modules that deploy before
+# this one. The module imports that standard role by name and attaches a
+# customer-managed policy referencing it.
+resourceAccessRolePermissions:
+  # S3 bucket ARNs the data sources must read (and write, for Athena results).
+  s3BucketArns:
+    - 'arn:{{partition}}:s3:::sample-datalake-bucket'
+    - 'arn:{{partition}}:s3:::sample-athena-results-bucket'
+  # KMS key ARNs protecting the data lake objects and Athena query results.
+  kmsKeyArns:
+    - 'arn:{{partition}}:kms:{{region}}:{{account}}:key/sample-data-lake-key-id'

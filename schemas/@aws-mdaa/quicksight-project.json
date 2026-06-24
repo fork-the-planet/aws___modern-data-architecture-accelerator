@@ -599,6 +599,10 @@
                     },
                     "type": "array"
                 },
+                "secretsManager": {
+                    "$ref": "#/definitions/SecretsManagerAuthProps",
+                    "description": "Secrets Manager authentication for the data source. When set, MDAA both (a) wires the\nsecret as the data source credentials, and (b) grants QuickSight's account-level Secrets\nManager role (`aws-quicksight-secretsmanager-role-v0`) read access to the secret (and\ndecrypt on its KMS key). This is the single toggle for the secret-based auth path — the\nrole name and all IAM wiring are handled automatically.\n\nUse cases: Secret-based Redshift (or other credential-pair) data source authentication\n\nAWS: QuickSight DataSourceCredentials.SecretArn + IAM grant on the QuickSight SM role\n\nValidation: Optional; when present, `arn` is required"
+                },
                 "sslProperties": {
                     "$ref": "#/definitions/DataSourceSSLProps",
                     "description": "Secure Socket Layer (SSL) properties that apply when Amazon QuickSight connects to your underlying source."
@@ -2531,6 +2535,27 @@
             "additionalProperties": false,
             "type": "object"
         },
+        "ResourceAccessRolePermissionsProps": {
+            "additionalProperties": false,
+            "description": "Customer-managed S3/KMS permissions to attach to QuickSight's account-level resource-access\nrole so this project's data sources can read the data they query.\n\nThe role itself (typically `aws-quicksight-service-role-v0`) is created by the\n`@aws-mdaa/quicksight-account` module, which also attaches any AWS-managed policies (it owns\nthe role). This module attaches the data-source-specific S3/KMS grants as a customer-managed\npolicy on the (imported) role, since only the data source knows which buckets/keys it needs and\nthose references resolve only after the data lake / Athena modules deploy.\n\nUse cases: Granting an Athena data source read/write on its results bucket and decrypt on the\nKMS-encrypted data lake it queries\n\nAWS: IAM ManagedPolicy attached to the QuickSight resource-access role\n\nValidation: all fields optional. The role is always the standard QuickSight resource-access\nrole (aws-quicksight-service-role-v0), so it is not configurable here.",
+            "properties": {
+                "kmsKeyArns": {
+                    "description": "KMS key ARNs the data source must use to decrypt KMS-encrypted data and query results.\n\nUse cases: Decrypting KMS-encrypted data lake objects and Athena results\n\nAWS: IAM KMS permissions on the QuickSight resource-access role\n\nValidation: Optional; array of KMS key ARNs",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "s3BucketArns": {
+                    "description": "S3 bucket ARNs the data source must read (and write, for Athena query results). Grants\nList/Get on the buckets and their objects, plus Put for query results.\n\nUse cases: Data lake bucket access; Athena query-results bucket access\n\nAWS: IAM S3 permissions on the QuickSight resource-access role\n\nValidation: Optional; array of S3 bucket ARNs (arn:aws:s3:::bucket-name)",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                }
+            },
+            "type": "object"
+        },
         "ResourceEnvironment": {
             "additionalProperties": false,
             "description": "Represents the environment a given resource lives in.\n\nUsed as the return value for the `IEnvironmentAware.env` property.",
@@ -2618,6 +2643,27 @@
                 "supportsCodeGuruProfiling",
                 "supportsInlineCode",
                 "supportsSnapStart"
+            ],
+            "type": "object"
+        },
+        "SecretsManagerAuthProps": {
+            "additionalProperties": false,
+            "description": "Secrets Manager authentication configuration for a QuickSight data source.\n\nUse cases: Authenticating a Redshift data source with a stored secret instead of IAM\n\nAWS: Secrets Manager secret consumed by QuickSight, read via the QuickSight SM role\n\nValidation: `arn` is required; `kmsKeyArns` is required only if the secret is encrypted\nwith a customer-managed KMS key",
+            "properties": {
+                "arn": {
+                    "description": "ARN of the Secrets Manager secret holding the data source credentials. Used both as the\nQuickSight data source credential and to scope the IAM read grant on the QuickSight\nSecrets Manager role.\n\nUse cases: Redshift service-user credentials secret\n\nAWS: Secrets Manager secret ARN\n\nValidation: Required",
+                    "type": "string"
+                },
+                "kmsKeyArns": {
+                    "description": "KMS key ARNs encrypting the secret. QuickSight's Secrets Manager role is granted decrypt\non these so it can read a customer-managed-key-encrypted secret.\n\nUse cases: Decrypting a CMK-encrypted credentials secret\n\nAWS: IAM kms:Decrypt permission on the QuickSight Secrets Manager role\n\nValidation: Optional; required only for CMK-encrypted secrets",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                }
+            },
+            "required": [
+                "arn"
             ],
             "type": "object"
         },
@@ -3182,6 +3228,10 @@
             },
             "description": "Named QuickSight principals (users or groups) referenced in folder and data source permissions.\nEach key is a logical name, value is the QuickSight principal ARN.\n\nUse cases: Principal-based access control; Group permission assignment; User management\n\nAWS: QuickSight user/group ARNs for permission assignment\n\nValidation: Required; map of string keys to QuickSight principal ARNs",
             "type": "object"
+        },
+        "resourceAccessRolePermissions": {
+            "$ref": "#/definitions/ResourceAccessRolePermissionsProps",
+            "description": "Optional S3/KMS permissions to attach to QuickSight's account-level resource-access role\n(created by the quicksight-account module) so this project's data sources can read the data\nthey query. Because the queried resources (e.g. the Athena results bucket and its KMS key)\nare created by modules that deploy before this one, the grants are attached here on the\nconsumer side rather than by quicksight-account.\n\nUse cases: Granting QuickSight Athena data sources S3/KMS access to data lake and results buckets\n\nAWS: IAM S3/KMS permissions on the QuickSight resource-access role\n\nValidation: Optional; see ResourceAccessRolePermissionsProps"
         },
         "sagemakerBlueprint": {
             "$ref": "#/definitions/MdaaSageMakerCustomBluePrintConfig",

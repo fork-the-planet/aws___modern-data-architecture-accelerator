@@ -818,6 +818,7 @@ export class MdaaDeploy {
       domain: moduleDeploymentConfig.domainName,
       env: moduleDeploymentConfig.envName,
       module_name: moduleDeploymentConfig.moduleName,
+      context: moduleDeploymentConfig.effectiveContext,
       awsEnvironment: {
         region: moduleDeploymentConfig.deployRegion,
         account: moduleDeploymentConfig.deployAccount,

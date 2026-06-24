@@ -10,6 +10,8 @@ os.environ['AWS_SESSION_TOKEN'] = 'testing'
 os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
 os.environ['USER_AGENT_STRING'] = 'test-solution-identifier'
 os.environ['LOG_LEVEL'] = 'INFO'
+# quicksight_account.py reads ACCOUNT_ID at import time
+os.environ['ACCOUNT_ID'] = '111111111111'
 
 import pytest
 import boto3
@@ -21,11 +23,11 @@ from moto import mock_aws
 src_path = os.path.join(os.path.dirname(__file__), '../src/python')
 sys.path.insert(0, src_path)
 
-# Also add the ip_restrictions directory specifically
-ip_restrictions_path = os.path.join(src_path, 'ip_restrictions')
-sys.path.insert(0, ip_restrictions_path)
+# Also add the per-handler directories specifically so each module imports by name
+for handler_dir in ('ip_restrictions', 'groups', 'quicksight_account'):
+    sys.path.insert(0, os.path.join(src_path, handler_dir))
 
-test_account_id = "111111111111"
+from constants import test_account_id
 
 @pytest.fixture
 def aws_credentials():

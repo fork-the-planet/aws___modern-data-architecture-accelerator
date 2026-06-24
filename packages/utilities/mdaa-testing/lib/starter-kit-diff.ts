@@ -39,6 +39,8 @@ const PLACEHOLDER_SHAPE_MAP: Record<string, ShapeGenerator> = {
   account_id: index => String(index).repeat(12),
   // IPv4 CIDR blocks, distinct per index: 10.1.0.0/16, 10.2.0.0/16, ...
   cidr: index => `10.${index}.0.0/16`,
+  // VPC CIDR (same shape as `cidr`; named token used by kits whose context key is `vpc_cidr`)
+  vpc_cidr: index => `10.${index}.0.0/16`,
   // KMS key ARN (account segment matches account_id #1 for cross-reference realism)
   kms_arn: index => `arn:test-partition:kms:test-region:111111111111:key/test-key-${index}`,
   // Secrets Manager secret ARN. The trailing 6-character segment after the final

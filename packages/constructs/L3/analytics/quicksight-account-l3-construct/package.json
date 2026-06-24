@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "@aws-mdaa/construct": "1.6.0",
+    "@aws-mdaa/custom-constructs": "1.6.0",
     "@aws-mdaa/ec2-constructs": "1.6.0",
     "@aws-mdaa/iam-constructs": "1.6.0",
     "@aws-mdaa/iam-role-helper": "1.6.0",

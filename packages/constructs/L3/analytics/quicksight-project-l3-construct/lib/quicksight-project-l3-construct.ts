@@ -6,7 +6,8 @@
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
 import { MdaaResourceType } from '@aws-mdaa/naming';
 import { MdaaLambdaFunction, MdaaLambdaRole } from '@aws-mdaa/lambda-constructs';
-import { Effect, ManagedPolicy, PolicyStatement } from 'aws-cdk-lib/aws-iam';
+import { MdaaManagedPolicy, MdaaRole } from '@aws-mdaa/iam-constructs';
+import { Effect, ManagedPolicy, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Code, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { CustomResource, Duration } from 'aws-cdk-lib';
 import { Provider } from 'aws-cdk-lib/custom-resources';
@@ -319,6 +320,56 @@ export interface DataSourceProps {
    * @link http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-datasource.html#cfn-quicksight-datasource-vpcconnectionproperties
    */
   readonly vpcConnectionProperties?: DataSourceVPCProps;
+  /**
+   * Secrets Manager authentication for the data source. When set, MDAA both (a) wires the
+   * secret as the data source credentials, and (b) grants QuickSight's account-level Secrets
+   * Manager role (`aws-quicksight-secretsmanager-role-v0`) read access to the secret (and
+   * decrypt on its KMS key). This is the single toggle for the secret-based auth path — the
+   * role name and all IAM wiring are handled automatically.
+   *
+   * Use cases: Secret-based Redshift (or other credential-pair) data source authentication
+   *
+   * AWS: QuickSight DataSourceCredentials.SecretArn + IAM grant on the QuickSight SM role
+   *
+   * Validation: Optional; when present, `arn` is required
+   */
+  readonly secretsManager?: SecretsManagerAuthProps;
+}
+
+/**
+ * Secrets Manager authentication configuration for a QuickSight data source.
+ *
+ * Use cases: Authenticating a Redshift data source with a stored secret instead of IAM
+ *
+ * AWS: Secrets Manager secret consumed by QuickSight, read via the QuickSight SM role
+ *
+ * Validation: `arn` is required; `kmsKeyArns` is required only if the secret is encrypted
+ * with a customer-managed KMS key
+ */
+export interface SecretsManagerAuthProps {
+  /**
+   * ARN of the Secrets Manager secret holding the data source credentials. Used both as the
+   * QuickSight data source credential and to scope the IAM read grant on the QuickSight
+   * Secrets Manager role.
+   *
+   * Use cases: Redshift service-user credentials secret
+   *
+   * AWS: Secrets Manager secret ARN
+   *
+   * Validation: Required
+   */
+  readonly arn: string;
+  /**
+   * KMS key ARNs encrypting the secret. QuickSight's Secrets Manager role is granted decrypt
+   * on these so it can read a customer-managed-key-encrypted secret.
+   *
+   * Use cases: Decrypting a CMK-encrypted credentials secret
+   *
+   * AWS: IAM kms:Decrypt permission on the QuickSight Secrets Manager role
+   *
+   * Validation: Optional; required only for CMK-encrypted secrets
+   */
+  readonly kmsKeyArns?: string[];
 }
 export interface DataSourceWithIdAndTypeProps extends DataSourceProps {
   /**
@@ -332,6 +383,48 @@ export interface DataSourceWithIdAndTypeProps extends DataSourceProps {
    */
   readonly dataSourceId: string;
 }
+/**
+ * Customer-managed S3/KMS permissions to attach to QuickSight's account-level resource-access
+ * role so this project's data sources can read the data they query.
+ *
+ * The role itself (typically `aws-quicksight-service-role-v0`) is created by the
+ * `@aws-mdaa/quicksight-account` module, which also attaches any AWS-managed policies (it owns
+ * the role). This module attaches the data-source-specific S3/KMS grants as a customer-managed
+ * policy on the (imported) role, since only the data source knows which buckets/keys it needs and
+ * those references resolve only after the data lake / Athena modules deploy.
+ *
+ * Use cases: Granting an Athena data source read/write on its results bucket and decrypt on the
+ * KMS-encrypted data lake it queries
+ *
+ * AWS: IAM ManagedPolicy attached to the QuickSight resource-access role
+ *
+ * Validation: all fields optional. The role is always the standard QuickSight resource-access
+ * role (aws-quicksight-service-role-v0), so it is not configurable here.
+ */
+export interface ResourceAccessRolePermissionsProps {
+  /**
+   * S3 bucket ARNs the data source must read (and write, for Athena query results). Grants
+   * List/Get on the buckets and their objects, plus Put for query results.
+   *
+   * Use cases: Data lake bucket access; Athena query-results bucket access
+   *
+   * AWS: IAM S3 permissions on the QuickSight resource-access role
+   *
+   * Validation: Optional; array of S3 bucket ARNs (arn:aws:s3:::bucket-name)
+   */
+  readonly s3BucketArns?: string[];
+  /**
+   * KMS key ARNs the data source must use to decrypt KMS-encrypted data and query results.
+   *
+   * Use cases: Decrypting KMS-encrypted data lake objects and Athena results
+   *
+   * AWS: IAM KMS permissions on the QuickSight resource-access role
+   *
+   * Validation: Optional; array of KMS key ARNs
+   */
+  readonly kmsKeyArns?: string[];
+}
+
 export interface QuickSightProjectL3ConstructProps extends MdaaL3ConstructProps {
   /** Data source configurations for the QuickSight project. */
   readonly dataSources?: DataSourceWithIdAndTypeProps[];
@@ -339,10 +432,30 @@ export interface QuickSightProjectL3ConstructProps extends MdaaL3ConstructProps 
   readonly principals: { [key: string]: string };
   /** Map of folder names to shared folder configurations. */
   readonly sharedFolders?: { [key: string]: SharedFoldersProps };
+  /**
+   * Optional S3/KMS permissions to attach to QuickSight's account-level resource-access role so
+   * this project's data sources can read the data they query. See
+   * {@link ResourceAccessRolePermissionsProps}.
+   */
+  readonly resourceAccessRolePermissions?: ResourceAccessRolePermissionsProps;
 }
 
 export class QuickSightProjectL3Construct extends MdaaL3Construct {
   protected readonly props: QuickSightProjectL3ConstructProps;
+
+  /**
+   * QuickSight's account-level Secrets Manager role, created (by name) when Secrets Manager
+   * access is enabled in the QuickSight console. QuickSight assumes it to read secrets backing
+   * data sources.
+   */
+  public static readonly SECRETS_MANAGER_ROLE_NAME = 'aws-quicksight-secretsmanager-role-v0';
+
+  /**
+   * QuickSight's account-level resource-access role (created by the quicksight-account module).
+   * Athena data sources assume this role to reach Athena/S3, so it is used as the default
+   * `roleArn` for Athena parameters unless the config provides an explicit override.
+   */
+  public static readonly RESOURCE_ACCESS_ROLE_NAME = 'aws-quicksight-service-role-v0';
 
   public static readonly sharedFoldersActions: { [key: string]: string[] } = {
     READER_FOLDER: ['quicksight:DescribeFolder'],
@@ -388,6 +501,93 @@ export class QuickSightProjectL3Construct extends MdaaL3Construct {
       const qsFolderProvider: Provider = this.createQSFoldersProvider();
       this.createQSFolders(qsFolderProvider, arraySharedFolders);
     }
+    //Attach S3/KMS data-access permissions to the QuickSight resource-access role
+    if (this.props.resourceAccessRolePermissions) {
+      this.attachResourceAccessRolePermissions(this.props.resourceAccessRolePermissions);
+    }
+  }
+
+  /**
+   * Attaches a customer-managed S3/KMS policy to QuickSight's account-level resource-access role
+   * (created by the quicksight-account module) so this project's data sources can read the data
+   * they query. The role is imported by name; a dedicated ManagedPolicy referencing the role is
+   * created, which attaches correctly even though this module does not own the role.
+   */
+  private attachResourceAccessRolePermissions(config: ResourceAccessRolePermissionsProps): void {
+    const s3BucketArns = config.s3BucketArns || [];
+    const kmsKeyArns = config.kmsKeyArns || [];
+    if (s3BucketArns.length === 0 && kmsKeyArns.length === 0) {
+      return;
+    }
+
+    const role = Role.fromRoleName(
+      this,
+      'resource-access-role',
+      QuickSightProjectL3Construct.RESOURCE_ACCESS_ROLE_NAME,
+      { mutable: true },
+    );
+
+    const dataAccessPolicy = new MdaaManagedPolicy(this, 'resource-access-data-policy', {
+      managedPolicyName: 'qs-resource-access',
+      roles: [role],
+      naming: this.props.naming,
+    });
+
+    if (s3BucketArns.length > 0) {
+      const objectArns = s3BucketArns.map(bucketArn => `${bucketArn}/*`);
+      dataAccessPolicy.addStatements(
+        new PolicyStatement({
+          sid: 'S3ListAllBuckets',
+          effect: Effect.ALLOW,
+          actions: ['s3:ListAllMyBuckets'],
+          resources: [`arn:${this.partition}:s3:::*`],
+        }),
+        new PolicyStatement({
+          sid: 'S3BucketAccess',
+          effect: Effect.ALLOW,
+          actions: ['s3:ListBucket', 's3:GetBucketLocation', 's3:ListBucketMultipartUploads'],
+          resources: s3BucketArns,
+        }),
+        new PolicyStatement({
+          sid: 'S3ObjectAccess',
+          effect: Effect.ALLOW,
+          actions: [
+            's3:GetObject',
+            's3:GetObjectVersion',
+            's3:PutObject',
+            's3:AbortMultipartUpload',
+            's3:ListMultipartUploadParts',
+          ],
+          resources: objectArns,
+        }),
+      );
+    }
+
+    if (kmsKeyArns.length > 0) {
+      dataAccessPolicy.addStatements(
+        new PolicyStatement({
+          sid: 'KmsDataAccess',
+          effect: Effect.ALLOW,
+          actions: ['kms:Decrypt', 'kms:GenerateDataKey', 'kms:DescribeKey'],
+          resources: kmsKeyArns,
+        }),
+      );
+    }
+
+    MdaaNagSuppressions.addCodeResourceSuppressions(
+      dataAccessPolicy,
+      [
+        {
+          id: 'AwsSolutions-IAM5',
+          reason:
+            's3:ListAllMyBuckets does not support resource-level permissions and requires a wildcard resource ' +
+            '(see https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazons3.html). ' +
+            'Object-level actions are scoped to the configured bucket ARNs, where bucket/* is the narrowest scope possible.',
+          appliesTo: [{ regex: String.raw`/^Resource::arn:.*:s3:::\*$/` }, { regex: String.raw`/^Resource::.*\/\*$/` }],
+        },
+      ],
+      true,
+    );
   }
 
   // Creates Custom Resource per Shared Folder - Handles OnCreate, OnUpdate, OnDelete Stack Events
@@ -644,18 +844,39 @@ export class QuickSightProjectL3Construct extends MdaaL3Construct {
         },
       );
 
-      return new MdaaQuickSightDataSource(
+      // For Redshift data sources using IAM authentication, create a QuickSight-assumable
+      // role scoped to the cluster and inject its ARN. This lets the data source deploy
+      // without Secrets Manager (and its one-time console enablement). Done in-code because
+      // only this module knows the role is for QuickSight->Redshift IAM auth.
+      const { dataSourceParameters: redshiftResolvedParams, credentialsPolicy } =
+        this.maybeCreateRedshiftIamRole(dataSourceWithIdAndTypeProps);
+
+      // For Athena data sources, default the resource-access role ARN to the account-level
+      // QuickSight role (created by the quicksight-account module). The user does not need to
+      // know or specify this fixed AWS role name; an explicit roleArn in config still wins.
+      const dataSourceParameters = this.applyAthenaRoleDefault(
+        dataSourceWithIdAndTypeProps.type,
+        redshiftResolvedParams,
+      );
+
+      // For the secret-based auth path, derive the QuickSight credentials from the
+      // secretsManager block and grant QuickSight's Secrets Manager role read access to the
+      // secret. The user only supplies the secret (and its KMS key) once; the role name and
+      // IAM wiring are handled here.
+      const { credentials, secretAccessPolicy } = this.resolveSecretsManagerAuth(dataSourceWithIdAndTypeProps);
+
+      const dataSource = new MdaaQuickSightDataSource(
         this,
         this.props.naming.resourceName(dataSourceWithIdAndTypeProps.dataSourceId),
         {
           naming: this.props.naming,
-          alternateDataSourceParameters: [dataSourceWithIdAndTypeProps.dataSourceSpecificParameters],
+          alternateDataSourceParameters: [dataSourceParameters],
           awsAccountId: this.account,
-          credentials: dataSourceWithIdAndTypeProps.credentials,
+          credentials: credentials,
           dataSourceId: this.props.naming
             .withResourceType(MdaaResourceType.QUICKSIGHT_DATASOURCE)
             .resourceName(dataSourceWithIdAndTypeProps.dataSourceId),
-          dataSourceParameters: dataSourceWithIdAndTypeProps.dataSourceSpecificParameters,
+          dataSourceParameters: dataSourceParameters,
           errorInfo: dataSourceWithIdAndTypeProps.errorInfo,
           name: dataSourceWithIdAndTypeProps.displayName,
           permissions: qsDataSourcePermissions,
@@ -663,6 +884,198 @@ export class QuickSightProjectL3Construct extends MdaaL3Construct {
           vpcConnectionProperties: dataSourceWithIdAndTypeProps.vpcConnectionProperties,
         },
       );
+
+      // QuickSight validates the connection at create time (assuming the IAM-auth role, or
+      // reading the secret via the Secrets Manager role), so the relevant permissions policy
+      // must exist first. Credential/role references only create a dependency on the role
+      // itself, not its managed policy, so add it explicitly.
+      if (credentialsPolicy) {
+        dataSource.node.addDependency(credentialsPolicy);
+      }
+      if (secretAccessPolicy) {
+        dataSource.node.addDependency(secretAccessPolicy);
+      }
+
+      return dataSource;
     });
+  }
+
+  /**
+   * Resolves Secrets Manager authentication for a data source. When `secretsManager` is set,
+   * returns credentials referencing the secret ARN and creates a managed policy granting
+   * QuickSight's account-level Secrets Manager role (aws-quicksight-secretsmanager-role-v0)
+   * read access to the secret (and decrypt on its KMS keys). Otherwise returns the data
+   * source's configured credentials unchanged and no policy.
+   */
+  private resolveSecretsManagerAuth(dataSource: DataSourceWithIdAndTypeProps): {
+    credentials?: DataSourceCredentialsProps;
+    secretAccessPolicy?: ManagedPolicy;
+  } {
+    const secretsManager = dataSource.secretsManager;
+    if (!secretsManager) {
+      return { credentials: dataSource.credentials };
+    }
+
+    const role = Role.fromRoleName(
+      this,
+      `qs-sm-role-${dataSource.dataSourceId}`,
+      QuickSightProjectL3Construct.SECRETS_MANAGER_ROLE_NAME,
+      { mutable: true },
+    );
+
+    const secretAccessPolicy = new MdaaManagedPolicy(this, `secret-access-policy-${dataSource.dataSourceId}`, {
+      managedPolicyName: `qs-secret-${dataSource.dataSourceId}`,
+      roles: [role],
+      naming: this.props.naming,
+    });
+    secretAccessPolicy.addStatements(
+      new PolicyStatement({
+        sid: 'SecretsManagerAccess',
+        effect: Effect.ALLOW,
+        actions: ['secretsmanager:GetSecretValue', 'secretsmanager:DescribeSecret'],
+        resources: [secretsManager.arn],
+      }),
+    );
+    const kmsKeyArns = secretsManager.kmsKeyArns || [];
+    if (kmsKeyArns.length > 0) {
+      secretAccessPolicy.addStatements(
+        new PolicyStatement({
+          sid: 'SecretKmsDecrypt',
+          effect: Effect.ALLOW,
+          actions: ['kms:Decrypt', 'kms:DescribeKey'],
+          resources: kmsKeyArns,
+        }),
+      );
+    }
+
+    return {
+      credentials: { secretArn: secretsManager.arn },
+      secretAccessPolicy,
+    };
+  }
+
+  /**
+   * If the data source is a Redshift source configured for IAM authentication
+   * (`redshiftParameters.iamParameters`), create a QuickSight-assumable role with
+   * `GetClusterCredentials` scoped to the configured cluster, and set the role's ARN on the
+   * params. Returns the (possibly updated) data source parameters plus the role's permissions
+   * policy (so the caller can order the data source after it). Non-Redshift or non-IAM-auth
+   * sources return the params unchanged and no policy.
+   */
+  private maybeCreateRedshiftIamRole(dataSource: DataSourceWithIdAndTypeProps): {
+    dataSourceParameters: ConfigurationElement;
+    credentialsPolicy?: ManagedPolicy;
+  } {
+    const params = dataSource.dataSourceSpecificParameters;
+    const redshiftParameters = params?.redshiftParameters as ConfigurationElement | undefined;
+    const iamParameters = redshiftParameters?.iamParameters as ConfigurationElement | undefined;
+    if (dataSource.type !== 'REDSHIFT' || !iamParameters) {
+      return { dataSourceParameters: params };
+    }
+
+    const clusterId = redshiftParameters?.clusterId as string | undefined;
+    // QuickSight's RedshiftIAMParameters treats DatabaseUser as optional: when AutoCreateDatabaseUser
+    // is true and no DatabaseUser is set, QuickSight generates the user at runtime. In that case the
+    // user name is unknown at synth time, so the dbuser resource must be a wildcard. When databaseUser
+    // is configured, the dbuser resource is scoped to that specific user.
+    const databaseUser = (iamParameters.databaseUser as string | undefined) || '*';
+    if (!clusterId) {
+      throw new Error(
+        `Redshift data source '${dataSource.dataSourceId}' uses iamParameters but is missing redshiftParameters.clusterId`,
+      );
+    }
+
+    const role = new MdaaRole(this, `redshift-iam-role-${dataSource.dataSourceId}`, {
+      assumedBy: new ServicePrincipal('quicksight.amazonaws.com'),
+      description: `QuickSight Redshift IAM auth role for ${dataSource.dataSourceId}`,
+      roleName: `qs-redshift-${dataSource.dataSourceId}`,
+      naming: this.props.naming,
+    });
+
+    // Use a managed policy (not inline) per CDK Nag IAMNoInlinePolicy.
+    const credsPolicy = new MdaaManagedPolicy(this, `redshift-iam-policy-${dataSource.dataSourceId}`, {
+      managedPolicyName: `qs-redshift-${dataSource.dataSourceId}`,
+      roles: [role],
+      naming: this.props.naming,
+    });
+    credsPolicy.addStatements(
+      new PolicyStatement({
+        sid: 'RedshiftGetClusterCredentials',
+        effect: Effect.ALLOW,
+        actions: ['redshift:GetClusterCredentials', 'redshift:CreateClusterUser', 'redshift:JoinGroup'],
+        resources: [
+          `arn:${this.partition}:redshift:${this.region}:${this.account}:dbuser:${clusterId}/${databaseUser}`,
+          `arn:${this.partition}:redshift:${this.region}:${this.account}:dbname:${clusterId}/*`,
+          `arn:${this.partition}:redshift:${this.region}:${this.account}:dbgroup:${clusterId}/*`,
+        ],
+      }),
+      new PolicyStatement({
+        sid: 'RedshiftDescribeClusters',
+        effect: Effect.ALLOW,
+        actions: ['redshift:DescribeClusters'],
+        resources: [`arn:${this.partition}:redshift:${this.region}:${this.account}:cluster:${clusterId}`],
+      }),
+    );
+
+    MdaaNagSuppressions.addCodeResourceSuppressions(
+      credsPolicy,
+      [
+        {
+          id: 'AwsSolutions-IAM5',
+          reason:
+            'GetClusterCredentials, CreateClusterUser, and JoinGroup are all scoped to the specific cluster (see ' +
+            'https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazonredshift.html). ' +
+            'The dbuser resource is scoped to the configured databaseUser; when databaseUser is omitted (QuickSight ' +
+            'auto-creates the user via AutoCreateDatabaseUser), the user name is unknown at synth time so a wildcard ' +
+            'is required. The dbname and dbgroup names are determined at query time, so per-database/per-group ' +
+            'wildcards are also required.',
+          appliesTo: [
+            { regex: String.raw`/^Resource::arn:.*:redshift:.*:dbuser:.*/\*$/` },
+            { regex: String.raw`/^Resource::arn:.*:redshift:.*:dbname:.*/\*$/` },
+            { regex: String.raw`/^Resource::arn:.*:redshift:.*:dbgroup:.*/\*$/` },
+          ],
+        },
+      ],
+      true,
+    );
+
+    // Inject the created role's ARN into the IAM params (overriding any configured value).
+    return {
+      dataSourceParameters: {
+        ...params,
+        redshiftParameters: {
+          ...redshiftParameters,
+          iamParameters: {
+            ...iamParameters,
+            roleArn: role.roleArn,
+          },
+        },
+      },
+      credentialsPolicy: credsPolicy,
+    };
+  }
+
+  /**
+   * For Athena data sources, default `athenaParameters.roleArn` to the account-level
+   * QuickSight resource-access role (`aws-quicksight-service-role-v0`, created by the
+   * quicksight-account module). Setting this explicitly bypasses QuickSight's account-wide
+   * role lookup, which fails on accounts where access to AWS resources has never been
+   * configured. The user does not need to know this fixed role name. A roleArn already
+   * present in the config is preserved (explicit override wins). Non-Athena sources and
+   * sources without athenaParameters are returned unchanged.
+   */
+  private applyAthenaRoleDefault(type: string, params: ConfigurationElement): ConfigurationElement {
+    const athenaParameters = params?.athenaParameters as ConfigurationElement | undefined;
+    if (type !== 'ATHENA' || !athenaParameters || athenaParameters.roleArn) {
+      return params;
+    }
+    const roleArn = `arn:${this.partition}:iam::${this.account}:role/service-role/${QuickSightProjectL3Construct.RESOURCE_ACCESS_ROLE_NAME}`;
+    return {
+      ...params,
+      athenaParameters: {
+        ...athenaParameters,
+        roleArn,
+      },
+    };
   }
 }

@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/ec2.json
+# QuickSight<->Redshift security group wiring.
+#
+# Adds the two cross-security-group rules that let the QuickSight Redshift data source reach the
+# Redshift cluster, on the cluster port (5440):
+#   - egress on the QuickSight SG (governance domain) towards the Redshift SG
+#   - ingress on the Redshift SG (data domain) from the QuickSight SG
+#
+# This declares the rules as standalone SecurityGroupIngress/SecurityGroupEgress resources that
+# reference each pre-existing SG by id (resolved from SSM). Because each rule references the peer
+# group only by id, there is no circular cross-stack dependency between the QuickSight and Redshift
+# modules, so neither module needs to know about the other. This replaces the former
+# setup_qs_redshift_sg.sh predeploy hook.
+
+# Required by the ec2 module. No KMS key, key pairs, or instances are created here (only rules),
+# so this role is not actually used to grant access to anything; it just satisfies the module
+# contract.
+adminRoles:
+  - id: ssm:/{{org}}/governance/generated-role/data-admin/id
+
+rules:
+  # Allow the QuickSight SG to reach the Redshift SG on the cluster port.
+  quicksight-to-redshift-egress:
+    securityGroupId: ssm:/{{org}}/governance/quicksight-account/security-group/quicksight-sg/id
+    egressRules:
+      sg:
+        - sgId: ssm:/{{org}}/data/redshift/cluster/security-group-id
+          port: 5440
+          protocol: tcp
+          description: QuickSight to Redshift on cluster port
+  # Allow the Redshift SG to receive traffic from the QuickSight SG on the cluster port.
+  redshift-from-quicksight-ingress:
+    securityGroupId: ssm:/{{org}}/data/redshift/cluster/security-group-id
+    ingressRules:
+      sg:
+        - sgId: ssm:/{{org}}/governance/quicksight-account/security-group/quicksight-sg/id
+          port: 5440
+          protocol: tcp
+          description: Redshift from QuickSight on cluster port

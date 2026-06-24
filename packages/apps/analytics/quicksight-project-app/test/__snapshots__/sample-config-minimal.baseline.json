@@ -34,6 +34,7 @@
         "AlternateDataSourceParameters": [
           {
             "AthenaParameters": {
+              "RoleArn": "arn:test-partition:iam::test-account:role/service-role/aws-quicksight-service-role-v0",
               "WorkGroup": "my-workgroup"
             }
           }
@@ -42,6 +43,7 @@
         "DataSourceId": "test-org-test-env-test-domain-test-quicksight-project-minimal-my-athena",
         "DataSourceParameters": {
           "AthenaParameters": {
+            "RoleArn": "arn:test-partition:iam::test-account:role/service-role/aws-quicksight-service-role-v0",
             "WorkGroup": "my-workgroup"
           }
         },

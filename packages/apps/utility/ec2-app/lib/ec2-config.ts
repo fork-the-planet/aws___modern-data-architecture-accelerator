@@ -9,6 +9,7 @@ import {
   NamedInstanceProps,
   NamedKeyPairProps,
   NamedSecurityGroupProps,
+  NamedSecurityGroupRulesProps,
 } from '@aws-mdaa/ec2-l3-construct';
 import { MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 import { Schema } from 'ajv';
@@ -51,6 +52,20 @@ export interface InstanceConfigContents extends MdaaBaseConfigContents {
    */
   readonly securityGroups?: NamedSecurityGroupProps;
   /**
+   * Rules added to pre-existing (externally-owned) security groups, keyed by rule-set name.
+   * Unlike securityGroups, this does not create any security group; it only authorizes
+   * additional ingress/egress rules on a group referenced by id (supports ssm: references).
+   * Use this to wire connectivity between two security groups owned by different modules
+   * without creating a circular cross-stack dependency.
+   *
+   * Use cases: QuickSight<->Redshift connectivity; Cross-module security group wiring
+   *
+   * AWS: EC2 SecurityGroupIngress/SecurityGroupEgress
+   *
+   * Validation: Optional; map of rule-set name to SecurityGroupRulesProps
+   */
+  readonly rules?: NamedSecurityGroupRulesProps;
+  /**
    * CloudFormation Init configurations for automated instance bootstrap.
    * Each named init contains configSets (ordered execution sequences) and configs
    * (packages, commands, files, services). Referenced by instances via initName.
@@ -80,6 +95,7 @@ export interface InstanceConfigContents extends MdaaBaseConfigContents {
 export class InstanceConfigParser extends MdaaAppConfigParser<InstanceConfigContents> {
   public readonly keyPairs?: NamedKeyPairProps;
   public readonly securityGroups?: NamedSecurityGroupProps;
+  public readonly rules?: NamedSecurityGroupRulesProps;
   public readonly cfnInit?: NamedInitProps;
   public readonly instances?: NamedInstanceProps;
   public readonly adminRoles: MdaaRoleRef[];
@@ -90,5 +106,6 @@ export class InstanceConfigParser extends MdaaAppConfigParser<InstanceConfigCont
     this.cfnInit = this.configContents.cfnInit;
     this.instances = this.configContents.instances;
     this.securityGroups = this.configContents.securityGroups;
+    this.rules = this.configContents.rules;
   }
 }

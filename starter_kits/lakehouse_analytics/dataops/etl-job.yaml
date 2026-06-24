@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=../../../schemas/@aws-mdaa/dataops-job.json
+# ETL Glue job for data transformation.
+# Reads from the raw bucket and writes transformed data to the transformed bucket.
+
+projectName: example-project
+
+jobs:
+  SampleEtlJob:
+    executionRoleArn: ssm:/{{org}}/governance/generated-role/glue-etl/arn
+    command:
+      name: 'glueetl'
+      pythonVersion: '3'
+      # Sample ETL script shipped with the starter kit.
+      # Replace with your actual data transformation script.
+      scriptLocation: ./src/glue/python/etl_job.py
+    description: Sample ETL job for data transformation
+    glueVersion: '4.0'
+    workerType: G.1X
+    numberOfWorkers: 2
+    defaultArguments:
+      --job-bookmark-option: job-bookmark-enable
+    timeout: 60

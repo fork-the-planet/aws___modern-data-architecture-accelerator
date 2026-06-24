@@ -12,7 +12,9 @@ Configures and deploys account-level QuickSight resources including the QuickSig
 
 This module deploys and integrates the following resources:
 
-**QuickSight Service Role** - Will be used by QuickSight to setup account-level resources
+**QuickSight Service Role** - The account-level QuickSight resource-access role (`aws-quicksight-service-role-v0`) used by QuickSight to access the AWS services its data sources query.
+
+- When `resourceAccessRolePermissions` is configured, this module attaches the specified AWS-managed policies (e.g., `AWSQuicksightAthenaAccess`) and a scoped customer-managed S3/KMS policy to the role.
 
 **QuickSight Security Group** - Security group for QuickSight VPC connection, controlling network access to VPC-connected data sources such as Redshift.
 
@@ -21,6 +23,8 @@ This module deploys and integrates the following resources:
 **QuickSight Account** - Creates the QS account for the AWS account.
 
 - Requires manual post deployment configuration in order to use deployed service role and security group
+
+**QuickSight Groups** - When `groups` is configured, creates the listed QuickSight groups (in the `default` namespace) via a custom resource. Groups are created idempotently and are intentionally not deleted on stack removal, since they may own assets and be shared across deployments.
 
 ![quicksight-account](../../../constructs/L3/analytics/quicksight-account-l3-construct/docs/quicksight-account.png)
 

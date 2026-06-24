@@ -32,20 +32,22 @@ AWS: QuickSight account with service role, VPC security group, and account-level
 
 Validation: Required; valid AccountProps
 
-| Property                                                 | Pattern | Type             | Deprecated | Definition                                  | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                |
-| -------------------------------------------------------- | ------- | ---------------- | ---------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| + [authenticationMethod](#account_authenticationMethod ) | No      | enum (of string) | No         | In #/definitions/AuthenticationMethod       | Authentication method controlling how users sign in to QuickSight.<br /><br />Use cases: IAM federation; Active Directory integration; Mixed authentication<br /><br />AWS: QuickSight account authentication configuration<br /><br />Validation: Required; 'IAM_AND_QUICKSIGHT' \| 'IAM_ONLY' \| 'ACTIVE_DIRECTORY'                                                                                                            |
-| - [contactNumber](#account_contactNumber )               | No      | string           | No         | -                                           | Phone number for the QuickSight account administrator.<br /><br />Use cases: Admin contact; Support escalation<br /><br />AWS: QuickSight account admin phone<br /><br />Validation: Optional; 10 digits                                                                                                                                                                                                                         |
-| + [edition](#account_edition )                           | No      | enum (of string) | No         | In #/definitions/Edition                    | QuickSight edition determining feature set and pricing tier.<br /><br />Use cases: Feature tier selection; Q AI capabilities; Enterprise governance<br /><br />AWS: QuickSight account edition<br /><br />Validation: Required; 'STANDARD' \| 'ENTERPRISE' \| 'ENTERPRISE_AND_Q'                                                                                                                                                 |
-| - [emailAddress](#account_emailAddress )                 | No      | string           | No         | -                                           | Email address of the QuickSight account administrator.<br /><br />Use cases: Admin contact; Account management notifications<br /><br />AWS: QuickSight account admin email<br /><br />Validation: Optional; valid email format                                                                                                                                                                                                  |
-| - [firstName](#account_firstName )                       | No      | string           | No         | -                                           | First name of the QuickSight account administrator.<br /><br />Use cases: Account personalization; AWS support communications<br /><br />AWS: QuickSight account admin contact<br /><br />Validation: Optional; string                                                                                                                                                                                                           |
-| - [glueResourceAccess](#account_glueResourceAccess )     | No      | array of string  | No         | -                                           | Glue resource patterns granting the QuickSight service role read access to<br />data catalog databases and tables for data source setup and validation.<br /><br />Use cases: Glue catalog integration; Athena data source discovery; Schema validation<br /><br />AWS: IAM permissions for QuickSight service role on Glue resources<br /><br />Validation: Optional; array of Glue resource patterns (e.g., 'database/my-db*') |
-| - [ipRestrictions](#account_ipRestrictions )             | No      | array            | No         | -                                           | IP CIDR restrictions for QuickSight console access. When specified, only<br />requests from these IP ranges can access the QuickSight interface.<br /><br />Use cases: Corporate network restrictions; IP allowlisting; Compliance access control<br /><br />AWS: QuickSight IP restriction rules<br /><br />Validation: Optional; array of IpRestrictionProps with valid CIDR blocks                                            |
-| - [lastName](#account_lastName )                         | No      | string           | No         | -                                           | Last name of the QuickSight account administrator.<br /><br />Use cases: Account personalization; AWS support communications<br /><br />AWS: QuickSight account admin contact<br /><br />Validation: Optional; string                                                                                                                                                                                                            |
-| + [notificationEmail](#account_notificationEmail )       | No      | string           | No         | -                                           | Email address for QuickSight account notifications including billing and service alerts.<br /><br />Use cases: Account alerts; Billing notifications; Service communications<br /><br />AWS: QuickSight account notification email<br /><br />Validation: Required; valid email format                                                                                                                                           |
-| - [securityGroupAccess](#account_securityGroupAccess )   | No      | object           | No         | In #/definitions/MdaaSecurityGroupRuleProps | Security group rules controlling which VPC resources QuickSight can connect to.<br />Defines ingress rules for the MDAA-created security group (e.g., Redshift on port 5439).<br /><br />Use cases: Redshift access; RDS connectivity; Data source network rules<br /><br />AWS: QuickSight security group ingress rules<br /><br />Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules                    |
-| + [subnetIds](#account_subnetIds )                       | No      | array of string  | No         | -                                           | Subnets for the QuickSight VPC connection. QuickSight requires at least 2 subnets<br />for multi-AZ availability.<br /><br />Use cases: Multi-AZ data source connectivity; High availability<br /><br />AWS: QuickSight VPC connection subnets<br /><br />Validation: Required; array of valid subnet IDs; minimum 2                                                                                                             |
-| + [vpcId](#account_vpcId )                               | No      | string           | No         | -                                           | VPC to associate with the QuickSight account for secure data source connectivity.<br />MDAA creates a security group and VPC connection for QuickSight to reach<br />VPC-based resources like Redshift clusters.<br /><br />Use cases: Private data source access; Redshift connectivity; VPC network isolation<br /><br />AWS: QuickSight VPC connection<br /><br />Validation: Required; valid VPC ID (vpc-xxxxxxxx)           |
+| Property                                                                   | Pattern | Type             | Deprecated | Definition                                          | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| -------------------------------------------------------------------------- | ------- | ---------------- | ---------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| + [authenticationMethod](#account_authenticationMethod )                   | No      | enum (of string) | No         | In #/definitions/AuthenticationMethod               | Authentication method controlling how users sign in to QuickSight.<br /><br />Use cases: IAM federation; Active Directory integration; Mixed authentication<br /><br />AWS: QuickSight account authentication configuration<br /><br />Validation: Required; 'IAM_AND_QUICKSIGHT' \| 'IAM_ONLY' \| 'ACTIVE_DIRECTORY'                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| - [contactNumber](#account_contactNumber )                                 | No      | string           | No         | -                                                   | Phone number for the QuickSight account administrator.<br /><br />Use cases: Admin contact; Support escalation<br /><br />AWS: QuickSight account admin phone<br /><br />Validation: Optional; 10 digits                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| + [edition](#account_edition )                                             | No      | enum (of string) | No         | In #/definitions/Edition                            | QuickSight edition determining feature set and pricing tier.<br /><br />Use cases: Feature tier selection; Q AI capabilities; Enterprise governance<br /><br />AWS: QuickSight account edition<br /><br />Validation: Required; 'STANDARD' \| 'ENTERPRISE' \| 'ENTERPRISE_AND_Q'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| - [emailAddress](#account_emailAddress )                                   | No      | string           | No         | -                                                   | Email address of the QuickSight account administrator.<br /><br />Use cases: Admin contact; Account management notifications<br /><br />AWS: QuickSight account admin email<br /><br />Validation: Optional; valid email format                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| - [firstName](#account_firstName )                                         | No      | string           | No         | -                                                   | First name of the QuickSight account administrator.<br /><br />Use cases: Account personalization; AWS support communications<br /><br />AWS: QuickSight account admin contact<br /><br />Validation: Optional; string                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| - [glueResourceAccess](#account_glueResourceAccess )                       | No      | array of string  | No         | -                                                   | Glue resource patterns granting the QuickSight service role read access to<br />data catalog databases and tables for data source setup and validation.<br /><br />Use cases: Glue catalog integration; Athena data source discovery; Schema validation<br /><br />AWS: IAM permissions for QuickSight service role on Glue resources<br /><br />Validation: Optional; array of Glue resource patterns (e.g., 'database/my-db*')                                                                                                                                                                                                                                                                                                                                                                   |
+| - [groups](#account_groups )                                               | No      | array of string  | No         | -                                                   | Names of QuickSight groups (in the default namespace) to create. Groups are the<br />QuickSight identity construct referenced when granting access to data sources, datasets,<br />and folders. Created idempotently (existing groups are left as-is); not deleted on stack<br />removal. Add users to these groups separately (the console or \`quicksight create-group-membership\`).<br /><br />Use cases: Reader/Author access tiers referenced by data source and folder permissions<br /><br />AWS: QuickSight groups in the default namespace<br /><br />Validation: Optional; array of group names                                                                                                                                                                                         |
+| - [ipRestrictions](#account_ipRestrictions )                               | No      | array            | No         | -                                                   | IP CIDR restrictions for QuickSight console access. When specified, only<br />requests from these IP ranges can access the QuickSight interface.<br /><br />Use cases: Corporate network restrictions; IP allowlisting; Compliance access control<br /><br />AWS: QuickSight IP restriction rules<br /><br />Validation: Optional; array of IpRestrictionProps with valid CIDR blocks                                                                                                                                                                                                                                                                                                                                                                                                              |
+| - [lastName](#account_lastName )                                           | No      | string           | No         | -                                                   | Last name of the QuickSight account administrator.<br /><br />Use cases: Account personalization; AWS support communications<br /><br />AWS: QuickSight account admin contact<br /><br />Validation: Optional; string                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| + [notificationEmail](#account_notificationEmail )                         | No      | string           | No         | -                                                   | Email address for QuickSight account notifications including billing and service alerts.<br /><br />Use cases: Account alerts; Billing notifications; Service communications<br /><br />AWS: QuickSight account notification email<br /><br />Validation: Required; valid email format                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| - [resourceAccessRolePermissions](#account_resourceAccessRolePermissions ) | No      | object           | No         | In #/definitions/ResourceAccessRolePermissionsProps | Permissions to attach to the account-level QuickSight resource-access role<br />(\`aws-quicksight-service-role-v0\`) created by this module, so QuickSight data sources can<br />reach the underlying AWS resources (Athena/S3/KMS). This module owns the role, so it<br />attaches both the AWS-managed policies and the customer-managed S3/KMS policy here in one<br />place. See {@link ResourceAccessRolePermissionsProps}.<br /><br />Use cases: Granting an Athena data source the AWS-managed Athena policy plus scoped access<br />to its workgroup results bucket and the KMS-encrypted data lake it queries<br /><br />AWS: AWS-managed policies plus an IAM ManagedPolicy attached to the QuickSight resource-access role<br /><br />Validation: Optional; all sub-properties optional |
+| - [securityGroupAccess](#account_securityGroupAccess )                     | No      | object           | No         | In #/definitions/MdaaSecurityGroupRuleProps         | Security group rules controlling which VPC resources QuickSight can connect to.<br />Defines ingress rules for the MDAA-created security group (e.g., Redshift on port 5439).<br /><br />Use cases: Redshift access; RDS connectivity; Data source network rules<br /><br />AWS: QuickSight security group ingress rules<br /><br />Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules                                                                                                                                                                                                                                                                                                                                                                                      |
+| + [subnetIds](#account_subnetIds )                                         | No      | array of string  | No         | -                                                   | Subnets for the QuickSight VPC connection. QuickSight requires at least 2 subnets<br />for multi-AZ availability.<br /><br />Use cases: Multi-AZ data source connectivity; High availability<br /><br />AWS: QuickSight VPC connection subnets<br /><br />Validation: Required; array of valid subnet IDs; minimum 2                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| + [vpcId](#account_vpcId )                                                 | No      | string           | No         | -                                                   | VPC to associate with the QuickSight account for secure data source connectivity.<br />MDAA creates a security group and VPC connection for QuickSight to reach<br />VPC-based resources like Redshift clusters.<br /><br />Use cases: Private data source access; Redshift connectivity; VPC network isolation<br /><br />AWS: QuickSight VPC connection<br /><br />Validation: Required; valid VPC ID (vpc-xxxxxxxx)                                                                                                                                                                                                                                                                                                                                                                             |
 
 ### <a name="account_authenticationMethod"></a>1.1. Property `root > account > authenticationMethod`
 
@@ -169,7 +171,44 @@ Validation: Optional; array of Glue resource patterns (e.g., 'database/my-db*')
 | **Type**     | `string` |
 | **Required** | No       |
 
-### <a name="account_ipRestrictions"></a>1.7. Property `root > account > ipRestrictions`
+### <a name="account_groups"></a>1.7. Property `root > account > groups`
+
+|              |                   |
+| ------------ | ----------------- |
+| **Type**     | `array of string` |
+| **Required** | No                |
+
+**Description:** Names of QuickSight groups (in the default namespace) to create. Groups are the
+QuickSight identity construct referenced when granting access to data sources, datasets,
+and folders. Created idempotently (existing groups are left as-is); not deleted on stack
+removal. Add users to these groups separately (the console or `quicksight create-group-membership`).
+
+Use cases: Reader/Author access tiers referenced by data source and folder permissions
+
+AWS: QuickSight groups in the default namespace
+
+Validation: Optional; array of group names
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be       | Description |
+| ------------------------------------- | ----------- |
+| [groups items](#account_groups_items) | -           |
+
+#### <a name="account_groups_items"></a>1.7.1. root > account > groups > groups items
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `string` |
+| **Required** | No       |
+
+### <a name="account_ipRestrictions"></a>1.8. Property `root > account > ipRestrictions`
 
 |              |         |
 | ------------ | ------- |
@@ -197,7 +236,7 @@ Validation: Optional; array of IpRestrictionProps with valid CIDR blocks
 | --------------------------------------------------- | -------------------------------------------------------------- |
 | [IpRestrictionProps](#account_ipRestrictions_items) | IP restriction rule for QuickSight console access control. ... |
 
-#### <a name="account_ipRestrictions_items"></a>1.7.1. root > account > ipRestrictions > IpRestrictionProps
+#### <a name="account_ipRestrictions_items"></a>1.8.1. root > account > ipRestrictions > IpRestrictionProps
 
 |                           |                                  |
 | ------------------------- | -------------------------------- |
@@ -219,7 +258,7 @@ Validation: cidr is required; description is optional
 | + [cidr](#account_ipRestrictions_items_cidr )               | No      | string | No         | -          | CIDR block defining the allowed IP range for QuickSight access.<br /><br />Use cases: Network allowlisting; IP-based access control<br /><br />AWS: QuickSight IP restriction CIDR<br /><br />Validation: Required; valid CIDR notation (e.g., 'a.b.c.d/n') |
 | - [description](#account_ipRestrictions_items_description ) | No      | string | No         | -          | Human-readable description of the IP restriction rule.<br /><br />Use cases: Rule documentation; Administrative clarity<br /><br />AWS: QuickSight IP restriction metadata<br /><br />Validation: Optional; string                                          |
 
-##### <a name="account_ipRestrictions_items_cidr"></a>1.7.1.1. Property `root > account > ipRestrictions > ipRestrictions items > cidr`
+##### <a name="account_ipRestrictions_items_cidr"></a>1.8.1.1. Property `root > account > ipRestrictions > ipRestrictions items > cidr`
 
 |              |          |
 | ------------ | -------- |
@@ -234,7 +273,7 @@ AWS: QuickSight IP restriction CIDR
 
 Validation: Required; valid CIDR notation (e.g., 'a.b.c.d/n')
 
-##### <a name="account_ipRestrictions_items_description"></a>1.7.1.2. Property `root > account > ipRestrictions > ipRestrictions items > description`
+##### <a name="account_ipRestrictions_items_description"></a>1.8.1.2. Property `root > account > ipRestrictions > ipRestrictions items > description`
 
 |              |          |
 | ------------ | -------- |
@@ -249,7 +288,7 @@ AWS: QuickSight IP restriction metadata
 
 Validation: Optional; string
 
-### <a name="account_lastName"></a>1.8. Property `root > account > lastName`
+### <a name="account_lastName"></a>1.9. Property `root > account > lastName`
 
 |              |          |
 | ------------ | -------- |
@@ -264,7 +303,7 @@ AWS: QuickSight account admin contact
 
 Validation: Optional; string
 
-### <a name="account_notificationEmail"></a>1.9. Property `root > account > notificationEmail`
+### <a name="account_notificationEmail"></a>1.10. Property `root > account > notificationEmail`
 
 |              |          |
 | ------------ | -------- |
@@ -279,7 +318,75 @@ AWS: QuickSight account notification email
 
 Validation: Required; valid email format
 
-### <a name="account_securityGroupAccess"></a>1.10. Property `root > account > securityGroupAccess`
+### <a name="account_resourceAccessRolePermissions"></a>1.11. Property `root > account > resourceAccessRolePermissions`
+
+|                           |                                                  |
+| ------------------------- | ------------------------------------------------ |
+| **Type**                  | `object`                                         |
+| **Required**              | No                                               |
+| **Additional properties** | Not allowed                                      |
+| **Defined in**            | #/definitions/ResourceAccessRolePermissionsProps |
+
+**Description:** Permissions to attach to the account-level QuickSight resource-access role
+(`aws-quicksight-service-role-v0`) created by this module, so QuickSight data sources can
+reach the underlying AWS resources (Athena/S3/KMS). This module owns the role, so it
+attaches both the AWS-managed policies and the customer-managed S3/KMS policy here in one
+place. See {@link ResourceAccessRolePermissionsProps}.
+
+Use cases: Granting an Athena data source the AWS-managed Athena policy plus scoped access
+to its workgroup results bucket and the KMS-encrypted data lake it queries
+
+AWS: AWS-managed policies plus an IAM ManagedPolicy attached to the QuickSight resource-access role
+
+Validation: Optional; all sub-properties optional
+
+| Property                                                                           | Pattern | Type            | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [awsManagedPolicies](#account_resourceAccessRolePermissions_awsManagedPolicies ) | No      | array of string | No         | -          | AWS managed policy names to attach (e.g. \`service-role/AWSQuicksightAthenaAccess\` for Athena<br />connectivity). Names are used rather than full ARNs because AWS-managed policies live in the<br />\`aws\` account and are never cross-account, matching the \`awsManagedPolicies\` convention in the<br />roles module. Only this module can attach AWS-managed policies, since it owns the role.<br /><br />Data-source-specific S3/KMS grants are NOT configured here — those reference resources<br />(e.g. the Athena results bucket and its KMS key) that are created by other modules which<br />deploy after this one, so they are attached by the consuming data source module<br />(\`@aws-mdaa/quicksight-project\`) instead.<br /><br />Use cases: Athena API + query-results access via the AWS-managed policy<br /><br />AWS: AWS managed policies attached to the QuickSight resource-access role<br /><br />Validation: Optional; array of AWS managed policy names |
+
+#### <a name="account_resourceAccessRolePermissions_awsManagedPolicies"></a>1.11.1. Property `root > account > resourceAccessRolePermissions > awsManagedPolicies`
+
+|              |                   |
+| ------------ | ----------------- |
+| **Type**     | `array of string` |
+| **Required** | No                |
+
+**Description:** AWS managed policy names to attach (e.g. `service-role/AWSQuicksightAthenaAccess` for Athena
+connectivity). Names are used rather than full ARNs because AWS-managed policies live in the
+`aws` account and are never cross-account, matching the `awsManagedPolicies` convention in the
+roles module. Only this module can attach AWS-managed policies, since it owns the role.
+
+Data-source-specific S3/KMS grants are NOT configured here — those reference resources
+(e.g. the Athena results bucket and its KMS key) that are created by other modules which
+deploy after this one, so they are attached by the consuming data source module
+(`@aws-mdaa/quicksight-project`) instead.
+
+Use cases: Athena API + query-results access via the AWS-managed policy
+
+AWS: AWS managed policies attached to the QuickSight resource-access role
+
+Validation: Optional; array of AWS managed policy names
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                                             | Description |
+| ------------------------------------------------------------------------------------------- | ----------- |
+| [awsManagedPolicies items](#account_resourceAccessRolePermissions_awsManagedPolicies_items) | -           |
+
+##### <a name="account_resourceAccessRolePermissions_awsManagedPolicies_items"></a>1.11.1.1. root > account > resourceAccessRolePermissions > awsManagedPolicies > awsManagedPolicies items
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `string` |
+| **Required** | No       |
+
+### <a name="account_securityGroupAccess"></a>1.12. Property `root > account > securityGroupAccess`
 
 |                           |                                          |
 | ------------------------- | ---------------------------------------- |
@@ -303,7 +410,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 | - [prefixList](#account_securityGroupAccess_prefixList ) | No      | array | No         | -          | Prefix list rules for security group traffic control defining managed prefix list-based access restrictions     |
 | - [sg](#account_securityGroupAccess_sg )                 | No      | array | No         | -          | Security group rules for cross-security group traffic control defining security group-based access restrictions |
 
-#### <a name="account_securityGroupAccess_ipv4"></a>1.10.1. Property `root > account > securityGroupAccess > ipv4`
+#### <a name="account_securityGroupAccess_ipv4"></a>1.12.1. Property `root > account > securityGroupAccess > ipv4`
 
 |              |         |
 | ------------ | ------- |
@@ -324,7 +431,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 | ------------------------------------------------------- | ----------- |
 | [MdaaCidrPeer](#account_securityGroupAccess_ipv4_items) | -           |
 
-##### <a name="account_securityGroupAccess_ipv4_items"></a>1.10.1.1. root > account > securityGroupAccess > ipv4 > MdaaCidrPeer
+##### <a name="account_securityGroupAccess_ipv4_items"></a>1.12.1.1. root > account > securityGroupAccess > ipv4 > MdaaCidrPeer
 
 |                           |                            |
 | ------------------------- | -------------------------- |
@@ -342,7 +449,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 | - [suppressions](#account_securityGroupAccess_ipv4_items_suppressions ) | No      | array  | No         | -          | -                                                                                             |
 | - [toPort](#account_securityGroupAccess_ipv4_items_toPort )             | No      | number | No         | -          | The ending port number for the security group rule defining the upper bound of the port range |
 
-###### <a name="account_securityGroupAccess_ipv4_items_cidr"></a>1.10.1.1.1. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > cidr`
+###### <a name="account_securityGroupAccess_ipv4_items_cidr"></a>1.12.1.1.1. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > cidr`
 
 |              |          |
 | ------------ | -------- |
@@ -351,28 +458,28 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 
 **Description:** CIDR block specification for network access control in security group rules enabling IP
 
-###### <a name="account_securityGroupAccess_ipv4_items_description"></a>1.10.1.1.2. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > description`
+###### <a name="account_securityGroupAccess_ipv4_items_description"></a>1.12.1.1.2. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > description`
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="account_securityGroupAccess_ipv4_items_port"></a>1.10.1.1.3. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > port`
+###### <a name="account_securityGroupAccess_ipv4_items_port"></a>1.12.1.1.3. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > port`
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `number` |
 | **Required** | No       |
 
-###### <a name="account_securityGroupAccess_ipv4_items_protocol"></a>1.10.1.1.4. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > protocol`
+###### <a name="account_securityGroupAccess_ipv4_items_protocol"></a>1.12.1.1.4. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > protocol`
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | Yes      |
 
-###### <a name="account_securityGroupAccess_ipv4_items_suppressions"></a>1.10.1.1.5. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > suppressions`
+###### <a name="account_securityGroupAccess_ipv4_items_suppressions"></a>1.12.1.1.5. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > suppressions`
 
 |              |         |
 | ------------ | ------- |
@@ -391,7 +498,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 | -------------------------------------------------------------------------------- | ----------------------------------------- |
 | [NagPackSuppression](#account_securityGroupAccess_ipv4_items_suppressions_items) | Interface for creating a rule suppression |
 
-###### <a name="account_securityGroupAccess_ipv4_items_suppressions_items"></a>1.10.1.1.5.1. root > account > securityGroupAccess > ipv4 > ipv4 items > suppressions > NagPackSuppression
+###### <a name="account_securityGroupAccess_ipv4_items_suppressions_items"></a>1.12.1.1.5.1. root > account > securityGroupAccess > ipv4 > ipv4 items > suppressions > NagPackSuppression
 
 |                           |                                  |
 | ------------------------- | -------------------------------- |
@@ -408,7 +515,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 | + [id](#account_securityGroupAccess_ipv4_items_suppressions_items_id )               | No      | string | No         | -          | The id of the rule to ignore                          |
 | + [reason](#account_securityGroupAccess_ipv4_items_suppressions_items_reason )       | No      | string | No         | -          | The reason to ignore the rule (minimum 10 characters) |
 
-###### <a name="account_securityGroupAccess_ipv4_items_suppressions_items_appliesTo"></a>1.10.1.1.5.1.1. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > suppressions > suppressions items > appliesTo`
+###### <a name="account_securityGroupAccess_ipv4_items_suppressions_items_appliesTo"></a>1.12.1.1.5.1.1. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > suppressions > suppressions items > appliesTo`
 
 |              |         |
 | ------------ | ------- |
@@ -429,7 +536,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 | --------------------------------------------------------------------------------------------------------- | ---------------------- |
 | [NagPackSuppressionAppliesTo](#account_securityGroupAccess_ipv4_items_suppressions_items_appliesTo_items) | A granular suppression |
 
-###### <a name="account_securityGroupAccess_ipv4_items_suppressions_items_appliesTo_items"></a>1.10.1.1.5.1.1.1. root > account > securityGroupAccess > ipv4 > ipv4 items > suppressions > suppressions items > appliesTo > NagPackSuppressionAppliesTo
+###### <a name="account_securityGroupAccess_ipv4_items_suppressions_items_appliesTo_items"></a>1.12.1.1.5.1.1.1. root > account > securityGroupAccess > ipv4 > ipv4 items > suppressions > suppressions items > appliesTo > NagPackSuppressionAppliesTo
 
 |                           |                                           |
 | ------------------------- | ----------------------------------------- |
@@ -445,7 +552,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 | [RegexAppliesTo](#account_securityGroupAccess_ipv4_items_suppressions_items_appliesTo_items_anyOf_i0) |
 | [item 1](#account_securityGroupAccess_ipv4_items_suppressions_items_appliesTo_items_anyOf_i1)         |
 
-###### <a name="account_securityGroupAccess_ipv4_items_suppressions_items_appliesTo_items_anyOf_i0"></a>1.10.1.1.5.1.1.1.1. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > suppressions > suppressions items > appliesTo > appliesTo items > anyOf > RegexAppliesTo`
+###### <a name="account_securityGroupAccess_ipv4_items_suppressions_items_appliesTo_items_anyOf_i0"></a>1.12.1.1.5.1.1.1.1. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > suppressions > suppressions items > appliesTo > appliesTo items > anyOf > RegexAppliesTo`
 
 |                           |                              |
 | ------------------------- | ---------------------------- |
@@ -460,7 +567,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 | ----------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------ |
 | + [regex](#account_securityGroupAccess_ipv4_items_suppressions_items_appliesTo_items_anyOf_i0_regex ) | No      | string | No         | -          | An ECMA-262 regex string |
 
-###### <a name="account_securityGroupAccess_ipv4_items_suppressions_items_appliesTo_items_anyOf_i0_regex"></a>1.10.1.1.5.1.1.1.1.1. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > suppressions > suppressions items > appliesTo > appliesTo items > anyOf > item 0 > regex`
+###### <a name="account_securityGroupAccess_ipv4_items_suppressions_items_appliesTo_items_anyOf_i0_regex"></a>1.12.1.1.5.1.1.1.1.1. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > suppressions > suppressions items > appliesTo > appliesTo items > anyOf > item 0 > regex`
 
 |              |          |
 | ------------ | -------- |
@@ -469,14 +576,14 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 
 **Description:** An ECMA-262 regex string
 
-###### <a name="account_securityGroupAccess_ipv4_items_suppressions_items_appliesTo_items_anyOf_i1"></a>1.10.1.1.5.1.1.1.2. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > suppressions > suppressions items > appliesTo > appliesTo items > anyOf > item 1`
+###### <a name="account_securityGroupAccess_ipv4_items_suppressions_items_appliesTo_items_anyOf_i1"></a>1.12.1.1.5.1.1.1.2. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > suppressions > suppressions items > appliesTo > appliesTo items > anyOf > item 1`
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="account_securityGroupAccess_ipv4_items_suppressions_items_id"></a>1.10.1.1.5.1.2. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > suppressions > suppressions items > id`
+###### <a name="account_securityGroupAccess_ipv4_items_suppressions_items_id"></a>1.12.1.1.5.1.2. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > suppressions > suppressions items > id`
 
 |              |          |
 | ------------ | -------- |
@@ -485,7 +592,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 
 **Description:** The id of the rule to ignore
 
-###### <a name="account_securityGroupAccess_ipv4_items_suppressions_items_reason"></a>1.10.1.1.5.1.3. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > suppressions > suppressions items > reason`
+###### <a name="account_securityGroupAccess_ipv4_items_suppressions_items_reason"></a>1.12.1.1.5.1.3. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > suppressions > suppressions items > reason`
 
 |              |          |
 | ------------ | -------- |
@@ -494,7 +601,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 
 **Description:** The reason to ignore the rule (minimum 10 characters)
 
-###### <a name="account_securityGroupAccess_ipv4_items_toPort"></a>1.10.1.1.6. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > toPort`
+###### <a name="account_securityGroupAccess_ipv4_items_toPort"></a>1.12.1.1.6. Property `root > account > securityGroupAccess > ipv4 > ipv4 items > toPort`
 
 |              |          |
 | ------------ | -------- |
@@ -503,7 +610,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 
 **Description:** The ending port number for the security group rule defining the upper bound of the port range
 
-#### <a name="account_securityGroupAccess_prefixList"></a>1.10.2. Property `root > account > securityGroupAccess > prefixList`
+#### <a name="account_securityGroupAccess_prefixList"></a>1.12.2. Property `root > account > securityGroupAccess > prefixList`
 
 |              |         |
 | ------------ | ------- |
@@ -524,7 +631,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 | ------------------------------------------------------------------- | ----------- |
 | [MdaaPrefixListPeer](#account_securityGroupAccess_prefixList_items) | -           |
 
-##### <a name="account_securityGroupAccess_prefixList_items"></a>1.10.2.1. root > account > securityGroupAccess > prefixList > MdaaPrefixListPeer
+##### <a name="account_securityGroupAccess_prefixList_items"></a>1.12.2.1. root > account > securityGroupAccess > prefixList > MdaaPrefixListPeer
 
 |                           |                                  |
 | ------------------------- | -------------------------------- |
@@ -542,21 +649,21 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 | - [suppressions](#account_securityGroupAccess_prefixList_items_suppressions ) | No      | array  | No         | -          | -                                                                                             |
 | - [toPort](#account_securityGroupAccess_prefixList_items_toPort )             | No      | number | No         | -          | The ending port number for the security group rule defining the upper bound of the port range |
 
-###### <a name="account_securityGroupAccess_prefixList_items_description"></a>1.10.2.1.1. Property `root > account > securityGroupAccess > prefixList > prefixList items > description`
+###### <a name="account_securityGroupAccess_prefixList_items_description"></a>1.12.2.1.1. Property `root > account > securityGroupAccess > prefixList > prefixList items > description`
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="account_securityGroupAccess_prefixList_items_port"></a>1.10.2.1.2. Property `root > account > securityGroupAccess > prefixList > prefixList items > port`
+###### <a name="account_securityGroupAccess_prefixList_items_port"></a>1.12.2.1.2. Property `root > account > securityGroupAccess > prefixList > prefixList items > port`
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `number` |
 | **Required** | No       |
 
-###### <a name="account_securityGroupAccess_prefixList_items_prefixList"></a>1.10.2.1.3. Property `root > account > securityGroupAccess > prefixList > prefixList items > prefixList`
+###### <a name="account_securityGroupAccess_prefixList_items_prefixList"></a>1.12.2.1.3. Property `root > account > securityGroupAccess > prefixList > prefixList items > prefixList`
 
 |              |          |
 | ------------ | -------- |
@@ -565,14 +672,14 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 
 **Description:** Prefix list identifier for managed IP range access control in security group rules enabling
 
-###### <a name="account_securityGroupAccess_prefixList_items_protocol"></a>1.10.2.1.4. Property `root > account > securityGroupAccess > prefixList > prefixList items > protocol`
+###### <a name="account_securityGroupAccess_prefixList_items_protocol"></a>1.12.2.1.4. Property `root > account > securityGroupAccess > prefixList > prefixList items > protocol`
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | Yes      |
 
-###### <a name="account_securityGroupAccess_prefixList_items_suppressions"></a>1.10.2.1.5. Property `root > account > securityGroupAccess > prefixList > prefixList items > suppressions`
+###### <a name="account_securityGroupAccess_prefixList_items_suppressions"></a>1.12.2.1.5. Property `root > account > securityGroupAccess > prefixList > prefixList items > suppressions`
 
 |              |         |
 | ------------ | ------- |
@@ -591,7 +698,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 | -------------------------------------------------------------------------------------- | ----------------------------------------- |
 | [NagPackSuppression](#account_securityGroupAccess_prefixList_items_suppressions_items) | Interface for creating a rule suppression |
 
-###### <a name="account_securityGroupAccess_prefixList_items_suppressions_items"></a>1.10.2.1.5.1. root > account > securityGroupAccess > prefixList > prefixList items > suppressions > NagPackSuppression
+###### <a name="account_securityGroupAccess_prefixList_items_suppressions_items"></a>1.12.2.1.5.1. root > account > securityGroupAccess > prefixList > prefixList items > suppressions > NagPackSuppression
 
 |                           |                                                                                                                         |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
@@ -602,7 +709,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 
 **Description:** Interface for creating a rule suppression
 
-###### <a name="account_securityGroupAccess_prefixList_items_toPort"></a>1.10.2.1.6. Property `root > account > securityGroupAccess > prefixList > prefixList items > toPort`
+###### <a name="account_securityGroupAccess_prefixList_items_toPort"></a>1.12.2.1.6. Property `root > account > securityGroupAccess > prefixList > prefixList items > toPort`
 
 |              |          |
 | ------------ | -------- |
@@ -611,7 +718,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 
 **Description:** The ending port number for the security group rule defining the upper bound of the port range
 
-#### <a name="account_securityGroupAccess_sg"></a>1.10.3. Property `root > account > securityGroupAccess > sg`
+#### <a name="account_securityGroupAccess_sg"></a>1.12.3. Property `root > account > securityGroupAccess > sg`
 
 |              |         |
 | ------------ | ------- |
@@ -632,7 +739,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 | -------------------------------------------------------------- | ----------- |
 | [MdaaSecurityGroupPeer](#account_securityGroupAccess_sg_items) | -           |
 
-##### <a name="account_securityGroupAccess_sg_items"></a>1.10.3.1. root > account > securityGroupAccess > sg > MdaaSecurityGroupPeer
+##### <a name="account_securityGroupAccess_sg_items"></a>1.12.3.1. root > account > securityGroupAccess > sg > MdaaSecurityGroupPeer
 
 |                           |                                     |
 | ------------------------- | ----------------------------------- |
@@ -650,28 +757,28 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 | - [suppressions](#account_securityGroupAccess_sg_items_suppressions ) | No      | array  | No         | -          | -                                                                                             |
 | - [toPort](#account_securityGroupAccess_sg_items_toPort )             | No      | number | No         | -          | The ending port number for the security group rule defining the upper bound of the port range |
 
-###### <a name="account_securityGroupAccess_sg_items_description"></a>1.10.3.1.1. Property `root > account > securityGroupAccess > sg > sg items > description`
+###### <a name="account_securityGroupAccess_sg_items_description"></a>1.12.3.1.1. Property `root > account > securityGroupAccess > sg > sg items > description`
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="account_securityGroupAccess_sg_items_port"></a>1.10.3.1.2. Property `root > account > securityGroupAccess > sg > sg items > port`
+###### <a name="account_securityGroupAccess_sg_items_port"></a>1.12.3.1.2. Property `root > account > securityGroupAccess > sg > sg items > port`
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `number` |
 | **Required** | No       |
 
-###### <a name="account_securityGroupAccess_sg_items_protocol"></a>1.10.3.1.3. Property `root > account > securityGroupAccess > sg > sg items > protocol`
+###### <a name="account_securityGroupAccess_sg_items_protocol"></a>1.12.3.1.3. Property `root > account > securityGroupAccess > sg > sg items > protocol`
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | Yes      |
 
-###### <a name="account_securityGroupAccess_sg_items_sgId"></a>1.10.3.1.4. Property `root > account > securityGroupAccess > sg > sg items > sgId`
+###### <a name="account_securityGroupAccess_sg_items_sgId"></a>1.12.3.1.4. Property `root > account > securityGroupAccess > sg > sg items > sgId`
 
 |              |          |
 | ------------ | -------- |
@@ -680,7 +787,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 
 **Description:** Security group identifier for security group-based access control in network rules enabling
 
-###### <a name="account_securityGroupAccess_sg_items_suppressions"></a>1.10.3.1.5. Property `root > account > securityGroupAccess > sg > sg items > suppressions`
+###### <a name="account_securityGroupAccess_sg_items_suppressions"></a>1.12.3.1.5. Property `root > account > securityGroupAccess > sg > sg items > suppressions`
 
 |              |         |
 | ------------ | ------- |
@@ -699,7 +806,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 | ------------------------------------------------------------------------------ | ----------------------------------------- |
 | [NagPackSuppression](#account_securityGroupAccess_sg_items_suppressions_items) | Interface for creating a rule suppression |
 
-###### <a name="account_securityGroupAccess_sg_items_suppressions_items"></a>1.10.3.1.5.1. root > account > securityGroupAccess > sg > sg items > suppressions > NagPackSuppression
+###### <a name="account_securityGroupAccess_sg_items_suppressions_items"></a>1.12.3.1.5.1. root > account > securityGroupAccess > sg > sg items > suppressions > NagPackSuppression
 
 |                           |                                                                                                                         |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
@@ -710,7 +817,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 
 **Description:** Interface for creating a rule suppression
 
-###### <a name="account_securityGroupAccess_sg_items_toPort"></a>1.10.3.1.6. Property `root > account > securityGroupAccess > sg > sg items > toPort`
+###### <a name="account_securityGroupAccess_sg_items_toPort"></a>1.12.3.1.6. Property `root > account > securityGroupAccess > sg > sg items > toPort`
 
 |              |          |
 | ------------ | -------- |
@@ -719,7 +826,7 @@ Validation: Optional; valid MdaaSecurityGroupRuleProps with sg/ipv4 rules
 
 **Description:** The ending port number for the security group rule defining the upper bound of the port range
 
-### <a name="account_subnetIds"></a>1.11. Property `root > account > subnetIds`
+### <a name="account_subnetIds"></a>1.13. Property `root > account > subnetIds`
 
 |              |                   |
 | ------------ | ----------------- |
@@ -747,14 +854,14 @@ Validation: Required; array of valid subnet IDs; minimum 2
 | ------------------------------------------- | ----------- |
 | [subnetIds items](#account_subnetIds_items) | -           |
 
-#### <a name="account_subnetIds_items"></a>1.11.1. root > account > subnetIds > subnetIds items
+#### <a name="account_subnetIds_items"></a>1.13.1. root > account > subnetIds > subnetIds items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-### <a name="account_vpcId"></a>1.12. Property `root > account > vpcId`
+### <a name="account_vpcId"></a>1.14. Property `root > account > vpcId`
 
 |              |          |
 | ------------ | -------- |
