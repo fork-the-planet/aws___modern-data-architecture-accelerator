@@ -213,6 +213,7 @@ export class SagemakerNotebookL3Construct extends MdaaL3Construct {
       egressRules: notebookProps.securityGroupEgress,
       allowAllOutbound: !customEgress,
       addSelfReferenceRule: false,
+      useParentSSMScope: true,
     };
 
     const securityGroup = new MdaaSecurityGroup(this, `${notebookId}-sg`, securityGroupProps);

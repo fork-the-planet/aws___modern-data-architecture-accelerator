@@ -247,6 +247,7 @@ export class NifiL3Construct extends MdaaL3Construct {
       naming: props.naming,
       allowAllOutbound: true,
       ingressRules: props.nifi.eksSecurityGroupIngressRules,
+      useParentSSMScope: true,
     };
     const clusterSecurityGroup = new MdaaSecurityGroup(scope, 'cluster-sg', clusterSecurityGroupProps);
 
@@ -458,6 +459,7 @@ export class NifiL3Construct extends MdaaL3Construct {
       naming: this.props.naming,
       allowAllOutbound: true,
       ingressRules: ingressRules,
+      useParentSSMScope: true,
     };
     const registrySecurityGroup = new MdaaSecurityGroup(this, 'registry-sg', registrySecurityGroupProps);
 
@@ -737,6 +739,7 @@ export class NifiL3Construct extends MdaaL3Construct {
       naming: this.props.naming,
       allowAllOutbound: true,
       ingressRules: this.props.nifi.eksSecurityGroupIngressRules,
+      useParentSSMScope: true,
     };
     const zkSecurityGroup = new MdaaSecurityGroup(this, 'zk-sg', zkSecurityGroupProps);
 

@@ -9,8 +9,7 @@ Audit and improve module quality across MDAA app modules — focusing on README 
 
 The standards for READMEs and sample configs are defined in CONTRIBUTING.md. This steering file provides the process for auditing and implementing those standards.
 
-#[[file:CONTRIBUTING.md]]
-#[[file:TESTING.md]]
+#[[file:CONTRIBUTING.md]] #[[file:TESTING.md]]
 
 ## Scope
 
@@ -62,14 +61,14 @@ Do NOT rely on a static resource reference table. Discover AWS services and reso
 
 Check that the module README has all required sections from CONTRIBUTING.md:
 
-| Section | Check |
-|---------|-------|
-| Title + description | Module name as H1, meaningful description, usage scenario sentence |
-| Deployed Resources | `**Bold** - description` format, factual only, no compliance language |
-| Architecture diagram | Image reference to L3 construct docs |
-| Related Modules | Linked list with relationship descriptions |
-| Security/Compliance | Categorized sub-bullets, standard intro paragraph |
-| MDAA Config | `mdaa.yaml` wiring snippet |
+| Section                | Check                                                                                        |
+| ---------------------- | -------------------------------------------------------------------------------------------- |
+| Title + description    | Module name as H1, meaningful description, usage scenario sentence                           |
+| Deployed Resources     | `**Bold** - description` format, factual only, no compliance language                        |
+| Architecture diagram   | Image reference to L3 construct docs                                                         |
+| Related Modules        | Linked list with relationship descriptions                                                   |
+| Security/Compliance    | Categorized sub-bullets, standard intro paragraph                                            |
+| MDAA Config            | `mdaa.yaml` wiring snippet                                                                   |
 | Sample config sections | All configs referenced with dual-include pattern, ordered minimal → comprehensive → variants |
 
 #### Structural Rules
@@ -192,7 +191,6 @@ For cross-module audits, use a sub-agent per module. Each module's analysis and 
 - Apps: `packages/apps/{ai,analytics,core,datalake,dataops,governance,utility}/*-app/`
 - L3 Constructs: `packages/constructs/L3/{category}/{module}-l3-construct/`
 
-
 ## CI Agent Usage
 
 This section is used by the automated Module Quality CI agent. When invoked by the agent,
@@ -284,3 +282,40 @@ An optional boolean config property should default (when omitted) to the safer, 
 - For L3 construct changes that affect the app module, check if the README's Deployed Resources and Security/Compliance sections still list the correct resources.
 - Order findings: HIGH first, then MEDIUM, then LOW.
 - Use only ASCII characters in all string values.
+
+## Config Schema Design Quality Checks
+
+When auditing config schemas for quality, verify these patterns:
+
+### Named Maps for Multi-Instance Resources
+
+Modules that deploy multiple instances of the same resource type should use `{ [name: string]: Props }` maps, not arrays. Check that:
+
+- The map key is used as the resource identifier (not a separate `name` property inside the object)
+- Comprehensive configs include at least 2 entries to demonstrate the multi-instance pattern
+- Minimal configs include exactly 1 entry with only required properties
+
+### Top-Level Category Objects
+
+Modules supporting multiple resource variants (e.g., PostgreSQL and MySQL) should use top-level category objects rather than a discriminator field. Check that:
+
+- Each category has its own typed interface with variant-specific properties
+- Categories are optional top-level keys (adding a new variant is additive, not breaking)
+- Sample configs demonstrate at least one category fully
+
+### Shared vs Per-Instance Resources
+
+Verify that shared resources (KMS keys, VPCs, IAM roles) are resolved once and reused across instances, not duplicated per instance. Common patterns:
+
+- A single KMS key for all clusters/tables in the module
+- Project KMS key auto-wired via `projectName` + `kmsArn`
+- Security groups created per instance (since they have instance-specific port/ingress rules)
+
+### DataOps Project Integration
+
+For modules under `packages/apps/dataops/`, verify:
+
+- Config interface extends `MdaaDataOpsConfigContents`
+- Config parser extends `MdaaDataOpsConfigParser`
+- `projectName` is optional — module works standalone with its own resources
+- When `projectName` is set, shared resources (KMS key, bucket, etc.) are auto-wired from SSM

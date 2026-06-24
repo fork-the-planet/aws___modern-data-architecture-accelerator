@@ -106,6 +106,13 @@ export interface MdaaSecurityGroupProps extends MdaaConstructProps {
   readonly egressRules?: MdaaSecurityGroupRuleProps;
   /** Whether to add a self-referencing rule allowing all TCP connections within the same security group */
   readonly addSelfReferenceRule?: boolean;
+  /**
+   * When true, scopes the SSM parameter to the parent construct (scope) instead of the
+   * MdaaSecurityGroup itself. This preserves backward compatibility with existing
+   * deployments where the SSM parameter was scoped to the parent construct.
+   * @default false
+   */
+  readonly useParentSSMScope?: boolean;
 }
 
 /**
@@ -220,7 +227,7 @@ export class MdaaSecurityGroup extends SecurityGroup {
         name: 'id',
         value: this.securityGroupId,
       },
-      scope,
+      props.useParentSSMScope ? scope : undefined,
     );
   }
 

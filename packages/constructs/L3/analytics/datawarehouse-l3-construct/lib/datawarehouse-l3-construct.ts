@@ -555,6 +555,7 @@ export class DataWarehouseL3Construct extends MdaaL3Construct {
       allowAllOutbound: true,
       addSelfReferenceRule: false,
       ingressRules: securityGroupIngress,
+      useParentSSMScope: true,
     });
 
     securityGroup.addIngressRule(securityGroup, Port.allTcp(), 'Self-Ref');

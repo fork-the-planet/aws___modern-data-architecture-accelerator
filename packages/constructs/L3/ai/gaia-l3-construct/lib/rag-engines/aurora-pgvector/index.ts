@@ -56,6 +56,7 @@ export class AuroraPgVector extends MdaaL3Construct {
           naming: props.naming,
           vpc: props.shared.vpc,
           allowAllOutbound: false,
+          useParentSSMScope: true,
         })
       : props.shared.dataSecurityGroup;
 

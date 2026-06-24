@@ -345,6 +345,7 @@ export class NifiCluster extends Construct {
       allowAllOutbound: !customEgress,
       ingressRules: ingressRules,
       egressRules: this.props.securityGroupEgressRules,
+      useParentSSMScope: true,
     };
     return new MdaaSecurityGroup(this, 'nifi-sg', sgProps);
   }
@@ -373,6 +374,7 @@ export class NifiCluster extends Construct {
       naming: naming,
       allowAllOutbound: true,
       ingressRules: efsSgIngressRules,
+      useParentSSMScope: true,
     };
     return new MdaaSecurityGroup(scope, `${name}-efs-sg`, sgProps);
   }

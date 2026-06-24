@@ -147,6 +147,7 @@ export class ChatBotApi extends MdaaL3Construct {
       description: 'Security group used by the lambdas of the chatbot API',
       vpc: props.vpc,
       allowAllOutbound: true,
+      useParentSSMScope: true,
     });
 
     // Create WebSocket API for real-time chat functionality.

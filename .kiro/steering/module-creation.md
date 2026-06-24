@@ -6,8 +6,7 @@ inclusion: manual
 
 Create new MDAA app modules and constructs following the working-backwards approach. This steering file generates proper skeleton packages with all required configuration, test scaffolding, and documentation.
 
-#[[file:CONTRIBUTING.md]]
-#[[file:TESTING.md]]
+#[[file:CONTRIBUTING.md]] #[[file:TESTING.md]]
 
 ## Design Approach
 
@@ -23,6 +22,7 @@ Follow the "Developing Modules" section in CONTRIBUTING.md. Always work backward
 ### Inputs Required
 
 Before starting, gather:
+
 - **Module name**: e.g., `my-service` (used in package name `@aws-mdaa/my-service`)
 - **Category**: one of `ai`, `analytics`, `core`, `datalake`, `dataops`, `governance`, `utility`
 - **What it deploys**: which AWS resources and what user problem it solves
@@ -116,7 +116,7 @@ packages/apps/{category}/{module}-app/
 #### jest.config.js
 
 ```javascript
-const baseConfig = require("../../jest.config");
+const baseConfig = require('../../jest.config');
 
 module.exports = {
   ...baseConfig,
@@ -448,3 +448,115 @@ Every app module needs a typed config interface, even for simple modules. The in
 ### Creating an L2 construct that's only used by one module
 
 L2 constructs should be reusable. If the construct is specific to one module's architecture, it belongs in the L3 construct instead.
+
+## Config Schema Design Patterns
+
+When designing a module's configuration schema, follow these patterns for extensibility, clarity, and consistency.
+
+### Named Maps for Multiple Instances
+
+When a module deploys multiple instances of the same resource type, use a named map (`{ [name: string]: Props }`) rather than an array. The map key becomes the resource identifier.
+
+**TypeScript type:**
+
+```typescript
+export type ClusterMap = { [clusterName: string]: ClusterProps };
+```
+
+**YAML config:**
+
+```yaml
+postgresql:
+  analytics-primary:
+    engineVersion: '16.6'
+    port: 15432
+    # ...
+  dev-sandbox:
+    engineVersion: '16.6'
+    port: 15433
+    # ...
+```
+
+**Why named maps over arrays:**
+
+- Keys provide stable, human-readable identifiers for construct IDs and SSM paths
+- Adding/removing entries doesn't shift indices (which would change construct IDs and cause resource replacement)
+- Keys are self-documenting in YAML — no need for a separate `name` property
+- Maps merge cleanly across multiple config files (MDAA config composition)
+
+### Top-Level Category Objects for Extensibility
+
+When a module will eventually support multiple variants of a resource (e.g., PostgreSQL and MySQL engines), use top-level category objects rather than a flat list with a `type` discriminator.
+
+**Good — extensible categories:**
+
+```yaml
+postgresql:
+  cluster-a: { ... }
+  cluster-b: { ... }
+mysql:
+  cluster-c: { ... }
+```
+
+**Bad — flat list with discriminator:**
+
+```yaml
+clusters:
+  - name: cluster-a
+    engine: postgresql
+    # ...
+  - name: cluster-b
+    engine: mysql
+    # ...
+```
+
+**Why top-level objects:**
+
+- Each category can have its own props interface with engine-specific properties
+- Adding a new engine type is additive (new optional top-level key) — no schema migration
+- YAML structure makes it visually clear which engine each cluster uses
+- TypeScript types are precise per category rather than a union with conditional fields
+
+### Shared Resources at Construct Level, Not Per-Instance
+
+When multiple instances share a resource (KMS key, VPC, IAM role), resolve it once in the construct constructor and pass it to each instance. Don't create per-instance copies.
+
+```typescript
+// Good — single shared key
+constructor(scope, id, props) {
+  this.encryptionKey = this.resolveKmsKey();
+  for (const [name, config] of Object.entries(props.clusters)) {
+    this.createCluster(name, config, this.encryptionKey);
+  }
+}
+
+// Bad — key per cluster
+for (const [name, config] of Object.entries(props.clusters)) {
+  const key = new MdaaKmsKey(this, `key-${name}`, { ... });
+  this.createCluster(name, config, key);
+}
+```
+
+### DataOps Project Integration Pattern
+
+DataOps modules should optionally integrate with `@aws-mdaa/dataops-shared` for shared resource auto-wiring:
+
+1. **Config interface** extends `MdaaDataOpsConfigContents` (provides `projectName`, `kmsArn`, etc.)
+2. **Config parser** extends `MdaaDataOpsConfigParser` (auto-resolves project SSM references)
+3. **L3 construct** accepts optional `projectName` and `kmsArn` — uses project key when available, creates its own when not
+4. **L3 construct** publishes resource identifiers to project SSM namespace via `DataOpsProjectUtils.createProjectSSMParam()`
+
+This pattern allows the module to work standalone (with its own KMS key) or as part of a DataOps project (sharing the project key).
+
+### Config Interface Design Rules
+
+1. **All properties `readonly`** — config is immutable after parsing
+2. **Optional properties use `?`** — never require properties that have sensible defaults
+3. **Defaults documented in JSDoc `@default`** — drives schema documentation
+4. **No computed properties in the config interface** — transformations happen in the parser class
+5. **Nested interfaces for complex objects** — don't inline object types in the config interface
+6. **Export all config-facing types** — they flow into the generated JSON schema
+
+### Sample Config Variants for Named Maps
+
+When using named maps, the comprehensive config should include at least two entries to demonstrate the multi-instance pattern. The minimal config should include exactly one entry with only required properties.

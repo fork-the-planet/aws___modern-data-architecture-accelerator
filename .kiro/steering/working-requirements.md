@@ -14,4 +14,4 @@ Non-optional requirements to be applied to all Kiro tasks.
 - All temporary working kiro files and outputs should written be under .kiro/working/<task identifier>
 - Run formatter and linting on any modified file.
 - Use functional/immutable pattern whenever possible.
-- Use repo-level and package-level npm scripts for all test and build tasks when available. Do not directly invoke build/test commands such as tsc, jsii, or jest.
+- Always use `npm run <script>` for build, test, lint, and other package operations. Never bypass the build system with direct `npx tsc`, `npx jest`, or similar calls — the npm scripts include necessary setup (venv activation, schema generation, environment variables) that raw commands skip.

@@ -593,6 +593,7 @@ export class DMSL3Construct extends MdaaL3Construct {
           egressRules: instanceProps.egressRules,
           allowAllOutbound: !customEgress,
           addSelfReferenceRule: instanceProps.addSelfReferenceRule,
+          useParentSSMScope: true,
         };
 
         const securityGroup = new MdaaSecurityGroup(this, `security-group-${instanceName}`, securityGroupCreateProps);

@@ -693,6 +693,7 @@ export class QuickSightAccountL3Construct extends MdaaL3Construct {
       allowAllOutbound: false,
       ingressRules: ingressRules,
       egressRules: this.props.qsAccount.securityGroupAccess,
+      useParentSSMScope: true,
     });
   }
 

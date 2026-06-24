@@ -1,0 +1,135 @@
+# Comprehensive config for the DataOps Aurora module.
+# Deploys multiple Aurora PostgreSQL Serverless v2 clusters exercising all
+# available configuration options including scaling, networking,
+# backup, authentication, monitoring, and project integration.
+
+# (Optional) DataOps project name for shared resource autowiring (KMS key)
+projectName: dataops-project-sample
+
+# (Optional) Override the auto-wired security configuration name
+# securityConfigurationName: my-custom-security-config
+
+# (Optional) Override the auto-wired deployment role ARN
+# deploymentRoleArn: arn:{{partition}}:iam::{{account}}:role/custom-deploy-role
+
+# (Optional) Override the auto-wired notification topic ARN
+# notificationTopicArn: arn:{{partition}}:sns:{{region}}:{{account}}:custom-topic
+
+# (Optional) KMS key ARN — alternative to projectName auto-wiring.
+# Use when deploying without a DataOps project.
+# kmsArn: arn:{{partition}}:kms:{{region}}:{{account}}:key/my-key-id
+
+# See CONFIGURATION.md for role reference options (name, arn, id).
+# Data admin roles granted cluster access managed policy for ALL clusters
+dataAdminRoles:
+  - arn: arn:{{partition}}:iam::{{account}}:role/data-admin
+  - id: generated-role-id:platform-admin
+
+# Aurora PostgreSQL cluster configurations
+postgresql:
+  # Primary analytics cluster with full configuration
+  analytics-primary:
+    # Aurora PostgreSQL engine version in major.minor format
+    engineVersion: '16.6'
+
+    # VPC ID for Aurora cluster deployment
+    # Often created by your VPC/networking stack.
+    # Example SSM: ssm:/path/to/vpc/id
+    vpcId: vpc-a1b2c3d4
+
+    # Subnet configurations for cluster node placement
+    # Often created by your VPC/networking stack.
+    # Example SSM: ssm:/path/to/subnet/id
+    subnets:
+      - subnetId: subnet-1a2b3c4d
+        # Must match the actual AZ of the specified subnet
+        availabilityZone: '{{region}}a'
+      - subnetId: subnet-5e6f7g8h
+        availabilityZone: '{{region}}b'
+      - subnetId: subnet-9i0j1k2l
+        availabilityZone: '{{region}}c'
+
+    # Security group ingress rules controlling network access
+    securityGroupIngress:
+      # IPv4 CIDR blocks allowed to connect to the cluster port
+      ipv4:
+        - 10.0.0.0/16
+        - 172.16.0.0/12
+      # (Optional) Security group IDs allowed to connect to the cluster port
+      sg:
+        - sg-0abc1234def56789a
+
+    # Non-default TCP port for client connections (avoid 5432)
+    port: 15432
+
+    # (Optional) Minimum Aurora Serverless v2 capacity units (ACUs)
+    # (default: 0.5)
+    minCapacity: 2
+
+    # (Optional) Maximum Aurora Serverless v2 capacity units (ACUs)
+    # (default: 2)
+    maxCapacity: 16
+
+    # (Optional) Number of Aurora reader instances for read scaling
+    # (default: 1)
+    numberOfReaders: 2
+
+    # (Optional) Number of days to retain automated backups (1-35)
+    # (default: 7)
+    backupRetentionDays: 14
+
+    # (Optional) Days between automatic admin password rotation
+    # (default: 30)
+    adminPasswordRotationDays: 60
+
+    # (Optional) Initial database name created in the cluster
+    defaultDatabaseName: analytics
+
+    # (Optional) Enable the RDS Data API for HTTP-based SQL access
+    # (default: false)
+    enableDataApi: true
+
+    # (Optional) Enable export of PostgreSQL logs to CloudWatch Logs
+    # (default: true)
+    enableCloudwatchLogsExports: true
+
+    # (Optional) Enable IAM database authentication for token-based access
+    # (default: true)
+    enableIamAuthentication: true
+
+    # See CONFIGURATION.md for role reference options (name, arn, id).
+    # (Optional) Roles granted cluster access managed policy for this cluster only
+    clusterAccessRoles:
+      - name: analytics-app-role
+      - arn: arn:{{partition}}:iam::{{account}}:role/etl-role
+
+  # Secondary lightweight cluster using a project-created security group
+  dev-sandbox:
+    engineVersion: '16.6'
+
+    vpcId: vpc-a1b2c3d4
+
+    subnets:
+      - subnetId: subnet-1a2b3c4d
+        availabilityZone: '{{region}}a'
+      - subnetId: subnet-5e6f7g8h
+        availabilityZone: '{{region}}b'
+
+    # (Optional) Use an existing security group instead of creating a new one.
+    # Supports project: prefix for auto-wiring from DataOps project SGs.
+    securityGroupId: project:securityGroupId/data-sg
+
+    # (Optional) Additional ingress rules added to the imported security group
+    securityGroupIngress:
+      ipv4:
+        - 10.0.0.0/16
+
+    port: 15433
+
+    # Minimal capacity for dev workloads
+    minCapacity: 0.5
+    maxCapacity: 2
+    numberOfReaders: 1
+    backupRetentionDays: 1
+    defaultDatabaseName: devdb
+    enableDataApi: true

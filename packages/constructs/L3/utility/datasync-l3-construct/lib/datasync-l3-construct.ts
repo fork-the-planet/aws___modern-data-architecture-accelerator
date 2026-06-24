@@ -702,6 +702,7 @@ export class DataSyncL3Construct extends MdaaL3Construct {
       vpc: vpc,
       allowAllOutbound: false,
       securityGroupName: 'datasync-vpce-sg',
+      useParentSSMScope: true,
     });
 
     this.props.agents?.forEach(agentConfig => {

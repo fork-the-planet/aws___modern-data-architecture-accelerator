@@ -410,6 +410,7 @@ export class BedrockKnowledgeBaseL3Construct extends MdaaL3Construct {
       vpc,
       allowAllOutbound: true,
       addSelfReferenceRule: true,
+      useParentSSMScope: true,
     });
     this.vectorStoreSecurityGroup = vectorStoreSg;
     return [vpc, vectorStoreSg];

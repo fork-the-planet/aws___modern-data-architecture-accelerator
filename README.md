@@ -145,6 +145,7 @@ MDAA includes 40+ modules for governance, data lakes, pipelines, analytics, AI, 
 - [**Data Ops Dashboard**](packages/apps/dataops/dataops-dashboard-app/README.md) - CloudWatch dashboards for MDAA observability.
 - [**Data Ops Data Quality**](packages/apps/dataops/dataops-data-quality-app/README.md) - Glue Data Quality rulesets for automated data validation.
 - [**Data Ops DynamoDB**](packages/apps/dataops/dataops-dynamodb-app/README.md) - DynamoDB tables for data operations.
+- [**Data Ops Aurora**](packages/apps/dataops/dataops-aurora-app/README.md) - Aurora Serverless v2 clusters for relational database workloads.
 
 </details>
 

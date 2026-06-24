@@ -1527,6 +1527,7 @@ export class Ec2L3Construct extends MdaaL3Construct {
         egressRules: securityGroupProps.egressRules,
         allowAllOutbound: !customEgress,
         addSelfReferenceRule: securityGroupProps.addSelfReferenceRule,
+        useParentSSMScope: true,
       };
 
       this.securityGroups[securityGroupName] = new MdaaSecurityGroup(this, securityGroupName, securityGroupCreateProps);

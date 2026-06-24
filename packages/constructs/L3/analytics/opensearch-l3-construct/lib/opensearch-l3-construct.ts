@@ -400,6 +400,7 @@ export class OpensearchL3Construct extends MdaaL3Construct {
       vpc: vpc,
       naming: this.props.naming,
       ingressRules: securityGroupIngress,
+      useParentSSMScope: true,
     };
 
     const securityGroup = new MdaaSecurityGroup(this, 'domain-sg', securityGroupProps);

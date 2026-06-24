@@ -645,6 +645,7 @@ export class SagemakerStudioDomainL3Construct extends MdaaL3Construct {
       ingressRules: securityGroupIngress,
       egressRules: securityGroupEgress,
       addSelfReferenceRule: true, // Required for intercontainer traffic and EFS
+      useParentSSMScope: true,
     };
 
     return new MdaaSecurityGroup(this.scope, `security-group`, securityGroupProps);

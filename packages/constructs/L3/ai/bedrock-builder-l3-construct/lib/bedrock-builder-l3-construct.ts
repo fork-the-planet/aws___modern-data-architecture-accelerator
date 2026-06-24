@@ -364,6 +364,7 @@ export class BedrockBuilderL3Construct extends MdaaL3Construct {
           vpc,
           allowAllOutbound: true,
           addSelfReferenceRule: true,
+          useParentSSMScope: true,
         });
 
         // Create VPC endpoint

@@ -303,3 +303,42 @@ describe('MDAA Construct Compliance Tests', () => {
     });
   });
 });
+
+describe('MdaaSecurityGroup useParentSSMScope Tests', () => {
+  test('Default behavior scopes SSM param to the security group construct', () => {
+    const testApp = new MdaaTestApp();
+    const testVpc = new Vpc(testApp.testStack, 'test-vpc');
+    const props: MdaaSecurityGroupProps = {
+      naming: testApp.naming,
+      vpc: testVpc,
+      securityGroupName: 'default-scope-sg',
+      allowAllOutbound: false,
+    };
+    new MdaaSecurityGroup(testApp.testStack, 'sg-default-scope', props);
+    const template = Template.fromStack(testApp.testStack);
+
+    // SSM parameter should exist scoped to the SG construct (inside sg-default-scope)
+    template.hasResourceProperties('AWS::SSM::Parameter', {
+      Name: Match.stringLikeRegexp('.*security-group/default-scope-sg/id'),
+    });
+  });
+
+  test('useParentSSMScope=true scopes SSM param to the parent construct', () => {
+    const testApp = new MdaaTestApp();
+    const testVpc = new Vpc(testApp.testStack, 'test-vpc');
+    const props: MdaaSecurityGroupProps = {
+      naming: testApp.naming,
+      vpc: testVpc,
+      securityGroupName: 'parent-scope-sg',
+      allowAllOutbound: false,
+      useParentSSMScope: true,
+    };
+    new MdaaSecurityGroup(testApp.testStack, 'sg-parent-scope', props);
+    const template = Template.fromStack(testApp.testStack);
+
+    // SSM parameter should exist scoped to the parent (testStack)
+    template.hasResourceProperties('AWS::SSM::Parameter', {
+      Name: Match.stringLikeRegexp('.*security-group/parent-scope-sg/id'),
+    });
+  });
+});

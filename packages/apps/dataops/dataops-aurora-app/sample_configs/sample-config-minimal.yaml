@@ -1,0 +1,37 @@
+# Minimal config for the DataOps Aurora module.
+# Deploys a single Aurora PostgreSQL Serverless v2 cluster with one writer
+# and one reader using project KMS key and secure defaults.
+
+# DataOps project name for shared resource autowiring (KMS key)
+projectName: dataops-project-sample
+
+# Aurora PostgreSQL cluster configurations
+postgresql:
+  # Cluster name (becomes the cluster identifier after MDAA naming)
+  analytics-db:
+    # Aurora PostgreSQL engine version in major.minor format
+    engineVersion: '16.6'
+
+    # VPC ID for Aurora cluster deployment
+    # Often created by your VPC/networking stack.
+    # Example SSM: ssm:/path/to/vpc/id
+    vpcId: vpc-a1b2c3d4
+
+    # Subnet configurations for cluster node placement
+    # Often created by your VPC/networking stack.
+    # Example SSM: ssm:/path/to/subnet/id
+    subnets:
+      - subnetId: subnet-1a2b3c4d
+        # Must match the actual AZ of the specified subnet
+        availabilityZone: '{{region}}a'
+      - subnetId: subnet-5e6f7g8h
+        availabilityZone: '{{region}}b'
+
+    # Security group ingress rules controlling network access
+    securityGroupIngress:
+      # IPv4 CIDR blocks allowed to connect to the cluster port
+      ipv4:
+        - 10.0.0.0/16
+
+    # Non-default TCP port for client connections (avoid 5432)
+    port: 15432
