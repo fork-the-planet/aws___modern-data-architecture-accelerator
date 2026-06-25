@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MdaaConstructProps } from '@aws-mdaa/construct'; //NOSONAR
+import { MdaaConstructProps, MdaaParamAndOutput } from '@aws-mdaa/construct'; //NOSONAR
 import { MdaaResourceType } from '@aws-mdaa/naming';
 import * as aoss from 'aws-cdk-lib/aws-opensearchserverless';
 import { IVpc } from 'aws-cdk-lib/aws-ec2';
@@ -73,6 +73,9 @@ export interface MdaaOpensearchServerlessCollectionProps extends MdaaConstructPr
 }
 
 export class MdaaOpensearchServerlessCollection extends Construct {
+  /** SSM param / output resource type for the published collection identifiers (id, arn) */
+  private static readonly COLLECTION_RESOURCE_TYPE = 'opensearch-serverless-collection';
+
   public readonly collection: aoss.CfnCollection;
 
   constructor(scope: Construct, id: string, props: MdaaOpensearchServerlessCollectionProps) {
@@ -190,5 +193,20 @@ export class MdaaOpensearchServerlessCollection extends Construct {
     if (dataAccessPolicy) {
       this.collection.addDependency(dataAccessPolicy);
     }
+
+    new MdaaParamAndOutput(this, {
+      ...props,
+      resourceType: MdaaOpensearchServerlessCollection.COLLECTION_RESOURCE_TYPE,
+      resourceId: props.name,
+      name: 'id',
+      value: this.collection.attrId,
+    });
+    new MdaaParamAndOutput(this, {
+      ...props,
+      resourceType: MdaaOpensearchServerlessCollection.COLLECTION_RESOURCE_TYPE,
+      resourceId: props.name,
+      name: 'arn',
+      value: this.collection.attrArn,
+    });
   }
 }

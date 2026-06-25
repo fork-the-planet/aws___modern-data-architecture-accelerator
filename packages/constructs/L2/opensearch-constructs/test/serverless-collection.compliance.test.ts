@@ -126,4 +126,29 @@ describe('MDAA Serverless Collection Compliance Tests', () => {
       ],
     });
   });
+
+  test('Collection Id SSM Param', () => {
+    template.hasResourceProperties('AWS::SSM::Parameter', {
+      Type: 'String',
+      Name: testApp.naming.ssmPath(`opensearch-serverless-collection/${testConstructProps.name}/id`),
+      Value: { 'Fn::GetAtt': ['testconstructopensearchserverlesscollectionDADCC84F', 'Id'] },
+    });
+  });
+
+  test('Collection Arn SSM Param', () => {
+    template.hasResourceProperties('AWS::SSM::Parameter', {
+      Type: 'String',
+      Name: testApp.naming.ssmPath(`opensearch-serverless-collection/${testConstructProps.name}/arn`),
+      Value: { 'Fn::GetAtt': ['testconstructopensearchserverlesscollectionDADCC84F', 'Arn'] },
+    });
+  });
+
+  test('Collection Id and Arn Outputs', () => {
+    template.hasOutput('*', {
+      Value: { 'Fn::GetAtt': ['testconstructopensearchserverlesscollectionDADCC84F', 'Id'] },
+    });
+    template.hasOutput('*', {
+      Value: { 'Fn::GetAtt': ['testconstructopensearchserverlesscollectionDADCC84F', 'Arn'] },
+    });
+  });
 });

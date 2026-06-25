@@ -23,6 +23,7 @@
   "types": "lib/index.d.ts",
   "devDependencies": {
     "@aws-mdaa/ai-helper": "1.6.0",
+    "@aws-mdaa/construct": "1.6.0",
     "@aws-mdaa/iam-constructs": "1.6.0",
     "@aws-mdaa/iam-role-helper": "1.6.0",
     "@aws-mdaa/kms-constructs": "1.6.0",
@@ -43,6 +44,7 @@
   },
   "peerDependencies": {
     "@aws-mdaa/ai-helper": "1.6.0",
+    "@aws-mdaa/construct": "1.6.0",
     "@aws-mdaa/iam-constructs": "1.6.0",
     "@aws-mdaa/iam-role-helper": "1.6.0",
     "@aws-mdaa/kms-constructs": "1.6.0",
@@ -53,6 +55,7 @@
   },
   "dependencies": {
     "@aws-mdaa/ai-helper": "1.6.0",
+    "@aws-mdaa/construct": "1.6.0",
     "@aws-mdaa/iam-constructs": "1.6.0",
     "@aws-mdaa/iam-role-helper": "1.6.0",
     "@aws-mdaa/kms-constructs": "1.6.0",

@@ -87,6 +87,31 @@ describe('Bedrock Agent L3 Construct Tests', () => {
       FoundationModel: 'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0',
       IdleSessionTTLInSeconds: 3600,
     });
+
+    // Agent id, arn, and alias id are published as SSM params for downstream discovery
+    template.hasResourceProperties('AWS::SSM::Parameter', {
+      Type: 'String',
+      Name: testApp.naming.ssmPath('agent/test-agent/id'),
+    });
+    template.hasResourceProperties('AWS::SSM::Parameter', {
+      Type: 'String',
+      Name: testApp.naming.ssmPath('agent/test-agent/arn'),
+    });
+    template.hasResourceProperties('AWS::SSM::Parameter', {
+      Type: 'String',
+      Name: testApp.naming.ssmPath('agent/test-agent/alias-id'),
+    });
+
+    // ...and as CloudFormation outputs (export names strip non-word chars from the resourceId)
+    template.hasOutput('*', {
+      Export: { Name: testApp.naming.exportName('agent:testagent:id') },
+    });
+    template.hasOutput('*', {
+      Export: { Name: testApp.naming.exportName('agent:testagent:arn') },
+    });
+    template.hasOutput('*', {
+      Export: { Name: testApp.naming.exportName('agent:testagent:alias-id') },
+    });
   });
 
   test('Agent with Knowledge Base', () => {
@@ -389,6 +414,12 @@ describe('Bedrock Agent L3 Construct Tests', () => {
     // No alias should be created
     const aliases = template.findResources('AWS::Bedrock::AgentAlias');
     expect(Object.keys(aliases).length).toBe(0);
+
+    // ...and without an alias, no alias-id SSM parameter should be published
+    const aliasIdParamName = testApp.naming.ssmPath('agent/test-agent-no-alias/alias-id');
+    const ssmParams = template.findResources('AWS::SSM::Parameter');
+    const aliasIdParams = Object.values(ssmParams).filter(param => param.Properties?.Name === aliasIdParamName);
+    expect(aliasIdParams.length).toBe(0);
   });
 
   test('Agent with Knowledge Base and Guardrail combined', () => {

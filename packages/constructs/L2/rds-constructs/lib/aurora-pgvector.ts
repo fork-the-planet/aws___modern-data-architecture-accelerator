@@ -100,8 +100,6 @@ export class MdaaAuroraPgVector extends MdaaRdsServerlessCluster {
       enableDataApi: props.enableDataApi,
       defaultDatabaseName: props.defaultDatabaseName,
       naming: props.naming,
-      createParams: false,
-      createOutputs: false,
       engine: 'aurora-postgresql',
       engineVersion: engineVersion,
       backupRetention: 20,

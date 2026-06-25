@@ -3670,6 +3670,149 @@
         }
       }
     },
+    "bedrockbuilderbedrockkbtestknowledgebasepgvectortestvectorstoreclustersecrettestvectorstorenamessmBF585409": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-bedrock-builder-app/cluster-secret/test-vector-store/name",
+        "Tags": {
+          "mdaa_cdk_app": "bedrock-builder",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-bedrock-builder-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::Join": [
+            "-",
+            [
+              {
+                "Fn::Select": [
+                  0,
+                  {
+                    "Fn::Split": [
+                      "-",
+                      {
+                        "Fn::Select": [
+                          6,
+                          {
+                            "Fn::Split": [
+                              ":",
+                              {
+                                "Ref": "bedrockbuilderbedrockkbtestknowledgebasepgvectortestvectorstoreSecret74C984C1"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "Fn::Select": [
+                  1,
+                  {
+                    "Fn::Split": [
+                      "-",
+                      {
+                        "Fn::Select": [
+                          6,
+                          {
+                            "Fn::Split": [
+                              ":",
+                              {
+                                "Ref": "bedrockbuilderbedrockkbtestknowledgebasepgvectortestvectorstoreSecret74C984C1"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Monitoring role required and monitoring intervals set with a minimum default.",
+              "id": "NIST.800.53.R5-RDSEnhancedMonitoringEnabled"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Monitoring role required and monitoring intervals set with a minimum default.",
+              "id": "HIPAA.Security-RDSEnhancedMonitoringEnabled"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Monitoring role required and monitoring intervals set with a minimum default.",
+              "id": "PCI.DSS.321-RDSEnhancedMonitoringEnabled"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Deployed within private subnets and vpc along with iam auth enforced and security group.",
+              "id": "HIPAA.Security-RDSInstancePublicAccess"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Deployed within private subnets and vpc along with iam auth enforced and security group.",
+              "id": "PCI.DSS.321-RDSInstancePublicAccess"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Deployed within private subnets and vpc along with iam auth enforced and security group.",
+              "id": "NIST.800.53.R5-RDSInstancePublicAccess"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Instance is serverless and has a backup retention policy defaulting to 1.",
+              "id": "NIST.800.53.R5-RDSInBackupPlan"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Instance is serverless and has a backup retention policy defaulting to 1.",
+              "id": "HIPAA.Security-RDSInBackupPlan"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Instance is serverless and has a backup retention policy defaulting to 1.",
+              "id": "PCI.DSS.321-RDSInBackupPlan"
+            }
+          ]
+        }
+      }
+    },
+    "bedrockbuilderbedrockkbtestknowledgebasepgvectortestvectorstoreclustertestvectorstoreendpointssm55B2C88F": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-bedrock-builder-app/cluster/test-vector-store/endpoint",
+        "Tags": {
+          "mdaa_cdk_app": "bedrock-builder",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-bedrock-builder-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Fn::GetAtt": [
+                  "bedrockbuilderbedrockkbtestknowledgebasepgvectortestvectorstore731662A6",
+                  "Endpoint.Address"
+                ]
+              },
+              ":",
+              {
+                "Fn::GetAtt": [
+                  "bedrockbuilderbedrockkbtestknowledgebasepgvectortestvectorstore731662A6",
+                  "Endpoint.Port"
+                ]
+              }
+            ]
+          ]
+        }
+      }
+    },
     "bedrockbuilderbedrockkbtestknowledgebasecreatedbtestknowledgebaseF9B4939F": {
       "Type": "Custom::RDS-Data",
       "Properties": {
@@ -5413,6 +5556,46 @@
         "bedrockbuilderbedrockkbtestknowledgebase2opensearchserverlesstestvectorstore2opensearchserverlessnetworkpolicy1DEC02E4"
       ]
     },
+    "bedrockbuilderbedrockkbtestknowledgebase2opensearchserverlesstestvectorstore2opensearchserverlesscollectiontestvectorstore2idssmA93986AB": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-bedrock-builder-app/opensearch-serverless-collection/test-vector-store2/id",
+        "Tags": {
+          "mdaa_cdk_app": "bedrock-builder",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-bedrock-builder-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::GetAtt": [
+            "bedrockbuilderbedrockkbtestknowledgebase2opensearchserverlesstestvectorstore2opensearchserverlesscollection33AE7111",
+            "Id"
+          ]
+        }
+      }
+    },
+    "bedrockbuilderbedrockkbtestknowledgebase2opensearchserverlesstestvectorstore2opensearchserverlesscollectiontestvectorstore2arnssmD498FE75": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-bedrock-builder-app/opensearch-serverless-collection/test-vector-store2/arn",
+        "Tags": {
+          "mdaa_cdk_app": "bedrock-builder",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-bedrock-builder-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::GetAtt": [
+            "bedrockbuilderbedrockkbtestknowledgebase2opensearchserverlesstestvectorstore2opensearchserverlesscollection33AE7111",
+            "Arn"
+          ]
+        }
+      }
+    },
     "bedrockbuilderbedrockkbtestknowledgebase2boto3layerA36F0895": {
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
@@ -5493,6 +5676,8 @@
       },
       "DependsOn": [
         "bedrockbuilderbedrockkbtestknowledgebase2opensearchserverlesstestvectorstore2opensearchserverlesscollection33AE7111",
+        "bedrockbuilderbedrockkbtestknowledgebase2opensearchserverlesstestvectorstore2opensearchserverlesscollectiontestvectorstore2arnssmD498FE75",
+        "bedrockbuilderbedrockkbtestknowledgebase2opensearchserverlesstestvectorstore2opensearchserverlesscollectiontestvectorstore2idssmA93986AB",
         "bedrockbuilderbedrockkbtestknowledgebase2opensearchserverlesstestvectorstore2opensearchserverlessdataaccesspolicyA22A5005",
         "bedrockbuilderbedrockkbtestknowledgebase2opensearchserverlesstestvectorstore2opensearchserverlessencryptionpolicy04D8E6CC",
         "bedrockbuilderbedrockkbtestknowledgebase2opensearchserverlesstestvectorstore2opensearchserverlessnetworkpolicy1DEC02E4"
@@ -7339,6 +7524,46 @@
         "bedrockbuilderbedrockagenttestagentagentmanagedpoltestagentCE76A899"
       ]
     },
+    "bedrockbuilderbedrockagenttestagentagenttestagentidssm38BBD467": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-bedrock-builder-app/agent/test-agent/id",
+        "Tags": {
+          "mdaa_cdk_app": "bedrock-builder",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-bedrock-builder-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::GetAtt": [
+            "bedrockbuilderbedrockagenttestagentmdaabedrockagenttestagent1271847A",
+            "AgentId"
+          ]
+        }
+      }
+    },
+    "bedrockbuilderbedrockagenttestagentagenttestagentarnssm4724D262": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-bedrock-builder-app/agent/test-agent/arn",
+        "Tags": {
+          "mdaa_cdk_app": "bedrock-builder",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-bedrock-builder-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::GetAtt": [
+            "bedrockbuilderbedrockagenttestagentmdaabedrockagenttestagent1271847A",
+            "AgentArn"
+          ]
+        }
+      }
+    },
     "bedrockbuilderbedrockagenttestagentmdaabedrockagenttestagentalias7801124A": {
       "Type": "AWS::Bedrock::AgentAlias",
       "Properties": {
@@ -7355,6 +7580,26 @@
           "mdaa_env": "test-env",
           "mdaa_module_name": "test-bedrock-builder-app",
           "mdaa_org": "test-org"
+        }
+      }
+    },
+    "bedrockbuilderbedrockagenttestagentagenttestagentaliasidssm147700D0": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-bedrock-builder-app/agent/test-agent/alias-id",
+        "Tags": {
+          "mdaa_cdk_app": "bedrock-builder",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-bedrock-builder-app",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::GetAtt": [
+            "bedrockbuilderbedrockagenttestagentmdaabedrockagenttestagentalias7801124A",
+            "AgentAliasId"
+          ]
         }
       }
     },
@@ -9235,6 +9480,89 @@
         "Name": "test-org:test-domain:test-bedrock-builder-app:role:monitoringroletestvectorstore:name"
       }
     },
+    "bedrockbuilderbedrockkbtestknowledgebasepgvectortestvectorstoreclustersecrettestvectorstorenameout615516D0": {
+      "Value": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Fn::Select": [
+                0,
+                {
+                  "Fn::Split": [
+                    "-",
+                    {
+                      "Fn::Select": [
+                        6,
+                        {
+                          "Fn::Split": [
+                            ":",
+                            {
+                              "Ref": "bedrockbuilderbedrockkbtestknowledgebasepgvectortestvectorstoreSecret74C984C1"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "Fn::Select": [
+                1,
+                {
+                  "Fn::Split": [
+                    "-",
+                    {
+                      "Fn::Select": [
+                        6,
+                        {
+                          "Fn::Split": [
+                            ":",
+                            {
+                              "Ref": "bedrockbuilderbedrockkbtestknowledgebasepgvectortestvectorstoreSecret74C984C1"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      "Export": {
+        "Name": "test-org:test-domain:test-bedrock-builder-app:cluster-secret:testvectorstore:name"
+      }
+    },
+    "bedrockbuilderbedrockkbtestknowledgebasepgvectortestvectorstoreclustertestvectorstoreendpointout3A6F431F": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            {
+              "Fn::GetAtt": [
+                "bedrockbuilderbedrockkbtestknowledgebasepgvectortestvectorstore731662A6",
+                "Endpoint.Address"
+              ]
+            },
+            ":",
+            {
+              "Fn::GetAtt": [
+                "bedrockbuilderbedrockkbtestknowledgebasepgvectortestvectorstore731662A6",
+                "Endpoint.Port"
+              ]
+            }
+          ]
+        ]
+      },
+      "Export": {
+        "Name": "test-org:test-domain:test-bedrock-builder-app:cluster:testvectorstore:endpoint"
+      }
+    },
     "bedrockbuilderbedrockkbtestknowledgebasekbloggrouptestknowledgebaseloggrouptestknowledgebasenameoutE2E3AA55": {
       "Value": "/aws/vendedlogs/bedrock/knowledge-base/test-org-test-env-test-domain-test-bedrock-builder-app-test-knowledge-base",
       "Export": {
@@ -9455,6 +9783,28 @@
       },
       "Export": {
         "Name": "test-org:test-domain:test-bedrock-builder-app:knowledgebase:testknowledgebase:id"
+      }
+    },
+    "bedrockbuilderbedrockkbtestknowledgebase2opensearchserverlesstestvectorstore2opensearchserverlesscollectiontestvectorstore2idoutB5CF12BF": {
+      "Value": {
+        "Fn::GetAtt": [
+          "bedrockbuilderbedrockkbtestknowledgebase2opensearchserverlesstestvectorstore2opensearchserverlesscollection33AE7111",
+          "Id"
+        ]
+      },
+      "Export": {
+        "Name": "test-org:test-domain:test-bedrock-builder-app:opensearch-serverless-collection:testvectorstore2:id"
+      }
+    },
+    "bedrockbuilderbedrockkbtestknowledgebase2opensearchserverlesstestvectorstore2opensearchserverlesscollectiontestvectorstore2arnout46347D4E": {
+      "Value": {
+        "Fn::GetAtt": [
+          "bedrockbuilderbedrockkbtestknowledgebase2opensearchserverlesstestvectorstore2opensearchserverlesscollection33AE7111",
+          "Arn"
+        ]
+      },
+      "Export": {
+        "Name": "test-org:test-domain:test-bedrock-builder-app:opensearch-serverless-collection:testvectorstore2:arn"
       }
     },
     "bedrockbuilderbedrockkbtestknowledgebase2kbloggrouptestknowledgebase2loggrouptestknowledgebase2nameoutED6BF271": {
@@ -9744,6 +10094,39 @@
       },
       "Export": {
         "Name": "test-org:test-domain:test-bedrock-builder-app:managed-policy:agenttestagent:name"
+      }
+    },
+    "bedrockbuilderbedrockagenttestagentagenttestagentidout15FD98F0": {
+      "Value": {
+        "Fn::GetAtt": [
+          "bedrockbuilderbedrockagenttestagentmdaabedrockagenttestagent1271847A",
+          "AgentId"
+        ]
+      },
+      "Export": {
+        "Name": "test-org:test-domain:test-bedrock-builder-app:agent:testagent:id"
+      }
+    },
+    "bedrockbuilderbedrockagenttestagentagenttestagentarnoutCCECE50B": {
+      "Value": {
+        "Fn::GetAtt": [
+          "bedrockbuilderbedrockagenttestagentmdaabedrockagenttestagent1271847A",
+          "AgentArn"
+        ]
+      },
+      "Export": {
+        "Name": "test-org:test-domain:test-bedrock-builder-app:agent:testagent:arn"
+      }
+    },
+    "bedrockbuilderbedrockagenttestagentagenttestagentaliasidout4F744A12": {
+      "Value": {
+        "Fn::GetAtt": [
+          "bedrockbuilderbedrockagenttestagentmdaabedrockagenttestagentalias7801124A",
+          "AgentAliasId"
+        ]
+      },
+      "Export": {
+        "Name": "test-org:test-domain:test-bedrock-builder-app:agent:testagent:alias-id"
       }
     },
     "customRDSDatahandlerfunctionlambdaRDSDatahandlernameoutD399CD66": {

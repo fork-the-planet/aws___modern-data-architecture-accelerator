@@ -1299,6 +1299,157 @@
         }
       }
     },
+    "bedrockbuilderbedrockkbbedrockknowledgebasepgvectorknowledgebasevectorstoreclustersecretknowledgebasevectorstorenamessmB08484F5": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/gaia/bedrock-builder/cluster-secret/knowledge-base-vector-store/name",
+        "Tags": {
+          "costcentre": "123456",
+          "mdaa_cdk_app": "bedrock-builder",
+          "mdaa_domain": "gaia",
+          "mdaa_env": "dev",
+          "mdaa_module_name": "bedrock-builder",
+          "mdaa_org": "test-org",
+          "project": "genai_gaia_chatbot"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::Join": [
+            "-",
+            [
+              {
+                "Fn::Select": [
+                  0,
+                  {
+                    "Fn::Split": [
+                      "-",
+                      {
+                        "Fn::Select": [
+                          6,
+                          {
+                            "Fn::Split": [
+                              ":",
+                              {
+                                "Ref": "bedrockbuilderbedrockkbbedrockknowledgebasepgvectorknowledgebasevectorstoreSecret4C627A2D"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "Fn::Select": [
+                  1,
+                  {
+                    "Fn::Split": [
+                      "-",
+                      {
+                        "Fn::Select": [
+                          6,
+                          {
+                            "Fn::Split": [
+                              ":",
+                              {
+                                "Ref": "bedrockbuilderbedrockkbbedrockknowledgebasepgvectorknowledgebasevectorstoreSecret4C627A2D"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "test-org-dev-gaia-bedrock-builder/bedrock-builder/bedrock-kb-bedrock-knowledge-base/pgvector-knowledge-base-vector-store/cluster-secret-knowledge-base-vector-store-name/ssm/Resource",
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Monitoring role required and monitoring intervals set with a minimum default.",
+              "id": "NIST.800.53.R5-RDSEnhancedMonitoringEnabled"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Monitoring role required and monitoring intervals set with a minimum default.",
+              "id": "HIPAA.Security-RDSEnhancedMonitoringEnabled"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Monitoring role required and monitoring intervals set with a minimum default.",
+              "id": "PCI.DSS.321-RDSEnhancedMonitoringEnabled"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Deployed within private subnets and vpc along with iam auth enforced and security group.",
+              "id": "HIPAA.Security-RDSInstancePublicAccess"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Deployed within private subnets and vpc along with iam auth enforced and security group.",
+              "id": "PCI.DSS.321-RDSInstancePublicAccess"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Deployed within private subnets and vpc along with iam auth enforced and security group.",
+              "id": "NIST.800.53.R5-RDSInstancePublicAccess"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Instance is serverless and has a backup retention policy defaulting to 1.",
+              "id": "NIST.800.53.R5-RDSInBackupPlan"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Instance is serverless and has a backup retention policy defaulting to 1.",
+              "id": "HIPAA.Security-RDSInBackupPlan"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Instance is serverless and has a backup retention policy defaulting to 1.",
+              "id": "PCI.DSS.321-RDSInBackupPlan"
+            }
+          ]
+        }
+      }
+    },
+    "bedrockbuilderbedrockkbbedrockknowledgebasepgvectorknowledgebasevectorstoreclusterknowledgebasevectorstoreendpointssmE03669A4": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/gaia/bedrock-builder/cluster/knowledge-base-vector-store/endpoint",
+        "Tags": {
+          "costcentre": "123456",
+          "mdaa_cdk_app": "bedrock-builder",
+          "mdaa_domain": "gaia",
+          "mdaa_env": "dev",
+          "mdaa_module_name": "bedrock-builder",
+          "mdaa_org": "test-org",
+          "project": "genai_gaia_chatbot"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Fn::GetAtt": [
+                  "bedrockbuilderbedrockkbbedrockknowledgebasepgvectorknowledgebasevectorstore16F7260D",
+                  "Endpoint.Address"
+                ]
+              },
+              ":",
+              {
+                "Fn::GetAtt": [
+                  "bedrockbuilderbedrockkbbedrockknowledgebasepgvectorknowledgebasevectorstore16F7260D",
+                  "Endpoint.Port"
+                ]
+              }
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "test-org-dev-gaia-bedrock-builder/bedrock-builder/bedrock-kb-bedrock-knowledge-base/pgvector-knowledge-base-vector-store/cluster-knowledge-base-vector-store-endpoint/ssm/Resource"
+      }
+    },
     "bedrockbuilderbedrockkbbedrockknowledgebasecreatedbbedrockknowledgebaseB896977C": {
       "Type": "Custom::RDS-Data",
       "Properties": {
@@ -3618,6 +3769,89 @@
       },
       "Export": {
         "Name": "test-org:gaia:bedrock-builder:role:monitoringroleknowledgebasevectorstore:name"
+      }
+    },
+    "bedrockbuilderbedrockkbbedrockknowledgebasepgvectorknowledgebasevectorstoreclustersecretknowledgebasevectorstorenameoutA69D2B8E": {
+      "Value": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Fn::Select": [
+                0,
+                {
+                  "Fn::Split": [
+                    "-",
+                    {
+                      "Fn::Select": [
+                        6,
+                        {
+                          "Fn::Split": [
+                            ":",
+                            {
+                              "Ref": "bedrockbuilderbedrockkbbedrockknowledgebasepgvectorknowledgebasevectorstoreSecret4C627A2D"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "Fn::Select": [
+                1,
+                {
+                  "Fn::Split": [
+                    "-",
+                    {
+                      "Fn::Select": [
+                        6,
+                        {
+                          "Fn::Split": [
+                            ":",
+                            {
+                              "Ref": "bedrockbuilderbedrockkbbedrockknowledgebasepgvectorknowledgebasevectorstoreSecret4C627A2D"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      "Export": {
+        "Name": "test-org:gaia:bedrock-builder:cluster-secret:knowledgebasevectorstore:name"
+      }
+    },
+    "bedrockbuilderbedrockkbbedrockknowledgebasepgvectorknowledgebasevectorstoreclusterknowledgebasevectorstoreendpointoutF564F62B": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            {
+              "Fn::GetAtt": [
+                "bedrockbuilderbedrockkbbedrockknowledgebasepgvectorknowledgebasevectorstore16F7260D",
+                "Endpoint.Address"
+              ]
+            },
+            ":",
+            {
+              "Fn::GetAtt": [
+                "bedrockbuilderbedrockkbbedrockknowledgebasepgvectorknowledgebasevectorstore16F7260D",
+                "Endpoint.Port"
+              ]
+            }
+          ]
+        ]
+      },
+      "Export": {
+        "Name": "test-org:gaia:bedrock-builder:cluster:knowledgebasevectorstore:endpoint"
       }
     },
     "bedrockbuilderbedrockkbbedrockknowledgebasekbloggroupbedrockknowledgebaseloggroupbedrockknowledgebasenameout8833B844": {

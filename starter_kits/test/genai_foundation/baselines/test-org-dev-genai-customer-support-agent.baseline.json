@@ -2246,6 +2246,157 @@
         }
       }
     },
+    "bedrockbuilderbedrockkbkbtestcustomersupportpgvectorcsvectorstoreclustersecretcsvectorstorenamessm06A99648": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/genai/customer-support-agent/cluster-secret/cs-vector-store/name",
+        "Tags": {
+          "costcentre": "123456",
+          "mdaa_cdk_app": "bedrock-builder",
+          "mdaa_domain": "genai",
+          "mdaa_env": "dev",
+          "mdaa_module_name": "customer-support-agent",
+          "mdaa_org": "test-org",
+          "project": "genai_foundation"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::Join": [
+            "-",
+            [
+              {
+                "Fn::Select": [
+                  0,
+                  {
+                    "Fn::Split": [
+                      "-",
+                      {
+                        "Fn::Select": [
+                          6,
+                          {
+                            "Fn::Split": [
+                              ":",
+                              {
+                                "Ref": "bedrockbuilderbedrockkbkbtestcustomersupportpgvectorcsvectorstoreSecret819FFE8B"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "Fn::Select": [
+                  1,
+                  {
+                    "Fn::Split": [
+                      "-",
+                      {
+                        "Fn::Select": [
+                          6,
+                          {
+                            "Fn::Split": [
+                              ":",
+                              {
+                                "Ref": "bedrockbuilderbedrockkbkbtestcustomersupportpgvectorcsvectorstoreSecret819FFE8B"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "test-org-dev-genai-customer-support-agent/bedrock-builder/bedrock-kb-kb-test-customer-support/pgvector-cs-vector-store/cluster-secret-cs-vector-store-name/ssm/Resource",
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Monitoring role required and monitoring intervals set with a minimum default.",
+              "id": "NIST.800.53.R5-RDSEnhancedMonitoringEnabled"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Monitoring role required and monitoring intervals set with a minimum default.",
+              "id": "HIPAA.Security-RDSEnhancedMonitoringEnabled"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Monitoring role required and monitoring intervals set with a minimum default.",
+              "id": "PCI.DSS.321-RDSEnhancedMonitoringEnabled"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Deployed within private subnets and vpc along with iam auth enforced and security group.",
+              "id": "HIPAA.Security-RDSInstancePublicAccess"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Deployed within private subnets and vpc along with iam auth enforced and security group.",
+              "id": "PCI.DSS.321-RDSInstancePublicAccess"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Deployed within private subnets and vpc along with iam auth enforced and security group.",
+              "id": "NIST.800.53.R5-RDSInstancePublicAccess"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Instance is serverless and has a backup retention policy defaulting to 1.",
+              "id": "NIST.800.53.R5-RDSInBackupPlan"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Instance is serverless and has a backup retention policy defaulting to 1.",
+              "id": "HIPAA.Security-RDSInBackupPlan"
+            },
+            {
+              "reason": "[MDAA:@aws-mdaa/rds-constructs/lib/serverless-cluster.ts] Instance is serverless and has a backup retention policy defaulting to 1.",
+              "id": "PCI.DSS.321-RDSInBackupPlan"
+            }
+          ]
+        }
+      }
+    },
+    "bedrockbuilderbedrockkbkbtestcustomersupportpgvectorcsvectorstoreclustercsvectorstoreendpointssm2852B864": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/genai/customer-support-agent/cluster/cs-vector-store/endpoint",
+        "Tags": {
+          "costcentre": "123456",
+          "mdaa_cdk_app": "bedrock-builder",
+          "mdaa_domain": "genai",
+          "mdaa_env": "dev",
+          "mdaa_module_name": "customer-support-agent",
+          "mdaa_org": "test-org",
+          "project": "genai_foundation"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Fn::GetAtt": [
+                  "bedrockbuilderbedrockkbkbtestcustomersupportpgvectorcsvectorstore16FDAE35",
+                  "Endpoint.Address"
+                ]
+              },
+              ":",
+              {
+                "Fn::GetAtt": [
+                  "bedrockbuilderbedrockkbkbtestcustomersupportpgvectorcsvectorstore16FDAE35",
+                  "Endpoint.Port"
+                ]
+              }
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "test-org-dev-genai-customer-support-agent/bedrock-builder/bedrock-kb-kb-test-customer-support/pgvector-cs-vector-store/cluster-cs-vector-store-endpoint/ssm/Resource"
+      }
+    },
     "bedrockbuilderbedrockkbkbtestcustomersupportcreatedbkbtestcustomersupport5B78FDC6": {
       "Type": "Custom::RDS-Data",
       "Properties": {
@@ -6046,6 +6197,78 @@
         "aws:cdk:path": "test-org-dev-genai-customer-support-agent/bedrock-builder/bedrock-agent-customer-support-agent/mdaa-bedrock-agent-customer-support-agent"
       }
     },
+    "bedrockbuilderbedrockagentcustomersupportagentagentcustomersupportagentidssm131A91E3": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/genai/customer-support-agent/agent/customer-support-agent/id",
+        "Tags": {
+          "costcentre": "123456",
+          "mdaa_cdk_app": "bedrock-builder",
+          "mdaa_domain": "genai",
+          "mdaa_env": "dev",
+          "mdaa_module_name": "customer-support-agent",
+          "mdaa_org": "test-org",
+          "project": "genai_foundation"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::GetAtt": [
+            "bedrockbuilderbedrockagentcustomersupportagentmdaabedrockagentcustomersupportagent1F563FB7",
+            "AgentId"
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "test-org-dev-genai-customer-support-agent/bedrock-builder/bedrock-agent-customer-support-agent/agent-customer-support-agent-id/ssm/Resource"
+      }
+    },
+    "bedrockbuilderbedrockagentcustomersupportagentagentcustomersupportagentarnssmDED38940": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/genai/customer-support-agent/agent/customer-support-agent/arn",
+        "Tags": {
+          "costcentre": "123456",
+          "mdaa_cdk_app": "bedrock-builder",
+          "mdaa_domain": "genai",
+          "mdaa_env": "dev",
+          "mdaa_module_name": "customer-support-agent",
+          "mdaa_org": "test-org",
+          "project": "genai_foundation"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::GetAtt": [
+            "bedrockbuilderbedrockagentcustomersupportagentmdaabedrockagentcustomersupportagent1F563FB7",
+            "AgentArn"
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "test-org-dev-genai-customer-support-agent/bedrock-builder/bedrock-agent-customer-support-agent/agent-customer-support-agent-arn/ssm/Resource"
+      }
+    },
+    "bedrockbuilderbedrockagentcustomersupportagentBedrockInvokePermission021519D99": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "bedrockbuilderbedrockbuilderlambdafunctionscustomersupportagentlambda9334B0DE",
+            "Arn"
+          ]
+        },
+        "Principal": "bedrock.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "bedrockbuilderbedrockagentcustomersupportagentmdaabedrockagentcustomersupportagent1F563FB7",
+            "AgentArn"
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "test-org-dev-genai-customer-support-agent/bedrock-builder/bedrock-agent-customer-support-agent/BedrockInvokePermission-0"
+      }
+    },
     "bedrockbuilderbedrockagentcustomersupportagentmdaabedrockagentcustomersupportagentaliasE2AE7101": {
       "Type": "AWS::Bedrock::AgentAlias",
       "Properties": {
@@ -6070,26 +6293,29 @@
         "aws:cdk:path": "test-org-dev-genai-customer-support-agent/bedrock-builder/bedrock-agent-customer-support-agent/mdaa-bedrock-agent-customer-support-agent-alias"
       }
     },
-    "bedrockbuilderbedrockagentcustomersupportagentBedrockInvokePermission021519D99": {
-      "Type": "AWS::Lambda::Permission",
+    "bedrockbuilderbedrockagentcustomersupportagentagentcustomersupportagentaliasidssmF56D8663": {
+      "Type": "AWS::SSM::Parameter",
       "Properties": {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "bedrockbuilderbedrockbuilderlambdafunctionscustomersupportagentlambda9334B0DE",
-            "Arn"
-          ]
+        "Name": "/test-org/genai/customer-support-agent/agent/customer-support-agent/alias-id",
+        "Tags": {
+          "costcentre": "123456",
+          "mdaa_cdk_app": "bedrock-builder",
+          "mdaa_domain": "genai",
+          "mdaa_env": "dev",
+          "mdaa_module_name": "customer-support-agent",
+          "mdaa_org": "test-org",
+          "project": "genai_foundation"
         },
-        "Principal": "bedrock.amazonaws.com",
-        "SourceArn": {
+        "Type": "String",
+        "Value": {
           "Fn::GetAtt": [
-            "bedrockbuilderbedrockagentcustomersupportagentmdaabedrockagentcustomersupportagent1F563FB7",
-            "AgentArn"
+            "bedrockbuilderbedrockagentcustomersupportagentmdaabedrockagentcustomersupportagentaliasE2AE7101",
+            "AgentAliasId"
           ]
         }
       },
       "Metadata": {
-        "aws:cdk:path": "test-org-dev-genai-customer-support-agent/bedrock-builder/bedrock-agent-customer-support-agent/BedrockInvokePermission-0"
+        "aws:cdk:path": "test-org-dev-genai-customer-support-agent/bedrock-builder/bedrock-agent-customer-support-agent/agent-customer-support-agent-alias-id/ssm/Resource"
       }
     },
     "bedrockcmk710EFABC": {
@@ -7752,6 +7978,89 @@
         "Name": "test-org:genai:customer-support-agent:role:monitoringrolecsvectorstore:name"
       }
     },
+    "bedrockbuilderbedrockkbkbtestcustomersupportpgvectorcsvectorstoreclustersecretcsvectorstorenameout74F6B51D": {
+      "Value": {
+        "Fn::Join": [
+          "-",
+          [
+            {
+              "Fn::Select": [
+                0,
+                {
+                  "Fn::Split": [
+                    "-",
+                    {
+                      "Fn::Select": [
+                        6,
+                        {
+                          "Fn::Split": [
+                            ":",
+                            {
+                              "Ref": "bedrockbuilderbedrockkbkbtestcustomersupportpgvectorcsvectorstoreSecret819FFE8B"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "Fn::Select": [
+                1,
+                {
+                  "Fn::Split": [
+                    "-",
+                    {
+                      "Fn::Select": [
+                        6,
+                        {
+                          "Fn::Split": [
+                            ":",
+                            {
+                              "Ref": "bedrockbuilderbedrockkbkbtestcustomersupportpgvectorcsvectorstoreSecret819FFE8B"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      "Export": {
+        "Name": "test-org:genai:customer-support-agent:cluster-secret:csvectorstore:name"
+      }
+    },
+    "bedrockbuilderbedrockkbkbtestcustomersupportpgvectorcsvectorstoreclustercsvectorstoreendpointout23AE4CF0": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            {
+              "Fn::GetAtt": [
+                "bedrockbuilderbedrockkbkbtestcustomersupportpgvectorcsvectorstore16FDAE35",
+                "Endpoint.Address"
+              ]
+            },
+            ":",
+            {
+              "Fn::GetAtt": [
+                "bedrockbuilderbedrockkbkbtestcustomersupportpgvectorcsvectorstore16FDAE35",
+                "Endpoint.Port"
+              ]
+            }
+          ]
+        ]
+      },
+      "Export": {
+        "Name": "test-org:genai:customer-support-agent:cluster:csvectorstore:endpoint"
+      }
+    },
     "bedrockbuilderbedrockkbkbtestcustomersupportkbloggroupkbtestcustomersupportloggroupkbtestcustomersupportnameout1430E678": {
       "Value": "/aws/vendedlogs/bedrock/knowledge-base/test-org-dev-genai-customer-support-agent-kb-test-customer-support",
       "Export": {
@@ -8205,6 +8514,39 @@
       },
       "Export": {
         "Name": "test-org:genai:customer-support-agent:managed-policy:agentcustomersupportagent:name"
+      }
+    },
+    "bedrockbuilderbedrockagentcustomersupportagentagentcustomersupportagentidout87EE848D": {
+      "Value": {
+        "Fn::GetAtt": [
+          "bedrockbuilderbedrockagentcustomersupportagentmdaabedrockagentcustomersupportagent1F563FB7",
+          "AgentId"
+        ]
+      },
+      "Export": {
+        "Name": "test-org:genai:customer-support-agent:agent:customersupportagent:id"
+      }
+    },
+    "bedrockbuilderbedrockagentcustomersupportagentagentcustomersupportagentarnout0D329B3D": {
+      "Value": {
+        "Fn::GetAtt": [
+          "bedrockbuilderbedrockagentcustomersupportagentmdaabedrockagentcustomersupportagent1F563FB7",
+          "AgentArn"
+        ]
+      },
+      "Export": {
+        "Name": "test-org:genai:customer-support-agent:agent:customersupportagent:arn"
+      }
+    },
+    "bedrockbuilderbedrockagentcustomersupportagentagentcustomersupportagentaliasidout5CB8778C": {
+      "Value": {
+        "Fn::GetAtt": [
+          "bedrockbuilderbedrockagentcustomersupportagentmdaabedrockagentcustomersupportagentaliasE2AE7101",
+          "AgentAliasId"
+        ]
+      },
+      "Export": {
+        "Name": "test-org:genai:customer-support-agent:agent:customersupportagent:alias-id"
       }
     },
     "bedrockcmkkmsarnout0D3BC511": {

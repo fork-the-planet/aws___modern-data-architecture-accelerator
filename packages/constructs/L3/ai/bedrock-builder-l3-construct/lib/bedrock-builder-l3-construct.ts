@@ -9,7 +9,7 @@ import { MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 import { DECRYPT_ACTIONS, ENCRYPT_ACTIONS, MdaaKmsKey } from '@aws-mdaa/kms-constructs';
 import { MdaaL3Construct, MdaaL3ConstructProps } from '@aws-mdaa/l3-construct';
 import { MdaaResourceType } from '@aws-mdaa/naming';
-import { MdaaNagSuppressions } from '@aws-mdaa/construct';
+import { MdaaNagSuppressions, MdaaParamAndOutput } from '@aws-mdaa/construct';
 import { MdaaManagedPolicy } from '@aws-mdaa/iam-constructs';
 import { MdaaAuroraPgVector } from '@aws-mdaa/rds-constructs';
 import { MdaaOpensearchServerlessCollection } from '@aws-mdaa/opensearch-constructs';
@@ -384,6 +384,14 @@ export class BedrockBuilderL3Construct extends MdaaL3Construct {
           // This ensures the custom resource Lambda waits for the VPC endpoint to be fully operational
           vpcEndpointResource: vpcEndpoint,
         };
+
+        new MdaaParamAndOutput(this, {
+          ...this.props,
+          resourceType: 'opensearch-serverless-vpc-endpoint',
+          resourceId: vpcId,
+          name: 'id',
+          value: vpcEndpoint.attrId,
+        });
       }
     }
 

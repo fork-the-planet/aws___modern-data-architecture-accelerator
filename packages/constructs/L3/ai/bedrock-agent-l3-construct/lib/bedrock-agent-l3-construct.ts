@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { MdaaParamAndOutput } from '@aws-mdaa/construct';
 import { MdaaManagedPolicy } from '@aws-mdaa/iam-constructs';
 import { MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 import { USER_ACTIONS } from '@aws-mdaa/kms-constructs';
@@ -105,7 +106,11 @@ export interface BedrockAgentL3ConstructProps extends MdaaL3ConstructProps {
 // ---------------------------------------------
 
 export class BedrockAgentL3Construct extends MdaaL3Construct {
+  /** SSM param / output resource type for the published agent identifiers (id, arn, alias-id) */
+  private static readonly AGENT_RESOURCE_TYPE = 'agent';
+
   public readonly agent: bedrock.CfnAgent;
+  public readonly agentAlias?: bedrock.CfnAgentAlias;
   protected readonly props: BedrockAgentL3ConstructProps;
 
   constructor(scope: Construct, id: string, props: BedrockAgentL3ConstructProps) {
@@ -119,6 +124,9 @@ export class BedrockAgentL3Construct extends MdaaL3Construct {
       props.knowledgeBases || {},
       props.guardrails || {},
     );
+
+    // Create an alias for the agent
+    this.agentAlias = this.createAgentAlias(props.agentName, this.agent.attrAgentId, props.agentConfig);
   }
 
   private createBedrockAgent(
@@ -180,8 +188,20 @@ export class BedrockAgentL3Construct extends MdaaL3Construct {
     // Ensure the agent is created only after the managed policy is fully deployed
     agent.addDependency(agentManagedPolicy.node.defaultChild as CfnResource);
 
-    // Create an alias for the agent
-    this.createAgentAlias(agentName, agent.attrAgentId, agentConfig);
+    new MdaaParamAndOutput(this, {
+      ...this.props,
+      resourceType: BedrockAgentL3Construct.AGENT_RESOURCE_TYPE,
+      resourceId: agentName,
+      name: 'id',
+      value: agent.attrAgentId,
+    });
+    new MdaaParamAndOutput(this, {
+      ...this.props,
+      resourceType: BedrockAgentL3Construct.AGENT_RESOURCE_TYPE,
+      resourceId: agentName,
+      name: 'arn',
+      value: agent.attrAgentArn,
+    });
 
     // Add Lambda Permission to allow Bedrock Service Principal to Invoke Lambda on behalf of Specific Agent
     if (agentActionGroups) {
@@ -232,13 +252,29 @@ export class BedrockAgentL3Construct extends MdaaL3Construct {
     return agentActionGroups;
   }
 
-  private createAgentAlias(agentName: string, agentId: string, agentConfig: BedrockAgentProps) {
-    if (agentConfig.agentAliasName) {
-      new bedrock.CfnAgentAlias(this, `mdaa-bedrock-agent-${agentName}-alias`, {
-        agentId: agentId,
-        agentAliasName: agentConfig.agentAliasName,
-      });
+  private createAgentAlias(
+    agentName: string,
+    agentId: string,
+    agentConfig: BedrockAgentProps,
+  ): bedrock.CfnAgentAlias | undefined {
+    if (!agentConfig.agentAliasName) {
+      return undefined;
     }
+
+    const agentAlias = new bedrock.CfnAgentAlias(this, `mdaa-bedrock-agent-${agentName}-alias`, {
+      agentId: agentId,
+      agentAliasName: agentConfig.agentAliasName,
+    });
+
+    new MdaaParamAndOutput(this, {
+      ...this.props,
+      resourceType: BedrockAgentL3Construct.AGENT_RESOURCE_TYPE,
+      resourceId: agentName,
+      name: 'alias-id',
+      value: agentAlias.attrAgentAliasId,
+    });
+
+    return agentAlias;
   }
 
   private resolveAgentKnowledgeBaseAssociations(

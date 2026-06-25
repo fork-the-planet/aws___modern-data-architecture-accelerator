@@ -125,6 +125,41 @@ describe('MdaaAuroraPgVector engine version', () => {
   });
 });
 
+describe('MdaaAuroraPgVector params and outputs', () => {
+  // The construct re-enables the base-class SSM params/outputs (createParams/createOutputs
+  // defaults), so the cluster endpoint and secret name are published for downstream discovery.
+  const clusterIdentifier = 'test-pgvector';
+  const naming = new MdaaTestApp().naming;
+
+  test('publishes cluster endpoint SSM param', () => {
+    const template = buildStack();
+    template.hasResourceProperties('AWS::SSM::Parameter', {
+      Type: 'String',
+      Name: naming.ssmPath(`cluster/${clusterIdentifier}/endpoint`),
+    });
+  });
+
+  test('publishes cluster secret name SSM param', () => {
+    const template = buildStack();
+    template.hasResourceProperties('AWS::SSM::Parameter', {
+      Type: 'String',
+      Name: naming.ssmPath(`cluster-secret/${clusterIdentifier}/name`),
+    });
+  });
+
+  test('publishes cluster endpoint and secret name outputs', () => {
+    const template = buildStack();
+    // Export names strip non-word chars from the resourceId (test-pgvector -> testpgvector).
+    const exportId = clusterIdentifier.replace(/\W/g, '');
+    template.hasOutput('*', {
+      Export: { Name: naming.exportName(`cluster:${exportId}:endpoint`) },
+    });
+    template.hasOutput('*', {
+      Export: { Name: naming.exportName(`cluster-secret:${exportId}:name`) },
+    });
+  });
+});
+
 describe('MdaaAuroraPgVector reader instances', () => {
   test('creates 1 reader by default (writer + 1 reader = 2 instances)', () => {
     const template = buildStack();

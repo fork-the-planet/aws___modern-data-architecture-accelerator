@@ -2431,6 +2431,31 @@ describe('Bedrock Builder Compliance Stack Tests', () => {
       });
     });
 
+    test('VPC Endpoint Id Published as SSM Param and Output', () => {
+      const testApp = new MdaaTestApp();
+      const template = generateTemplateFromTestInput(
+        testApp,
+        dataAdminRoleRef,
+        undefined,
+        { 'vector-single-oss': vectorStoreOss },
+        { 'kb-single-oss': kb },
+        undefined,
+        undefined,
+        undefined,
+        true,
+      );
+
+      // The newly created VPC endpoint id is published for downstream discovery (resourceId = vpcId)
+      template.hasResourceProperties('AWS::SSM::Parameter', {
+        Type: 'String',
+        Name: testApp.naming.ssmPath('opensearch-serverless-vpc-endpoint/vpc-single-oss/id'),
+      });
+      // Export names strip non-word chars from the resourceId (vpc-single-oss -> vpcsingleoss)
+      template.hasOutput('*', {
+        Export: { Name: testApp.naming.exportName('opensearch-serverless-vpc-endpoint:vpcsingleoss:id') },
+      });
+    });
+
     test('Custom Resource for Index Creation Depends on VPC Endpoint', () => {
       const testApp = new MdaaTestApp();
       const template = generateTemplateFromTestInput(

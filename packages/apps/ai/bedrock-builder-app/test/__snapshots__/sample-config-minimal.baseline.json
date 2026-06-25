@@ -184,6 +184,46 @@
         "bedrockbuilderbedrockagenttestagentagentmanagedpoltestagentCE76A899"
       ]
     },
+    "bedrockbuilderbedrockagenttestagentagenttestagentidssm38BBD467": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-bedrock-builder-minimal/agent/test-agent/id",
+        "Tags": {
+          "mdaa_cdk_app": "bedrock-builder",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-bedrock-builder-minimal",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::GetAtt": [
+            "bedrockbuilderbedrockagenttestagentmdaabedrockagenttestagent1271847A",
+            "AgentId"
+          ]
+        }
+      }
+    },
+    "bedrockbuilderbedrockagenttestagentagenttestagentarnssm4724D262": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/test-org/test-domain/test-bedrock-builder-minimal/agent/test-agent/arn",
+        "Tags": {
+          "mdaa_cdk_app": "bedrock-builder",
+          "mdaa_domain": "test-domain",
+          "mdaa_env": "test-env",
+          "mdaa_module_name": "test-bedrock-builder-minimal",
+          "mdaa_org": "test-org"
+        },
+        "Type": "String",
+        "Value": {
+          "Fn::GetAtt": [
+            "bedrockbuilderbedrockagenttestagentmdaabedrockagenttestagent1271847A",
+            "AgentArn"
+          ]
+        }
+      }
+    },
     "RoleResDataAdmin0": {
       "Type": "AWS::CloudFormation::CustomResource",
       "Properties": {
@@ -496,6 +536,28 @@
       },
       "Export": {
         "Name": "test-org:test-domain:test-bedrock-builder-minimal:managed-policy:agenttestagent:name"
+      }
+    },
+    "bedrockbuilderbedrockagenttestagentagenttestagentidout15FD98F0": {
+      "Value": {
+        "Fn::GetAtt": [
+          "bedrockbuilderbedrockagenttestagentmdaabedrockagenttestagent1271847A",
+          "AgentId"
+        ]
+      },
+      "Export": {
+        "Name": "test-org:test-domain:test-bedrock-builder-minimal:agent:testagent:id"
+      }
+    },
+    "bedrockbuilderbedrockagenttestagentagenttestagentarnoutCCECE50B": {
+      "Value": {
+        "Fn::GetAtt": [
+          "bedrockbuilderbedrockagenttestagentmdaabedrockagenttestagent1271847A",
+          "AgentArn"
+        ]
+      },
+      "Export": {
+        "Name": "test-org:test-domain:test-bedrock-builder-minimal:agent:testagent:arn"
       }
     },
     "bedrockcmkkmsarnout0D3BC511": {
