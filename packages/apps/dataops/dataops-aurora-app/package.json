@@ -52,6 +52,6 @@
     "url": "https://github.com/aws/modern-data-architecture-accelerator"
   },
   "mdaa": {
-    "deployStage": "2"
+    "deployStage": "4"
   }
 }
