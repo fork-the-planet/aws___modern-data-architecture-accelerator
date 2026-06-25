@@ -10,6 +10,9 @@ Once deployed, you should see the following in your AWS account:
 
 | Resource | Deployed Name / SSM Path | Config Reference |
 |----------|--------------------------|------------------|
+| Audit S3 Bucket | `<org>-dev-shared-audit-audit`<br>`/<org>/shared/audit/bucket/name` | deployed by [`shared/audit.yaml`](shared/audit.yaml) |
+| Audit KMS Key | `<org>-dev-shared-audit-audit`<br>`/<org>/shared/audit/kms/arn` | deployed by [`shared/audit.yaml`](shared/audit.yaml) |
+| CloudTrail Trail | `<org>-dev-shared-audit-trail-s3-audit` | `trails.s3-audit` in [`shared/audit-trail.yaml`](shared/audit-trail.yaml) |
 | SMUS Domain | `<org>-dev-sagemaker-domain-domain1`<br>`/<org>/sagemaker/domain/domain/domain1/name` | `domains.domain1` in [`sagemaker/domain.yaml`](sagemaker/domain.yaml) |
 | SMUS Project Profile | `<org>-dev-sagemaker-projects`<br>`/<org>/sagemaker/projects/project/name` | configured in [`sagemaker/projects.yaml`](sagemaker/projects.yaml) |
 | IAM Role | `<org>-dev-shared-roles-data-admin`<br>`/<org>/shared/generated-role/data-admin/id` | `generateRoles.data-admin` in [`shared/roles.yaml`](shared/roles.yaml) |

@@ -90,6 +90,8 @@ See [USAGE](USAGE.md) for post-deployment instructions.
 | `@aws-mdaa/glue-catalog` | Glue Catalog KMS encryption (all accounts) |
 | `@aws-mdaa/roles` | IAM roles per account (data-admin, data-engineer, glue-etl, ddb-bp-prov) |
 | `@aws-mdaa/lakeformation-settings` | Lake Formation DataZone integration (all accounts) |
+| `@aws-mdaa/audit` | Encrypted S3 bucket and KMS key for CloudTrail audit log storage (all accounts) |
+| `@aws-mdaa/audit-trail` | CloudTrail trail for S3 data event auditing (all accounts) |
 | `@aws-mdaa/sagemaker` | SMUS domain (DataZone V2) with cross-account associations |
 | `@aws-mdaa/dataops-dynamodb` | DynamoDB custom SMUS blueprint (cross-account) |
 | `@aws-mdaa/sagemaker-project` | SMUS project profiles and team projects |

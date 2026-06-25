@@ -588,8 +588,8 @@ def main():
         sys.exit(0)
 
     # Force all tests when explicitly requested.
-    if run_all or update_baselines:
-        reason = "NX_RUN_ALL=true" if run_all else "UPDATE_BASELINES=true"
+    if run_all:
+        reason = "NX_RUN_ALL=true"
         if args.kit:
             sys.exit(_run_all_kits([args.kit], kits_root, f"{reason}, kit={args.kit}"))
         sys.exit(_run_all_kits(kits, kits_root, reason))

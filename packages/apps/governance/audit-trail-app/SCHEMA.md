@@ -11,7 +11,8 @@
 | - [nag_suppressions](#nag_suppressions )                             | No      | object | No         | In #/definitions/MdaaNagSuppressionConfigs          | Q-ENHANCED-PROPERTY<br />Optional CDK Nag suppression configurations for compliance rule management enabling controlled security rule exceptions and compliance documentation. Provides structured approach to managing security rule suppressions with proper justification and documentation for compliance auditing.<br /><br />Use cases: Compliance management; Security rule exceptions; Audit documentation; Controlled suppressions<br /><br />AWS: CDK Nag suppressions for compliance rule management and security exception documentation<br /><br />Validation: Must be valid MdaaNagSuppressionConfigs if provided; enables structured compliance rule management          |
 | - [sagemakerBlueprint](#sagemakerBlueprint )                         | No      | object | No         | In #/definitions/MdaaSageMakerCustomBluePrintConfig | Q-ENHANCED-PROPERTY<br />Optional SageMaker blueprint configuration for governed self-service deployment enabling controlled infrastructure provisioning and governance. When specified, deploys the module as a SageMaker blueprint instead of direct deployment for governed access and compliance.<br /><br />Use cases: Governed deployment; Self-service provisioning; SageMaker integration; Controlled access<br /><br />AWS: SageMaker blueprint configuration for governed infrastructure deployment and self-service provisioning<br /><br />Validation: Must be valid MdaaServiceCatalogProductConfig if provided; enables SageMaker deployment mode                         |
 | - [service_catalog_product_config](#service_catalog_product_config ) | No      | object | No         | In #/definitions/MdaaServiceCatalogProductConfig    | Q-ENHANCED-PROPERTY<br />Optional Service Catalog product configuration for governed self-service deployment enabling controlled infrastructure provisioning and governance. When specified, deploys the module as a Service Catalog product instead of direct deployment for governed access and compliance.<br /><br />Use cases: Governed deployment; Self-service provisioning; Service Catalog integration; Controlled access<br /><br />AWS: Service Catalog product configuration for governed infrastructure deployment and self-service provisioning<br /><br />Validation: Must be valid MdaaServiceCatalogProductConfig if provided; enables Service Catalog deployment mode |
-| + [trail](#trail )                                                   | No      | object | No         | In #/definitions/AuditTrailProps                    | CloudTrail audit trail configuration defining S3 destination, KMS encryption,<br />and event scope for compliance monitoring.<br /><br />Use cases: S3 data event auditing; Compliance logging; Security monitoring<br /><br />AWS: CloudTrail trail with S3 data events and KMS encryption<br /><br />Validation: Required; must be valid AuditTrailProps                                                                                                                                                                                                                                                                                                                              |
+| - [trail](#trail )                                                   | No      | object | No         | In #/definitions/AuditTrailProps                    | Deprecated. Use 'trails' with a key of 's3-audit' for equivalent behavior.<br />CloudTrail audit trail configuration defining S3 destination, KMS encryption,<br />and event scope for compliance monitoring.<br /><br />Use cases: S3 data event auditing; Compliance logging; Security monitoring<br /><br />AWS: CloudTrail trail with S3 data events and KMS encryption<br /><br />Validation: Optional; must be valid AuditTrailProps                                                                                                                                                                                                                                              |
+| - [trails](#trails )                                                 | No      | object | No         | -                                                   | Named CloudTrail audit trail configurations for deploying multiple independent trails.<br />Each key is used as the trail's resource name segment.<br /><br />Use cases: Multiple trails per domain; Separate trails for different compliance scopes<br /><br />AWS: Multiple CloudTrail trails with independent configuration<br /><br />Validation: Optional; keys must be valid resource name segments; values must be valid AuditTrailProps                                                                                                                                                                                                                                         |
 
 ## <a name="nag_suppressions"></a>1. Property `root > nag_suppressions`
 
@@ -7263,24 +7264,26 @@ Validation: Must be valid MdaaServiceCatalogProductConfig if provided; enables S
 |                           |                               |
 | ------------------------- | ----------------------------- |
 | **Type**                  | `object`                      |
-| **Required**              | Yes                           |
+| **Required**              | No                            |
 | **Additional properties** | Not allowed                   |
 | **Defined in**            | #/definitions/AuditTrailProps |
 
-**Description:** CloudTrail audit trail configuration defining S3 destination, KMS encryption,
+**Description:** Deprecated. Use 'trails' with a key of 's3-audit' for equivalent behavior.
+CloudTrail audit trail configuration defining S3 destination, KMS encryption,
 and event scope for compliance monitoring.
 
 Use cases: S3 data event auditing; Compliance logging; Security monitoring
 
 AWS: CloudTrail trail with S3 data events and KMS encryption
 
-Validation: Required; must be valid AuditTrailProps
+Validation: Optional; must be valid AuditTrailProps
 
-| Property                                                         | Pattern | Type    | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                                    |
-| ---------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| + [cloudTrailAuditBucketName](#trail_cloudTrailAuditBucketName ) | No      | string  | No         | -          | S3 bucket name where CloudTrail audit logs are stored.<br />Accepts bucket names or SSM parameter references.<br /><br />Use cases: Centralized audit log collection; Compliance log storage<br /><br />AWS: CloudTrail S3 destination bucket<br /><br />Validation: Required; must be existing S3 bucket name or SSM parameter path |
-| + [cloudTrailAuditKmsKeyArn](#trail_cloudTrailAuditKmsKeyArn )   | No      | string  | No         | -          | KMS key ARN for encrypting CloudTrail logs written to S3.<br />Accepts key ARNs or SSM parameter references.<br /><br />Use cases: Audit log encryption; Data protection compliance<br /><br />AWS: KMS key for CloudTrail log encryption<br /><br />Validation: Required; must be valid KMS key ARN or SSM parameter path           |
-| - [includeManagementEvents](#trail_includeManagementEvents )     | No      | boolean | No         | -          | If true, management/control plane events will be included in trail.<br />Otherwise, only S3 Data Events will be included.                                                                                                                                                                                                            |
+| Property                                                         | Pattern | Type    | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ---------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| + [cloudTrailAuditBucketName](#trail_cloudTrailAuditBucketName ) | No      | string  | No         | -          | S3 bucket name where CloudTrail audit logs are stored.<br />Accepts bucket names or SSM parameter references.<br /><br />Use cases: Centralized audit log collection; Compliance log storage<br /><br />AWS: CloudTrail S3 destination bucket<br /><br />Validation: Required; must be existing S3 bucket name or SSM parameter path                                                                                                                                                 |
+| + [cloudTrailAuditKmsKeyArn](#trail_cloudTrailAuditKmsKeyArn )   | No      | string  | No         | -          | KMS key ARN for encrypting CloudTrail logs written to S3.<br />Accepts key ARNs or SSM parameter references.<br /><br />Use cases: Audit log encryption; Data protection compliance<br /><br />AWS: KMS key for CloudTrail log encryption<br /><br />Validation: Required; must be valid KMS key ARN or SSM parameter path                                                                                                                                                           |
+| - [eventSelectors](#trail_eventSelectors )                       | No      | array   | No         | -          | Optional list of S3 event selectors to scope CloudTrail data event capture<br />to specific buckets and prefixes. If omitted, the trail captures all S3 data<br />events in the account.<br /><br />Use cases: Audit specific data lake buckets; Reduce CloudTrail costs; Targeted compliance logging<br /><br />AWS: CloudTrail S3 data event selectors (DataResources on the trail)<br /><br />Validation: Optional; array of EventSelectorConfig objects with required bucketName |
+| - [includeManagementEvents](#trail_includeManagementEvents )     | No      | boolean | No         | -          | If true, management/control plane events will be included in trail.<br />Otherwise, only S3 Data Events will be included.                                                                                                                                                                                                                                                                                                                                                            |
 
 ### <a name="trail_cloudTrailAuditBucketName"></a>4.1. Property `root > trail > cloudTrailAuditBucketName`
 
@@ -7314,7 +7317,92 @@ AWS: KMS key for CloudTrail log encryption
 
 Validation: Required; must be valid KMS key ARN or SSM parameter path
 
-### <a name="trail_includeManagementEvents"></a>4.3. Property `root > trail > includeManagementEvents`
+### <a name="trail_eventSelectors"></a>4.3. Property `root > trail > eventSelectors`
+
+|              |         |
+| ------------ | ------- |
+| **Type**     | `array` |
+| **Required** | No      |
+
+**Description:** Optional list of S3 event selectors to scope CloudTrail data event capture
+to specific buckets and prefixes. If omitted, the trail captures all S3 data
+events in the account.
+
+Use cases: Audit specific data lake buckets; Reduce CloudTrail costs; Targeted compliance logging
+
+AWS: CloudTrail S3 data event selectors (DataResources on the trail)
+
+Validation: Optional; array of EventSelectorConfig objects with required bucketName
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                    | Description                                                                       |
+| -------------------------------------------------- | --------------------------------------------------------------------------------- |
+| [EventSelectorConfig](#trail_eventSelectors_items) | Scoped S3 event selector targeting a specific bucket and optional key prefix. ... |
+
+#### <a name="trail_eventSelectors_items"></a>4.3.1. root > trail > eventSelectors > EventSelectorConfig
+
+|                           |                                   |
+| ------------------------- | --------------------------------- |
+| **Type**                  | `object`                          |
+| **Required**              | No                                |
+| **Additional properties** | Not allowed                       |
+| **Defined in**            | #/definitions/EventSelectorConfig |
+
+**Description:** Scoped S3 event selector targeting a specific bucket and optional key prefix.
+Narrows CloudTrail data event capture to only the specified S3 locations
+rather than logging all S3 data events account-wide.
+
+Use cases: Cost-effective auditing of specific data buckets; Targeted compliance monitoring; Reduced log volume
+
+AWS: CloudTrail S3 data event selector (DataResource with S3 ARN)
+
+Validation: bucketName required; objectPrefix optional
+
+| Property                                                    | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                                                                                |
+| ----------------------------------------------------------- | ------- | ------ | ---------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| + [bucketName](#trail_eventSelectors_items_bucketName )     | No      | string | No         | -          | S3 bucket name to scope CloudTrail data event capture to.<br />Accepts bucket names or SSM parameter references.<br /><br />Use cases: Target specific data buckets for audit; Scope trail to sensitive data stores<br /><br />AWS: CloudTrail S3 data event selector bucket target<br /><br />Validation: Required; must be existing S3 bucket name or SSM parameter path       |
+| - [objectPrefix](#trail_eventSelectors_items_objectPrefix ) | No      | string | No         | -          | Optional S3 key prefix to further narrow event capture within the bucket.<br />Only data events for objects under this prefix will be logged.<br /><br />Use cases: Audit only a specific dataset prefix; Reduce log volume for large buckets<br /><br />AWS: CloudTrail S3 data event selector object prefix filter<br /><br />Validation: Optional; valid S3 key prefix string |
+
+##### <a name="trail_eventSelectors_items_bucketName"></a>4.3.1.1. Property `root > trail > eventSelectors > eventSelectors items > bucketName`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `string` |
+| **Required** | Yes      |
+
+**Description:** S3 bucket name to scope CloudTrail data event capture to.
+Accepts bucket names or SSM parameter references.
+
+Use cases: Target specific data buckets for audit; Scope trail to sensitive data stores
+
+AWS: CloudTrail S3 data event selector bucket target
+
+Validation: Required; must be existing S3 bucket name or SSM parameter path
+
+##### <a name="trail_eventSelectors_items_objectPrefix"></a>4.3.1.2. Property `root > trail > eventSelectors > eventSelectors items > objectPrefix`
+
+|              |          |
+| ------------ | -------- |
+| **Type**     | `string` |
+| **Required** | No       |
+
+**Description:** Optional S3 key prefix to further narrow event capture within the bucket.
+Only data events for objects under this prefix will be logged.
+
+Use cases: Audit only a specific dataset prefix; Reduce log volume for large buckets
+
+AWS: CloudTrail S3 data event selector object prefix filter
+
+Validation: Optional; valid S3 key prefix string
+
+### <a name="trail_includeManagementEvents"></a>4.4. Property `root > trail > includeManagementEvents`
 
 |              |           |
 | ------------ | --------- |
@@ -7323,5 +7411,45 @@ Validation: Required; must be valid KMS key ARN or SSM parameter path
 
 **Description:** If true, management/control plane events will be included in trail.
 Otherwise, only S3 Data Events will be included.
+
+## <a name="trails"></a>5. Property `root > trails`
+
+|                           |                                                                                     |
+| ------------------------- | ----------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                            |
+| **Required**              | No                                                                                  |
+| **Additional properties** | [Each additional property must conform to the schema](#trails_additionalProperties) |
+
+**Description:** Named CloudTrail audit trail configurations for deploying multiple independent trails.
+Each key is used as the trail's resource name segment.
+
+Use cases: Multiple trails per domain; Separate trails for different compliance scopes
+
+AWS: Multiple CloudTrail trails with independent configuration
+
+Validation: Optional; keys must be valid resource name segments; values must be valid AuditTrailProps
+
+| Property                            | Pattern | Type   | Deprecated | Definition               | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| ----------------------------------- | ------- | ------ | ---------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [](#trails_additionalProperties ) | No      | object | No         | Same as [trail](#trail ) | CloudTrail audit trail configuration for S3 data event logging with KMS encryption.<br />Logs are written to the specified S3 bucket encrypted with the specified KMS key.<br />Optionally includes management/control plane events.<br /><br />Use cases: Compliance auditing; S3 data access logging; Security monitoring; Regulatory compliance<br /><br />AWS: CloudTrail trail with S3 data events, KMS encryption, and optional management events<br /><br />Validation: cloudTrailAuditBucketName and cloudTrailAuditKmsKeyArn required |
+
+### <a name="trails_additionalProperties"></a>5.1. Property `root > trails > AuditTrailProps`
+
+|                           |                 |
+| ------------------------- | --------------- |
+| **Type**                  | `object`        |
+| **Required**              | No              |
+| **Additional properties** | Not allowed     |
+| **Same definition as**    | [trail](#trail) |
+
+**Description:** CloudTrail audit trail configuration for S3 data event logging with KMS encryption.
+Logs are written to the specified S3 bucket encrypted with the specified KMS key.
+Optionally includes management/control plane events.
+
+Use cases: Compliance auditing; S3 data access logging; Security monitoring; Regulatory compliance
+
+AWS: CloudTrail trail with S3 data events, KMS encryption, and optional management events
+
+Validation: cloudTrailAuditBucketName and cloudTrailAuditKmsKeyArn required
 
 ----------------------------------------------------------------------------------------------------------------------------

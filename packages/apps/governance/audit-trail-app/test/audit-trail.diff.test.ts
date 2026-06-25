@@ -52,4 +52,26 @@ describe('Audit Trail Baseline Diff Tests', () => {
       },
     ),
   );
+
+  baselineDiffTestApp(
+    'Audit Trail Trails Only',
+    Create.appProvider(
+      context => {
+        const moduleApp = new AuditTrailCDKApp({
+          context: {
+            ...context,
+            module_configs: path.join(__dirname, '..', 'sample_configs', 'sample-config-trails-only.yaml'),
+          },
+        });
+        moduleApp.generateStack();
+        return moduleApp;
+      },
+      {
+        module_name: 'test-audit-trail-trails-only',
+        org: 'test-org',
+        env: 'test-env',
+        domain: 'test-domain',
+      },
+    ),
+  );
 });

@@ -63,13 +63,24 @@ Required properties only — a CloudTrail trail with audit bucket and KMS key re
 
 #### Comprehensive Configuration
 
-Deploys a CloudTrail trail with S3 audit bucket, KMS encryption, and management event logging for compliance monitoring. Start here when evaluating all available options for event selectors, management events, and multi-bucket data event coverage.
+Covers all available options including management events, scoped event selectors targeting specific buckets and prefixes, and multiple named trails via the `trails` property. Demonstrates both the legacy single `trail` and additional named `trails` coexisting in one config.
 
 [sample-config-comprehensive.yaml](sample_configs/sample-config-comprehensive.yaml)
 
 ```yaml
 # Contents available via above link
 --8<-- "target/docs/packages/apps/governance/audit-trail-app/sample_configs/sample-config-comprehensive.yaml"
+```
+
+#### Trails Only
+
+Uses only the `trails` property without the legacy `trail` — for deployments that exclusively use named trails without needing the default `s3-audit` trail.
+
+[sample-config-trails-only.yaml](sample_configs/sample-config-trails-only.yaml)
+
+```yaml
+# Contents available via above link
+--8<-- "target/docs/packages/apps/governance/audit-trail-app/sample_configs/sample-config-trails-only.yaml"
 ```
 
 ---

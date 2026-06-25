@@ -27,8 +27,6 @@ describe('MDAA Compliance Stack Tests', () => {
   testApp.checkCdkNagCompliance(testApp.testStack);
   const template = Template.fromStack(testApp.testStack);
 
-  // console.log( JSON.stringify( template, undefined, 2 ) )
-
   test('Resource Count', () => {
     template.resourceCountIs('AWS::CloudTrail::Trail', 1);
   });
@@ -60,4 +58,51 @@ describe('MDAA Compliance Stack Tests', () => {
       ]),
     });
   });
+});
+
+describe('MDAA Audit Trail with Event Selectors - Compliance', () => {
+  const testApp = new MdaaTestApp();
+  const stack = testApp.testStack;
+
+  const constructProps: AuditTrailL3ConstructProps = {
+    trail: {
+      cloudTrailAuditBucketName: 'some-bucket-name',
+      cloudTrailAuditKmsKeyArn: 'arn:test-partition:kms:test-region:test-account:key/some-key-id',
+      includeManagementEvents: false,
+      eventSelectors: [{ bucketName: 'data-bucket-1', objectPrefix: 'raw/' }, { bucketName: 'data-bucket-2' }],
+    },
+
+    roleHelper: new MdaaRoleHelper(stack, testApp.naming),
+    naming: testApp.naming,
+  };
+
+  new AuditTrailL3Construct(stack, 'teststack', constructProps);
+  testApp.checkCdkNagCompliance(testApp.testStack);
+});
+
+describe('MDAA Audit Trail with Multiple Named Trails - Compliance', () => {
+  const testApp = new MdaaTestApp();
+  const stack = testApp.testStack;
+
+  const constructProps: AuditTrailL3ConstructProps = {
+    trails: {
+      'datalake-audit': {
+        cloudTrailAuditBucketName: 'datalake-audit-bucket',
+        cloudTrailAuditKmsKeyArn: 'arn:test-partition:kms:test-region:test-account:key/datalake-key-id',
+        includeManagementEvents: false,
+        eventSelectors: [{ bucketName: 'raw-data-bucket', objectPrefix: 'sensitive/' }],
+      },
+      'analytics-audit': {
+        cloudTrailAuditBucketName: 'analytics-audit-bucket',
+        cloudTrailAuditKmsKeyArn: 'arn:test-partition:kms:test-region:test-account:key/analytics-key-id',
+        includeManagementEvents: true,
+      },
+    },
+
+    roleHelper: new MdaaRoleHelper(stack, testApp.naming),
+    naming: testApp.naming,
+  };
+
+  new AuditTrailL3Construct(stack, 'teststack', constructProps);
+  testApp.checkCdkNagCompliance(testApp.testStack);
 });

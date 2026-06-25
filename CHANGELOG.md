@@ -22,6 +22,10 @@
 
 ### New Features
 
+- **Audit Trail Module — Event Selectors**: Added optional `eventSelectors` configuration to the audit-trail module, allowing users to scope CloudTrail S3 data event capture to specific buckets and key prefixes instead of logging all S3 data events account-wide. Each selector accepts a `bucketName` (or SSM parameter reference) and an optional `objectPrefix`. When omitted, the existing behavior (capture all S3 data events) is preserved.
+
+- **Audit Trail Module — Multiple Named Trails**: Added a new `trails` configuration property accepting a map of named trail configurations. Each key becomes the trail's resource name segment, enabling multiple independent trails with separate S3 destinations, KMS keys, and event selectors in a single deployment. The existing `trail` property is now deprecated — migrate to `trails` with a key of `'s3-audit'` for equivalent behavior. Both properties can coexist during migration.
+
 - **aws-cdk-lib upgrade to 2.258.0**: `aws-cdk-lib` has been updated from 2.192.0 to 2.258.0. This version removes the `lambda.Runtime.PYTHON_3_13` enum value and upgrades it to Runtime.PYTHON_3_14. Any MDAA config that references `python3.13` as a Lambda runtime must be updated to `python3.13t` (thread-based) or another supported runtime (e.g., `python3.14`).
 - **Naming**: Added `MdaaResourceType` enum and `withResourceType()` method to `IMdaaResourceNaming` interface, enabling custom naming modules to inject service-type abbreviations of the implementer's choosing into resource names (the abbreviations themselves are not produced by the enum). The default implementation is unchanged — no impact on existing deployments.
 

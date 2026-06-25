@@ -21,6 +21,7 @@ export class AuditTrailCDKApp extends MdaaCdkApp {
     const appConfig = new AuditTrailConfigParser(stack, parserProps);
     const constructProps: AuditTrailL3ConstructProps = {
       trail: appConfig.trail,
+      trails: appConfig.trails,
       ...l3ConstructProps,
     };
 

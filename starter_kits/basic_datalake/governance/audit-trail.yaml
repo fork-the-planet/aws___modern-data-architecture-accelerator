@@ -1,8 +1,11 @@
 # yaml-language-server: $schema=../../../schemas/@aws-mdaa/audit-trail.json
-trail:
-  # The name of the bucket to which audit events will be written
-  cloudTrailAuditBucketName: ssm-org:/shared/audit/bucket/name
-  # The Arn of the KMS CMK which will be used to encrypt audit logs
-  cloudTrailAuditKmsKeyArn: ssm-org:/shared/audit/kms/arn
-  # Optionally include control plane events in trail
-  includeManagementEvents: true
+# Named CloudTrail trails to deploy
+trails:
+  # Default trail for S3 data event auditing
+  s3-audit:
+    # The name of the bucket to which audit events will be written
+    cloudTrailAuditBucketName: ssm-org:/shared/audit/bucket/name
+    # The ARN of the KMS key which will be used to encrypt audit logs
+    cloudTrailAuditKmsKeyArn: ssm-org:/shared/audit/kms/arn
+    # Include management/control plane events in the trail
+    includeManagementEvents: true

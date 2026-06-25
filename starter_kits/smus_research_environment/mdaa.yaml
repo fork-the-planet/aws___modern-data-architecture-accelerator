@@ -56,6 +56,18 @@ domains:
             module_configs:
               - ./shared/lakeformation-settings.yaml
 
+          # Encrypted S3 bucket and KMS key for CloudTrail audit log storage
+          audit:
+            module_path: '@aws-mdaa/audit'
+            module_configs:
+              - ./shared/audit.yaml
+
+          # CloudTrail trail for S3 data events written to the audit bucket
+          audit-trail:
+            module_path: '@aws-mdaa/audit-trail'
+            module_configs:
+              - ./shared/audit-trail.yaml
+
   # The name of the domain. In this case, we are building a 'sagemaker' domain.
   sagemaker:
     # One or more environments may be specified, typically along the lines of 'dev', 'test', and/or 'prod'

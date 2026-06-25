@@ -46,6 +46,16 @@ domains:
             module_path: '@aws-mdaa/lakeformation-settings'
             module_configs:
               - ./common/governance/lakeformation-settings.yaml
+          # Encrypted S3 bucket and KMS key for CloudTrail audit log storage
+          audit:
+            module_path: '@aws-mdaa/audit'
+            module_configs:
+              - ./common/governance/audit.yaml
+          # CloudTrail trail for S3 data events written to the audit bucket
+          audit-trail:
+            module_path: '@aws-mdaa/audit-trail'
+            module_configs:
+              - ./common/governance/audit-trail.yaml
           # This module will ensure that LakeFormation is configured to not
           # automatically generate IAMAllowedPrincipal grants on new databases and tables.
           datazone:

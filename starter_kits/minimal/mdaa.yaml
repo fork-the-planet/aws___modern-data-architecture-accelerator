@@ -36,6 +36,18 @@ domains:
             module_configs:
               - ./govern/lakeformation-settings.yaml
 
+          # Encrypted S3 bucket and KMS key for CloudTrail audit log storage
+          audit:
+            module_path: "@aws-mdaa/audit"
+            module_configs:
+              - ./govern/audit.yaml
+
+          # CloudTrail trail for S3 data events written to the audit bucket
+          audit-trail:
+            module_path: "@aws-mdaa/audit-trail"
+            module_configs:
+              - ./govern/audit-trail.yaml
+
   # TODO: Add additional domains below. Each domain groups related modules
   # (e.g., datalake, analytics, dataops). Modules within a domain share
   # naming prefixes and can reference each other via ssm-domain:/ paths.

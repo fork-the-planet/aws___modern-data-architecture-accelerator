@@ -67,6 +67,13 @@
                     "description": "KMS key ARN for encrypting CloudTrail logs written to S3.\nAccepts key ARNs or SSM parameter references.\n\nUse cases: Audit log encryption; Data protection compliance\n\nAWS: KMS key for CloudTrail log encryption\n\nValidation: Required; must be valid KMS key ARN or SSM parameter path",
                     "type": "string"
                 },
+                "eventSelectors": {
+                    "description": "Optional list of S3 event selectors to scope CloudTrail data event capture\nto specific buckets and prefixes. If omitted, the trail captures all S3 data\nevents in the account.\n\nUse cases: Audit specific data lake buckets; Reduce CloudTrail costs; Targeted compliance logging\n\nAWS: CloudTrail S3 data event selectors (DataResources on the trail)\n\nValidation: Optional; array of EventSelectorConfig objects with required bucketName",
+                    "items": {
+                        "$ref": "#/definitions/EventSelectorConfig"
+                    },
+                    "type": "array"
+                },
                 "includeManagementEvents": {
                     "description": "If true, management/control plane events will be included in trail.\nOtherwise, only S3 Data Events will be included.",
                     "type": "boolean"
@@ -732,6 +739,24 @@
                 "amount",
                 "components",
                 "unit"
+            ],
+            "type": "object"
+        },
+        "EventSelectorConfig": {
+            "additionalProperties": false,
+            "description": "Scoped S3 event selector targeting a specific bucket and optional key prefix.\nNarrows CloudTrail data event capture to only the specified S3 locations\nrather than logging all S3 data events account-wide.\n\nUse cases: Cost-effective auditing of specific data buckets; Targeted compliance monitoring; Reduced log volume\n\nAWS: CloudTrail S3 data event selector (DataResource with S3 ARN)\n\nValidation: bucketName required; objectPrefix optional",
+            "properties": {
+                "bucketName": {
+                    "description": "S3 bucket name to scope CloudTrail data event capture to.\nAccepts bucket names or SSM parameter references.\n\nUse cases: Target specific data buckets for audit; Scope trail to sensitive data stores\n\nAWS: CloudTrail S3 data event selector bucket target\n\nValidation: Required; must be existing S3 bucket name or SSM parameter path",
+                    "type": "string"
+                },
+                "objectPrefix": {
+                    "description": "Optional S3 key prefix to further narrow event capture within the bucket.\nOnly data events for objects under this prefix will be logged.\n\nUse cases: Audit only a specific dataset prefix; Reduce log volume for large buckets\n\nAWS: CloudTrail S3 data event selector object prefix filter\n\nValidation: Optional; valid S3 key prefix string",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "bucketName"
             ],
             "type": "object"
         },
@@ -2984,12 +3009,16 @@
         },
         "trail": {
             "$ref": "#/definitions/AuditTrailProps",
-            "description": "CloudTrail audit trail configuration defining S3 destination, KMS encryption,\nand event scope for compliance monitoring.\n\nUse cases: S3 data event auditing; Compliance logging; Security monitoring\n\nAWS: CloudTrail trail with S3 data events and KMS encryption\n\nValidation: Required; must be valid AuditTrailProps"
+            "description": "Deprecated. Use 'trails' with a key of 's3-audit' for equivalent behavior.\nCloudTrail audit trail configuration defining S3 destination, KMS encryption,\nand event scope for compliance monitoring.\n\nUse cases: S3 data event auditing; Compliance logging; Security monitoring\n\nAWS: CloudTrail trail with S3 data events and KMS encryption\n\nValidation: Optional; must be valid AuditTrailProps"
+        },
+        "trails": {
+            "additionalProperties": {
+                "$ref": "#/definitions/AuditTrailProps"
+            },
+            "description": "Named CloudTrail audit trail configurations for deploying multiple independent trails.\nEach key is used as the trail's resource name segment.\n\nUse cases: Multiple trails per domain; Separate trails for different compliance scopes\n\nAWS: Multiple CloudTrail trails with independent configuration\n\nValidation: Optional; keys must be valid resource name segments; values must be valid AuditTrailProps",
+            "type": "object"
         }
     },
-    "required": [
-        "trail"
-    ],
     "type": "object"
 }
 

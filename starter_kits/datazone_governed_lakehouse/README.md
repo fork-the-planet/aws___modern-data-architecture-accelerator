@@ -69,6 +69,8 @@ See [USAGE](USAGE.md) for post-deployment instructions.
 | `@aws-mdaa/roles` | IAM roles and policies (data-admin, data-engineer, data-users, glue-etl) |
 | `@aws-mdaa/glue-catalog` | Glue Catalog KMS encryption (account-level) |
 | `@aws-mdaa/lakeformation-settings` | Lake Formation governance settings (account-level) |
+| `@aws-mdaa/audit` | Encrypted S3 bucket and KMS key for CloudTrail audit log storage |
+| `@aws-mdaa/audit-trail` | CloudTrail trail for S3 data event auditing |
 | `@aws-mdaa/datazone` | DataZone domain for data product management |
 | `@aws-mdaa/datalake` | KMS keys, S3 buckets, and bucket policies |
 | `@aws-mdaa/dataops-project` | Glue databases with Lake Formation access control (x3) |

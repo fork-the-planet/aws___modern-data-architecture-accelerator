@@ -83,6 +83,8 @@ See [USAGE](USAGE.md) for post-deployment instructions.
 | `@aws-mdaa/glue-catalog` | Glue Catalog KMS encryption (account-level) |
 | `@aws-mdaa/roles` | IAM roles for data and domain administration |
 | `@aws-mdaa/lakeformation-settings` | Lake Formation settings (account-level) |
+| `@aws-mdaa/audit` | Encrypted S3 bucket and KMS key for CloudTrail audit log storage |
+| `@aws-mdaa/audit-trail` | CloudTrail trail for S3 data events |
 | `@aws-mdaa/sagemaker` | SMUS domain (DataZone V2) with SSO integration |
 | `@aws-mdaa/sagemaker-project` | SMUS project profiles and team projects |
 

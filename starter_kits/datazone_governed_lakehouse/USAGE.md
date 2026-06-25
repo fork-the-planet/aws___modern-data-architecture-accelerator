@@ -10,6 +10,9 @@ Once deployed, you should see the following in your AWS account:
 
 | Resource | Deployed Name / SSM Path | Config Reference |
 |----------|--------------------------|------------------|
+| Audit S3 Bucket | `<org>-dev-govern1-audit-audit`<br>`/<org>/govern1/audit/bucket/name` | deployed by [`common/governance/audit.yaml`](common/governance/audit.yaml) |
+| Audit KMS Key | `<org>-dev-govern1-audit-audit`<br>`/<org>/govern1/audit/kms/arn` | deployed by [`common/governance/audit.yaml`](common/governance/audit.yaml) |
+| CloudTrail Trail | `<org>-dev-govern1-audit-trail-s3-audit` | `trails.s3-audit` in [`common/governance/audit-trail.yaml`](common/governance/audit-trail.yaml) |
 | DataZone Domain | `<org>-dev-govern1-datazone-domain1`<br>`/<org>/govern1/datazone/domain/domain1/name` | `domains.domain1` in [`domain1/governance/datazone.yaml`](domain1/governance/datazone.yaml) |
 | S3 Bucket | `<org>-dev-data1-datalake-raw`<br>`/<org>/data1/datalake/bucket/raw/name` | `buckets.raw` in [`domain1/data/datalake.yaml`](domain1/data/datalake.yaml) |
 | S3 Bucket | `<org>-dev-data1-datalake-transformed`<br>`/<org>/data1/datalake/bucket/transformed/name` | `buckets.transformed` in [`domain1/data/datalake.yaml`](domain1/data/datalake.yaml) |

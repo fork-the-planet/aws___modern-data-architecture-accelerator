@@ -1,10 +1,10 @@
 # Comprehensive sample config for the Audit Trail module.
 # Covers EVERY non-excluded property from config-schema.json at full depth.
-# Deploys a CloudTrail trail with S3 audit bucket, KMS encryption,
-# and management event logging for compliance monitoring.
+# Deploys multiple CloudTrail trails: one via the legacy 'trail' property and
+# additional named trails via 'trails'. Both can coexist in the same config.
 
-# CloudTrail audit trail configuration for S3 data event logging
-# with KMS encryption. (AuditTrailProps)
+# Legacy single-trail configuration (backward-compatible).
+# Produces a trail named '{org}-{env}-{domain}-{module}-s3-audit'.
 trail:
   # (Required) S3 bucket name where CloudTrail audit logs are stored.
   # Accepts bucket names or SSM parameter references.
@@ -16,3 +16,26 @@ trail:
   # (Optional, boolean) If true, management/control plane events will be
   # included in trail. Otherwise, only S3 Data Events will be included.
   includeManagementEvents: true
+  # (Optional) Scoped S3 event selectors. If omitted, all S3 data events
+  # in the account are captured. Each entry targets a specific bucket and
+  # optional key prefix.
+  eventSelectors:
+    # Selector targeting a specific bucket and prefix
+    - bucketName: ssm:/sample-org/datalake/raw-bucket/name
+      # (Optional) S3 key prefix to narrow event capture
+      objectPrefix: sensitive-data/
+    # Selector targeting an entire bucket (no prefix)
+    - bucketName: ssm:/sample-org/datalake/curated-bucket/name
+
+# Named trail configurations for deploying multiple independent trails.
+# Each key becomes the trail's resource name segment
+# (e.g., '{org}-{env}-{domain}-{module}-analytics-audit').
+trails:
+  # Trail scoped to analytics workloads
+  analytics-audit:
+    cloudTrailAuditBucketName: ssm:/sample-org/analytics/audit/bucket/name
+    cloudTrailAuditKmsKeyArn: ssm:/sample-org/analytics/audit/kms/cmk/arn
+    includeManagementEvents: false
+    eventSelectors:
+      - bucketName: ssm:/sample-org/analytics/reports-bucket/name
+        objectPrefix: daily/

@@ -1,0 +1,15 @@
+# Trails-only sample config for the Audit Trail module.
+# Demonstrates using only the 'trails' property without the legacy 'trail' property.
+# Use this pattern when deploying multiple named trails without a default 's3-audit' trail.
+
+trails:
+  # Trail scoped to datalake buckets
+  datalake-audit:
+    # (Required) S3 bucket name where CloudTrail audit logs are stored.
+    cloudTrailAuditBucketName: ssm:/sample-org/shared/audit/bucket/name
+    # (Required) KMS key ARN for encrypting CloudTrail logs written to S3.
+    cloudTrailAuditKmsKeyArn: ssm:/sample-org/shared/audit/kms/cmk/arn
+    includeManagementEvents: false
+    eventSelectors:
+      - bucketName: ssm:/sample-org/datalake/raw-bucket/name
+        objectPrefix: sensitive-data/
