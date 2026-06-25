@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { buildCustomJwtAuthorizer } from '@aws-mdaa/agentcore-shared';
 import { aws_bedrockagentcore as bedrockagentcore } from 'aws-cdk-lib';
 import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import {
@@ -93,28 +94,15 @@ export function buildAuthorizerConfiguration(
   // Support both customJwtAuthorizer and jwtAuthorizer (backward compatibility)
   const jwtConfig = authorizerConfig.customJwtAuthorizer || authorizerConfig.jwtAuthorizer; // NOSONAR
 
+  // No JWT authorizer => AWS IAM (SigV4) is the runtime's default; emit no authorizer config.
   if (!jwtConfig) {
     return {};
   }
 
-  if (!jwtConfig.discoveryUrl) {
-    throw new Error('DiscoveryUrl is required in CustomJwtAuthorizer (or JwtAuthorizer) configuration');
-  }
-
-  // Validate pattern: must end with /.well-known/openid-configuration
-  if (!/^.+\/\.well-known\/openid-configuration$/.test(jwtConfig.discoveryUrl)) {
-    throw new Error('DiscoveryUrl must match pattern: ^.+/\\.well-known/openid-configuration$');
-  }
-
-  const customJwtAuthorizer: bedrockagentcore.CfnRuntime.CustomJWTAuthorizerConfigurationProperty = {
-    discoveryUrl: jwtConfig.discoveryUrl,
-    ...(jwtConfig.allowedAudience && jwtConfig.allowedAudience.length > 0
-      ? { allowedAudience: jwtConfig.allowedAudience }
-      : {}),
-    ...(jwtConfig.allowedClients && jwtConfig.allowedClients.length > 0
-      ? { allowedClients: jwtConfig.allowedClients }
-      : {}),
-  };
+  // Validation and JWT field mapping are shared with the gateway module via @aws-mdaa/agentcore-shared.
+  // The built object matches both CfnRuntime/CfnGateway CustomJWTAuthorizerConfiguration shapes.
+  const customJwtAuthorizer: bedrockagentcore.CfnRuntime.CustomJWTAuthorizerConfigurationProperty =
+    buildCustomJwtAuthorizer(jwtConfig);
 
   return { customJwtAuthorizer };
 }
