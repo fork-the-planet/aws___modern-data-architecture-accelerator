@@ -7,7 +7,6 @@ import { MdaaAppConfigParserProps } from '@aws-mdaa/app';
 import { MdaaDataOpsConfigContents, MdaaDataOpsConfigParser } from '@aws-mdaa/dataops-shared';
 import { AuroraPostgresqlClusterMap } from '@aws-mdaa/dataops-aurora-l3-construct';
 import { MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
-import { Schema } from 'ajv';
 import { Stack } from 'aws-cdk-lib';
 import * as configSchema from './config-schema.json';
 
@@ -44,7 +43,7 @@ export class DataopsAuroraConfigParser extends MdaaDataOpsConfigParser<DataopsAu
   public readonly dataAdminRoles?: MdaaRoleRef[];
 
   constructor(stack: Stack, props: MdaaAppConfigParserProps) {
-    super(stack, props, configSchema as Schema);
+    super(stack, props, configSchema);
 
     this.postgresqlClusters = this.configContents.postgresql;
     this.dataAdminRoles = this.configContents.dataAdminRoles;

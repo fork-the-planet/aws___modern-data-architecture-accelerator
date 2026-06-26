@@ -39,7 +39,6 @@
     "@aws-mdaa/config": "1.6.0",
     "@aws-mdaa/iam-role-helper": "1.6.0",
     "@aws-mdaa/l3-construct": "1.6.0",
-    "ajv": "8.18.0",
     "aws-cdk-lib": "2.258.0",
     "cdk-nag": "2.37.55",
     "constructs": "10.6.0",

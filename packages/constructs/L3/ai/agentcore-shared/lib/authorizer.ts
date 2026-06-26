@@ -116,7 +116,7 @@ export function validateCustomJwt(jwtConfig: SharedCustomJwtAuthorizerProperty):
     throw new Error('DiscoveryUrl is required in CustomJwt authorizer configuration');
   }
   if (!DISCOVERY_URL_PATTERN.test(jwtConfig.discoveryUrl)) {
-    throw new Error('DiscoveryUrl must match pattern: ^.+/\\.well-known/openid-configuration$');
+    throw new Error(String.raw`DiscoveryUrl must match pattern: ^.+/\.well-known/openid-configuration$`);
   }
 }
 
