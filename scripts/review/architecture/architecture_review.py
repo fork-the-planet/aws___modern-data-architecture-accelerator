@@ -44,7 +44,7 @@ from review.lib.diff_parser import parse_diff_chunks, format_chunks_for_prompt, 
 KIRO_PROMPT = """\
 You are reviewing code architecture for package '{package_name}'.
 
-Read the steering file #[[file:.kiro/steering/architecture-review.md]] for the complete
+Read the steering file #[[file:packages/utilities/agent-rules/rules/review-architecture.md]] for the complete
 architecture rules and the CI Agent Usage section for output format.
 
 Package: {package_name}
@@ -106,7 +106,7 @@ def get_changed_packages() -> list[dict]:
         if not root:
             continue
         pkg_type = classify_package(root)
-        if pkg_type in ("L2", "L3", "app"):
+        if pkg_type in ("L2", "L3", "app", "cli", "utility"):
             packages.append({"name": name, "root": root, "type": pkg_type})
 
     return packages

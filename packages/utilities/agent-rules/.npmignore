@@ -1,0 +1,24 @@
+# Don't include original .ts files when doing `npm pack`
+*.ts
+*.tsbuildinfo
+.eslintrc.js
+tsconfig.json
+
+# dev-related files
+coverage
+test/
+
+# pack output
+*.tgz
+
+# Include javascript files and typescript declarations
+!*.js
+!*.d.ts
+
+# Always include rule sources, manifest, bin, README
+!rules/**
+!manifest.yaml
+!bin/**
+!README.md
+
+jest.config.js

@@ -9,7 +9,7 @@ Welcome, and thank you for considering a contribution to the Modern Data Archite
 - [Design Philosophy](#design-philosophy)
 - [Ways to Contribute](#ways-to-contribute)
 - [Getting Started](#getting-started)
-- [Kiro-Assisted Development](#kiro-assisted-development)
+- [AI-Assisted Development](#ai-assisted-development)
 - [Sample Configuration Standards](#sample-configuration-standards)
 - [Module Documentation Standards](#module-documentation-standards)
 - [Developing Modules](#developing-modules)
@@ -49,25 +49,38 @@ When filing an issue, please check existing open or recently closed issues to av
 - [DEVELOPMENT.md](DEVELOPMENT.md) — Environment setup, build commands, coding guidelines, and scripts
 - [TESTING.md](TESTING.md) — Testing strategy, coverage requirements, and CI pipeline
 
-## Kiro-Assisted Development
 
-This repository is designed for use with [Kiro](https://kiro.dev), an AI-powered development environment that dramatically accelerates development across MDAA. Kiro steering files in `.kiro/steering/` provide guided workflows that automate complex, multi-step processes that would otherwise take hours of manual work — auditing sample config coverage across 45+ modules, ensuring README consistency, improving schema documentation, and more.
+## AI-Assisted Development
 
-**Available steering files:**
+This repository includes pre-configured AI steering rules for multiple development tools. On first checkout, your IDE's AI assistant automatically picks up project-specific guidance — no setup required.
 
-| Steering File | What It Automates |
+**Supported tools:**
+
+| Tool | Rules location |
 |---|---|
-| `code-documentation` | Code documentation standards for all MDAA code (auto-included in every session) |
-| `coding-standards` | Detailed process for config schema JSDoc auditing and improvement |
-| `compliance-review` | Reviews compliance controls, CDK Nag validation, and improves nag suppression documentation |
-| `testing-standards` | Enforces testing strategy, diff baselines, coverage requirements, and Python test patterns |
-| `diff-risk-assessment` | Reviews baseline diffs for breaking changes, data loss risks, and construct ID scoping issues |
-| `module-quality` | Audits and improves module README documentation and sample config schema coverage |
-| `module-creation` | Scaffolds new app modules and constructs with proper skeleton packages |
+| [Kiro](https://kiro.dev) | `.kiro/steering/` |
+| Claude Code | `CLAUDE.md` + `.claude/rules/` |
+| GitHub Copilot | `.github/copilot-instructions.md` + `.github/instructions/` |
+| Cursor | `.cursor/rules/` |
+| Windsurf | `.windsurf/rules/` |
 
-To use a steering file, reference it by name in Kiro (e.g., `#module-quality`). The steering files encode the standards from this document into executable workflows — they know the rules, the file paths, the analysis steps, and the validation checks.
+Rules activate automatically based on the files you're working with (e.g., config-authoring rules load when editing yaml files, testing-standards load when editing test files).
 
-We strongly recommend using Kiro for any task that touches multiple modules or requires consistency across the codebase.
+**Available rules:**
+
+| Rule | What It Covers |
+|---|---|
+| `config-authoring` | MDAA config editing: dynamic references, role refs, schema lookup, module discovery |
+| `coding-standards` | Config schema JSDoc auditing and improvement |
+| `compliance-review` | Compliance controls, CDK Nag validation, nag suppression documentation |
+| `testing-standards` | Testing strategy, diff baselines, coverage requirements, Python test patterns |
+| `diff-risk-assessment` | Baseline diffs: breaking changes, data loss risks, construct ID scoping |
+| `module-quality` | Module README documentation and sample config schema coverage |
+| `module-creation` | Scaffolding new app modules and constructs |
+| `code-documentation` | Code documentation standards for all MDAA code |
+| `scripts-authoring` | Standards for scripts under `scripts/` |
+
+In Kiro, reference a rule by name (e.g., `#module-quality`) to activate it manually. Other tools activate rules automatically based on file patterns.
 
 ## Sample Configuration Standards
 

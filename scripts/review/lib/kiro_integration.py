@@ -38,13 +38,25 @@ class KiroTimeoutError(KiroError):
 
 
 def load_preamble() -> str:
-    """Load the shared review agent preamble from the steering file.
+    """Load the shared review agent preamble from the canonical rule source.
 
-    Reads .kiro/steering/review-agent-preamble.md, strips YAML front matter,
-    and returns the content with a trailing newline pair. Returns empty string
-    if the file doesn't exist.
+    Reads the canonical source at packages/utilities/agent-rules/rules/review-preamble.md,
+    strips YAML front matter, and returns the content with a trailing newline pair.
+    Returns empty string if the file doesn't exist.
+
+    Note: This reads the canonical source directly rather than the projected
+    .kiro/steering/ file, because the projection is a thin wrapper containing only
+    a #[[file:...]] include directive (resolved by Kiro at runtime, not by this
+    Python code).
     """
-    preamble_path = PROJECT_ROOT / ".kiro" / "steering" / "review-agent-preamble.md"
+    preamble_path = (
+        PROJECT_ROOT
+        / "packages"
+        / "utilities"
+        / "agent-rules"
+        / "rules"
+        / "review-preamble.md"
+    )
     if not preamble_path.is_file():
         return ""
     raw = preamble_path.read_text()

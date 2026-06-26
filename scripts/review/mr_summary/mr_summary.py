@@ -356,7 +356,7 @@ def get_config_schema_diff() -> str:
 KIRO_PROMPT = """\
 You are generating a merge request summary for the MDAA repository.
 
-Read the steering file #[[file:.kiro/steering/mr-summary.md]] for the complete
+Read the steering file #[[file:packages/utilities/agent-rules/rules/review-mr-summary.md]] for the complete
 rules and JSON output schema. Follow those rules exactly.
 
 Here is the context for this MR:

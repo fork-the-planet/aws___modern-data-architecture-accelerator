@@ -49,7 +49,7 @@ from review.lib.file_collector import collect_files
 KIRO_PROMPT = """\
 You are reviewing test standards alignment for package '{package_name}'.
 
-Read the steering file #[[file:.kiro/steering/testing-standards.md]] for the complete
+Read the steering file #[[file:packages/utilities/agent-rules/rules/review-testing-standards.md]] for the complete
 testing standards and the CI Agent Usage section for output format.
 
 Package: {package_name}
@@ -107,7 +107,7 @@ def get_changed_packages() -> list[dict]:
         if not root:
             continue
         pkg_type = classify_package(root)
-        if pkg_type in ("L2", "L3", "app"):
+        if pkg_type in ("L2", "L3", "app", "cli", "utility"):
             packages.append({"name": name, "root": root, "type": pkg_type})
 
     return packages

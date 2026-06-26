@@ -1,0 +1,67 @@
+{
+  "name": "@aws-mdaa/agent-rules",
+  "description": "Tool-agnostic AI agent steering rules for MDAA. Authors rules once and projects them to per-tool layouts (Kiro, Claude Code, GitHub Copilot, Cursor, Windsurf).",
+  "author": {
+    "name": "Amazon Web Services",
+    "url": "https://aws.amazon.com/solutions"
+  },
+  "version": "1.6.0",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aws/modern-data-architecture-accelerator"
+  },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "rules",
+    "manifest.yaml",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc && node lib/run-projections.js",
+    "watch": "tsc -w",
+    "test": "jest --passWithNoTests --coverage",
+    "lint": "eslint --max-warnings 0 -c ../../../eslint.config.mjs",
+    "test:package-docs": "../../../scripts/generate_docs/test_package_docs.sh"
+  },
+  "devDependencies": {
+    "@types/jest": "29.5.14",
+    "@types/js-yaml": "4.0.9",
+    "@types/node": "22.9.0",
+    "jest": "29.7.0",
+    "ts-jest": "29.4.9",
+    "ts-node": "10.9.2",
+    "typescript": "5.9.3"
+  },
+  "dependencies": {
+    "js-yaml": "4.1.1"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "inputs": [
+          "{projectRoot}/rules/**/*.md",
+          "{projectRoot}/manifest.yaml",
+          "{workspaceRoot}/.kiro/steering/**",
+          "{workspaceRoot}/.claude/rules/**",
+          "{workspaceRoot}/.cursor/rules/**",
+          "{workspaceRoot}/.windsurf/rules/**",
+          "{workspaceRoot}/.github/instructions/**",
+          "{workspaceRoot}/.github/copilot-instructions.md",
+          "{workspaceRoot}/CLAUDE.md"
+        ],
+        "outputs": [
+          "{workspaceRoot}/.kiro/steering",
+          "{workspaceRoot}/.claude/rules",
+          "{workspaceRoot}/.cursor/rules",
+          "{workspaceRoot}/.windsurf/rules",
+          "{workspaceRoot}/.github/instructions",
+          "{workspaceRoot}/.github/copilot-instructions.md",
+          "{workspaceRoot}/CLAUDE.md"
+        ]
+      }
+    }
+  }
+}

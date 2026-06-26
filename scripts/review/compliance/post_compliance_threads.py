@@ -151,7 +151,7 @@ def format_summary_body(entries: list[dict]) -> str:
         "",
         "_Reviews encryption, IAM policies, CDK Nag suppressions, and security controls "
         "in L2/L3 constructs. "
-        f"[Steering file]({_steering_link('compliance-review.md')})_",
+        f"[Steering file]({_steering_link('review-compliance.md')})_",
         "",
         f"**Packages reviewed:** {len(entries)}",
         "",

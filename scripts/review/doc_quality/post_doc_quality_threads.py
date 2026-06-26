@@ -93,14 +93,13 @@ def format_summary_body(entries: list[dict]) -> str:
             total += 1
 
     breakdown = [f"{c} {l}" for l in ["HIGH", "MEDIUM", "LOW"] if (c := risk_counts.get(l, 0))]
-    lines = [
-        SUMMARY_MARKER, "",
-        "## Documentation Quality Review Summary", "",
-        "_Reviews documentation quality, accuracy, cross-references, and alignment with code changes. "
-        f"[Steering file]({_steering_link('documentation-review.md')})_", "",
-        f"**Files reviewed:** {files_reviewed}",
-        f"**Total findings:** {total}", "",
-    ]
+    lines = [SUMMARY_MARKER, "", "## Repo Documentation Quality Review Summary", "",
+             "_Reviews CHANGELOG updates, SCHEMA.md regeneration, starter kit docs, "
+             "MkDocs nav, and cross-document links. "
+             "Does not review per-module documentation (covered by Module Quality agent). "
+             f"[Steering file]({_steering_link('review-documentation.md')})_", "",
+             f"**Files reviewed:** {files_reviewed}",
+             f"**Total findings:** {total}", ""]
     if breakdown:
         lines.append(f"**Findings:** {', '.join(breakdown)}")
     else:

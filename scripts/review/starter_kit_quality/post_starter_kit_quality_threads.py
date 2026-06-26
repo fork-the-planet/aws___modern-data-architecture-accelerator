@@ -107,7 +107,7 @@ def format_summary_body(entries: list[dict]) -> str:
         "",
         "_Reviews README structure, deployment instructions, CDK Nag suppressions, "
         "schema validation directives, config placeholders, and CLI usage in starter kits. "
-        f"[Steering file]({_steering_link('starter-kit-standards.md')})_",
+        f"[Steering file]({_steering_link('review-starter-kit-standards.md')})_",
         "",
         f"**Kits reviewed:** {len(entries)}",
         "",

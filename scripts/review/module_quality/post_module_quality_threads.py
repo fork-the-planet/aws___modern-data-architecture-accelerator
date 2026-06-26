@@ -85,7 +85,7 @@ def format_summary_body(entries: list[dict]) -> str:
         "",
         "_Reviews README documentation, sample config coverage, config schema usability, "
         "and JSDoc quality in app modules. "
-        f"[Steering file]({_steering_link('module-quality.md')})_",
+        f"[Steering file]({_steering_link('review-module-quality.md')})_",
         "",
         f"**Modules reviewed:** {len(entries)}",
         "",

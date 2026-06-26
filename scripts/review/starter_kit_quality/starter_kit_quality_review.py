@@ -46,7 +46,7 @@ from review.lib.thread_lifecycle import compute_source_hash
 KIRO_PROMPT = """\
 You are reviewing starter kit quality for starter kit '{kit_name}'.
 
-Read the steering file #[[file:.kiro/steering/starter-kit-standards.md]] for the complete
+Read the steering file #[[file:packages/utilities/agent-rules/rules/review-starter-kit-standards.md]] for the complete
 starter kit standards and the CI Agent Usage section for output format.
 
 Starter kit: {kit_name}

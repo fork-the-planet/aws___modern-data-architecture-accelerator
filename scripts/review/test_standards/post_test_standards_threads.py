@@ -87,7 +87,7 @@ def format_summary_body(entries: list[dict]) -> str:
         "",
         "_Reviews test coverage, naming conventions, baseline completeness, and CDK Nag "
         "compliance validation in changed packages. "
-        f"[Steering file]({_steering_link('testing-standards.md')})_",
+        f"[Steering file]({_steering_link('review-testing-standards.md')})_",
         "",
         f"**Packages reviewed:** {len(entries)}",
         "",

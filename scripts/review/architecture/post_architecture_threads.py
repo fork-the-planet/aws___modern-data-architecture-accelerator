@@ -129,7 +129,7 @@ def format_summary_body(entries: list[dict]) -> str:
     lines = [SUMMARY_MARKER, "", "## Code Architecture Review Summary", "",
              "_Reviews construct hierarchy, dependency direction, separation of concerns, "
              "and dependency management. "
-             f"[Steering file]({_steering_link('architecture-review.md')})_", "",
+             f"[Steering file]({_steering_link('review-architecture.md')})_", "",
              f"**Packages reviewed:** {len(entries)}", "",
              f"**Total findings:** {total}", ""]
 

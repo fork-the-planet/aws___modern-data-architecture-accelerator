@@ -54,16 +54,20 @@ def _now() -> str:
 
 
 def _steering_link(steering_file: str) -> str:
-    """Build an absolute link to a steering file on the current branch.
+    """Build an absolute link to a canonical rule source on the current branch.
 
-    Uses CI_PROJECT_URL and CI_COMMIT_REF_NAME if available (GitLab CI).
-    Falls back to a relative path outside CI.
+    Points to the canonical rule under packages/utilities/agent-rules/rules/
+    rather than the projected .kiro/steering/ file (which is a thin wrapper
+    containing only an include directive). Uses CI_PROJECT_URL and
+    CI_COMMIT_REF_NAME if available (GitLab CI). Falls back to a relative path
+    outside CI.
     """
+    canonical_path = f"packages/utilities/agent-rules/rules/{steering_file}"
     project_url = os.environ.get("CI_PROJECT_URL", "")
     branch = os.environ.get("CI_COMMIT_REF_NAME", "main")
     if project_url:
-        return f"{project_url}/-/blob/{branch}/.kiro/steering/{steering_file}"
-    return f".kiro/steering/{steering_file}"
+        return f"{project_url}/-/blob/{branch}/{canonical_path}"
+    return canonical_path
 
 
 def _job_link() -> str:

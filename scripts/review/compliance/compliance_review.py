@@ -49,7 +49,7 @@ from review.lib.diff_parser import parse_diff_chunks, format_chunks_for_prompt, 
 KIRO_PROMPT = """\
 You are reviewing construct code changes for compliance with MDAA security standards.
 
-Read the steering file #[[file:.kiro/steering/compliance-review.md]] for the complete
+Read the steering file #[[file:packages/utilities/agent-rules/rules/review-compliance.md]] for the complete
 compliance rules, categories, and the CI Agent Usage section for output format.
 
 Package: {package_name}

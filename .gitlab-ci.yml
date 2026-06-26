@@ -331,6 +331,7 @@ feature_merge_build_test:
     - ./scripts/build/npm_install_repo.sh
     - npm run build
     - ./scripts/ci/check_schema_drift.sh
+    - ./scripts/ci/check_agent_rules_drift.sh
     - npm run test
     # Remove nx daemon log before cache save (~157MB of no CI value)
     - rm -rf .nx/workspace-data/d/
