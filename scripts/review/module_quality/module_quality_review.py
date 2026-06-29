@@ -12,6 +12,8 @@ Outputs:
 
 Environment:
   KIRO_API_KEY                            - Required for assessment
+  KIRO_MODEL                              - Optional, default claude-opus-4.8
+  KIRO_EFFORT                             - Optional, default high
   KIRO_TIMEOUT                            - Optional, default 600s
   KIRO_MAX_THREADS                        - Optional, default 5
 

@@ -16,6 +16,9 @@ Outputs:
 
 Environment:
   KIRO_API_KEY                      - Required for risk assessment (Kiro headless auth)
+  KIRO_MODEL                        - Optional, default claude-opus-4.8
+  KIRO_EFFORT                       - Optional, default high
+  KIRO_TIMEOUT                      - Optional, default 600s
 
 Usage:
   python3 scripts/review/baseline/baseline_review.py [--output-dir baseline-review]

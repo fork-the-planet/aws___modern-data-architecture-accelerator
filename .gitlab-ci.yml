@@ -44,6 +44,12 @@ variables:
   KUBERNETES_HELPER_MEMORY_REQUEST: 2Gi
   KUBERNETES_HELPER_MEMORY_LIMIT: 2Gi
   KUBERNETES_HELPER_EPHEMERAL_STORAGE_REQUEST: 4Gi
+  # Kiro review agent defaults. Model is pinned (not 'auto') so the same model
+  # assesses every run, avoiding finding variance from auto-routing. High effort
+  # produces more thorough, consistent assessments. Override per-job if needed.
+  KIRO_MODEL: 'claude-opus-4.8'
+  KIRO_EFFORT: 'high'
+  KIRO_TIMEOUT: '600'
 
 image: ${BASE_IMAGE_TAG}
 
@@ -139,10 +145,10 @@ before_script:
   retry:
     max: 2
     when:
-      - runner_system_failure   # helper container evicted, pod terminated, runner OOM
+      - runner_system_failure # helper container evicted, pod terminated, runner OOM
       - stuck_or_timeout_failure # job stuck waiting for a runner to pick it up
-      - api_failure              # GitLab API hiccup during job orchestration
-      - scheduler_failure        # GitLab couldn't schedule the job onto a runner
+      - api_failure # GitLab API hiccup during job orchestration
+      - scheduler_failure # GitLab couldn't schedule the job onto a runner
 
 # Template: Kaniko-based Docker image build
 .base_image_template:
@@ -163,7 +169,6 @@ before_script:
       --dockerfile "${CI_PROJECT_DIR}/.pipeline/Dockerfile"
       --destination "${BASE_IMAGE_TAG}"
       --cache=true --cache-repo="${CI_REGISTRY_IMAGE}/cache" --cleanup --cache-ttl 72h0m0s
-
 
 # =============================================================================
 # Pipeline 1: Feature Merge Pipeline (merge requests)
@@ -246,7 +251,7 @@ feature_check_target:
   interruptible: true
   image:
     name: alpine/git:latest
-    entrypoint: [""]
+    entrypoint: ['']
   tags:
     - arch:amd64
   only:
@@ -535,7 +540,6 @@ feature_merge_baseline_review:
     AWS_DEFAULT_REGION: us-east-1
     GIT_DEPTH: '0'
     KIRO_API_KEY: '${KIRO_API_KEY}'
-    KIRO_TIMEOUT: '600'
     KIRO_MAX_THREADS: '5'
   script:
     - python3 ./scripts/review/baseline/baseline_review.py --output-dir baseline-review
@@ -567,7 +571,6 @@ feature_merge_mr_summary:
   variables:
     GIT_DEPTH: '0'
     KIRO_API_KEY: '${KIRO_API_KEY}'
-    KIRO_TIMEOUT: '600'
   script:
     - python3 ./scripts/review/mr_summary/mr_summary.py --output-dir mr-summary
   artifacts:
@@ -602,7 +605,6 @@ feature_merge_compliance_review:
   variables:
     GIT_DEPTH: '0'
     KIRO_API_KEY: '${KIRO_API_KEY}'
-    KIRO_TIMEOUT: '600'
     KIRO_MAX_THREADS: '5'
   script:
     - python3 ./scripts/review/compliance/compliance_review.py --output-dir compliance-review
@@ -641,7 +643,6 @@ feature_merge_test_standards_review:
   variables:
     GIT_DEPTH: '0'
     KIRO_API_KEY: '${KIRO_API_KEY}'
-    KIRO_TIMEOUT: '600'
     KIRO_MAX_THREADS: '5'
   script:
     - python3 ./scripts/review/test_standards/test_standards_review.py --output-dir test-standards-review
@@ -680,7 +681,6 @@ feature_merge_module_quality_review:
   variables:
     GIT_DEPTH: '0'
     KIRO_API_KEY: '${KIRO_API_KEY}'
-    KIRO_TIMEOUT: '600'
     KIRO_MAX_THREADS: '5'
   script:
     - python3 ./scripts/review/module_quality/module_quality_review.py --output-dir module-quality-review
@@ -719,7 +719,6 @@ feature_merge_architecture_review:
   variables:
     GIT_DEPTH: '0'
     KIRO_API_KEY: '${KIRO_API_KEY}'
-    KIRO_TIMEOUT: '600'
     KIRO_MAX_THREADS: '5'
   script:
     - python3 ./scripts/review/architecture/architecture_review.py --output-dir architecture-review
@@ -758,7 +757,6 @@ feature_merge_doc_quality_review:
   variables:
     GIT_DEPTH: '0'
     KIRO_API_KEY: '${KIRO_API_KEY}'
-    KIRO_TIMEOUT: '600'
   script:
     - python3 ./scripts/review/doc_quality/doc_quality_review.py --output-dir doc-quality-review
     - python3 ./scripts/review/doc_quality/post_doc_quality_threads.py --report doc-quality-review/report.json
@@ -796,7 +794,6 @@ feature_merge_starter_kit_quality_review:
   variables:
     GIT_DEPTH: '0'
     KIRO_API_KEY: '${KIRO_API_KEY}'
-    KIRO_TIMEOUT: '600'
     KIRO_MAX_THREADS: '5'
   script:
     - python3 ./scripts/review/starter_kit_quality/starter_kit_quality_review.py --output-dir starter-kit-quality-review

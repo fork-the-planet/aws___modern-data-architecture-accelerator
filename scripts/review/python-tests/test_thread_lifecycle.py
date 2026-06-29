@@ -305,6 +305,95 @@ class TestResolveOrphanedThreads:
         mock_add.assert_called_once()
         mock_resolve.assert_called_once_with("1", "10", "d1", "tok", resolved=True)
 
+    @patch("review.lib.thread_lifecycle._file_unchanged_since", return_value=True)
+    @patch("review.lib.thread_lifecycle.resolve_discussion")
+    @patch("review.lib.thread_lifecycle.add_note_to_discussion")
+    def test_keeps_orphan_when_file_unchanged(self, mock_add, mock_resolve, _unchanged):
+        """The finding's file is unchanged since the thread was written, so a
+        disappearance is LLM variance, not a fix — keep the thread. This is the
+        false auto-resolve bug the file-content check prevents, and it works in
+        detached MR pipelines (no push range needed)."""
+        discussions = [{"id": "d1", "notes": [{
+            "id": "n1",
+            "body": "<!-- test-pkg:lib/a.ts:abc123 -->\n<!-- source-hash:h1 -->\nContent",
+        }]}]
+        resolve_orphaned_threads(
+            "1", "10", "tok", discussions, DETAIL_PATTERN, set(),
+            source_file_resolver=lambda k: k.rsplit(":", 1)[0],
+        )
+        mock_add.assert_not_called()
+        mock_resolve.assert_not_called()
+
+    @patch("review.lib.thread_lifecycle._file_unchanged_since", return_value=False)
+    @patch("review.lib.thread_lifecycle.resolve_discussion")
+    @patch("review.lib.thread_lifecycle.add_note_to_discussion")
+    def test_resolves_orphan_when_file_changed(self, mock_add, mock_resolve, _unchanged):
+        """The finding's file changed since the thread was written, so a fix is
+        plausible — auto-resolve the orphan."""
+        discussions = [{"id": "d1", "notes": [{
+            "id": "n1",
+            "body": "<!-- test-pkg:lib/a.ts:abc123 -->\n<!-- source-hash:h1 -->\nContent",
+        }]}]
+        resolve_orphaned_threads(
+            "1", "10", "tok", discussions, DETAIL_PATTERN, set(),
+            source_file_resolver=lambda k: k.rsplit(":", 1)[0],
+        )
+        mock_add.assert_called_once()
+        mock_resolve.assert_called_once_with("1", "10", "d1", "tok", resolved=True)
+
+    @patch("review.lib.thread_lifecycle._file_unchanged_since", return_value=None)
+    @patch("review.lib.thread_lifecycle.resolve_discussion")
+    @patch("review.lib.thread_lifecycle.add_note_to_discussion")
+    def test_undetermined_falls_back_to_source_hash(self, mock_add, mock_resolve, _unchanged):
+        """When the file check can't determine change (no recorded hash), fall
+        back to the source-hash map guard."""
+        discussions = [{"id": "d1", "notes": [{
+            "id": "n1",
+            "body": "<!-- test-pkg:lib/a.ts:abc123 -->\n<!-- source-hash:h1 -->\nContent",
+        }]}]
+        resolve_orphaned_threads(
+            "1", "10", "tok", discussions, DETAIL_PATTERN, set(),
+            source_hashes={"lib/a.ts:abc123": "h1"},
+            source_file_resolver=lambda k: k.rsplit(":", 1)[0],
+        )
+        mock_add.assert_not_called()
+        mock_resolve.assert_not_called()
+
+    @patch("review.lib.thread_lifecycle.compute_file_source_hash", return_value="h1")
+    @patch("review.lib.thread_lifecycle.resolve_discussion")
+    @patch("review.lib.thread_lifecycle.add_note_to_discussion")
+    def test_mr_pipeline_keeps_unchanged_file_end_to_end(self, mock_add, mock_resolve, _hash):
+        """End-to-end through the real _file_unchanged_since (no push range,
+        as in a detached MR pipeline): the recorded source-hash equals the
+        file's current content hash, so the orphan is kept."""
+        discussions = [{"id": "d1", "notes": [{
+            "id": "n1",
+            "body": "<!-- test-pkg:lib/a.ts:abc123 -->\n<!-- source-hash:h1 -->\nContent",
+        }]}]
+        resolve_orphaned_threads(
+            "1", "10", "tok", discussions, DETAIL_PATTERN, set(),
+            source_file_resolver=lambda k: k.rsplit(":", 1)[0],
+        )
+        mock_add.assert_not_called()
+        mock_resolve.assert_not_called()
+
+    @patch("review.lib.thread_lifecycle.compute_file_source_hash", return_value="h2")
+    @patch("review.lib.thread_lifecycle.resolve_discussion")
+    @patch("review.lib.thread_lifecycle.add_note_to_discussion")
+    def test_mr_pipeline_resolves_changed_file_end_to_end(self, mock_add, mock_resolve, _hash):
+        """End-to-end: the file's current content hash differs from the recorded
+        source-hash, so the file changed in the MR and the orphan resolves."""
+        discussions = [{"id": "d1", "notes": [{
+            "id": "n1",
+            "body": "<!-- test-pkg:lib/a.ts:abc123 -->\n<!-- source-hash:h1 -->\nContent",
+        }]}]
+        resolve_orphaned_threads(
+            "1", "10", "tok", discussions, DETAIL_PATTERN, set(),
+            source_file_resolver=lambda k: k.rsplit(":", 1)[0],
+        )
+        mock_add.assert_called_once()
+        mock_resolve.assert_called_once_with("1", "10", "d1", "tok", resolved=True)
+
     @patch("review.lib.thread_lifecycle.resolve_discussion")
     @patch("review.lib.thread_lifecycle.add_note_to_discussion")
     def test_keeps_current_thread(self, mock_add, mock_resolve):

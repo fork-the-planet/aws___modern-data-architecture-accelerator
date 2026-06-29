@@ -330,7 +330,7 @@ class TestFormatRootCauseThread:
 
         group = self._make_group(risk_level="LOW")
         body = format_root_cause_thread("key", group, "hash")
-        assert "\u2705" in body  # ✅ icon for LOW
+        assert "\u2139\ufe0f" in body  # info icon for LOW (reserve check mark for all-clear)
         assert "Infrastructure Risk: LOW" in body
 
     def test_shows_root_cause_with_display_source(self):

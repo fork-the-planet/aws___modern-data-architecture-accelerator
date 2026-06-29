@@ -68,7 +68,7 @@ class TestFormatSummaryBody:
         assert SUMMARY_MARKER in body
         assert "Module Quality Review Summary" in body
         assert "1 HIGH" in body
-        assert "Concerns:" in body
+        assert "Thread severity breakdown:" in body
 
     def test_no_findings_uses_concerns_language(self):
         entries = [{"package_name": "pkg-a", "type": "app", "risk_level": "LOW", "risk_summary": "", "findings": []}]
@@ -79,6 +79,19 @@ class TestFormatSummaryBody:
     def test_empty_entries(self):
         body = format_summary_body([])
         assert "Modules reviewed:** 0" in body
+
+    def test_breakdown_counts_threads_not_findings(self):
+        """One module = one thread headed at the module risk; the breakdown
+        counts the thread, not each individual finding."""
+        entries = [{"package_name": "pkg-a", "type": "app", "risk_level": "MEDIUM", "risk_summary": "", "findings": [
+            {"risk": "MEDIUM", "category": "readme_structure"},
+            {"risk": "LOW", "category": "jsdoc"},
+        ]}]
+        body = format_summary_body(entries)
+        assert "**Review threads:** 1" in body
+        assert "**Total concerns:** 2" in body
+        assert "1 MEDIUM" in body
+        assert "1 LOW" not in body
 
 
 class TestFormatModuleThread:

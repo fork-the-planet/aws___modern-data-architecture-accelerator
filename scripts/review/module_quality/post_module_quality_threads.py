@@ -57,23 +57,31 @@ PKG_PATTERN = re.compile(r"<!-- module-quality-pkg:(.+?) -->")
 ICON_MAP = {
     "HIGH": "\u26a0\ufe0f",
     "MEDIUM": "\u26a0\ufe0f",
-    "LOW": "\u2705",
+    "LOW": "\u2139\ufe0f",
     "UNKNOWN": "\u2753",
 }
 
 
 def format_summary_body(entries: list[dict]) -> str:
-    """Format the summary thread body."""
+    """Format the summary thread body.
+
+    The severity breakdown counts review threads (one per module with findings),
+    each at its module-level risk, matching the thread headers a reviewer sees —
+    not individual findings, which would advertise severities that have no thread
+    of their own (a module is a single thread regardless of how many findings it
+    contains). Total concerns is still reported for visibility.
+    """
+    entries_with_findings = [e for e in entries if e.get("findings")]
+    total_findings = sum(len(e.get("findings", [])) for e in entries_with_findings)
+    thread_count = len(entries_with_findings)
+
     concern_counts: dict[str, int] = {}
-    total_findings = 0
-    for entry in entries:
-        for finding in entry.get("findings", []):
-            risk = finding.get("risk", "UNKNOWN").upper()
-            concern_counts[risk] = concern_counts.get(risk, 0) + 1
-            total_findings += 1
+    for entry in entries_with_findings:
+        level = entry.get("risk_level", "UNKNOWN")
+        concern_counts[level] = concern_counts.get(level, 0) + 1
 
     breakdown = []
-    for level in ["HIGH", "MEDIUM", "LOW"]:
+    for level in ["HIGH", "MEDIUM", "LOW", "UNKNOWN"]:
         count = concern_counts.get(level, 0)
         if count:
             breakdown.append(f"{count} {level}")
@@ -89,12 +97,14 @@ def format_summary_body(entries: list[dict]) -> str:
         "",
         f"**Modules reviewed:** {len(entries)}",
         "",
+        f"**Review threads:** {thread_count}",
+        "",
         f"**Total concerns:** {total_findings}",
         "",
     ]
 
     if breakdown:
-        lines.append(f"**Concerns:** {', '.join(breakdown)}")
+        lines.append(f"**Thread severity breakdown:** {', '.join(breakdown)}")
     else:
         lines.append("**Result:** \u2705 All modules meet quality standards.")
 

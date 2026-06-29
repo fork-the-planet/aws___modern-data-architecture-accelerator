@@ -67,6 +67,24 @@ def load_preamble() -> str:
     return raw.strip() + "\n\n"
 
 
+def _build_kiro_command(prompt_path: str) -> list[str]:
+    """Assemble the kiro-cli invocation.
+
+    Extracted so the highest-blast-radius flags (--model, --effort) can be unit
+    tested without executing a subprocess. The model and effort are pinned (not
+    'auto') to keep findings consistent across runs; both are overridable via
+    KIRO_MODEL / KIRO_EFFORT.
+    """
+    return [
+        "kiro-cli", "chat",
+        "--no-interactive",
+        "--model", os.environ.get("KIRO_MODEL", "claude-opus-4.8"),
+        "--effort", os.environ.get("KIRO_EFFORT", "high"),
+        "--trust-tools=read,write,shell",
+        f"Read and follow the instructions in {prompt_path}",
+    ]
+
+
 def run_kiro_assessment(prompt: str, validate_json: bool = False) -> str:
     """Pipe a prompt through Kiro headless and return the assessment.
 
@@ -77,6 +95,14 @@ def run_kiro_assessment(prompt: str, validate_json: bool = False) -> str:
     If validate_json is True, the output is parsed as JSON after each attempt.
     If parsing fails, the attempt is retried (up to max_retries). This avoids
     regex fallback parsing and ensures structured output.
+
+    Environment:
+        KIRO_API_KEY    - Required API key for authentication
+        KIRO_TIMEOUT    - Max seconds per invocation (default 600)
+        KIRO_MODEL      - Model to use (default claude-opus-4.8). Pinned to
+                          avoid variance from auto-routing across different models.
+        KIRO_EFFORT     - Effort level (default high). Higher effort produces
+                          more thorough and consistent assessments.
 
     Raises:
         KiroNotFoundError: kiro-cli not installed
@@ -119,13 +145,9 @@ def run_kiro_assessment(prompt: str, validate_json: bool = False) -> str:
         prompt_path = prompt_file.name
 
         try:
+            cmd = _build_kiro_command(prompt_path)
             result = subprocess.run(
-                [
-                    "kiro-cli", "chat",
-                    "--no-interactive",
-                    "--trust-tools=read,write,shell",
-                    f"Read and follow the instructions in {prompt_path}",
-                ],
+                cmd,
                 capture_output=True,
                 text=True,
                 timeout=int(os.environ.get("KIRO_TIMEOUT", "600")),

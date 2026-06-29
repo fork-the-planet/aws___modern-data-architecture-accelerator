@@ -16,6 +16,9 @@ Outputs:
 
 Environment:
   KIRO_API_KEY           - Required for narrative generation (Kiro headless auth)
+  KIRO_MODEL             - Optional, default claude-opus-4.8
+  KIRO_EFFORT            - Optional, default high
+  KIRO_TIMEOUT           - Optional, default 600s
   KIRO_DIFF_BUDGET       - Max chars of diff to send to Kiro (default: 100000)
   KIRO_DIFF_PER_FILE_CAP - Max chars of diff per individual file (default: 4000)
   CI_API_V4_URL          - GitLab API base URL (set by GitLab CI)

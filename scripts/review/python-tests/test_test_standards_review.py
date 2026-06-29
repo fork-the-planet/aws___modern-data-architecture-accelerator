@@ -81,6 +81,19 @@ class TestFormatSummaryBody:
         assert "Packages reviewed:** 0" in body
         assert "All packages meet test standards" in body
 
+    def test_breakdown_counts_threads_not_findings(self):
+        """One package = one thread headed at the package risk; the breakdown
+        counts the thread, not each individual finding."""
+        entries = [{"package": "pkg-a", "type": "L2", "risk_level": "MEDIUM", "risk_summary": "", "findings": [
+            {"risk": "MEDIUM", "category": "coverage"},
+            {"risk": "LOW", "category": "naming"},
+        ]}]
+        body = format_summary_body(entries)
+        assert "**Review threads:** 1" in body
+        assert "**Total findings:** 2" in body
+        assert "1 MEDIUM" in body
+        assert "1 LOW" not in body
+
 
 class TestFormatPackageThread:
     """Test per-package thread formatting."""

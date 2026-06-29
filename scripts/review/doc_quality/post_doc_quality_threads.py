@@ -41,7 +41,7 @@ from review.lib.thread_lifecycle import (
 
 SUMMARY_MARKER = "<!-- docs-quality-summary -->"
 FILE_PATTERN = re.compile(r"<!-- docs-quality-file:(.+?) -->")
-ICON_MAP = {"HIGH": "\u26a0\ufe0f", "MEDIUM": "\u26a0\ufe0f", "LOW": "\u2705", "UNKNOWN": "\u2753"}
+ICON_MAP = {"HIGH": "\u26a0\ufe0f", "MEDIUM": "\u26a0\ufe0f", "LOW": "\u2139\ufe0f", "UNKNOWN": "\u2753"}
 
 
 def build_file_groups(entries: list[dict]) -> dict[str, dict]:
@@ -80,28 +80,42 @@ def build_file_groups(entries: list[dict]) -> dict[str, dict]:
 
 
 def format_summary_body(entries: list[dict]) -> str:
-    """Format the summary note body."""
-    risk_counts: dict[str, int] = {}
-    total = 0
-    files_reviewed = 0
-    for entry in entries:
-        findings = entry.get("findings", [])
-        files_reviewed += 1
-        for f in findings:
-            r = f.get("risk", "UNKNOWN").upper()
-            risk_counts[r] = risk_counts.get(r, 0) + 1
-            total += 1
+    """Format the summary note body.
 
-    breakdown = [f"{c} {l}" for l in ["HIGH", "MEDIUM", "LOW"] if (c := risk_counts.get(l, 0))]
-    lines = [SUMMARY_MARKER, "", "## Repo Documentation Quality Review Summary", "",
-             "_Reviews CHANGELOG updates, SCHEMA.md regeneration, starter kit docs, "
-             "MkDocs nav, and cross-document links. "
-             "Does not review per-module documentation (covered by Module Quality agent). "
-             f"[Steering file]({_steering_link('review-documentation.md')})_", "",
-             f"**Files reviewed:** {files_reviewed}",
-             f"**Total findings:** {total}", ""]
+    Counts are derived from the same per-file grouping used to post detail
+    threads (build_file_groups), so the thread count and severity breakdown
+    match the threads a reviewer sees. Each detail thread groups all findings in
+    one file under the file's highest severity, so the breakdown is by thread,
+    not by individual finding. Total findings is still reported.
+    """
+    groups = build_file_groups(entries)
+    files_reviewed = len(entries)
+    total = sum(len(g["findings"]) for g in groups.values())
+    thread_count = len(groups)
+
+    level_counts: dict[str, int] = {}
+    for group in groups.values():
+        level = group["risk_level"]
+        level_counts[level] = level_counts.get(level, 0) + 1
+
+    breakdown = [
+        f"{level_counts[level]} {level}"
+        for level in ["HIGH", "MEDIUM", "LOW", "UNKNOWN"]
+        if level_counts.get(level)
+    ]
+    lines = [
+        SUMMARY_MARKER, "",
+        "## Repo Documentation Quality Review Summary", "",
+        "_Reviews CHANGELOG updates, SCHEMA.md regeneration, starter kit docs, "
+        "MkDocs nav, and cross-document links. "
+        "Does not review per-module documentation (covered by Module Quality agent). "
+        f"[Steering file]({_steering_link('review-documentation.md')})_", "",
+        f"**Files reviewed:** {files_reviewed}",
+        f"**Review threads:** {thread_count}",
+        f"**Total findings:** {total}", "",
+    ]
     if breakdown:
-        lines.append(f"**Findings:** {', '.join(breakdown)}")
+        lines.append(f"**Thread severity breakdown:** {', '.join(breakdown)}")
     else:
         lines.append("**Result:** \u2705 No documentation gaps found.")
     lines.append("")
@@ -215,6 +229,8 @@ def main():
     resolve_orphaned_threads(
         project_id, mr_iid, token, discussions, FILE_PATTERN, processed_keys,
         source_hashes=source_hashes,
+        # The doc-quality thread key is the file path itself.
+        source_file_resolver=lambda key: key,
     )
 
     try:

@@ -215,7 +215,8 @@ class TestBuildFileGroups:
 
 class TestFormatSummaryBody:
     def test_with_findings(self):
-        entries = [{"findings": [{"risk": "HIGH", "category": "changelog"}]}]
+        entries = [{"file": "CHANGELOG.md", "risk_level": "HIGH",
+                    "findings": [{"risk": "HIGH", "category": "changelog"}]}]
         body = format_summary_body(entries)
         assert SUMMARY_MARKER in body
         assert "Documentation Quality Review Summary" in body
@@ -229,6 +230,19 @@ class TestFormatSummaryBody:
         entries = [{"findings": []}, {"findings": [{"risk": "LOW", "category": "spelling_grammar"}]}]
         body = format_summary_body(entries)
         assert "**Files reviewed:** 2" in body
+
+    def test_breakdown_counts_threads_not_findings(self):
+        """All findings in one file collapse into one thread headed at the file
+        risk; the breakdown counts the thread, not each individual finding."""
+        entries = [{"file": "README.md", "risk_level": "HIGH", "findings": [
+            {"risk": "HIGH", "category": "cross_reference"},
+            {"risk": "LOW", "category": "spelling_grammar"},
+        ]}]
+        body = format_summary_body(entries)
+        assert "**Review threads:** 1" in body
+        assert "**Total findings:** 2" in body
+        assert "1 HIGH" in body
+        assert "1 LOW" not in body
 
 
 class TestFormatFileThread:

@@ -5,6 +5,34 @@ import os
 import pytest
 
 
+class TestBuildKiroCommand:
+    """Tests for the assembled kiro-cli command (highest-blast-radius flags)."""
+
+    def test_defaults(self, monkeypatch):
+        from review.lib.kiro_integration import _build_kiro_command
+
+        monkeypatch.delenv("KIRO_MODEL", raising=False)
+        monkeypatch.delenv("KIRO_EFFORT", raising=False)
+        cmd = _build_kiro_command("/tmp/prompt.md")
+
+        assert cmd[:3] == ["kiro-cli", "chat", "--no-interactive"]
+        assert "--model" in cmd
+        assert cmd[cmd.index("--model") + 1] == "claude-opus-4.8"
+        assert "--effort" in cmd
+        assert cmd[cmd.index("--effort") + 1] == "high"
+        assert cmd[-1] == "Read and follow the instructions in /tmp/prompt.md"
+
+    def test_env_overrides(self, monkeypatch):
+        from review.lib.kiro_integration import _build_kiro_command
+
+        monkeypatch.setenv("KIRO_MODEL", "claude-sonnet-4.6")
+        monkeypatch.setenv("KIRO_EFFORT", "max")
+        cmd = _build_kiro_command("/tmp/prompt.md")
+
+        assert cmd[cmd.index("--model") + 1] == "claude-sonnet-4.6"
+        assert cmd[cmd.index("--effort") + 1] == "max"
+
+
 class TestParseRiskJson:
     """Tests for _parse_risk_json."""
 

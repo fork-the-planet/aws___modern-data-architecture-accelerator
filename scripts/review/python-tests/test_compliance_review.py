@@ -99,7 +99,10 @@ class TestBuildFindingGroups:
         assert "lib/a.ts:abc123" in groups
         assert len(groups["lib/a.ts:abc123"]["findings"]) == 2
         assert groups["lib/a.ts:abc123"]["risk_level"] == "HIGH"
-        assert groups["lib/a.ts:abc123"]["source_hash"] == "abc123"
+        # The thread KEY still uses the chunk hash (stable identity across line
+        # shifts), but the source_hash MARKER is now a per-file content hash for
+        # the orphan safety net — not the chunk id. (Fake file -> empty hash.)
+        assert groups["lib/a.ts:abc123"]["source_hash"] != "abc123"
 
     def test_different_chunks_separate_groups(self):
         """Findings in different chunks get separate groups."""
@@ -157,6 +160,21 @@ class TestFormatSummaryBody:
         body = format_summary_body([])
         assert "Packages reviewed:** 0" in body
         assert "No compliance issues found" in body
+
+    def test_breakdown_counts_threads_not_findings(self):
+        """Findings sharing a source collapse into one thread; the summary
+        severity breakdown reflects the thread (group max), not each finding."""
+        entries = [{"package": "pkg-a", "risk_level": "HIGH", "risk_summary": "", "findings": [
+            {"file": "lib/a.ts", "line": 42, "risk": "HIGH", "category": "encryption",
+             "resource": "Bucket", "detail": "d1", "source_hash": "h1"},
+            {"file": "lib/a.ts", "line": 42, "risk": "LOW", "category": "logging",
+             "resource": "Bucket", "detail": "d2", "source_hash": "h1"},
+        ]}]
+        body = format_summary_body(entries)
+        assert "**Review threads:** 1" in body
+        assert "**Total findings:** 2" in body
+        assert "1 HIGH" in body
+        assert "1 LOW" not in body
 
 
 class TestFormatFindingThread:

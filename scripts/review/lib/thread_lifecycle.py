@@ -404,6 +404,34 @@ def post_detail_threads(
     return processed_keys
 
 
+def _file_unchanged_since(file_path: str, stored_hash: str | None) -> bool | None:
+    """Whether file_path's current content still matches the hash on the thread.
+
+    The thread records a file-content hash (the ``source-hash`` marker) when it
+    is created or last updated. Comparing the file's current hash to that
+    recorded value answers "has the finding's file changed since this thread was
+    written?" purely from file content. This works in detached merge-request
+    pipelines (where CI_COMMIT_BEFORE_SHA is all-zeros and a push range is
+    unavailable) and on any re-run, because it depends on committed file content
+    rather than the commit range that triggered the pipeline.
+
+    Returns:
+        True  - content unchanged: the finding cannot have been fixed, so a
+                disappearance is LLM variance — keep the thread.
+        False - content changed, or the file is gone (deleted): a fix is
+                plausible — allow auto-resolve.
+        None  - undetermined (no recorded hash on the thread): the caller should
+                fall back to the source-hash map guard.
+    """
+    if not stored_hash:
+        return None
+    current = compute_file_source_hash(file_path)
+    if not current:
+        # File missing/unreadable (e.g. deleted in this MR) — treat as changed.
+        return False
+    return current == stored_hash
+
+
 def resolve_orphaned_threads(
     project_id: str,
     mr_iid: str,
@@ -412,12 +440,24 @@ def resolve_orphaned_threads(
     detail_pattern: re.Pattern,
     current_keys: set[str],
     source_hashes: dict[str, str] | None = None,
+    source_file_resolver: Callable[[str], str | None] | None = None,
 ) -> None:
     """Auto-resolve threads whose findings no longer exist.
 
-    If source_hashes is provided, only orphan-resolve threads whose source
-    files actually changed. If source is unchanged but finding disappeared,
-    it's likely Kiro variance — leave the thread alone.
+    A finding is only genuinely "resolved by code changes" if the source it
+    points at actually changed. Two guards prevent falsely resolving a finding
+    that merely disappeared due to LLM variance on an unrelated run:
+
+    - source_file_resolver: maps a thread key to the finding's source file. When
+      provided, the file's current content hash is compared to the source-hash
+      recorded on the thread (_file_unchanged_since). If the file is unchanged
+      since the thread was written, the thread is kept. This is content-based,
+      so it works in detached merge-request pipelines (no push range needed) and
+      is robust for source/file-keyed agents whose thread keys would otherwise
+      not appear in source_hashes once orphaned.
+    - source_hashes: {key: current_source_hash}. Fallback when the file check is
+      undetermined, and the primary guard for package-keyed agents (whose keys
+      remain present in the map even when a package reports no findings).
     """
     for discussion in discussions:
         notes = discussion.get("notes", [])
@@ -443,14 +483,29 @@ def resolve_orphaned_threads(
                 print(f"  Thread for '{orphan_key}' human-resolved, skipping orphan resolution")
                 continue
 
-            # If we have source hashes, check if source actually changed
+            # Extract the source-hash this thread recorded when last written.
+            stored_source_hash = None
+            for note in notes:
+                sm = _SOURCE_HASH_PATTERN.search(note.get("body", ""))
+                if sm:
+                    stored_source_hash = sm.group(1)
+
+            # Primary guard: has the finding's file changed since the thread was
+            # written? Content-based, so it works in detached MR pipelines where
+            # no push range is available.
+            if source_file_resolver is not None:
+                finding_file = source_file_resolver(orphan_key)
+                if finding_file:
+                    unchanged = _file_unchanged_since(finding_file, stored_source_hash)
+                    if unchanged is True:
+                        print(f"  Thread for '{orphan_key}' file unchanged since last review, keeping (likely LLM variance)")
+                        continue
+                    # unchanged is False -> file changed, a fix is plausible; proceed
+                    # unchanged is None  -> no recorded hash; fall back to source-hash map
+
+            # Fallback guard (package-keyed agents): compare recorded vs current
+            # source hash looked up by key.
             if source_hashes is not None:
-                stored_source_hash = None
-                for note in notes:
-                    sm = _SOURCE_HASH_PATTERN.search(note.get("body", ""))
-                    if sm:
-                        stored_source_hash = sm.group(1)
-                # Find the current source hash for this key's package
                 current_sh = source_hashes.get(orphan_key, "")
                 if stored_source_hash and current_sh and stored_source_hash == current_sh:
                     # Source unchanged — finding likely still exists, Kiro just missed it

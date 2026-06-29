@@ -90,6 +90,36 @@ class TestFormatSummaryBody:
         body = format_summary_body([{"package": "p", "risk_level": "LOW", "findings": []}])
         assert "No architecture misalignments found" in body
 
+    def test_breakdown_matches_threads_not_findings(self):
+        """Findings grouped into one source thread are summarized by thread severity.
+
+        Two findings (MEDIUM + LOW) at the same source collapse into a single
+        detail thread headed MEDIUM. The summary must reflect one MEDIUM thread
+        (not advertise a separate LOW), while still reporting the total findings.
+        """
+        entries = [{"package": "p", "risk_level": "MEDIUM", "findings": [
+            {"file": "lib/a.ts", "line": 96, "risk": "MEDIUM", "category": "layer_violation", "source_hash": "h1"},
+            {"file": "lib/a.ts", "line": 96, "risk": "LOW", "category": "reusability", "source_hash": "h1"},
+        ]}]
+        body = format_summary_body(entries)
+        assert "**Review threads:** 1" in body
+        assert "**Total findings:** 2" in body
+        assert "1 MEDIUM" in body
+        # The LOW finding shares the MEDIUM thread, so no standalone LOW is claimed.
+        assert "1 LOW" not in body
+
+    def test_breakdown_counts_distinct_threads(self):
+        """Findings at distinct sources produce distinct threads counted separately."""
+        entries = [{"package": "p", "risk_level": "HIGH", "findings": [
+            {"file": "lib/a.ts", "line": 10, "risk": "HIGH", "category": "layer_violation", "source_hash": "h1"},
+            {"file": "lib/b.ts", "line": 20, "risk": "LOW", "category": "reusability", "source_hash": "h2"},
+        ]}]
+        body = format_summary_body(entries)
+        assert "**Review threads:** 2" in body
+        assert "**Total findings:** 2" in body
+        assert "1 HIGH" in body
+        assert "1 LOW" in body
+
 
 class TestFormatSourceThread:
     def test_markers(self):

@@ -62,7 +62,7 @@ SOURCE_PATTERN = re.compile(r"<!-- baseline-source:(.+?) -->")
 
 RISK_RANK = {"BLOCKING": 0, "HIGH": 1, "MEDIUM": 2, "LOW": 3, "UNKNOWN": 1}
 RISK_ESCALATION_LADDER = ["LOW", "MEDIUM", "HIGH"]
-ICON_MAP = {"BLOCKING": "\u274c", "HIGH": "\u26a0\ufe0f", "MEDIUM": "\u26a0\ufe0f", "LOW": "\u2705", "UNKNOWN": "\u2753"}
+ICON_MAP = {"BLOCKING": "\u274c", "HIGH": "\u26a0\ufe0f", "MEDIUM": "\u26a0\ufe0f", "LOW": "\u2139\ufe0f", "UNKNOWN": "\u2753"}
 
 
 def build_root_cause_groups(entries: list[dict]) -> dict[str, dict]:

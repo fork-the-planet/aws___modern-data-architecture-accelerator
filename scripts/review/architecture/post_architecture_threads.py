@@ -45,6 +45,7 @@ from review.lib.thread_lifecycle import (
     _steering_link,
     _action_context,
     compute_line_anchor,
+    compute_file_source_hash,
     post_or_update_summary,
     post_detail_threads,
     resolve_orphaned_threads,
@@ -55,7 +56,12 @@ from review.lib.thread_lifecycle import (
 
 SUMMARY_MARKER = "<!-- architecture-summary -->"
 SOURCE_PATTERN = re.compile(r"<!-- architecture-source:(.+?) -->")
-ICON_MAP = {"HIGH": "\u26a0\ufe0f", "MEDIUM": "\u26a0\ufe0f", "LOW": "\u2705", "UNKNOWN": "\u2753"}
+ICON_MAP = {"HIGH": "\u26a0\ufe0f", "MEDIUM": "\u26a0\ufe0f", "LOW": "\u2139\ufe0f", "UNKNOWN": "\u2753"}
+
+
+def _orphan_source_file(key: str) -> str:
+    """Derive the source file path from an architecture thread key (file:chunk_hash)."""
+    return key.rsplit(":", 1)[0] if ":" in key else key
 
 
 def build_source_groups(entries: list[dict]) -> dict[str, dict]:
@@ -93,8 +99,11 @@ def build_source_groups(entries: list[dict]) -> dict[str, dict]:
                 # Fallback to line content hash for legacy findings
                 key = compute_line_anchor(file_path, line)
 
-            # Use per-chunk hash if available, fall back to package-level
-            effective_source_hash = finding_source_hash or pkg_source_hash
+            # Source-hash marker is a per-file content hash so the orphan
+            # safety net (_file_unchanged_since) can compare the file's current
+            # content to what it was when the thread was written. Falls back to
+            # the package-level hash if the file can't be read.
+            effective_source_hash = compute_file_source_hash(file_path) or pkg_source_hash
 
             if key not in groups:
                 groups[key] = {
@@ -115,26 +124,44 @@ def build_source_groups(entries: list[dict]) -> dict[str, dict]:
 
 
 def format_summary_body(entries: list[dict]) -> str:
-    """Format the summary thread body."""
-    risk_counts: dict[str, int] = {}
-    total = 0
-    for entry in entries:
-        for f in entry.get("findings", []):
-            r = f.get("risk", "UNKNOWN").upper()
-            risk_counts[r] = risk_counts.get(r, 0) + 1
-            total += 1
+    """Format the summary thread body.
 
-    breakdown = [f"{c} {l}" for l in ["HIGH", "MEDIUM", "LOW"] if (c := risk_counts.get(l, 0))]
+    Counts are derived from the same source-grouped data used to post the detail
+    threads (build_source_groups), so the summary stays consistent with the
+    threads a reviewer actually sees. Each detail thread groups every finding at
+    one source location and is headed by that group's highest severity. The
+    severity breakdown is therefore by thread (group), matching the thread
+    headers — not by individual finding, which previously advertised severities
+    (e.g. a LOW) that had no thread of their own because they were grouped under
+    a higher-severity finding at the same source.
+    """
+    groups = build_source_groups(entries)
+    total_findings = sum(len(g["findings"]) for g in groups.values())
+    thread_count = len(groups)
+
+    level_counts: dict[str, int] = {}
+    for group in groups.values():
+        level = group["risk_level"]
+        level_counts[level] = level_counts.get(level, 0) + 1
+
+    breakdown = [
+        f"{level_counts[level]} {level}"
+        for level in ["HIGH", "MEDIUM", "LOW", "UNKNOWN"]
+        if level_counts.get(level)
+    ]
 
     lines = [SUMMARY_MARKER, "", "## Code Architecture Review Summary", "",
              "_Reviews construct hierarchy, dependency direction, separation of concerns, "
              "and dependency management. "
              f"[Steering file]({_steering_link('review-architecture.md')})_", "",
-             f"**Packages reviewed:** {len(entries)}", "",
-             f"**Total findings:** {total}", ""]
+             f"**Packages reviewed:** {len(entries)}", ""]
 
-    if breakdown:
-        lines.append(f"**Findings:** {', '.join(breakdown)}")
+    if thread_count:
+        lines.append(f"**Review threads:** {thread_count}")
+        lines.append("")
+        lines.append(f"**Total findings:** {total_findings}")
+        lines.append("")
+        lines.append(f"**Thread severity breakdown:** {', '.join(breakdown)}")
     else:
         lines.append("**Result:** \u2705 No architecture misalignments found.")
 
@@ -258,6 +285,7 @@ def main():
     resolve_orphaned_threads(
         project_id, mr_iid, token, discussions, SOURCE_PATTERN, processed_keys,
         source_hashes=source_hashes,
+        source_file_resolver=_orphan_source_file,
     )
 
     try:

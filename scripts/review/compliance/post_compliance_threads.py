@@ -47,6 +47,7 @@ from review.lib.thread_lifecycle import (
     _steering_link,
     _action_context,
     compute_line_anchor,
+    compute_file_source_hash,
     post_or_update_summary,
     post_detail_threads,
     resolve_orphaned_threads,
@@ -58,11 +59,16 @@ from review.lib.thread_lifecycle import (
 SUMMARY_MARKER = "<!-- compliance-summary -->"
 SOURCE_PATTERN = re.compile(r"<!-- compliance-source:(.+?) -->")
 
+
+def _orphan_source_file(key: str) -> str:
+    """Derive the source file path from a compliance thread key (file:chunk_hash)."""
+    return key.rsplit(":", 1)[0] if ":" in key else key
+
 ICON_MAP = {
     "BLOCKING": "\u274c",
     "HIGH": "\u26a0\ufe0f",
     "MEDIUM": "\u26a0\ufe0f",
-    "LOW": "\u2705",
+    "LOW": "\u2139\ufe0f",
     "UNKNOWN": "\u2753",
 }
 
@@ -107,8 +113,11 @@ def build_finding_groups(entries: list[dict]) -> dict[str, dict]:
                 # Fallback to line content hash for legacy findings
                 key = compute_line_anchor(source_file, source_line)
 
-            # Use per-chunk hash if available, fall back to package-level
-            effective_source_hash = finding_source_hash or pkg_source_hash
+            # Source-hash marker is a per-file content hash so the orphan
+            # safety net (_file_unchanged_since) can compare the file's current
+            # content to what it was when the thread was written. Falls back to
+            # the package-level hash if the file can't be read.
+            effective_source_hash = compute_file_source_hash(source_file) or pkg_source_hash
 
             if key not in groups:
                 groups[key] = {
@@ -129,18 +138,27 @@ def build_finding_groups(entries: list[dict]) -> dict[str, dict]:
 
 
 def format_summary_body(entries: list[dict]) -> str:
-    """Format the summary thread body."""
-    risk_counts: dict[str, int] = {}
-    total_findings = 0
-    for entry in entries:
-        for finding in entry.get("findings", []):
-            risk = finding.get("risk", "UNKNOWN").upper()
-            risk_counts[risk] = risk_counts.get(risk, 0) + 1
-            total_findings += 1
+    """Format the summary thread body.
+
+    Counts are derived from the same source grouping used to post detail threads
+    (build_finding_groups), so the thread count and severity breakdown match the
+    threads a reviewer actually sees. Each detail thread groups all findings at
+    one source location under the group's highest severity, so the breakdown is
+    by thread, not by individual finding. Total findings is still reported for
+    visibility into grouped findings.
+    """
+    groups = build_finding_groups(entries)
+    total_findings = sum(len(g["findings"]) for g in groups.values())
+    thread_count = len(groups)
+
+    level_counts: dict[str, int] = {}
+    for group in groups.values():
+        level = group["risk_level"]
+        level_counts[level] = level_counts.get(level, 0) + 1
 
     breakdown = []
-    for level in ["BLOCKING", "HIGH", "MEDIUM", "LOW"]:
-        count = risk_counts.get(level, 0)
+    for level in ["BLOCKING", "HIGH", "MEDIUM", "LOW", "UNKNOWN"]:
+        count = level_counts.get(level, 0)
         if count:
             breakdown.append(f"{count} {level}")
 
@@ -155,12 +173,14 @@ def format_summary_body(entries: list[dict]) -> str:
         "",
         f"**Packages reviewed:** {len(entries)}",
         "",
+        f"**Review threads:** {thread_count}",
+        "",
         f"**Total findings:** {total_findings}",
         "",
     ]
 
     if breakdown:
-        lines.append(f"**Risk breakdown:** {', '.join(breakdown)}")
+        lines.append(f"**Thread severity breakdown:** {', '.join(breakdown)}")
     else:
         lines.append("**Result:** \u2705 No compliance issues found.")
 
@@ -329,7 +349,10 @@ def main() -> None:
         print("Creating compliance summary thread...")
         # Resolve any orphaned threads from previous runs
         discussions = get_mr_discussions(project_id, mr_iid, token)
-        resolve_orphaned_threads(project_id, mr_iid, token, discussions, SOURCE_PATTERN, set())
+        resolve_orphaned_threads(
+            project_id, mr_iid, token, discussions, SOURCE_PATTERN, set(),
+            source_file_resolver=_orphan_source_file,
+        )
         try:
             check_unresolved_and_exit(
                 project_id, mr_iid, token, SOURCE_PATTERN,
@@ -375,6 +398,7 @@ def main() -> None:
     resolve_orphaned_threads(
         project_id, mr_iid, token, discussions, SOURCE_PATTERN, processed_keys,
         source_hashes=source_hashes,
+        source_file_resolver=_orphan_source_file,
     )
 
     try:
