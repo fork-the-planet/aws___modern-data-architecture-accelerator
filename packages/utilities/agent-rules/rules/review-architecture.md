@@ -71,6 +71,11 @@ If the app config parser is doing significant work beyond parsing, default appli
 - Changing a construct ID changes the CloudFormation logical ID, which causes resource replacement.
 - IDs like `bucket-${bucketName}` are acceptable when the variable is a fixed structural element (e.g., zone name), not user-provided config.
 
+### Resource Naming Consistency
+
+- L2 and L3 constructs that call `props.naming.resourceName(...)` MUST chain `withResourceType(MdaaResourceType.<TYPE>)` before it. The resource type is required for consistent generated names and for downstream consumers that swap in a custom naming module.
+- Do not nest template literals inside a `resourceName()` call site — hoist the chained call into a local variable when composing it into a larger string (e.g., a log group path).
+
 ### Base Class Usage
 
 - L3 constructs must extend `MdaaL3Construct` from `@aws-mdaa/l3-construct`
@@ -124,7 +129,7 @@ outside the JSON. The file must contain ONLY valid JSON.
 ### Severity Classification for CI Agent
 
 - **HIGH:** Construct logic in app class (code that creates AWS resources or implements business logic in an app module instead of the L3 construct), reverse dependency (L2 importing L3, L3 importing app), construct IDs derived from user config values (causes logical ID instability), undeclared dependency used in production code, new module created for resources that belong in an existing module (resources always co-deployed, subset of existing module's domain, or requiring cross-module references to function)
-- **MEDIUM:** L2 construct only used by one module (may belong in L3), L3 reimplementing compliance controls that an existing L2 already provides, missing base class usage (`MdaaL3Construct`, `MdaaCdkApp`), `devDependency` used in `lib/` code, inconsistent `@aws-mdaa/*` versions across the monorepo
+- **MEDIUM:** L2 construct only used by one module (may belong in L3), L3 reimplementing compliance controls that an existing L2 already provides, missing base class usage (`MdaaL3Construct`, `MdaaCdkApp`), `devDependency` used in `lib/` code, inconsistent `@aws-mdaa/*` versions across the monorepo, `props.naming.resourceName(...)` called without a preceding `withResourceType(MdaaResourceType.<TYPE>)` in an L2 or L3 construct
 - **LOW:** Reusability improvements (extracting shared logic into utilities), minor layering suggestions
 
 ### Category Definitions
@@ -135,7 +140,7 @@ Each category has a strict scope. Do NOT stretch categories to cover concerns ha
 |----------|---------------|----------------------|
 | `layer_violation` | Code in the wrong layer: construct logic in app class, config parsing in L3, business logic in L2 | Missing JSDoc, missing documentation, config schema design |
 | `dependency_direction` | Import direction violations: L2→L3, L3→app, circular dependencies | Missing test imports, test file organization |
-| `construct_id_stability` | Construct IDs derived from user config values that would change logical IDs on config changes | Logical ID changes from refactoring (that's baseline review) |
+| `construct_id_stability` | Construct IDs derived from user config values that would change logical IDs on config changes; `props.naming.resourceName(...)` called without a preceding `withResourceType(MdaaResourceType.<TYPE>)` in an L2 or L3 construct | Logical ID changes from refactoring (that's baseline review) |
 | `separation_of_concerns` | Mixed responsibilities within a single file/class: a construct doing both resource creation AND config parsing, or an app class containing resource creation logic | Missing documentation, JSDoc quality, config usability |
 | `reusability` | L2 constructs used by only one module, duplicated compliance logic across L3 constructs, using a raw CDK construct where an MDAA wrapper exists (e.g., `Role` instead of `MdaaRole`) and thereby bypassing its compliance defaults | Sample config coverage, README quality |
 | `module_boundaries` | New modules created for resources that belong in an existing module, module proliferation where L3 construct modularity should be used instead, modules that cannot function independently without cross-module references | Config schema design choices, whether a module has enough features |
