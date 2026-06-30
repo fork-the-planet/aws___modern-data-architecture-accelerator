@@ -22,18 +22,18 @@ function kiroInclusion(scope: RuleScope): string {
 export function projectKiro(rules: readonly Rule[]): ProjectionResult {
   const targets = rulesForTool(rules, 'kiro');
   const files: ProjectionFile[] = targets.map(rule => {
-    const lines: string[] = ['---'];
-    lines.push(`inclusion: ${kiroInclusion(rule.entry.scope)}`);
-    if (rule.entry.description) {
-      lines.push(`description: ${rule.entry.description}`);
-    }
-    if (rule.entry.scope === 'fileMatch' && rule.entry.globs) {
-      lines.push(`fileMatchPattern: '${rule.entry.globs.join(',')}'`);
-    }
-    lines.push('---');
-    lines.push('');
-    lines.push(`#[[file:${CANONICAL_DIR}/${rule.entry.name}.md]]`);
-    lines.push('');
+    const lines = [
+      '---',
+      `inclusion: ${kiroInclusion(rule.entry.scope)}`,
+      ...(rule.entry.description ? [`description: ${rule.entry.description}`] : []),
+      ...(rule.entry.scope === 'fileMatch' && rule.entry.globs
+        ? [`fileMatchPattern: '${rule.entry.globs.join(',')}'`]
+        : []),
+      '---',
+      '',
+      `#[[file:${CANONICAL_DIR}/${rule.entry.name}.md]]`,
+      '',
+    ];
 
     return {
       path: `${KIRO_OUTPUT_DIR}/${rule.entry.name}.md`,

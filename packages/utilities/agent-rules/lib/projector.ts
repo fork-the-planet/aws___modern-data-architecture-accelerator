@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { loadSources } from './source-loader';
 import { projectorFor } from './projectors';
 import { ALL_TOOLS, ProjectionResult, ToolName } from './types';

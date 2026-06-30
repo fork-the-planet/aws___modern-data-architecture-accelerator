@@ -27,53 +27,61 @@ export { FrontmatterValidationError as ManifestValidationError };
  * Validates required fields, scope enum, glob requirements, and tool names.
  */
 export function parseFrontmatter(name: string, raw: Record<string, unknown>): RuleManifestEntry {
-  const scope = raw.scope;
+  const scope = parseScope(name, raw.scope);
+  const description = parseDescription(name, raw.description);
+  const globs = parseGlobs(name, raw.globs);
+  if (scope === 'fileMatch' && (!globs || globs.length === 0)) {
+    throw new FrontmatterValidationError(`rule '${name}': globs must be set when scope is 'fileMatch'`);
+  }
+  const tools = parseTools(name, raw.tools);
+
+  return { name, scope, description, globs, tools };
+}
+
+function parseScope(name: string, scope: unknown): RuleScope {
   if (typeof scope !== 'string' || !VALID_SCOPES.has(scope as RuleScope)) {
     throw new FrontmatterValidationError(
       `rule '${name}': scope '${String(scope)}' must be one of: ${[...VALID_SCOPES].join(', ')}`,
     );
   }
+  return scope as RuleScope;
+}
 
-  const description = raw.description;
-  if (description !== undefined && typeof description !== 'string') {
+function parseDescription(name: string, description: unknown): string | undefined {
+  if (description === undefined) {
+    return undefined;
+  }
+  if (typeof description !== 'string') {
     throw new FrontmatterValidationError(`rule '${name}': description must be a string when set`);
   }
+  return description;
+}
 
-  const globs = raw.globs;
-  let normalizedGlobs: readonly string[] | undefined;
-  if (globs !== undefined) {
-    if (!Array.isArray(globs) || !globs.every(g => typeof g === 'string')) {
-      throw new FrontmatterValidationError(`rule '${name}': globs must be an array of strings`);
-    }
-    normalizedGlobs = globs as readonly string[];
+function parseGlobs(name: string, globs: unknown): readonly string[] | undefined {
+  if (globs === undefined) {
+    return undefined;
   }
-  if (scope === 'fileMatch' && (!normalizedGlobs || normalizedGlobs.length === 0)) {
-    throw new FrontmatterValidationError(`rule '${name}': globs must be set when scope is 'fileMatch'`);
+  if (!Array.isArray(globs) || !globs.every(g => typeof g === 'string')) {
+    throw new FrontmatterValidationError(`rule '${name}': globs must be an array of strings`);
   }
+  return globs;
+}
 
-  const tools = raw.tools;
-  let normalizedTools: readonly ToolName[] | undefined;
-  if (tools !== undefined) {
-    if (!Array.isArray(tools) || !tools.every(t => typeof t === 'string')) {
-      throw new FrontmatterValidationError(`rule '${name}': tools must be an array of strings`);
-    }
-    for (const t of tools) {
-      if (!VALID_TOOLS.has(t as ToolName)) {
-        throw new FrontmatterValidationError(
-          `rule '${name}': tools contains unsupported tool '${t}'. Supported: ${[...VALID_TOOLS].join(', ')}`,
-        );
-      }
-    }
-    normalizedTools = tools as readonly ToolName[];
+function parseTools(name: string, tools: unknown): readonly ToolName[] | undefined {
+  if (tools === undefined) {
+    return undefined;
   }
-
-  return {
-    name,
-    scope: scope as RuleScope,
-    description,
-    globs: normalizedGlobs,
-    tools: normalizedTools,
-  };
+  if (!Array.isArray(tools) || !tools.every(t => typeof t === 'string')) {
+    throw new FrontmatterValidationError(`rule '${name}': tools must be an array of strings`);
+  }
+  for (const t of tools) {
+    if (!VALID_TOOLS.has(t as ToolName)) {
+      throw new FrontmatterValidationError(
+        `rule '${name}': tools contains unsupported tool '${t}'. Supported: ${[...VALID_TOOLS].join(', ')}`,
+      );
+    }
+  }
+  return tools as readonly ToolName[];
 }
 
 /** Returns the entries that target the given tool, honoring per-rule `tools` overrides. */
