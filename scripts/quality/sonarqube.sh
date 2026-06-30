@@ -20,10 +20,14 @@ PROJECT_KEY="${SONAR_PROJECT_KEY}"
 if [ "${SONAR_IS_MR}" = "true" ]; then
   echo "Merge Request detected (MR !${CI_MERGE_REQUEST_IID}, branch: ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME}, target: ${SONAR_TARGET_REF}@${SONAR_TARGET_SHA}) - using project key: ${PROJECT_KEY}"
 
-  # Static version "mr" — paired with the baseline's "baseline" version,
-  # this creates a permanent new code boundary via "Previous Version."
-  # The boundary never resets because both versions are static strings.
-  VERSION_ARGS="-Dsonar.projectVersion=mr"
+  # No projectVersion. The baseline scan (sonarqube-target-baseline.sh) is the
+  # project's first analysis and is dated at the MR's fork point via
+  # sonar.projectDate. With "Previous Version" new code definition and no
+  # version transitions, the new code period anchors to that first analysis,
+  # so its fork-point date is the period start. This MR scan runs at "now",
+  # so every line committed after the fork point — the MR's own changes — is
+  # classified as new code.
+  VERSION_ARGS=""
 
   # Check if the MR contains any TypeScript changes. If not, skip —
   # there's nothing for SonarQube to gate on.
