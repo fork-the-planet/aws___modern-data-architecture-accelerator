@@ -13,10 +13,10 @@ export interface ProjectOptions {
   /** Directory where projections should be written. Defaults to CWD. */
   readonly consumerRoot?: string;
   /**
-   * Override the package root used for source loading. Tests pass a fixture
-   * directory; production callers leave this unset.
+   * Override the canonical rules directory used for source loading. Tests pass
+   * a fixture directory; production callers leave this unset.
    */
-  readonly packageRoot?: string;
+  readonly rulesDir?: string;
 }
 
 export interface ProjectSummary {
@@ -32,7 +32,7 @@ export interface ProjectSummary {
  */
 export function project(options: ProjectOptions = {}): ProjectSummary[] {
   const consumerRoot = options.consumerRoot ?? process.cwd();
-  const sources = loadSources({ packageRoot: options.packageRoot });
+  const sources = loadSources({ rulesDir: options.rulesDir });
 
   const summaries: ProjectSummary[] = [];
   for (const tool of ALL_TOOLS) {
@@ -58,7 +58,7 @@ function collectOutputDirs(files: readonly { path: string }[], consumerRoot: str
     const dir = path.dirname(abs);
     if (dir === consumerRoot) continue;
     if (!dirFiles.has(dir)) dirFiles.set(dir, new Set());
-    dirFiles.get(dir)!.add(path.basename(abs));
+    dirFiles.get(dir)?.add(path.basename(abs));
   }
   return dirFiles;
 }

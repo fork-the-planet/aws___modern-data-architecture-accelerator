@@ -1,8 +1,8 @@
 # `@aws-mdaa/agent-rules`
 
 Tool-agnostic AI agent steering rules for MDAA. Author each rule once under
-`rules/<name>.md` and project a thin, tool-specific wrapper into every
-supported assistant's expected layout.
+the repo-root `agent_rules/<name>.md` directory and project a thin,
+tool-specific wrapper into every supported assistant's expected layout.
 
 ## Why
 
@@ -19,17 +19,23 @@ tool list does.
 
 ## Layout
 
+The canonical rules live at the **repo root** (`agent_rules/`), so they can be
+copied wholesale into consumer projects (e.g. by `mdaa init`) with their
+repo-root-relative references intact. The tooling that projects them lives in
+this package.
+
 ```
+agent_rules/                   # canonical rules at repo root: frontmatter + body
+├── review-compliance.md
+├── developer-coding-standards.md
+├── user-config-authoring.md
+└── ...
+
 packages/utilities/agent-rules/
-├── rules/                 # canonical rules: frontmatter + body, one file per rule
-│   ├── review-compliance.md
-│   ├── developer-coding-standards.md
-│   ├── user-config-authoring.md
-│   └── ...
 ├── lib/                   # TypeScript source
 │   ├── types.ts
 │   ├── manifest.ts        # frontmatter parser + validator, rulesForTool()
-│   ├── source-loader.ts   # auto-discovers rules/*.md, parses frontmatter
+│   ├── source-loader.ts   # auto-discovers agent_rules/*.md, parses frontmatter
 │   ├── include-resolver.ts
 │   ├── projectors/        # one file per supported tool
 │   ├── projector.ts       # writes projections, prunes stale files
@@ -39,7 +45,8 @@ packages/utilities/agent-rules/
 ```
 
 There is no `manifest.yaml` and no CLI. Rules are auto-discovered from the
-`rules/` directory and metadata is read from each file's frontmatter.
+repo-root `agent_rules/` directory and metadata is read from each file's
+frontmatter.
 
 ## Naming convention
 
@@ -53,8 +60,8 @@ Rule file stems are prefixed by audience:
 
 ## Canonical rule format
 
-Each rule is a Markdown file under `rules/<name>.md` with tool-agnostic YAML
-frontmatter followed by the body:
+Each rule is a Markdown file under `agent_rules/<name>.md` with tool-agnostic
+YAML frontmatter followed by the body:
 
 ```markdown
 ---
@@ -104,7 +111,7 @@ infrastructure (`scripts/review/lib/kiro_integration.py`) consumes it directly.
 | Windsurf       | `.windsurf/rules/<name>.md`                                                               | `@`-mention; `trigger:` frontmatter      |
 
 Each projected file references the canonical body at
-`packages/utilities/agent-rules/rules/<name>.md` rather than inlining it.
+`agent_rules/<name>.md` rather than inlining it.
 
 ## Building projections
 
@@ -126,7 +133,7 @@ are pruned automatically.
 ```ts
 import { loadSources, projectKiro, projectClaude, project } from '@aws-mdaa/agent-rules';
 
-const sources = loadSources(); // auto-discovers rules/*.md
+const sources = loadSources(); // auto-discovers agent_rules/*.md
 const kiro = projectKiro(sources.rules); // ProjectionResult
 const claude = projectClaude(sources.rules);
 
@@ -137,7 +144,7 @@ The full type surface lives in `lib/index.ts`.
 
 ## Editing rules
 
-1. Edit the canonical file under `rules/<name>.md` (frontmatter and/or body).
+1. Edit the canonical file under `agent_rules/<name>.md` (frontmatter and/or body).
 2. Run `npm run build` to regenerate projections.
 3. Commit the canonical rule and the regenerated projections together.
 
@@ -163,7 +170,7 @@ canonical sources:
   (it does not resolve Kiro includes, so it reads the canonical source, not the
   `.kiro/steering/` wrapper).
 - Each review agent prompt embeds a
-  `#[[file:packages/utilities/agent-rules/rules/<rule>.md]]` directive resolved
+  `#[[file:agent_rules/<rule>.md]]` directive resolved
   at runtime.
 - `_steering_link()` in `scripts/review/lib/thread_lifecycle.py` builds GitLab
   URLs to the canonical sources for MR review threads.

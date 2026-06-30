@@ -46,7 +46,7 @@ describe('projectKiro', () => {
 
   it('references canonical source via #[[file:...]] directive', () => {
     const auto = result.files.find(f => f.path.endsWith('auto-rule.md'))!;
-    expect(auto.contents).toContain('#[[file:packages/utilities/agent-rules/rules/auto-rule.md]]');
+    expect(auto.contents).toContain('#[[file:agent_rules/auto-rule.md]]');
   });
 
   it('emits inclusion: scope and fileMatchPattern', () => {
@@ -91,7 +91,10 @@ describe('projectClaude', () => {
     const auto = result.files.find(f => f.path === '.claude/rules/auto-rule.md')!;
     expect(auto.contents).not.toContain('#[[file:');
     expect(auto.contents).toContain('auto-rule');
-    expect(auto.contents).toContain('packages/utilities/agent-rules/rules/auto-rule.md');
+    // .claude/rules/ is two levels deep, so the canonical link must traverse
+    // up two directories. Assert the exact prefix so the depth correction is
+    // guarded (a plain 'agent_rules/...' check passes for the wrong '../' too).
+    expect(auto.contents).toContain('../../agent_rules/auto-rule.md');
   });
 });
 
@@ -114,6 +117,18 @@ describe('projectCopilot', () => {
     const manual = result.files.find(f => f.path === '.github/instructions/manual-rule.instructions.md');
     expect(manual).toBeDefined();
     expect(manual!.contents).not.toContain('applyTo:');
+  });
+
+  it('references the canonical source from the per-rule instructions file', () => {
+    // .github/instructions/ is two levels deep, so the canonical link must
+    // traverse up two directories. Guards the CANONICAL_DIR ('agent_rules') value.
+    const auto = result.files.find(f => f.path === '.github/instructions/auto-rule.instructions.md')!;
+    expect(auto.contents).toContain('../../agent_rules/auto-rule.md');
+  });
+
+  it('references the canonical source from copilot-instructions.md', () => {
+    const root = result.files.find(f => f.path === '.github/copilot-instructions.md')!;
+    expect(root.contents).toContain('../agent_rules/always-rule.md');
   });
 
   it('starts every per-rule file with the frontmatter delimiter on line 1', () => {
@@ -140,7 +155,7 @@ describe('projectCursor', () => {
 
   it('references canonical source with @-mention syntax', () => {
     const auto = result.files.find(f => f.path === '.cursor/rules/auto-rule.mdc')!;
-    expect(auto.contents).toContain('@packages/utilities/agent-rules/rules/auto-rule.md');
+    expect(auto.contents).toContain('@agent_rules/auto-rule.md');
   });
 
   it('starts every .mdc file with the frontmatter delimiter on line 1', () => {
@@ -171,6 +186,12 @@ describe('projectWindsurf', () => {
   it('emits globs for fileMatch rules', () => {
     const glob = result.files.find(f => f.path === '.windsurf/rules/glob-rule.md')!;
     expect(glob.contents).toContain('globs: **/*.ts,**/*.tsx');
+  });
+
+  it('references the canonical source with @-mention syntax', () => {
+    // Guards the CANONICAL_DIR ('agent_rules') value for the windsurf projector.
+    const auto = result.files.find(f => f.path === '.windsurf/rules/auto-rule.md')!;
+    expect(auto.contents).toContain('@agent_rules/auto-rule.md');
   });
 
   it('starts every rule file with the frontmatter delimiter on line 1', () => {

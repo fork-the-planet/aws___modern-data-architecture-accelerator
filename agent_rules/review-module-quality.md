@@ -23,7 +23,7 @@ The standards for READMEs and sample configs are defined in CONTRIBUTING.md. Thi
 - **READMEs**: `README.md` in each module root
 - **Sample configs**: `sample_configs/sample-config*.yaml`
 - **Config schemas**: `lib/config-schema.json` (JSON Schema draft-07, auto-generated from TypeScript interfaces)
-- **Architecture diagrams**: `packages/constructs/L3/{category}/{module-l3-construct}/docs/`
+- **Architecture diagrams**: `packages/constructs/L3/{category}/{module}-l3-construct/docs/`
 
 ### Excluded Modules
 

@@ -8,7 +8,7 @@ import { rulesForTool } from '../manifest';
 
 /** Kiro stores rules at this path. */
 export const KIRO_OUTPUT_DIR = '.kiro/steering';
-const CANONICAL_DIR = 'packages/utilities/agent-rules/rules';
+const CANONICAL_DIR = 'agent_rules';
 
 function kiroInclusion(scope: RuleScope): string {
   return scope;

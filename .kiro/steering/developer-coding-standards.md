@@ -2,4 +2,4 @@
 inclusion: manual
 ---
 
-#[[file:packages/utilities/agent-rules/rules/developer-coding-standards.md]]
+#[[file:agent_rules/developer-coding-standards.md]]

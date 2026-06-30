@@ -117,7 +117,7 @@ outside the JSON. The file must contain ONLY valid JSON.
   "findings": [
     {
       "risk": "HIGH | MEDIUM | LOW",
-      "category": "layer_violation | dependency_direction | construct_id_stability | separation_of_concerns | reusability | dependency_declaration | version_consistency",
+      "category": "layer_violation | dependency_direction | construct_id_stability | separation_of_concerns | reusability | module_boundaries | dependency_declaration | version_consistency",
       "file": "path/to/file.ts",
       "line": 42,
       "detail": "What's misaligned and what should be done."

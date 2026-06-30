@@ -51,7 +51,7 @@ from review.lib.file_collector import collect_files
 KIRO_PROMPT = """\
 You are reviewing test standards alignment for package '{package_name}'.
 
-Read the steering file #[[file:packages/utilities/agent-rules/rules/review-testing-standards.md]] for the complete
+Read the steering file #[[file:agent_rules/review-testing-standards.md]] for the complete
 testing standards and the CI Agent Usage section for output format.
 
 Package: {package_name}

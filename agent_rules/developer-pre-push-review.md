@@ -31,6 +31,7 @@ Use the same rules as the CI agents:
 - **Module Quality** (`#[[file:.kiro/steering/review-module-quality.md]]`): README, sample configs, schema coverage, JSDoc, config usability
 - **Test Standards** (`#[[file:.kiro/steering/review-testing-standards.md]]`): test coverage, naming, baselines, CDK Nag compliance
 - **Diff Risk** (`#[[file:.kiro/steering/review-diff-risk.md]]`): breaking changes, data loss, privilege escalation
+- **Documentation** (`#[[file:.kiro/steering/review-documentation.md]]`): CHANGELOG, SCHEMA.md, starter kit READMEs, MkDocs nav, cross-references
 
 ### Step 3: Report findings
 

@@ -52,7 +52,7 @@ Properties on interfaces that flow into JSON schemas via `typescript-json-schema
 - In app configs, only document app-specific overrides or transformations
 - Nested L3 interfaces appear as separate schema definitions — each needs standalone documentation
 
-For the full config schema documentation process (gathering context, cleanup, validation, anti-patterns), use the `coding-standards` steering file.
+For the full config schema documentation process (gathering context, cleanup, validation, anti-patterns), use the `developer-coding-standards` steering file.
 
 ## Non-Config Interfaces and Types
 

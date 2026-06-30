@@ -53,7 +53,7 @@ from review.lib.thread_lifecycle import compute_file_source_hash
 FILE_PROMPT = """\
 You are reviewing documentation quality for a single file in an MDAA merge request.
 
-Read the steering file #[[file:packages/utilities/agent-rules/rules/review-documentation.md]] for the complete
+Read the steering file #[[file:agent_rules/review-documentation.md]] for the complete
 documentation rules and the CI Agent Usage section for output format.
 
 File: {file_path}
@@ -97,7 +97,7 @@ no explanation outside the JSON. The file must contain ONLY valid JSON.
 CHANGELOG_PROMPT = """\
 You are reviewing CHANGELOG adequacy for an MDAA merge request.
 
-Read the steering file #[[file:packages/utilities/agent-rules/rules/review-documentation.md]] for the complete
+Read the steering file #[[file:agent_rules/review-documentation.md]] for the complete
 documentation rules and the CI Agent Usage section for output format.
 
 ## Code changes in this MR:

@@ -40,7 +40,7 @@ class KiroTimeoutError(KiroError):
 def load_preamble() -> str:
     """Load the shared review agent preamble from the canonical rule source.
 
-    Reads the canonical source at packages/utilities/agent-rules/rules/review-preamble.md,
+    Reads the canonical source at agent_rules/review-preamble.md,
     strips YAML front matter, and returns the content with a trailing newline pair.
     Returns empty string if the file doesn't exist.
 
@@ -49,14 +49,7 @@ def load_preamble() -> str:
     a #[[file:...]] include directive (resolved by Kiro at runtime, not by this
     Python code).
     """
-    preamble_path = (
-        PROJECT_ROOT
-        / "packages"
-        / "utilities"
-        / "agent-rules"
-        / "rules"
-        / "review-preamble.md"
-    )
+    preamble_path = PROJECT_ROOT / "agent_rules" / "review-preamble.md"
     if not preamble_path.is_file():
         return ""
     raw = preamble_path.read_text()

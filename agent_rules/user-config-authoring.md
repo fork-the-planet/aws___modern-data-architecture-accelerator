@@ -27,7 +27,7 @@ Each config file references its JSON schema via the `# yaml-language-server: $sc
 
 ## 1. Use dynamic references instead of hardcoded values
 
-Never hardcode account IDs, regions, ARNs, or cross-module values. Use the dynamic reference system described in the [Dynamic References](CONFIGURATION.md#dynamic-references) section of CONFIGURATION.md.
+Never hardcode account IDs, regions, ARNs, or cross-module values. Use the dynamic reference system described in the [Dynamic References](../CONFIGURATION.md#dynamic-references) section of CONFIGURATION.md.
 
 Preferred patterns, in order:
 

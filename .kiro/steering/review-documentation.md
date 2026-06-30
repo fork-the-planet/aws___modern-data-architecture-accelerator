@@ -2,4 +2,4 @@
 inclusion: manual
 ---
 
-#[[file:packages/utilities/agent-rules/rules/review-documentation.md]]
+#[[file:agent_rules/review-documentation.md]]

@@ -15,8 +15,6 @@
   "types": "lib/index.d.ts",
   "files": [
     "lib",
-    "rules",
-    "manifest.yaml",
     "README.md"
   ],
   "scripts": {
@@ -42,8 +40,7 @@
     "targets": {
       "build": {
         "inputs": [
-          "{projectRoot}/rules/**/*.md",
-          "{projectRoot}/manifest.yaml",
+          "{workspaceRoot}/agent_rules/**/*.md",
           "{workspaceRoot}/.kiro/steering/**",
           "{workspaceRoot}/.claude/rules/**",
           "{workspaceRoot}/.cursor/rules/**",

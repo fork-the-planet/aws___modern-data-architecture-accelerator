@@ -57,7 +57,7 @@ EXCLUDED_ROOTS = {
 KIRO_PROMPT = """\
 You are reviewing module quality for app package '{package_name}'.
 
-Read the steering file #[[file:packages/utilities/agent-rules/rules/review-module-quality.md]] for the complete
+Read the steering file #[[file:agent_rules/review-module-quality.md]] for the complete
 module quality rules, categories, and the CI Agent Usage section for output format.
 
 Package: {package_name}

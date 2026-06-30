@@ -3,4 +3,4 @@ inclusion: fileMatch
 fileMatchPattern: 'scripts/**'
 ---
 
-#[[file:packages/utilities/agent-rules/rules/developer-scripts-authoring.md]]
+#[[file:agent_rules/developer-scripts-authoring.md]]

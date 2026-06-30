@@ -1,5 +1,5 @@
 # Mark projected agent-rules outputs as generated.
-# These are mechanically derived from packages/utilities/agent-rules/rules/
+# These are mechanically derived from agent_rules/
 # and should not be reviewed — review the canonical sources instead.
 .kiro/steering/** linguist-generated=true
 .claude/rules/** linguist-generated=true

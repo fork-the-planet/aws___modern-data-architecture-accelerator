@@ -4,16 +4,16 @@
 
 ## developer-code-review
 
-See [`developer-code-review`](../packages/utilities/agent-rules/rules/developer-code-review.md)
+See [`developer-code-review`](../agent_rules/developer-code-review.md)
 
 ---
 
 ## developer-operational-guidance
 
-See [`developer-operational-guidance`](../packages/utilities/agent-rules/rules/developer-operational-guidance.md)
+See [`developer-operational-guidance`](../agent_rules/developer-operational-guidance.md)
 
 ---
 
 ## developer-working-requirements
 
-See [`developer-working-requirements`](../packages/utilities/agent-rules/rules/developer-working-requirements.md)
+See [`developer-working-requirements`](../agent_rules/developer-working-requirements.md)

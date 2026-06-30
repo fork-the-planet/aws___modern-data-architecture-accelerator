@@ -117,6 +117,12 @@ When adding new functionality:
 - Use `os.environ.get()` with sensible defaults for optional variables
 - Fail fast with clear error messages when required variables are missing
 
+### Exception handling
+- Library functions (`lib/`) must **never** call `sys.exit()`. Raise meaningful exceptions instead and let the caller decide how to handle them.
+- Define custom exception classes for distinct failure modes (e.g., `KiroNotFoundError`, `KiroTimeoutError`).
+- Only CLI entry points (`main()` functions) should call `sys.exit()`.
+- Catch specific exceptions at the boundary, not broad `except Exception` in library code.
+
 ## Shell Script Standards
 
 ### Sourcing shared scripts
@@ -139,9 +145,3 @@ fi
 - Always `set -e` at the top
 - Use `|| true` only when failure is explicitly acceptable
 - Print clear error messages to stderr before exiting
-
-### Exception handling in Python
-- Library functions (`lib/`) must **never** call `sys.exit()`. Raise meaningful exceptions instead and let the caller decide how to handle them.
-- Define custom exception classes for distinct failure modes (e.g., `KiroNotFoundError`, `KiroTimeoutError`).
-- Only CLI entry points (`main()` functions) should call `sys.exit()`.
-- Catch specific exceptions at the boundary, not broad `except Exception` in library code.

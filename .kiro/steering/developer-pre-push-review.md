@@ -2,4 +2,4 @@
 inclusion: manual
 ---
 
-#[[file:packages/utilities/agent-rules/rules/developer-pre-push-review.md]]
+#[[file:agent_rules/developer-pre-push-review.md]]

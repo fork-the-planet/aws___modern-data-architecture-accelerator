@@ -8,15 +8,51 @@ import * as path from 'node:path';
 import { parseFrontmatter, FrontmatterValidationError } from './manifest';
 import { Rule, RuleManifestEntry } from './types';
 
-/** Default location of the canonical rule sources within the package. */
-export const DEFAULT_PACKAGE_ROOT = path.resolve(__dirname, '..');
+/** Name of the canonical rules directory at the repo root. */
+const RULES_DIR_NAME = 'agent_rules';
+
+/**
+ * Discover the canonical rules directory by walking up the directory tree from
+ * this module's location until a directory containing `agent_rules/` is found.
+ *
+ * The rules live at the repo root (`agent_rules/`) rather than inside this
+ * package, so they can be copied wholesale into consumer projects (e.g. by
+ * `mdaa init`) with their repo-root-relative references intact. Resolving via
+ * an upward search — rather than a fixed parent-count — keeps the default
+ * stable if the build output depth or the package's position in the repo
+ * changes.
+ */
+export function discoverDefaultRulesDir(start: string): string {
+  let dir = start;
+  // Bounded walk to the filesystem root; stops as soon as agent_rules/ is found.
+  for (;;) {
+    const candidate = path.join(dir, RULES_DIR_NAME);
+    if (fs.existsSync(candidate) && fs.statSync(candidate).isDirectory()) {
+      return candidate;
+    }
+    const parent = path.dirname(dir);
+    if (parent === dir) {
+      // Reached the filesystem root without finding the directory. Fall back to
+      // the historical repo-root-relative location so the error surfaced by
+      // loadSources() names a meaningful path.
+      return path.resolve(start, '..', '..', '..', '..', RULES_DIR_NAME);
+    }
+    dir = parent;
+  }
+}
+
+/**
+ * Default location of the canonical rule sources, discovered by walking up from
+ * this module to the first ancestor containing an `agent_rules/` directory.
+ */
+export const DEFAULT_RULES_DIR = discoverDefaultRulesDir(__dirname);
 
 export interface SourceLoadOptions {
   /**
-   * Directory containing the `rules/` folder with rule body Markdown files.
-   * Defaults to the package root.
+   * Directory containing the canonical rule body Markdown files. Defaults to
+   * the repo-root `agent_rules/` directory. Tests pass a fixture directory.
    */
-  readonly packageRoot?: string;
+  readonly rulesDir?: string;
 }
 
 export interface LoadedSources {
@@ -26,17 +62,16 @@ export interface LoadedSources {
 }
 
 /**
- * Auto-discover all `.md` files under `<packageRoot>/rules/`, parse their
- * YAML frontmatter for metadata (scope, globs, description, tools), and
- * return the loaded rules sorted by name.
+ * Auto-discover all `.md` files under the rules directory, parse their YAML
+ * frontmatter for metadata (scope, globs, description, tools), and return the
+ * loaded rules sorted by name.
  *
  * Each rule file must have YAML frontmatter delimited by `---` lines at the
  * top of the file. Required fields: `scope`. Optional: `description`, `globs`,
  * `tools`.
  */
 export function loadSources(options: SourceLoadOptions = {}): LoadedSources {
-  const packageRoot = options.packageRoot ?? DEFAULT_PACKAGE_ROOT;
-  const rulesDir = path.join(packageRoot, 'rules');
+  const rulesDir = options.rulesDir ?? DEFAULT_RULES_DIR;
 
   if (!fs.existsSync(rulesDir) || !fs.statSync(rulesDir).isDirectory()) {
     throw new FrontmatterValidationError(`rules directory not found at ${rulesDir}`);

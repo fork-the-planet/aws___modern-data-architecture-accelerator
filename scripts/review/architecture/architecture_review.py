@@ -46,7 +46,7 @@ from review.lib.diff_parser import parse_diff_chunks, format_chunks_for_prompt, 
 KIRO_PROMPT = """\
 You are reviewing code architecture for package '{package_name}'.
 
-Read the steering file #[[file:packages/utilities/agent-rules/rules/review-architecture.md]] for the complete
+Read the steering file #[[file:agent_rules/review-architecture.md]] for the complete
 architecture rules and the CI Agent Usage section for output format.
 
 Package: {package_name}

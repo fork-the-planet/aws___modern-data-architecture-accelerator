@@ -156,7 +156,7 @@ Changes that add new CDK Nag rule suppressions:
 - Suppressions accumulate over time and can erode the security baseline
 - Vague reasons make it impossible to audit whether the suppression is still justified
 
-**Action:** Flag for compliance review. Every new suppression must have a specific, documented reason that references the AWS service authorization documentation. Verify the suppression is scoped as narrowly as possible (resource-level, not stack-level). See the `compliance-review` steering file for suppression reason standards.
+**Action:** Flag for compliance review. Every new suppression must have a specific, documented reason that references the AWS service authorization documentation. Verify the suppression is scoped as narrowly as possible (resource-level, not stack-level). See the `review-compliance` steering file for suppression reason standards.
 
 ### 8. Low Risk Diffs (Approve)
 

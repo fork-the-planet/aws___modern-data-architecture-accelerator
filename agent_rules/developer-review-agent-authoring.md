@@ -16,7 +16,7 @@ Each review agent is an independent CI job that:
 1. Detects affected packages using `changed-only.py` and `_target_ref()`
 2. Collects context (source code, diffs, test files) for each affected package
 3. Pipes context through Kiro headless with a steering file for assessment
-4. Produces a `report.json` and JUnit XML report
+4. Produces a `report.json` and a GitLab Code Quality JSON report
 5. Posts structured GitLab MR discussion threads (summary + detail threads)
 
 The MR Summary agent is a special case — it updates the MR description instead of posting threads.
@@ -45,7 +45,7 @@ Before writing any new code, check these existing components:
 | `run_kiro_assessment()` | `review/lib/kiro_integration.py` | Import |
 | `_parse_risk_json()` | `review/lib/kiro_integration.py` | Import |
 | `_parse_risk_level()` | `review/lib/kiro_integration.py` | Import |
-| `to_junit_xml()` | `review/lib/report.py` | Import |
+| `to_codequality_json()` | `review/lib/report.py` | Import |
 | `gitlab_api()` | `review/lib/gitlab_threads.py` | Import |
 | `get_mr_discussions()` | `review/lib/gitlab_threads.py` | Import |
 | `compute_hash()` | `review/lib/gitlab_threads.py` | Import |
@@ -53,6 +53,12 @@ Before writing any new code, check these existing components:
 | `resolve_discussion()` | `review/lib/gitlab_threads.py` | Import |
 | `_build_diff_position()` | `review/lib/gitlab_threads.py` | Import |
 | `_parse_source_position()` | `review/lib/gitlab_threads.py` | Import |
+| `compute_source_hash()` | `review/lib/thread_lifecycle.py` | Import |
+| `find_thread_by_marker()` | `review/lib/thread_lifecycle.py` | Import |
+| `post_or_update_summary()` | `review/lib/thread_lifecycle.py` | Import |
+| `post_detail_threads()` | `review/lib/thread_lifecycle.py` | Import |
+| `resolve_orphaned_threads()` | `review/lib/thread_lifecycle.py` | Import |
+| `check_unresolved_and_exit()` | `review/lib/thread_lifecycle.py` | Import |
 | `changed-only.py` | `scripts/nx/changed-only.py` | Subprocess (different purpose directory) |
 
 **Do NOT:**
@@ -71,6 +77,7 @@ Each agent uses a domain-specific label that describes what the finding is:
 | Module Quality | `## {icon} Quality Concern: {LEVEL}` | `## Module Quality Review Summary` |
 | Code Architecture | `## {icon} Architecture Misalignment: {LEVEL}` | `## Architecture Review Summary` |
 | Documentation Quality | `## {icon} Documentation Gap: {LEVEL}` | `## Documentation Quality Review Summary` |
+| Starter Kit Quality | `## {icon} Quality Concern: {LEVEL}` | `## Starter Kit Quality Review Summary` |
 
 Icons: ❌ BLOCKING, ⚠️ HIGH/MEDIUM, ✅ LOW, ❓ UNKNOWN
 
@@ -86,6 +93,7 @@ Each agent uses distinct HTML comment markers to identify its threads. Markers m
 | Module Quality | `<!-- module-quality-pkg:{name} -->` | `<!-- module-quality-summary -->` |
 | Architecture | `<!-- architecture-source:{file}:{hash} -->` | `<!-- architecture-summary -->` |
 | Documentation | `<!-- docs-quality-file:{path} -->` | `<!-- docs-quality-summary -->` |
+| Starter Kit Quality | `<!-- starter-kit-quality-kit:{name} -->` | `<!-- starter-kit-quality-summary -->` |
 
 ## Two-Tier Thread Model
 
@@ -108,7 +116,7 @@ Every review agent follows the same two-tier pattern from the baseline review:
 
 ## Thread Lifecycle
 
-Copy the lifecycle logic from `post_baseline_threads.py`:
+Import the shared lifecycle helpers from `review/lib/thread_lifecycle.py` (`compute_source_hash`, `find_thread_by_marker`, `post_or_update_summary`, `post_detail_threads`, `resolve_orphaned_threads`, `check_unresolved_and_exit`) — do not reimplement them:
 
 1. **Compute structural hash** from finding data (excludes prose descriptions)
 2. **Find existing thread** via HTML comment marker
@@ -151,7 +159,7 @@ feature_merge_{agent}_review:
     paths:
       - {agent}-review/report.json
     reports:
-      junit: {agent}-review/junit-report.xml
+      codequality: {agent}-review/codequality-report.json
     when: always
 ```
 
@@ -167,8 +175,8 @@ Each `*_review.py` follows the `baseline_review.py` pattern:
 {Detailed description of what it does, numbered steps.}
 
 Outputs:
-  {agent}-review/report.json       - Full structured report
-  {agent}-review/junit-report.xml  - JUnit XML for GitLab MR test reports
+  {agent}-review/report.json               - Full structured report
+  {agent}-review/codequality-report.json   - GitLab Code Quality report for MR diffs
 
 Environment:
   KIRO_API_KEY                     - Required for assessment
@@ -186,7 +194,7 @@ Key implementation points:
 - Filter packages by path for agent scope (L2/L3 for compliance, apps for module quality, etc.)
 - Parallel Kiro invocations via `ThreadPoolExecutor` with `KIRO_MAX_THREADS`
 - Use `run_kiro_assessment(prompt, validate_json=True)` for structured output
-- Generate JUnit XML via `to_junit_xml()` from `review/lib/report.py`
+- Generate the Code Quality JSON via `to_codequality_json()` from `review/lib/report.py`
 - Exit non-zero only for BLOCKING findings (compliance agent) or infrastructure failures
 
 ## Thread Lifecycle and Exit Code Logic
@@ -224,7 +232,7 @@ For agents reviewing shared constructs (compliance, architecture):
 - 10+ → escalate three levels (max HIGH, never auto-escalate to BLOCKING)
 - Note the blast radius in the thread body
 
-Copy the escalation logic from `post_baseline_threads.py` `_build_root_cause_groups()`.
+Reuse the escalation logic from `post_baseline_threads.py` — `build_root_cause_groups()` builds the per-source groups and `_apply_wide_impact_escalation()` applies the graduated risk bump.
 
 ## File Reading Pattern
 

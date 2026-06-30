@@ -62,7 +62,7 @@ COVERAGE_IGNORE_DEFAULTS = [
 KIRO_RISK_PROMPT = """\
 You are reviewing a CDK baseline diff for module '{module}'.
 
-Read the steering file #[[file:packages/utilities/agent-rules/rules/review-diff-risk.md]] for the complete
+Read the steering file #[[file:agent_rules/review-diff-risk.md]] for the complete
 risk classification rules, categories, and review process. Apply those rules exactly.
 
 IMPORTANT CONTEXT: Baseline files only contain resources that are actively validated.
