@@ -2,7 +2,7 @@
   "name": "@aws-mdaa/gaia-l3-construct",
   "version": "1.6.0",
   "description": "[DEPRECATED] MDAA GenAI Accelerator L3 Construct. Use @aws-mdaa/gaia-v2-l3-construct for new deployments.",
-  "deprecated": "Use @aws-mdaa/gaia-v2-l3-construct for new consumers. Existing v1 consumers continue to function; v1 will be removed in a future release.",
+  "deprecated": "Use @aws-mdaa/gaia-v2-l3-construct for new consumers. Existing v1 consumers continue to function; v1 will be removed in v1.9.0.",
   "license": "Apache-2.0",
   "author": {
     "name": "Amazon Web Services",

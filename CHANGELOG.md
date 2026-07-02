@@ -98,6 +98,10 @@
 - **CLI**: The `mdaa` CLI now validates `--domain`, `--env`, and `--module` filter values against the loaded config and fails fast with an error listing the unknown value(s) and the valid options, instead of silently matching nothing.
 - Fixed intermittent deployment failures caused by concurrent `AWS::DataZone::Owner` creation triggering DynamoDB transaction collisions (`Transaction cancelled ... ConditionalCheckFailed ... AlreadyExists`). `CfnOwner` resources that target the same domain unit are now chained sequentially via CloudFormation `DependsOn`, eliminating the race; owners on different domain units remain parallel. The chain order is derived from the owner construct id, so reordering a config's owner list produces no template change.
 
+### Deprecations
+
+- **GAIA v1 removal target set to v1.9.0**: `@aws-mdaa/gaia` and `@aws-mdaa/gaia-l3-construct` (GAIA v1), deprecated in favor of `@aws-mdaa/gaia-v2` and `@aws-mdaa/gaia-v2-l3-construct`, now have a firm removal target of **v1.9.0**. Previously the removal was documented only as "a future release". v1 remains published and functional for existing deployments until then and will not receive new features. See [MIGRATION_TO_V2.md](packages/apps/ai/gaia-app/MIGRATION_TO_V2.md) for migration guidance.
+
 ## [1.6.0] - 2026-05-22
 
 #### Generative AI Accelerator v2 Module

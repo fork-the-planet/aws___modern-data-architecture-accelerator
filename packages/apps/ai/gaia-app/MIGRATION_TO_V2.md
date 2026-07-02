@@ -2,7 +2,7 @@
 
 `@aws-mdaa/gaia` (v1) is deprecated in favor of `@aws-mdaa/gaia-v2`. This guide describes what changed, what does not have a drop-in equivalent, and how to migrate an existing deployment.
 
-> **Status:** v1 remains published and functional. New features land in v2 only. v1 will be removed in a future release; no removal date is committed yet.
+> **Status:** v1 remains published and functional. New features land in v2 only. v1 will be removed in v1.9.0.
 
 ## Why v2 exists
 

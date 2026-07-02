@@ -2,7 +2,7 @@
 
 > **:warning: Deprecated in favor of [`@aws-mdaa/gaia-v2`](../gaia-v2-app/README.md).**
 > New deployments should use `@aws-mdaa/gaia-v2`, which deploys a re-architected GAIA backend built on Cognito, AppSync Events, and CloudFront.
-> This v1 module remains published and functional for existing deployments but will not receive new features. It will be removed in a future major release.
+> This v1 module remains published and functional for existing deployments but will not receive new features. It will be removed in v1.9.0.
 > See [MIGRATION_TO_V2.md](./MIGRATION_TO_V2.md) for guidance on migrating existing deployments.
 
 > **Note:** This documentation is also available in a rendered format [here](https://aws.github.io/modern-data-architecture-accelerator/packages/apps/ai/gaia-app/index.html).
