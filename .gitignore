@@ -8,7 +8,6 @@ codescan*
 !jest.config.js
 !jest.setup.js
 !eslint.config.js
-!packages/utilities/mdaa-testing/lib/starter-kit-synth-setup.js
 *.d.ts
 *.d.ts.map
 node_modules
@@ -72,6 +71,11 @@ dist/
 .kiro/steering/*.md.bak
 .kiro/steering-external
 
+.claude/*
+!.claude/agents/
+!.claude/rules/
+CLAUDE.local.md
+
 e2e
 
 tmp
@@ -87,5 +91,3 @@ temp_configs
 .gitlab/issues
 .gitlab/merge_requests
 .gitlab/test_evidence
-
-CLAUDE.local.md

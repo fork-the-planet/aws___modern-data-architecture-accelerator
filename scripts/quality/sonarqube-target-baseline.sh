@@ -121,8 +121,9 @@ fi
 
 # Check out the fork point for the baseline scan. The reference snapshot and
 # its date both describe the branch point, so the MR scan's new code is
-# exactly the diff the MR introduces on top of where it branched.
-ORIGINAL_HEAD=$(git rev-parse HEAD)
+# exactly the diff the MR introduces on top of where it branched. There is no
+# need to capture the current HEAD for later restoration — see the closing
+# note below on why this job leaves the tree at the fork point.
 echo "Checking out fork point ${BRANCH_POINT} for baseline scan..."
 git checkout "${BRANCH_POINT}" --quiet
 
@@ -159,8 +160,14 @@ sonar-scanner \
 
 echo "Baseline scan complete."
 
-# Restore the original MR commit
-echo "Restoring original HEAD: ${ORIGINAL_HEAD}"
-git checkout "${ORIGINAL_HEAD}" --quiet
+# No HEAD restore needed. This is the job's final step: nothing downstream
+# consumes the working tree. The baseline result is pushed to the SonarQube
+# server over HTTP, and the only persisted CI artifact is the build cache
+# (node_modules/.nx), which is independent of the checked-out commit. The
+# dependent feature_merge_sonarqube job re-clones into its own workspace.
+# Restoring HEAD here would also abort under `set -e`, because the baseline
+# build recompiles TypeScript and dirties tracked compiled artifacts (e.g.
+# starter-kit-synth-setup.js) at the fork point, so the checkout would hit
+# "local changes would be overwritten".
 
-echo "=== Target baseline: DONE ==="
+echo "=== Target baseline: DONE (left at fork point ${BRANCH_POINT}) ==="

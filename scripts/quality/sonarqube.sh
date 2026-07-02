@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+# Fail early if any specific-file sonar exclusion no longer matches a tracked
+# file, so stale exclusions cannot silently linger in sonar-project.properties.
+SONAR_SH_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+"${SONAR_SH_DIR}/../ci/check_sonar_exclusions.sh"
+
 echo "Merging coverage reports"
 python3 ./scripts/test/mergelcov.py
 

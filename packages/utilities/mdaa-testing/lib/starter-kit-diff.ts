@@ -213,6 +213,17 @@ function getCliEntryPoint(): string {
   return path.join(repoRoot, 'packages', 'cli', 'lib', 'mdaa.js');
 }
 
+/**
+ * Resolve the path to the synth-setup file to inject via NODE_OPTIONS=--require.
+ *
+ * The setup is authored in TypeScript (starter-kit-synth-setup.ts) so it is
+ * type-checked, linted, and license-header managed like the rest of the package.
+ * The standard tsc build compiles it to a sibling .js (gitignored like all lib
+ * output), which is what --require loads since Node cannot require .ts directly.
+ * This path already depends on the build (getCliEntryPoint resolves the compiled
+ * CLI, and consumers import the package via its compiled main), so relying on the
+ * compiled sibling here introduces no new build-order assumption.
+ */
 function getSynthSetupPath(): string {
   return path.join(__dirname, 'starter-kit-synth-setup.js');
 }
