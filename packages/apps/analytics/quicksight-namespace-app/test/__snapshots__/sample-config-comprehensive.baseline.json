@@ -1241,6 +1241,23 @@
               "Principal": {
                 "Federated": "arn:test-partition:iam::test-account:saml-provider/test-provider"
               }
+            },
+            {
+              "Action": "sts:TagSession",
+              "Condition": {
+                "StringLike": {
+                  "aws:RequestTag/Email": "*"
+                },
+                "ForAllValues:StringEquals": {
+                  "sts:TagKeys": [
+                    "Email"
+                  ]
+                }
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Federated": "arn:test-partition:iam::test-account:saml-provider/test-provider"
+              }
             }
           ],
           "Version": "2012-10-17"
@@ -1708,6 +1725,23 @@
               "Principal": {
                 "Federated": "arn:test-partition:iam::test-account:saml-provider/test-provider"
               }
+            },
+            {
+              "Action": "sts:TagSession",
+              "Condition": {
+                "StringLike": {
+                  "aws:RequestTag/Email": "*"
+                },
+                "ForAllValues:StringEquals": {
+                  "sts:TagKeys": [
+                    "Email"
+                  ]
+                }
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Federated": "arn:test-partition:iam::test-account:saml-provider/test-provider"
+              }
             }
           ],
           "Version": "2012-10-17"
@@ -2171,6 +2205,23 @@
           "Statement": [
             {
               "Action": "sts:AssumeRoleWithSAML",
+              "Effect": "Allow",
+              "Principal": {
+                "Federated": "arn:test-partition:iam::test-account:saml-provider/test-provider"
+              }
+            },
+            {
+              "Action": "sts:TagSession",
+              "Condition": {
+                "StringLike": {
+                  "aws:RequestTag/Email": "*"
+                },
+                "ForAllValues:StringEquals": {
+                  "sts:TagKeys": [
+                    "Email"
+                  ]
+                }
+              },
               "Effect": "Allow",
               "Principal": {
                 "Federated": "arn:test-partition:iam::test-account:saml-provider/test-provider"

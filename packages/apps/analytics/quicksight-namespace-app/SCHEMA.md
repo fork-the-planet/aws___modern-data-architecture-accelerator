@@ -45,13 +45,35 @@ Validation: Required; map of string keys to FederationProps
 | **Additional properties** | Not allowed                   |
 | **Defined in**            | #/definitions/FederationProps |
 
-| Property                                                        | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                       |
-| --------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------------------------------------------------------------------------------------------------------------- |
-| + [providerArn](#federations_additionalProperties_providerArn ) | No      | string | No         | -          | Arn or SSM Import (prefix with ssm:) of the federation provider                                                         |
-| + [roles](#federations_additionalProperties_roles )             | No      | object | No         | -          | QS Groups and QS Role(Reader\|Author) info for creating IAM Roles, Creating QS Groups, Registering Users with a QS Role |
-| + [url](#federations_additionalProperties_url )                 | No      | string | No         | -          | URL used by the connecting driver                                                                                       |
+| Property                                                                      | Pattern | Type    | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| ----------------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [enableEmailSyncing](#federations_additionalProperties_enableEmailSyncing ) | No      | boolean | No         | -          | When true, adds the sts:TagSession action to the trust policy of every IAM role created<br />for this federation, alongside the default sts:AssumeRoleWithSAML. This is the prerequisite<br />for QuickSight "Email Syncing for Federated Users", which lets the IdP pass a user's email<br />as a principal (session) tag via the SAML attribute PrincipalTag:Email so users are not<br />prompted for their email on first login. The IdP claim mapping and the QuickSight<br />account-level email-syncing setting must be configured separately, outside of MDAA.<br /><br />Use cases: QuickSight federated email syncing; IdP-driven principal tags; ABAC session tagging<br /><br />AWS: sts:TagSession trust policy action on the SAML federation role<br /><br />Validation: Optional; boolean |
+| + [providerArn](#federations_additionalProperties_providerArn )               | No      | string  | No         | -          | Arn or SSM Import (prefix with ssm:) of the federation provider                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| + [roles](#federations_additionalProperties_roles )                           | No      | object  | No         | -          | QS Groups and QS Role(Reader\|Author) info for creating IAM Roles, Creating QS Groups, Registering Users with a QS Role                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| + [url](#federations_additionalProperties_url )                               | No      | string  | No         | -          | URL used by the connecting driver                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
-#### <a name="federations_additionalProperties_providerArn"></a>1.1.1. Property `root > federations > additionalProperties > providerArn`
+#### <a name="federations_additionalProperties_enableEmailSyncing"></a>1.1.1. Property `root > federations > additionalProperties > enableEmailSyncing`
+
+|              |           |
+| ------------ | --------- |
+| **Type**     | `boolean` |
+| **Required** | No        |
+| **Default**  | `false`   |
+
+**Description:** When true, adds the sts:TagSession action to the trust policy of every IAM role created
+for this federation, alongside the default sts:AssumeRoleWithSAML. This is the prerequisite
+for QuickSight "Email Syncing for Federated Users", which lets the IdP pass a user's email
+as a principal (session) tag via the SAML attribute PrincipalTag:Email so users are not
+prompted for their email on first login. The IdP claim mapping and the QuickSight
+account-level email-syncing setting must be configured separately, outside of MDAA.
+
+Use cases: QuickSight federated email syncing; IdP-driven principal tags; ABAC session tagging
+
+AWS: sts:TagSession trust policy action on the SAML federation role
+
+Validation: Optional; boolean
+
+#### <a name="federations_additionalProperties_providerArn"></a>1.1.2. Property `root > federations > additionalProperties > providerArn`
 
 |              |          |
 | ------------ | -------- |
@@ -60,7 +82,7 @@ Validation: Required; map of string keys to FederationProps
 
 **Description:** Arn or SSM Import (prefix with ssm:) of the federation provider
 
-#### <a name="federations_additionalProperties_roles"></a>1.1.2. Property `root > federations > additionalProperties > roles`
+#### <a name="federations_additionalProperties_roles"></a>1.1.3. Property `root > federations > additionalProperties > roles`
 
 |                           |                                                                                                                     |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------- |
@@ -74,7 +96,7 @@ Validation: Required; map of string keys to FederationProps
 | ------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | - [](#federations_additionalProperties_roles_additionalProperties ) | No      | object | No         | In #/definitions/FederationRoleProps | Role configuration mapping QuickSight groups to a user type (READER or AUTHOR)<br />for federated namespace access. MDAA creates IAM roles for each federation role<br />and moves federated users into the specified QuickSight groups.<br /><br />Use cases: Group-based access tiers; Reader/Author role separation; Federation role mapping<br /><br />AWS: QuickSight groups, IAM federation roles<br /><br />Validation: qsGroups required; qsUserType must be 'READER' or 'AUTHOR' |
 
-##### <a name="federations_additionalProperties_roles_additionalProperties"></a>1.1.2.1. Property `root > federations > additionalProperties > roles > FederationRoleProps`
+##### <a name="federations_additionalProperties_roles_additionalProperties"></a>1.1.3.1. Property `root > federations > additionalProperties > roles > FederationRoleProps`
 
 |                           |                                   |
 | ------------------------- | --------------------------------- |
@@ -98,7 +120,7 @@ Validation: qsGroups required; qsUserType must be 'READER' or 'AUTHOR'
 | + [qsGroups](#federations_additionalProperties_roles_additionalProperties_qsGroups )     | No      | array of string  | No         | -                           | QS Groups info for creating Creating QS Groups      |
 | + [qsUserType](#federations_additionalProperties_roles_additionalProperties_qsUserType ) | No      | enum (of string) | No         | In #/definitions/QSUserType | QS Role(Reader\|Author) info for creating IAM Roles |
 
-###### <a name="federations_additionalProperties_roles_additionalProperties_qsGroups"></a>1.1.2.1.1. Property `root > federations > additionalProperties > roles > additionalProperties > qsGroups`
+###### <a name="federations_additionalProperties_roles_additionalProperties_qsGroups"></a>1.1.3.1.1. Property `root > federations > additionalProperties > roles > additionalProperties > qsGroups`
 
 |              |                   |
 | ------------ | ----------------- |
@@ -119,14 +141,14 @@ Validation: qsGroups required; qsUserType must be 'READER' or 'AUTHOR'
 | --------------------------------------------------------------------------------------------- | ----------- |
 | [qsGroups items](#federations_additionalProperties_roles_additionalProperties_qsGroups_items) | -           |
 
-###### <a name="federations_additionalProperties_roles_additionalProperties_qsGroups_items"></a>1.1.2.1.1.1. root > federations > additionalProperties > roles > additionalProperties > qsGroups > qsGroups items
+###### <a name="federations_additionalProperties_roles_additionalProperties_qsGroups_items"></a>1.1.3.1.1.1. root > federations > additionalProperties > roles > additionalProperties > qsGroups > qsGroups items
 
 |              |          |
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | No       |
 
-###### <a name="federations_additionalProperties_roles_additionalProperties_qsUserType"></a>1.1.2.1.2. Property `root > federations > additionalProperties > roles > additionalProperties > qsUserType`
+###### <a name="federations_additionalProperties_roles_additionalProperties_qsUserType"></a>1.1.3.1.2. Property `root > federations > additionalProperties > roles > additionalProperties > qsUserType`
 
 |                |                          |
 | -------------- | ------------------------ |
@@ -140,7 +162,7 @@ Must be one of:
 * "AUTHOR"
 * "READER"
 
-#### <a name="federations_additionalProperties_url"></a>1.1.3. Property `root > federations > additionalProperties > url`
+#### <a name="federations_additionalProperties_url"></a>1.1.4. Property `root > federations > additionalProperties > url`
 
 |              |          |
 | ------------ | -------- |

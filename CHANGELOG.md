@@ -22,6 +22,8 @@
 
 ### New Features
 
+- **QuickSight Namespace Module — Federated Email Syncing** (`@aws-mdaa/quicksight-namespace`): Added an optional `enableEmailSyncing` flag (default `false`) to each federation configuration. When enabled, the SAML federation role trust policy also grants `sts:TagSession`, scoped by conditions to only the `Email` session tag. This enables QuickSight email syncing for federated users.
+
 - **Audit Trail Module — Event Selectors**: Added optional `eventSelectors` configuration to the audit-trail module, allowing users to scope CloudTrail S3 data event capture to specific buckets and key prefixes instead of logging all S3 data events account-wide. Each selector accepts a `bucketName` (or SSM parameter reference) and an optional `objectPrefix`. When omitted, the existing behavior (capture all S3 data events) is preserved.
 
 - **Audit Trail Module — Multiple Named Trails**: Added a new `trails` configuration property accepting a map of named trail configurations. Each key becomes the trail's resource name segment, enabling multiple independent trails with separate S3 destinations, KMS keys, and event selectors in a single deployment. The existing `trail` property is now deprecated — migrate to `trails` with a key of `'s3-audit'` for equivalent behavior. Both properties can coexist during migration.

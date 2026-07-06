@@ -34,6 +34,7 @@ describe('MDAA Compliance Stack Tests', () => {
     url: 'test-url',
     providerArn: 'arn:test-partition:iam::test-account:role/test',
     roles: { testRole2: federationRoleProps2 },
+    enableEmailSyncing: true,
   };
   //{ "key1": federationProps }
   const constructProps: QuickSightNamespaceL3ConstructProps = {
@@ -79,6 +80,40 @@ describe('MDAA Compliance Stack Tests', () => {
     // each rule name should have been generated using EVENTBRIDGE_RULE
     const expectedPrefix = testApp.naming.withResourceType(MdaaResourceType.EVENTBRIDGE_RULE).resourceName('');
     ruleNames.forEach(name => expect(name).toContain(expectedPrefix.replace(/-$/, '')));
+  });
+
+  test('Federation role with email syncing grants sts:TagSession in trust policy', () => {
+    template.hasResourceProperties('AWS::IAM::Role', {
+      Description: 'QuickSight Federation Role for testRole2',
+      AssumeRolePolicyDocument: {
+        Statement: Match.arrayWith([
+          Match.objectLike({
+            Action: 'sts:AssumeRoleWithSAML',
+            Effect: 'Allow',
+            Principal: { Federated: 'arn:test-partition:iam::test-account:role/test' },
+          }),
+          Match.objectLike({
+            Action: 'sts:TagSession',
+            Effect: 'Allow',
+            Principal: { Federated: 'arn:test-partition:iam::test-account:role/test' },
+            Condition: {
+              StringLike: { 'aws:RequestTag/Email': '*' },
+              'ForAllValues:StringEquals': { 'sts:TagKeys': ['Email'] },
+            },
+          }),
+        ]),
+      },
+    });
+  });
+
+  test('Federation role without email syncing omits sts:TagSession', () => {
+    const roles = template.findResources('AWS::IAM::Role', {
+      Properties: { Description: 'QuickSight Federation Role for testRole1' },
+    });
+    const statements = Object.values(roles)[0].Properties.AssumeRolePolicyDocument.Statement;
+    const actions = statements.map((s: { Action: string }) => s.Action);
+    expect(actions).toContain('sts:AssumeRoleWithSAML');
+    expect(actions).not.toContain('sts:TagSession');
   });
 
   test('Check qsUserType Reader', () => {

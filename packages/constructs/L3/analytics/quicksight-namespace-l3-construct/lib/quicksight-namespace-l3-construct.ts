@@ -50,6 +50,22 @@ export interface FederationProps {
    * QS Groups and QS Role(Reader|Author) info for creating IAM Roles, Creating QS Groups, Registering Users with a QS Role
    */
   readonly roles: { [key: string]: FederationRoleProps };
+  /**
+   * When true, adds the sts:TagSession action to the trust policy of every IAM role created
+   * for this federation, alongside the default sts:AssumeRoleWithSAML. This is the prerequisite
+   * for QuickSight "Email Syncing for Federated Users", which lets the IdP pass a user's email
+   * as a principal (session) tag via the SAML attribute PrincipalTag:Email so users are not
+   * prompted for their email on first login. The IdP claim mapping and the QuickSight
+   * account-level email-syncing setting must be configured separately, outside of MDAA.
+   *
+   * Use cases: QuickSight federated email syncing; IdP-driven principal tags; ABAC session tagging
+   *
+   * AWS: sts:TagSession trust policy action on the SAML federation role
+   *
+   * Validation: Optional; boolean
+   * @default false
+   */
+  readonly enableEmailSyncing?: boolean;
 }
 export interface NameAndFederationProps extends FederationProps {
   /**
@@ -489,13 +505,34 @@ export class QuickSightNamespaceL3Construct extends MdaaL3Construct {
   }
   //Creates Federation roles for each federation config
   private createFederationRoles(federation: NameAndFederationProps, roleName: string): IRole {
+    const federatedPrincipal = new FederatedPrincipal(federation.providerArn, {}, 'sts:AssumeRoleWithSAML');
     //Create a Role which will be provided the accesses required to access Athena via Lake Formation
-    return new MdaaRole(this, `role-${roleName}-${federation.federationName}`, {
+    const role = new MdaaRole(this, `role-${roleName}-${federation.federationName}`, {
       naming: this.props.naming,
-      assumedBy: new FederatedPrincipal(federation.providerArn, {}, 'sts:AssumeRoleWithSAML'),
+      assumedBy: federatedPrincipal,
       description: `QuickSight Federation Role for ${roleName}`,
       roleName: `${roleName}-${federation.federationName}`,
     });
+    // Allow the IdP to pass the user's email as a principal (session) tag so QuickSight's
+    // "Email Syncing for Federated Users" can provision users without an email prompt. The
+    // conditions enforce least privilege on session tagging: StringLike requires the Email
+    // tag to be present, and ForAllValues:StringEquals on sts:TagKeys restricts the request
+    // to only the Email key, so the federated principal cannot inject any other session
+    // tags. This mirrors the trust policy in the AWS QuickSight email-syncing documentation.
+    if (federation.enableEmailSyncing && role.assumeRolePolicy) {
+      role.assumeRolePolicy.addStatements(
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          actions: ['sts:TagSession'],
+          principals: [federatedPrincipal],
+          conditions: {
+            StringLike: { 'aws:RequestTag/Email': '*' },
+            'ForAllValues:StringEquals': { 'sts:TagKeys': ['Email'] },
+          },
+        }),
+      );
+    }
+    return role;
   }
 
   private createReaderManagedPolicy(): ManagedPolicy {

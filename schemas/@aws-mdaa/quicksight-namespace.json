@@ -715,6 +715,11 @@
         "FederationProps": {
             "additionalProperties": false,
             "properties": {
+                "enableEmailSyncing": {
+                    "default": false,
+                    "description": "When true, adds the sts:TagSession action to the trust policy of every IAM role created\nfor this federation, alongside the default sts:AssumeRoleWithSAML. This is the prerequisite\nfor QuickSight \"Email Syncing for Federated Users\", which lets the IdP pass a user's email\nas a principal (session) tag via the SAML attribute PrincipalTag:Email so users are not\nprompted for their email on first login. The IdP claim mapping and the QuickSight\naccount-level email-syncing setting must be configured separately, outside of MDAA.\n\nUse cases: QuickSight federated email syncing; IdP-driven principal tags; ABAC session tagging\n\nAWS: sts:TagSession trust policy action on the SAML federation role\n\nValidation: Optional; boolean",
+                    "type": "boolean"
+                },
                 "providerArn": {
                     "description": "Arn or SSM Import (prefix with ssm:) of the federation provider",
                     "type": "string"
