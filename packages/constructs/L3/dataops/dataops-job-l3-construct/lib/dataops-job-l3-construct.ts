@@ -61,7 +61,18 @@ export interface JobCommand {
   readonly scriptLocation: string;
 }
 
-export type JobWorkerType = 'Standard' | 'G.1X' | 'G.2X';
+export type JobWorkerType =
+  | 'Standard'
+  | 'G.1X'
+  | 'G.2X'
+  | 'G.4X'
+  | 'G.8X'
+  | 'G.12X'
+  | 'G.16X'
+  | 'R.1X'
+  | 'R.2X'
+  | 'R.4X'
+  | 'R.8X';
 
 /**
  * Configuration for a Glue job including execution roles, commands, capacity, and monitoring.
@@ -101,7 +112,7 @@ export interface JobConfig {
   readonly numberOfWorkers?: number;
   /** Job timeout in minutes. */
   readonly timeout?: number;
-  /** Worker type: 'Standard', 'G.1X', or 'G.2X'. */
+  /** Worker type: 'Standard', 'G.1X', 'G.2X', 'G.4X', 'G.8X', 'G.12X', 'G.16X', 'R.1X', 'R.2X', 'R.4X', or 'R.8X'. G.12X, G.16X, and R types require a compatible Glue version and regional availability. */
   readonly workerType?: JobWorkerType;
   /** Relative paths to additional Python scripts for the job. */
   readonly additionalScripts?: string[];

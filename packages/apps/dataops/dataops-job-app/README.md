@@ -124,7 +124,7 @@ Demonstrates standalone Glue jobs with explicit KMS, bucket, deployment role, an
 
 #### Worker Type Configuration
 
-Uses workerType + numberOfWorkers instead of maxCapacity for explicit control over Glue worker sizing (Standard, G.1X, or G.2X). Choose this variant when you need predictable worker allocation instead of maxCapacity-based auto-scaling.
+Uses workerType + numberOfWorkers instead of maxCapacity for explicit control over Glue worker sizing. Supported worker types are the general-purpose G family (Standard, G.1X, G.2X, G.4X, G.8X, G.12X, G.16X) and the memory-optimized R family (R.1X, R.2X, R.4X, R.8X). Choose this variant when you need predictable worker allocation instead of maxCapacity-based auto-scaling. Note: larger G types (G.12X, G.16X) and all R types require a compatible Glue version and regional availability.
 
 [sample-config-workertype.yaml](sample_configs/sample-config-workertype.yaml)
 

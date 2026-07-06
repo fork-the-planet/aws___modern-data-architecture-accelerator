@@ -1613,10 +1613,18 @@
                     "type": "number"
                 },
                 "workerType": {
-                    "description": "Worker type: 'Standard', 'G.1X', or 'G.2X'.",
+                    "description": "Worker type: 'Standard', 'G.1X', 'G.2X', 'G.4X', 'G.8X', 'G.12X', 'G.16X', 'R.1X', 'R.2X', 'R.4X', or 'R.8X'. G.12X, G.16X, and R types require a compatible Glue version and regional availability.",
                     "enum": [
+                        "G.12X",
+                        "G.16X",
                         "G.1X",
                         "G.2X",
+                        "G.4X",
+                        "G.8X",
+                        "R.1X",
+                        "R.2X",
+                        "R.4X",
+                        "R.8X",
                         "Standard"
                     ],
                     "type": "string"

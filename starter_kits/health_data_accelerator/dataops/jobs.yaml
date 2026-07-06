@@ -37,7 +37,7 @@ templates:
     #numberOfWorkers: 1
     # (optional) Number of minutes to wait before considering the job timed out
     timeout: 60
-    # (optional) Worker type to use.  Any of: "Standard" | "G.1X" | "G.2X"
+    # (optional) Worker type to use.  Any of: "Standard" | "G.1X" | "G.2X" | "G.4X" | "G.8X" | "G.12X" | "G.16X" | "R.1X" | "R.2X" | "R.4X" | "R.8X"
     # Use maxCapacity or WorkerType.  Not both.
     # workerType: "G.1X"
     # Viewing real-time logs provides you with a better perspective on the running job.

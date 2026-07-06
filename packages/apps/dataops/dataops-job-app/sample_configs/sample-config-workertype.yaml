@@ -1,6 +1,7 @@
 # Sample config for the DataOps Job module - workerType variant.
 # Exercises the workerType + numberOfWorkers path which is mutually
-# exclusive with maxCapacity. Covers all three workerType enum values.
+# exclusive with maxCapacity. Covers a representative set of workerType
+# enum values, including the larger G and memory-optimized R families.
 
 # (Optional) DataOps project name for job resource autowiring
 # (databases, roles, security).
@@ -26,7 +27,7 @@ jobs:
       scriptLocation: ./src/glue/python/job.py
     # (Optional) Glue runtime version for the job.
     glueVersion: '2.0'
-    # (Optional) Worker type. (enum: Standard, G.1X, G.2X)
+    # (Optional) Worker type. (enum: Standard, G.1X, G.2X, G.4X, G.8X, G.12X, G.16X, R.1X, R.2X, R.4X, R.8X)
     # Note: Use workerType+numberOfWorkers OR maxCapacity, not both.
     workerType: Standard
     # (Optional) Number of workers for parallel processing.
@@ -49,7 +50,7 @@ jobs:
       scriptLocation: ./src/glue/python/job.py
     # (Optional) Glue runtime version for the job.
     glueVersion: '3.0'
-    # (Optional) Worker type. (enum: Standard, G.1X, G.2X)
+    # (Optional) Worker type. (enum: Standard, G.1X, G.2X, G.4X, G.8X, G.12X, G.16X, R.1X, R.2X, R.4X, R.8X)
     workerType: G.1X
     # (Optional) Number of workers for parallel processing.
     numberOfWorkers: 4
@@ -71,7 +72,51 @@ jobs:
       scriptLocation: ./src/glue/python/job.py
     # (Optional) Glue runtime version for the job.
     glueVersion: '4.0'
-    # (Optional) Worker type. (enum: Standard, G.1X, G.2X)
+    # (Optional) Worker type. (enum: Standard, G.1X, G.2X, G.4X, G.8X, G.12X, G.16X, R.1X, R.2X, R.4X, R.8X)
     workerType: G.2X
     # (Optional) Number of workers for parallel processing.
     numberOfWorkers: 8
+
+  # Job using G.8X worker type for demanding, compute-intensive workloads.
+  G8XWorkerJob:
+    # IAM role ARN for Glue job execution permissions.
+    # Often created by the Roles module.
+    # Example SSM: ssm:/{{org}}/{{domain}}/<roles_module_name>/role/<role_name>/arn
+    executionRoleArn: some-arn
+    # Job description for documentation and management.
+    description: Glue ETL job with G.8X worker type
+    command:
+      # Job type. (enum: glueetl, pythonshell)
+      name: 'glueetl'
+      # (Optional) Python version for job runtime. (enum: 2, 3)
+      pythonVersion: '3'
+      # Relative path to the Glue script for job execution.
+      scriptLocation: ./src/glue/python/job.py
+    # (Optional) Glue runtime version for the job.
+    glueVersion: '4.0'
+    # (Optional) Worker type. (enum: Standard, G.1X, G.2X, G.4X, G.8X, G.12X, G.16X, R.1X, R.2X, R.4X, R.8X)
+    workerType: G.8X
+    # (Optional) Number of workers for parallel processing.
+    numberOfWorkers: 10
+
+  # Job using R.2X memory-optimized worker type for memory-intensive workloads.
+  R2XWorkerJob:
+    # IAM role ARN for Glue job execution permissions.
+    # Often created by the Roles module.
+    # Example SSM: ssm:/{{org}}/{{domain}}/<roles_module_name>/role/<role_name>/arn
+    executionRoleArn: some-arn
+    # Job description for documentation and management.
+    description: Glue ETL job with R.2X worker type
+    command:
+      # Job type. (enum: glueetl, pythonshell)
+      name: 'glueetl'
+      # (Optional) Python version for job runtime. (enum: 2, 3)
+      pythonVersion: '3'
+      # Relative path to the Glue script for job execution.
+      scriptLocation: ./src/glue/python/job.py
+    # (Optional) Glue runtime version for the job.
+    glueVersion: '4.0'
+    # (Optional) Worker type. (enum: Standard, G.1X, G.2X, G.4X, G.8X, G.12X, G.16X, R.1X, R.2X, R.4X, R.8X)
+    workerType: R.2X
+    # (Optional) Number of workers for parallel processing.
+    numberOfWorkers: 4

@@ -260,6 +260,31 @@ describe('MDAA Compliance Stack Tests', () => {
     });
   });
 
+  describe('MDAA with worker type', () => {
+    const testApp = new MdaaTestApp();
+    const stack = testApp.testStack;
+
+    const testJobWorkerTypeProps: JobConfig = {
+      ...testJobProps,
+      workerType: 'G.4X',
+      numberOfWorkers: 4,
+    };
+
+    new GlueJobL3Construct(stack, 'teststack', {
+      ...createConstructorProps(stack, testApp),
+      jobConfigs: { testJob: testJobWorkerTypeProps },
+    });
+    testApp.checkCdkNagCompliance(testApp.testStack);
+    const template = Template.fromStack(testApp.testStack);
+
+    test('workerType and numberOfWorkers reach the Glue job', () => {
+      template.hasResourceProperties('AWS::Glue::Job', {
+        WorkerType: 'G.4X',
+        NumberOfWorkers: 4,
+      });
+    });
+  });
+
   describe('MDAA with input parameters', () => {
     const testApp = new MdaaTestApp();
     const stack = testApp.testStack;
