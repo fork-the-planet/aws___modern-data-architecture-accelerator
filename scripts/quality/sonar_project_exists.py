@@ -9,7 +9,7 @@ Uses api/components/show which requires Browse permission on the project
 
 Environment variables:
     SONAR_SERVER - SonarQube server URL
-    SONAR_LOGIN  - SonarQube authentication token
+    SONAR_TOKEN  - SonarQube authentication token
 
 Usage:
     python3 sonar_project_exists.py <project_key>
@@ -28,13 +28,13 @@ def main() -> None:
         sys.exit(1)
 
     server = os.environ.get("SONAR_SERVER", "").rstrip("/")
-    token = os.environ.get("SONAR_LOGIN", "")
+    token = os.environ.get("SONAR_TOKEN", "")
 
     if not server:
         print("SONAR_SERVER environment variable is not set", file=sys.stderr)
         sys.exit(1)
     if not token:
-        print("SONAR_LOGIN environment variable is not set", file=sys.stderr)
+        print("SONAR_TOKEN environment variable is not set", file=sys.stderr)
         sys.exit(1)
 
     project_key = sys.argv[1]

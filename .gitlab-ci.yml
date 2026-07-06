@@ -830,7 +830,7 @@ feature_merge_sonarqube_target:
     policy: pull-push
   variables:
     GIT_DEPTH: '0'
-    AWS_CREDS_TARGET_ROLE: '${DEV_ROLE_ARN}'
+    AWS_CREDS_TARGET_ROLE: '${SONAR_ROLE_ARN}'
     AWS_DEFAULT_REGION: us-east-1
   allow_failure: false
   script:
@@ -861,6 +861,8 @@ feature_merge_sonarqube:
     policy: pull
   variables:
     GIT_DEPTH: '0'
+    AWS_CREDS_TARGET_ROLE: '${SONAR_ROLE_ARN}'
+    AWS_DEFAULT_REGION: us-east-1
   allow_failure: false
   script:
     - ./scripts/quality/sonarqube.sh
@@ -1312,6 +1314,8 @@ prerelease_analyze:
     - prerelease_build_test
   variables:
     GIT_DEPTH: '0'
+    AWS_CREDS_TARGET_ROLE: '${SONAR_ROLE_ARN}'
+    AWS_DEFAULT_REGION: us-east-1
   allow_failure: false
   script:
     - ./scripts/quality/sonarqube.sh

@@ -7,7 +7,7 @@ failure is treated as a blocking error.
 
 Environment variables:
     SONAR_SERVER - SonarQube server URL (for API calls)
-    SONAR_LOGIN  - SonarQube authentication token
+    SONAR_TOKEN  - SonarQube authentication token
     SONAR_PORT   - (optional) Port for browser links, defaults to 8443
 
 Usage:
@@ -62,13 +62,13 @@ def main() -> None:
         public_url = f"{parsed.scheme}://{parsed.hostname}:{sonar_port}{parsed.path}"
     else:
         public_url = server
-    token = os.environ.get("SONAR_LOGIN", "")
+    token = os.environ.get("SONAR_TOKEN", "")
 
     if not server:
         print("ERROR: SONAR_SERVER environment variable is not set", file=sys.stderr)
         sys.exit(1)
     if not token:
-        print("ERROR: SONAR_LOGIN environment variable is not set", file=sys.stderr)
+        print("ERROR: SONAR_TOKEN environment variable is not set", file=sys.stderr)
         sys.exit(1)
 
     project_key = sys.argv[1]

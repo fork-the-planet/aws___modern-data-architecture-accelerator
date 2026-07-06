@@ -13,6 +13,16 @@ echo "Running Sonar Scanner"
 export SONAR_SCANNER_JAVA_OPTS="-Xmx1024m"
 unset NODE_OPTIONS
 
+if [ -z "${SONAR_SECRET_ARN}" ]; then
+  echo "ERROR: SONAR_SECRET_ARN CI/CD variable is not set" >&2
+  exit 1
+fi
+export SONAR_TOKEN=$(aws secretsmanager get-secret-value --secret-id "${SONAR_SECRET_ARN}" --region us-east-1 --query 'SecretString' --output text)
+if [ -z "${SONAR_TOKEN}" ]; then
+  echo "ERROR: Failed to retrieve SonarQube token from Secrets Manager" >&2
+  exit 1
+fi
+
 # Derive the project key (shared with the target-baseline scan so both
 # scans target an identical key). See sonar-project-key.sh for details.
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -69,7 +79,7 @@ sonar-scanner \
   -Dsonar.javascript.node.maxspace=${SONAR_NODE_MAXSPACE:-8192} \
   -Dsonar.qualitygate.wait=true \
   -Dsonar.host.url=${SONAR_SERVER} \
-  -Dsonar.token=${SONAR_LOGIN} \
+  -Dsonar.token=${SONAR_TOKEN} \
   -Dsonar.sourceEncoding=utf-8 \
   ${VERSION_ARGS} \
   ${SCOPE_ARGS}

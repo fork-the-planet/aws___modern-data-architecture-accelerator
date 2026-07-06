@@ -30,7 +30,7 @@
 #
 # Environment variables (provided by GitLab CI):
 #   SONAR_SERVER   - SonarQube server URL
-#   SONAR_LOGIN    - SonarQube authentication token
+#   SONAR_TOKEN    - SonarQube authentication token
 #   SONAR_PROJECT_KEY - (optional) base project key, defaults to CI_PROJECT_PATH_SLUG
 #   CI_MERGE_REQUEST_SOURCE_BRANCH_NAME - MR source branch
 #   CI_MERGE_REQUEST_IID - MR identifier
@@ -44,6 +44,15 @@ if [ "${CI_PIPELINE_SOURCE}" != "merge_request_event" ] && [ -z "${CI_MERGE_REQU
 fi
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+if [ -z "${SONAR_SECRET_ARN}" ]; then
+  echo "ERROR: SONAR_SECRET_ARN CI/CD variable is not set" >&2
+  exit 1
+fi
+export SONAR_TOKEN=$(aws secretsmanager get-secret-value --secret-id "${SONAR_SECRET_ARN}" --region us-east-1 --query 'SecretString' --output text)
+if [ -z "${SONAR_TOKEN}" ]; then
+  echo "ERROR: Failed to retrieve SonarQube token from Secrets Manager" >&2
+  exit 1
+fi
 source "${SCRIPT_DIR}/sonar-project-key.sh"
 PROJECT_KEY="${SONAR_PROJECT_KEY}"
 
@@ -154,7 +163,7 @@ sonar-scanner \
   -Dsonar.projectDate="${BASELINE_DATE}" \
   -Dsonar.javascript.node.maxspace=${SONAR_NODE_MAXSPACE:-8192} \
   -Dsonar.host.url="${SONAR_SERVER}" \
-  -Dsonar.token="${SONAR_LOGIN}" \
+  -Dsonar.token="${SONAR_TOKEN}" \
   -Dsonar.sourceEncoding=utf-8 \
   -Dsonar.qualitygate.wait=false
 
