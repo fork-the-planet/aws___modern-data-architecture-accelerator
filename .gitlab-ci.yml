@@ -926,6 +926,7 @@ feature_version:
       - lerna.json
       - package-lock.json
       - packages
+      - starter_kits
       - target
       - schemas
     exclude:
@@ -966,6 +967,7 @@ feature_build_test:
       - lerna.json
       - package-lock.json
       - packages
+      - starter_kits
       - target
       - schemas
     exclude:
@@ -1184,6 +1186,7 @@ prerelease_version:
       - lerna.json
       - package-lock.json
       - packages
+      - starter_kits
       - target
       - schemas
     exclude:
@@ -1225,6 +1228,7 @@ prerelease_build_test:
       - lerna.json
       - package-lock.json
       - packages
+      - starter_kits
       - schemas
       - target
     exclude:
