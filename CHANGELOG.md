@@ -242,6 +242,7 @@
 - Fixed unique-environment generation in SageMaker projects when the user supplies tooling
 - Fixed Lambda Alias `CurrentVersion` no longer being incorrectly flagged by CDK diff baseline testing
 - Fixed SageMaker endpoint construct using a non-fixed model name to avoid update conflicts
+- Fixed LakeFormation Settings SSO application ARN hardcoding the data platform account ID, which caused `CreateLakeFormationIdentityCenterConfiguration` to fail in Control Tower / AWS Organizations deployments where IAM Identity Center runs in a separate management or delegated-admin account
 
 ## [1.5.0] - 2026-03-13
 

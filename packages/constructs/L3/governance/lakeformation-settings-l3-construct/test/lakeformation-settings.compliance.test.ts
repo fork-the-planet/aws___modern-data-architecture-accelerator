@@ -4,7 +4,7 @@
  */
 
 import { MdaaTestApp } from '@aws-mdaa/testing';
-import { Template } from 'aws-cdk-lib/assertions';
+import { Match, Template } from 'aws-cdk-lib/assertions';
 import { MdaaRoleHelper, MdaaRoleRef } from '@aws-mdaa/iam-role-helper';
 
 import { LakeFormationSettingsL3ConstructProps, LakeFormationSettingsL3Construct } from '../lib';
@@ -82,6 +82,33 @@ describe('MDAA Compliance Stack Tests', () => {
           DataLakePrincipalIdentifier: 'test-account',
         },
       ],
+    });
+  });
+
+  // Regression guard for the cross-account IdC fix:
+  // sso application resource ARN must use a wildcard ('*') in the account segment,
+  // otherwise CreateLakeFormationIdentityCenterConfiguration is denied when the
+  // IdC instance lives in a different account than the data platform account.
+  test('IdcIntegration: SSO application resource ARN uses wildcard account segment', () => {
+    template.hasResourceProperties('AWS::IAM::Policy', {
+      PolicyDocument: {
+        Statement: Match.arrayWith([
+          Match.objectLike({
+            Effect: 'Allow',
+            Action: Match.arrayWith([
+              'sso:PutApplicationAssignmentConfiguration',
+              'sso:CreateApplication',
+              'sso:DeleteApplication',
+              'sso:DescribeApplication',
+            ]),
+            Resource: Match.arrayWith([
+              'arn:test-partition:sso:::instance/test-sso-instance',
+              'arn:test-partition:sso::*:application/test-sso-instance/*',
+              'arn:aws:sso::aws:applicationProvider/*',
+            ]),
+          }),
+        ]),
+      },
     });
   });
   test('DZ Management Role', () => {
