@@ -22,6 +22,7 @@ stages:
   - package
   - prerelease_publish
   - pre_release
+  - release_validate
   - release_publish
   - post_release
 
@@ -1534,6 +1535,11 @@ release_version_package:
       - lerna.json
       - package-lock.json
       - packages
+      # starter_kits is an npm workspace (@aws-mdaa/starter-kits) whose version is
+      # bumped by version_release.sh and pinned in package-lock.json. It must travel
+      # with the release artifacts or a clean `npm ci` downstream (validate_release_commit)
+      # fails on the lockfile/workspace version mismatch. Mirrors prerelease_version.
+      - starter_kits
       - target
       - schemas
       - solution-manifest.yaml
@@ -1584,6 +1590,65 @@ release:
   allow_failure: false
   script:
     - echo "Releasing "
+
+# --- release_validate stage ---
+
+# Validate the exact version-bumped commit that will be pushed to main, from a
+# pristine checkout. release_version_package builds and tests against a dirty tree
+# (version_release.sh removes package-lock.json and regenerates it with a lenient
+# `npm install` on top of an already-populated node_modules), and the resulting
+# commit is pushed straight to main without ever being installed from the
+# regenerated lockfile. This job closes that gap: it takes the version-bumped
+# tracked files (from release_version_package artifacts), wipes all dependency and
+# nx state, and proves the commit is releasable via a strict `npm ci` + full build
+# + schema-drift check + full TypeScript test suite (Python and starter-kit suites
+# run in their own jobs, matching release_version_package's test surface).
+#
+# This gate deliberately protects only the IRREVERSIBLE, customer-facing release
+# actions: the push to main / CodeCommit (confirm_push_to_git, prerelease_push_git,
+# release_push_git) and the Cornerstone S3 distribution upload
+# (cornerstone_build_distributions). It intentionally does NOT gate the
+# release_publish_npm/pip/s3 jobs: those publish to INTERNAL CodeArtifact (not the
+# public/customer artifact), are recoverable via the rollback_release* jobs and
+# delete_codeartifact_version.sh, and the public NPM publish is a separate manual
+# operator step performed off a validated main. Gating them would add a second full
+# build/test pass for no protection those properties don't already provide.
+#
+# Depends only on release_version_package (not the `release` confirmation gate) so it
+# auto-runs as soon as the version-bumped tree exists — the earliest possible failure
+# signal — and so cornerstone_build_distributions can gate on it without inheriting
+# the release confirmation it does not require today.
+validate_release_commit:
+  extends: .size_3xlarge
+  interruptible: false
+  tags:
+    - arch:amd64
+  # No `environment:` — this is build/test validation, not a deployment. Mirrors the
+  # merge-pipeline build jobs (feature_merge_lint) which use DEV_ROLE_ARN without an
+  # environment, and avoids coupling this auto-running gate to any Protected Environment
+  # deployment-approval rule on `release`.
+  except:
+    variables:
+      - $GITLAB_USER_NAME == "CI_GROUP_TOKEN"
+    refs:
+      - tags
+  only:
+    refs:
+      - main
+  stage: release_validate
+  # No cache: a pristine environment is the whole point. Restoring node_modules or
+  # .nx would defeat the clean-`npm ci` signal this job exists to provide.
+  cache: {}
+  dependencies:
+    - release_version_package
+  needs:
+    - release_version_package
+  allow_failure: false
+  variables:
+    AWS_CREDS_TARGET_ROLE: '${DEV_ROLE_ARN}'
+    AWS_DEFAULT_REGION: us-east-1
+  script:
+    - ./scripts/publish/validate_release_commit.sh
 
 # --- release_publish stage ---
 
@@ -1850,6 +1915,7 @@ confirm_push_to_git:
   needs:
     - release
     - release_version_package
+    - validate_release_commit
     - release_publish_s3
     - release_publish_pip
     - release_publish_npm
@@ -1896,6 +1962,10 @@ prerelease_push_git:
     - release_version_package
   needs:
     - confirm_push_to_git
+    # Explicit gate (in addition to confirm_push_to_git, which also requires it) so a
+    # future refactor that decouples this push from the confirmation job cannot silently
+    # un-gate the push to main.
+    - validate_release_commit
     - release_version_package
   allow_failure: false
   variables:
@@ -1942,6 +2012,10 @@ release_push_git:
     - release_version_package
   needs:
     - confirm_push_to_git
+    # Explicit gate (in addition to confirm_push_to_git, which also requires it) so a
+    # future refactor that decouples this push from the confirmation job cannot silently
+    # un-gate the force-push to the delivery remote.
+    - validate_release_commit
     - release_version_package
   allow_failure: false
   variables:
@@ -2082,6 +2156,10 @@ cornerstone_build_distributions:
   dependencies:
     - release_version_package
   needs:
+    # Gate the Cornerstone distribution build on the clean-checkout validation so the
+    # irreversible S3 upload downstream is only ever produced from a tree proven to
+    # install/build/test from a pristine npm ci.
+    - validate_release_commit
     - release_version_package
   cache:
     key: release-$CI_COMMIT_SHA
