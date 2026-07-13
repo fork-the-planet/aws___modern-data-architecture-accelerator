@@ -671,6 +671,29 @@ describe('Terraform', () => {
     const mdaa = new MdaaDeploy(cmdOptions, undefined, configContents);
     expect(() => mdaa.deploy()).not.toThrow();
   });
+
+  test('interpolates a valid global region into the generated Terraform commands', () => {
+    const cmdOptions = {
+      ...options,
+      action: 'plan',
+    };
+    const configWithRegion = {
+      ...configContents,
+      region: 'us-east-1',
+    };
+    const mdaa = new MdaaDeploy(cmdOptions, undefined, configWithRegion);
+    const captured: string[] = [];
+    jest.spyOn(mdaa as unknown as { execCmd: (cmd: string) => void }, 'execCmd').mockImplementation((cmd: string) => {
+      captured.push(cmd);
+    });
+
+    expect(() => mdaa.deploy()).not.toThrow();
+    const allCmds = captured.join('\n');
+    expect(allCmds).toContain('export AWS_DEFAULT_REGION=us-east-1');
+    expect(allCmds).toContain('-var region="us-east-1"');
+
+    jest.restoreAllMocks();
+  });
 });
 
 describe('sanity check', () => {
@@ -1379,5 +1402,244 @@ describe('useStaging', () => {
     expect(stageLogCalls).toHaveLength(0);
 
     consoleSpy.mockRestore();
+  });
+});
+
+describe('Deployment target validation', () => {
+  const baseOptions = {
+    testing: 'true',
+    action: 'synth',
+    working_dir: 'test/test_working',
+    tag: 'testtag',
+  };
+
+  const configWithTarget = (target: { region?: string; account?: string }) => ({
+    organization: 'sample-org',
+    domains: {
+      shared: {
+        environments: {
+          dev: {
+            ...target,
+            modules: {
+              'test-module': {
+                module_path: '@aws-mdaa/test',
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // A concrete env-level region/account containing shell metacharacters is
+  // rejected at parse time (validateConfig), before it can reach the
+  // `export CDK_DEPLOY_*` statement built by createCdkCommandEnv.
+  it.each([
+    ['region', 'us-east-1$(id > /tmp/pwned)'],
+    ['region', 'us-east-1;curl evil'],
+    ['account', '123456789012$(id)'],
+    ['account', 'not-an-account'],
+  ])('rejects a concrete invalid %s before deployment', (field, value) => {
+    expect(() => {
+      const mdaa = new MdaaDeploy(baseOptions, undefined, configWithTarget({ [field]: value }));
+      mdaa.deploy();
+    }).toThrow(field === 'region' ? /Invalid region/ : /Invalid account/);
+  });
+
+  // The Terraform path interpolates the global region into `export
+  // AWS_DEFAULT_REGION` / `-var region=`. A concrete invalid global region is
+  // rejected at parse time, before any Terraform command is built.
+  it('rejects a concrete invalid global region used by the Terraform path', () => {
+    const config = {
+      organization: 'sample-org',
+      region: 'us-east-1$(id)',
+      domains: {
+        shared: {
+          environments: {
+            dev: {
+              modules: {
+                'tf-module': {
+                  module_type: 'tf',
+                  module_path: '@aws-mdaa/test',
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    expect(() => {
+      const mdaa = new MdaaDeploy(baseOptions, undefined, config);
+      mdaa.deploy();
+    }).toThrow(/Invalid region/);
+  });
+
+  it('rejects an invalid region in additional_stacks', () => {
+    const config = {
+      organization: 'sample-org',
+      domains: {
+        shared: {
+          environments: {
+            dev: {
+              modules: {
+                'test-module': {
+                  module_path: '@aws-mdaa/test',
+                  additional_stacks: [{ region: 'us-east-1;curl evil' }],
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    const mdaa = new MdaaDeploy(baseOptions, undefined, config);
+    expect(() => mdaa.deploy()).toThrow(/additional_stacks\[0\]\.region/);
+  });
+
+  // A Terraform module has no `-var account`, so account is only validated by the
+  // uniform post-resolution guard in prepModule (not a TF command sink). A bad
+  // account that resolves from a reference (passing parse-time) must still be
+  // rejected before hooks substitute {{account}} into a shell command.
+  it('rejects a resolved invalid account on the Terraform path', () => {
+    const config = {
+      organization: 'sample-org',
+      domains: {
+        shared: {
+          environments: {
+            dev: {
+              context: { bad_account: '$(id)' },
+              account: '{{context:bad_account}}',
+              modules: {
+                'tf-module': {
+                  module_type: 'tf',
+                  module_path: '@aws-mdaa/test',
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    const mdaa = new MdaaDeploy(baseOptions, undefined, config);
+    expect(() => mdaa.deploy()).toThrow(/Invalid account/);
+  });
+
+  it('passes a valid region/account through to the generated CDK command', () => {
+    const mdaa = new MdaaDeploy(
+      baseOptions,
+      undefined,
+      configWithTarget({ region: 'us-east-1', account: '123456789012' }),
+    );
+    const captured: string[] = [];
+    jest.spyOn(mdaa as unknown as { execCmd: (cmd: string) => void }, 'execCmd').mockImplementation((cmd: string) => {
+      captured.push(cmd);
+    });
+
+    expect(() => mdaa.deploy()).not.toThrow();
+    const cdkCmd = captured.find(cmd => cmd.includes('CDK_DEPLOY_REGION'));
+    expect(cdkCmd).toContain('export CDK_DEPLOY_REGION=us-east-1');
+    expect(cdkCmd).toContain('export CDK_DEPLOY_ACCOUNT=123456789012');
+
+    jest.restoreAllMocks();
+  });
+
+  // 'default' is the sentinel meaning "use the ambient AWS environment"; it must be
+  // accepted for both region and account, and must not emit a CDK_DEPLOY_* export
+  // (matching the pre-validation behaviour of the != 'default' guards).
+  it.each([{ region: 'default', account: 'default' }, {}])(
+    'accepts the default/omitted target and emits no CDK_DEPLOY export (%o)',
+    target => {
+      const mdaa = new MdaaDeploy(baseOptions, undefined, configWithTarget(target));
+      const captured: string[] = [];
+      jest.spyOn(mdaa as unknown as { execCmd: (cmd: string) => void }, 'execCmd').mockImplementation((cmd: string) => {
+        captured.push(cmd);
+      });
+
+      expect(() => mdaa.deploy()).not.toThrow();
+      expect(captured.some(cmd => cmd.includes('CDK_DEPLOY_REGION'))).toBe(false);
+      expect(captured.some(cmd => cmd.includes('CDK_DEPLOY_ACCOUNT'))).toBe(false);
+
+      jest.restoreAllMocks();
+    },
+  );
+
+  // Values arriving via a config reference bypass the parse-time validators (which
+  // intentionally defer references), so the resolved-value guard in prepModule is
+  // the only enforcement point. This drives a malicious region through resolution
+  // on the CDK path and asserts it is rejected before any command string is built.
+  it('rejects a resolved invalid region on the CDK path', () => {
+    const config = {
+      organization: 'sample-org',
+      domains: {
+        shared: {
+          environments: {
+            dev: {
+              context: { bad_region: 'us-east-1$(id)' },
+              region: '{{context:bad_region}}',
+              modules: {
+                'test-module': {
+                  module_path: '@aws-mdaa/test',
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    const mdaa = new MdaaDeploy(baseOptions, undefined, config);
+    const captured: string[] = [];
+    jest.spyOn(mdaa as unknown as { execCmd: (cmd: string) => void }, 'execCmd').mockImplementation((cmd: string) => {
+      captured.push(cmd);
+    });
+
+    expect(() => mdaa.deploy()).toThrow(/Invalid region/);
+    expect(captured.some(cmd => cmd.includes('CDK_DEPLOY_REGION'))).toBe(false);
+
+    jest.restoreAllMocks();
+  });
+
+  // Directly exercise the interpolation-site guards so a regression that drops one
+  // of them is caught even though the parse-time validator would also fire in the
+  // full flow. These are the last line of defense before values reach the shell.
+  describe('interpolation-site guards', () => {
+    // Reach the private members via casts, mirroring the execCmd spies above.
+    type CdkEnvSink = { createCdkCommandEnv: (moduleConfig: Record<string, unknown>) => string[] };
+    type TfRegionSink = { validatedTerraformRegion: () => string | undefined };
+
+    const moduleConfigWith = (target: Record<string, string>) => ({
+      domainName: 'shared',
+      envName: 'dev',
+      moduleName: 'test-module',
+      ...target,
+    });
+
+    it.each([
+      ['deployRegion', 'us-east-1$(id)', /Invalid region/],
+      ['deployAccount', '123456789012;id', /Invalid account/],
+    ])('createCdkCommandEnv rejects a malicious %s', (field, value, pattern) => {
+      const mdaa = new MdaaDeploy(baseOptions, undefined, configWithTarget({})) as unknown as CdkEnvSink;
+      expect(() => mdaa.createCdkCommandEnv(moduleConfigWith({ [field]: value }))).toThrow(pattern);
+    });
+
+    it('validatedTerraformRegion rejects a malicious global region', () => {
+      // Construct with a valid region (so parse-time validation passes), then
+      // overwrite it to isolate the interpolation-site guard from parse-time.
+      const mdaa = new MdaaDeploy(baseOptions, undefined, {
+        organization: 'sample-org',
+        region: 'us-east-1',
+        domains: {},
+      });
+      (mdaa as unknown as { config: { contents: { region: string } } }).config.contents.region = 'us-east-1$(id)';
+      expect(() => (mdaa as unknown as TfRegionSink).validatedTerraformRegion()).toThrow(/Invalid region/);
+    });
+
+    it('validatedTerraformRegion returns undefined for the default sentinel', () => {
+      const mdaa = new MdaaDeploy(baseOptions, undefined, {
+        organization: 'sample-org',
+        region: 'default',
+        domains: {},
+      }) as unknown as TfRegionSink;
+      expect(mdaa.validatedTerraformRegion()).toBeUndefined();
+    });
   });
 });

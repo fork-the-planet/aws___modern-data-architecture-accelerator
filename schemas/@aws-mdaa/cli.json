@@ -480,6 +480,7 @@
         },
         "Deployment": {
             "additionalProperties": false,
+            "description": "A single deployment target (account/region) for an MDAA module. Used both for\nthe primary deployment and for entries under `additional_stacks` /\n`additional_accounts`.",
             "properties": {
                 "account": {
                     "description": "The target account. If not specified, defaults to the CDK default account.",

@@ -18,6 +18,8 @@ import * as configJsonSchema from './config-schema.json';
 import { DevOpsConfigContents } from '@aws-mdaa/devops';
 // nosemgrep
 import * as path from 'path';
+import { validateDeployAccountValueOrRef, validateDeployRegionValueOrRef } from './deployment-target-validator';
+import { Deployment } from './deployment-types';
 
 const avj = new Ajv();
 
@@ -81,14 +83,6 @@ export interface MdaaModuleConfig {
   readonly postdeploy?: HookConfig;
 }
 
-export interface Deployment {
-  /** The target region. If not specified, defaults to the CDK default region. */
-  readonly region?: string;
-  /** The target account. If not specified, defaults to the CDK default account. */
-  readonly account?: string;
-  /** If true, adds a dependency on the main stack to make sure the main stack is deployed first. If not specified, defaults to true.*/
-  readonly addDependencyMainStack?: boolean;
-}
 export interface TerraformConfig {
   /** Terraform configuration override settings for customizing Terraform backend and provider */
   readonly override?: {
@@ -294,14 +288,17 @@ export class MdaaCliConfig {
         `Org name ${this.contents.organization} must match pattern ${MdaaCliConfig.VALIDATE_NAME_REGEXP}`,
       );
     }
+    this.validateDeploymentTarget(this.contents, 'global');
     Object.entries(this.contents.domains).forEach(domainEntry => {
       if (!namePattern.test(domainEntry[0])) {
         throw new Error(`Domain name ${domainEntry[0]} must match pattern ${MdaaCliConfig.VALIDATE_NAME_REGEXP}`);
       }
+      this.validateDeploymentTarget(domainEntry[1], `domain ${domainEntry[0]}`);
       Object.entries(domainEntry[1].environments).forEach(envEntry => {
         if (!namePattern.test(envEntry[0])) {
           throw new Error(`Env name ${envEntry[0]} must match pattern ${MdaaCliConfig.VALIDATE_NAME_REGEXP}`);
         }
+        this.validateDeploymentTarget(envEntry[1], `domain ${domainEntry[0]}, env ${envEntry[0]}`);
         Object.entries(envEntry[1].modules || {}).forEach(moduleEntry => {
           if (!namePattern.test(moduleEntry[0])) {
             throw new Error(`Module name ${moduleEntry[0]} must match pattern ${MdaaCliConfig.VALIDATE_NAME_REGEXP}`);
@@ -309,6 +306,10 @@ export class MdaaCliConfig {
         });
       });
       Object.entries(domainEntry[1].env_templates || {}).forEach(envTemplateEntry => {
+        this.validateDeploymentTarget(
+          envTemplateEntry[1],
+          `domain ${domainEntry[0]}, env_template ${envTemplateEntry[0]}`,
+        );
         Object.entries(envTemplateEntry[1].modules || {}).forEach(moduleEntry => {
           if (!namePattern.test(moduleEntry[0])) {
             throw new Error(`Module name ${moduleEntry[0]} must match pattern ${MdaaCliConfig.VALIDATE_NAME_REGEXP}`);
@@ -317,11 +318,29 @@ export class MdaaCliConfig {
       });
     });
     Object.entries(this.contents.env_templates || {}).forEach(envTemplateEntry => {
+      this.validateDeploymentTarget(envTemplateEntry[1], `env_template ${envTemplateEntry[0]}`);
       Object.entries(envTemplateEntry[1].modules || {}).forEach(moduleEntry => {
         if (!namePattern.test(moduleEntry[0])) {
           throw new Error(`Module name ${moduleEntry[0]} must match pattern ${MdaaCliConfig.VALIDATE_NAME_REGEXP}`);
         }
       });
     });
+  }
+
+  /**
+   * Validate the region/account of a config level (global, domain, or env)
+   * before it is later interpolated into shell commands by the CLI. Concrete
+   * values are checked immediately so malformed literals fail fast at parse
+   * time; dynamic references (e.g. `{{context:account}}`) and the `default`
+   * sentinel are passed through and re-validated once resolved. This mirrors
+   * the existing org/domain/env/module name validation above.
+   */
+  private validateDeploymentTarget(target: { region?: string; account?: string }, context: string) {
+    if (target.region !== undefined) {
+      validateDeployRegionValueOrRef(target.region, context);
+    }
+    if (target.account !== undefined) {
+      validateDeployAccountValueOrRef(target.account, context);
+    }
   }
 }

@@ -8528,9 +8528,9 @@ Validation: Must be valid MdaaServiceCatalogProductConfig if provided; enables S
 | **Additional items** | False              |
 | **Tuple validation** | See below          |
 
-| Each item of this array must be                                                                                                     | Description |
-| ----------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| [Deployment](#domains_additionalProperties_env_templates_additionalProperties_modules_additionalProperties_additional_stacks_items) | -           |
+| Each item of this array must be                                                                                                     | Description                                                                       |
+| ----------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| [Deployment](#domains_additionalProperties_env_templates_additionalProperties_modules_additionalProperties_additional_stacks_items) | A single deployment target (account/region) for an MDAA module. Used both for ... |
 
 ###### <a name="domains_additionalProperties_env_templates_additionalProperties_modules_additionalProperties_additional_stacks_items"></a>5.1.5.1.6.1.3.1. root > domains > additionalProperties > env_templates > additionalProperties > modules > additionalProperties > additional_stacks > Deployment
 
@@ -8540,6 +8540,10 @@ Validation: Must be valid MdaaServiceCatalogProductConfig if provided; enables S
 | **Required**              | No                       |
 | **Additional properties** | Not allowed              |
 | **Defined in**            | #/definitions/Deployment |
+
+**Description:** A single deployment target (account/region) for an MDAA module. Used both for
+the primary deployment and for entries under `additional_stacks` /
+`additional_accounts`.
 
 | Property                                                                                                                                                                  | Pattern | Type    | Deprecated | Definition | Title/Description                                                                                                               |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------- |

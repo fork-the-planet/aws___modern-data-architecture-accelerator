@@ -4,7 +4,8 @@
  */
 
 import { ConfigurationElement, MdaaCustomAspect, MdaaCustomNaming, TagElement } from '@aws-mdaa/config';
-import { Deployment, MdaaEnvironmentConfig, TerraformConfig } from './mdaa-cli-config-parser';
+import { MdaaEnvironmentConfig, TerraformConfig } from './mdaa-cli-config-parser';
+import { Deployment } from './deployment-types';
 
 export interface EffectiveConfig {
   readonly effectiveContext: ConfigurationElement;

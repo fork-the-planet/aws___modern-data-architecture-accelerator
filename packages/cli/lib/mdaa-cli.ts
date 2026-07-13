@@ -30,7 +30,6 @@ import {
 } from './config-types';
 import { DuplicateAccountLevelModulesException } from './exceptions';
 import {
-  Deployment,
   HookConfig,
   MdaaCliConfig,
   MdaaDomainConfig,
@@ -38,9 +37,15 @@ import {
   MdaaModuleConfig,
   TerraformConfig,
 } from './mdaa-cli-config-parser';
+import { Deployment } from './deployment-types';
 import { getMdaaConfig } from './module-service';
 import { loadLocalPackages } from './package-helper';
 import { validateFilters } from './filter-validator';
+import {
+  validateDeployAccountResolved,
+  validateDeployRegionResolved,
+  validateDeployments,
+} from './deployment-target-validator';
 import { findDuplicates, generateContextCdkParams, isBoolean } from './utils';
 
 export interface DeployStageMap {
@@ -475,12 +480,36 @@ export class MdaaDeploy {
       new MdaaConfigRefValueTransformer(refTransformerProps),
     ).transformConfig(moduleConfig as unknown as ConfigurationElement) as unknown as ModuleEffectiveConfig;
 
+    // Validate the resolved deployment target once here, before any module type
+    // branch. This is the single post-resolution guard covering every downstream
+    // consumer regardless of module type — the CDK command env, the Terraform
+    // commands, and the deploy hooks (which substitute {{region}}/{{account}}
+    // into shell commands). The per-sink checks remain as local safety nets.
+    this.validateModuleDeploymentTarget(configRefTransformedConfig);
+
     if (!configRefTransformedConfig.moduleType || configRefTransformedConfig.moduleType == 'cdk') {
       return this.prepCdkModule(configRefTransformedConfig);
     } else if (configRefTransformedConfig.moduleType == 'tf') {
       return this.prepTerraformModule(configRefTransformedConfig);
     } else {
       throw new Error(`Unknown module type: ${configRefTransformedConfig.moduleType}`);
+    }
+  }
+
+  /**
+   * Validate a module's resolved region/account before it is consumed by any
+   * downstream shell-command builder. Applied uniformly for all module types so
+   * that account validation is not silently skipped on the Terraform path (which
+   * has no `-var account`) yet still feeds `{{account}}` into deploy hooks. The
+   * `default` sentinel is excluded, matching the interpolation-site guards.
+   */
+  private validateModuleDeploymentTarget(moduleConfig: ModuleEffectiveConfig): void {
+    const modulePrefix = this.modulePrefix(moduleConfig);
+    if (moduleConfig.deployRegion && moduleConfig.deployRegion.toLowerCase() != 'default') {
+      validateDeployRegionResolved(moduleConfig.deployRegion, `module ${modulePrefix}`);
+    }
+    if (moduleConfig.deployAccount && moduleConfig.deployAccount.toLowerCase() != 'default') {
+      validateDeployAccountResolved(moduleConfig.deployAccount, `module ${modulePrefix}`);
     }
   }
 
@@ -533,9 +562,10 @@ export class MdaaDeploy {
     const tfAction = MdaaDeploy.TF_ACTION_MAPPINGS[this.action] ?? this.action;
 
     this.createTerraformOverride(moduleConfig);
+    const region = this.validatedTerraformRegion();
     const tfCmds: string[] = [];
-    if (this.config.contents.region && this.config.contents.region.toLowerCase() != 'default') {
-      tfCmds.push(`export AWS_DEFAULT_REGION=${this.config.contents.region}`);
+    if (region) {
+      tfCmds.push(`export AWS_DEFAULT_REGION=${region}`);
     }
     tfCmds.push(`terraform init `);
     const checkovCmd: string[] = [
@@ -548,8 +578,8 @@ export class MdaaDeploy {
     tfCmds.push(checkovCmd.join(' \\\n\t'));
     if (tfAction == 'plan') {
       const tfPlanCmd: string[] = [];
-      if (this.config.contents.region && this.config.contents.region.toLowerCase() != 'default') {
-        tfPlanCmd.push(`export AWS_DEFAULT_REGION=${this.config.contents.region}`);
+      if (region) {
+        tfPlanCmd.push(`export AWS_DEFAULT_REGION=${region}`);
       }
       tfPlanCmd.push('terraform plan');
       tfPlanCmd.push(...this.createTerraformPlanApplyCmdArgs(moduleConfig));
@@ -557,8 +587,8 @@ export class MdaaDeploy {
       tfCmds.push(tfPlanCmd.join(' \\\n\t'));
     } else if (tfAction == 'apply') {
       const tfApplyCmd: string[] = [];
-      if (this.config.contents.region && this.config.contents.region.toLowerCase() != 'default') {
-        tfApplyCmd.push(`export AWS_DEFAULT_REGION=${this.config.contents.region}`);
+      if (region) {
+        tfApplyCmd.push(`export AWS_DEFAULT_REGION=${region}`);
       }
       tfApplyCmd.push('terraform apply');
       tfApplyCmd.push('-auto-approve');
@@ -566,13 +596,27 @@ export class MdaaDeploy {
       tfCmds.push(tfApplyCmd.join(' \\\n\t'));
     } else {
       const tfCmd: string[] = [];
-      if (this.config.contents.region && this.config.contents.region.toLowerCase() != 'default') {
-        tfCmd.push(`export AWS_DEFAULT_REGION=${this.config.contents.region}`);
+      if (region) {
+        tfCmd.push(`export AWS_DEFAULT_REGION=${region}`);
       }
       tfCmd.push(`terraform ${tfAction}`);
       tfCmds.push(tfCmd.join(' \\\n\t'));
     }
     return tfCmds;
+  }
+
+  /**
+   * Returns the configured global region validated for safe interpolation into
+   * the Terraform shell commands, or undefined when unset or set to the
+   * `default` sentinel (in which case no region export is emitted). Centralizes
+   * the guard + validation so every interpolation site uses the checked value.
+   */
+  private validatedTerraformRegion(): string | undefined {
+    const region = this.config.contents.region;
+    if (!region || region.toLowerCase() == 'default') {
+      return undefined;
+    }
+    return validateDeployRegionResolved(region, 'terraform region');
   }
 
   private createTerraformPlanApplyCmdArgs(moduleConfig: ModuleEffectiveConfig): string[] {
@@ -583,8 +627,9 @@ export class MdaaDeploy {
       tfCmd.push(`-var domain="${moduleConfig.domainName}"`);
       tfCmd.push(`-var env="${moduleConfig.envName}"`);
       tfCmd.push(`-var module_name="${moduleConfig.moduleName}"`);
-      if (this.config.contents.region && this.config.contents.region.toLowerCase() != 'default') {
-        tfCmd.push(`-var region="${this.config.contents.region}"`);
+      const region = this.validatedTerraformRegion();
+      if (region) {
+        tfCmd.push(`-var region="${region}"`);
       } else {
         tfCmd.push('-var region="${AWS_DEFAULT_REGION}"');
       }
@@ -906,6 +951,9 @@ export class MdaaDeploy {
       'allow_cross_reference_stack',
       moduleEffectiveConfig.allow_cross_reference_stack?.toString(),
     );
+    if (moduleEffectiveConfig.additionalStacks) {
+      validateDeployments(moduleEffectiveConfig.additionalStacks);
+    }
     this.addOptionalCdkContextObjParam(cdkCmd, 'additional_stacks', moduleEffectiveConfig.additionalStacks);
     this.addOptionalCdkContextStringParam(
       cdkCmd,
@@ -973,14 +1021,14 @@ export class MdaaDeploy {
 
   private createCdkCommandEnv(moduleEffectiveConfig: ModuleEffectiveConfig): string[] {
     const cdkEnv: string[] = [];
-    /* istanbul ignore next */
+    const modulePrefix = this.modulePrefix(moduleEffectiveConfig);
     if (moduleEffectiveConfig.deployRegion && moduleEffectiveConfig.deployRegion.toLowerCase() != 'default') {
-      cdkEnv.push(`export CDK_DEPLOY_REGION=${moduleEffectiveConfig.deployRegion}`);
-      cdkEnv.push(`export AWS_DEFAULT_REGION=${moduleEffectiveConfig.deployRegion}`);
+      const region = validateDeployRegionResolved(moduleEffectiveConfig.deployRegion, `module ${modulePrefix}`);
+      cdkEnv.push(`export CDK_DEPLOY_REGION=${region}`, `export AWS_DEFAULT_REGION=${region}`);
     }
-    /* istanbul ignore next */
     if (moduleEffectiveConfig.deployAccount && moduleEffectiveConfig.deployAccount.toLowerCase() != 'default') {
-      cdkEnv.push(`export CDK_DEPLOY_ACCOUNT=${moduleEffectiveConfig.deployAccount}`);
+      const account = validateDeployAccountResolved(moduleEffectiveConfig.deployAccount, `module ${modulePrefix}`);
+      cdkEnv.push(`export CDK_DEPLOY_ACCOUNT=${account}`);
     }
     return cdkEnv;
   }

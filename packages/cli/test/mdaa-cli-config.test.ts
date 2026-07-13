@@ -151,3 +151,88 @@ test('TerraformModuleTest', () => {
   };
   expect(() => new MdaaCliConfig({ configContents: configContents })).not.toThrow();
 });
+
+const configWithEnvTarget = (target: { region?: string; account?: string }): MdaaConfigContents => ({
+  organization: 'test-good-org',
+  domains: {
+    'test-good-domain': {
+      environments: {
+        'test-good-env': {
+          ...target,
+          modules: {},
+        },
+      },
+    },
+  },
+});
+
+test('BadRegionValueTest', () => {
+  expect(() => new MdaaCliConfig({ configContents: configWithEnvTarget({ region: 'us-east-1$(id)' }) })).toThrow(
+    /Invalid region/,
+  );
+});
+
+test('BadAccountValueTest', () => {
+  expect(() => new MdaaCliConfig({ configContents: configWithEnvTarget({ account: 'not-an-account' }) })).toThrow(
+    /Invalid account/,
+  );
+});
+
+test('BadGlobalRegionValueTest', () => {
+  const configContents: MdaaConfigContents = {
+    organization: 'test-good-org',
+    region: 'us-east-1;curl evil',
+    domains: {},
+  };
+  expect(() => new MdaaCliConfig({ configContents })).toThrow(/Invalid region/);
+});
+
+test('BadDomainAccountValueTest', () => {
+  const configContents: MdaaConfigContents = {
+    organization: 'test-good-org',
+    domains: {
+      'test-good-domain': {
+        account: 'not-an-account',
+        environments: {},
+      },
+    },
+  };
+  expect(() => new MdaaCliConfig({ configContents })).toThrow(/Invalid account.*domain test-good-domain/);
+});
+
+test('BadEnvTemplateRegionValueTest', () => {
+  const configContents: MdaaConfigContents = {
+    organization: 'test-good-org',
+    domains: {},
+    env_templates: {
+      'test-template': {
+        region: 'us-east-1$(id)',
+        modules: {},
+      },
+    },
+  };
+  expect(() => new MdaaCliConfig({ configContents })).toThrow(/Invalid region.*env_template test-template/);
+});
+
+test('GoodRegionAccountValueTest', () => {
+  expect(
+    () => new MdaaCliConfig({ configContents: configWithEnvTarget({ region: 'us-east-1', account: '123456789012' }) }),
+  ).not.toThrow();
+});
+
+test('ReferenceRegionAccountDeferredAtParseTest', () => {
+  // Dynamic references are not resolvable at parse time; they must pass parsing
+  // and be validated later once resolved.
+  expect(
+    () =>
+      new MdaaCliConfig({
+        configContents: configWithEnvTarget({ region: '{{env_var:PROD_REGION}}', account: '{{context:team_account}}' }),
+      }),
+  ).not.toThrow();
+});
+
+test('DefaultRegionAccountValueTest', () => {
+  expect(
+    () => new MdaaCliConfig({ configContents: configWithEnvTarget({ region: 'default', account: 'default' }) }),
+  ).not.toThrow();
+});

@@ -104,17 +104,17 @@ describe('MdaaDeploy.sanityCheck', () => {
       domains: createConfig([
         [
           {
-            account: 'acct1',
+            account: '111111111111',
             modules: [1, 2, 3],
           },
           {
-            account: 'acct3',
+            account: '333333333333',
             modules: [1],
           },
         ],
         [
           {
-            account: 'acct2',
+            account: '222222222222',
             modules: [1, 3],
           },
         ],
@@ -123,9 +123,9 @@ describe('MdaaDeploy.sanityCheck', () => {
     const mdaaDeploy = new MdaaDeploy(options, undefined, config);
 
     const expectedInput = {
-      'acct1/default': { mod1: 1, mod3: 1 },
-      'acct2/default': { mod1: 1, mod3: 1 },
-      'acct3/default': { mod1: 1 },
+      '111111111111/default': { mod1: 1, mod3: 1 },
+      '222222222222/default': { mod1: 1, mod3: 1 },
+      '333333333333/default': { mod1: 1 },
     };
     (findDuplicates as jest.Mock).mockReturnValue(actualFindDuplicates(expectedInput));
     mdaaDeploy.sanityCheck();

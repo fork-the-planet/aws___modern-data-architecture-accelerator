@@ -114,10 +114,10 @@ domains:
     environments:
       # Example of envs that uses a global environment template
       dev:
-        account: dev_acct_num
+        account: '111111111111'
         template: example_global_env_template
       test:
-        account: test_acct_num
+        account: '222222222222'
         template: example_global_env_template
 
 
