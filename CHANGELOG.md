@@ -104,6 +104,7 @@
 - Fixed missing KMS encryption on Data Warehouse cluster events SNS topic
 - Fixed GAIA v2 REST API missing per-method and per-user throttling
 - Fixed GAIA v2 REST API pagination tokens to be opaque and versioned
+- Fixed GAIA (v1) CDK synth failure caused by unsuppressed `IAMNoInlinePolicy` (NIST/HIPAA/PCI) findings on the CDK-managed S3 bucket-notifications handler for the RAG data-import upload bucket
 
 ## [1.6.0] - 2026-05-22
 

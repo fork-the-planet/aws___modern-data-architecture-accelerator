@@ -394,10 +394,21 @@ test_comprehensive_synth() {
         --mdaa_version "$SNAPSHOT_VERSION" \
         $npm_tag_arg > "$synth_log" 2>&1; then
         echo ""
-        echo "ERROR: Comprehensive synth failed. Last 200 lines of output:"
+        echo "ERROR: Comprehensive synth failed."
+        echo ""
+        # Surface the actual failures first. cdk-nag emits large volumes of WARNING
+        # lines (e.g. CdkNagValidationFailure on intrinsic-resolved ports), which a
+        # plain `tail` buries the real ERROR-level findings and the command-failure
+        # block under. Print the meaningful lines explicitly, then a tail as fallback.
+        echo "--- Synth errors (ERROR-level nag findings, command failures) ---"
+        grep -nE "^ERROR |Synthesis finished with errors|Command Execution Failed|Command failed:|Exit code:|Error message:" \
+            "$synth_log" | grep -vE "CdkNagValidationFailure|threw an error during validation|could not be validated" \
+            | head -100 || echo "(no explicit error lines matched; see tail and full log below)"
+        echo ""
+        echo "--- Last 200 lines of synth output (context) ---"
         tail -200 "$synth_log"
         echo ""
-        echo "Full artifacts available at: publish-validation-artifacts/"
+        echo "Full synth log and generated configs available at: publish-validation-artifacts/ (synth-output.log)"
         return 1
     fi
 
