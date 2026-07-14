@@ -9,31 +9,19 @@
 - **Minimal** — Starting point for custom configurations with base governance
 - **MLOps Platform** — Automated train → deploy → monitor pipeline for ML models
 
-### Starter Kit Improvements
+### Starter Kit Changes
 
 - Renamed `genai_accelerator` → `genai_foundation`
 - Renamed `governed_lakehouse` → `datazone_governed_lakehouse`
 - Standardized READMEs across all starter kits
-
-### Cleanup
-
 - Removed top-level `sample_blueprints/` and `sample_configs/` directories. Equivalent examples are available in the [external sample configurations repository](https://github.com/aws-samples/sample-config-modern-data-architecture-accelerator).
 - Renamed `sample_code/` → `sample_customizations/`
 
 ### New Features
 
-- **QuickSight Namespace Module — Federated Email Syncing** (`@aws-mdaa/quicksight-namespace`): Added an optional `enableEmailSyncing` flag (default `false`) to each federation configuration. When enabled, the SAML federation role trust policy also grants `sts:TagSession`, scoped by conditions to only the `Email` session tag. This enables QuickSight email syncing for federated users.
+#### DataOps Aurora Module
 
-- **DataOps Job — Additional Glue Worker Types** (`@aws-mdaa/dataops-job`, `@aws-mdaa/dataops-job-l3-construct`): Expanded the supported `workerType` values beyond `Standard`, `G.1X`, and `G.2X` to include the larger general-purpose G family (`G.4X`, `G.8X`, `G.12X`, `G.16X`) and the memory-optimized R family (`R.1X`, `R.2X`, `R.4X`, `R.8X`) for demanding and memory-intensive ETL workloads. Existing configurations are unaffected (backwards compatible). Note: `G.12X`, `G.16X`, and all R types require a compatible Glue version and regional availability; incompatible combinations surface as CloudFormation deploy-time errors rather than at synth.
-
-- **Audit Trail Module — Event Selectors**: Added optional `eventSelectors` configuration to the audit-trail module, allowing users to scope CloudTrail S3 data event capture to specific buckets and key prefixes instead of logging all S3 data events account-wide. Each selector accepts a `bucketName` (or SSM parameter reference) and an optional `objectPrefix`. When omitted, the existing behavior (capture all S3 data events) is preserved.
-
-- **Audit Trail Module — Multiple Named Trails**: Added a new `trails` configuration property accepting a map of named trail configurations. Each key becomes the trail's resource name segment, enabling multiple independent trails with separate S3 destinations, KMS keys, and event selectors in a single deployment. The existing `trail` property is now deprecated — migrate to `trails` with a key of `'s3-audit'` for equivalent behavior. Both properties can coexist during migration.
-
-- **aws-cdk-lib upgrade to 2.258.0**: `aws-cdk-lib` has been updated from 2.192.0 to 2.258.0. This version removes the `lambda.Runtime.PYTHON_3_13` enum value and upgrades it to Runtime.PYTHON_3_14. Any MDAA config that references `python3.13` as a Lambda runtime must be updated to `python3.13t` (thread-based) or another supported runtime (e.g., `python3.14`).
-- **Naming**: Added `MdaaResourceType` enum and `withResourceType()` method to `IMdaaResourceNaming` interface, enabling custom naming modules to inject service-type abbreviations of the implementer's choosing into resource names (the abbreviations themselves are not produced by the enum). The default implementation is unchanged — no impact on existing deployments.
-
-- **DataOps Aurora** (`@aws-mdaa/dataops-aurora`): Aurora Serverless v2 cluster deployment with enterprise security
+- New `@aws-mdaa/dataops-aurora` module: Aurora Serverless v2 cluster deployment with enterprise security
   - Supports multiple named PostgreSQL clusters per module (MySQL planned)
   - Config schema with top-level `postgresql` category object and named cluster maps
   - KMS encryption (project key or dedicated shared key), VPC isolation, enhanced monitoring
@@ -42,73 +30,80 @@
   - Top-level `dataAdminRoles` for cross-cluster admin access, per-cluster `clusterAccessRoles`
   - DataOps project integration for shared KMS key auto-wiring via `projectName`
   - Comprehensive, minimal, and no-project sample configs with inline documentation
-- **S3 Constructs**: Added `publicAccessBlockManagedExternally` option to skip the explicit `BlockPublicAccess` setting on S3 buckets. Set globally via CDK context (`@aws-mdaa/publicAccessBlockManagedExternally: true`) or as a per-module config property in the datawarehouse app (`@aws-mdaa/datawarehouse`)
-- **SageMaker MLOps — `buildPolicies` config** (`@aws-mdaa/sagemaker-mlops`, `@aws-mdaa/sagemaker-model-training-l3-construct`, `@aws-mdaa/sagemaker-model-deploy-l3-construct`): Generic mechanism for attaching custom IAM policies to CodeBuild pipeline roles. Replaces the CodeArtifact-specific `codeArtifact` prop with a flexible `buildPolicies` array supporting managed policy ARNs (`policyArn`) and inline policy documents (`policyDocument`) with optional CDK Nag suppressions. Registry authentication (CodeArtifact, Artifactory, GitLab, etc.) is now handled entirely in the user's buildspec. The `mlops_platform` starter kit is updated with commented examples.
-- **Generative AI Accelerator v2** (`@aws-mdaa/gaia-v2`): Authenticated GenAI chatbot platform, successor to `@aws-mdaa/gaia`
-  - AppSync Events API for real-time bidirectional streaming to client UIs, fronted by Cognito User Pool authentication (with optional external OIDC such as Entra ID)
-  - REST API (API Gateway + Lambda) for session management, feedback, and administrative endpoints
-  - Pluggable data source model: Bedrock Knowledge Base RAG (via `@aws-mdaa/bedrock-builder`), direct Bedrock model invocation with streaming, or customer-provided Lambda — exactly one per deployment
-  - Optional client and admin CloudFront UIs with KMS-encrypted logging, Origin Access Control, HTTPS-only enforcement (TLS 1.2), and custom-domain + ACM certificate support
-  - Chat history, feedback collection, and service-interruption banner managed via DynamoDB tables with KMS encryption and TTL
-  - X-Origin verification secret (KMS-encrypted Secrets Manager) to validate that API traffic flows through CloudFront
-  - WAF protection (regional + global), VPC-attached Lambda execution, and full CDK Nag compliance
-  - Runtime validation rejects misconfigurations at synth time: exactly one data source, Knowledge Base required when `bedrockRagDataSource` is set, authentication requires at least one of `cognitoDomain` or `entraIdOIDCConfiguration`, and `vpc.appSubnets` must be non-empty
-  - The `genai_accelerator` starter kit deploys v2 by default
-- **SageMaker Ground Truth App** (`@aws-mdaa/sagemaker-ground-truth`): Automated, continuous data labeling pipeline
-  - EventBridge + SQS + Step Functions architecture for continuous S3 ingestion → batched labeling
-  - Upload/Output S3 buckets with KMS encryption and EventBridge notifications
-  - SQS queue with DLQ and CloudWatch alarms for failed items
-  - Step Functions state machine orchestrating: poll SQS → create labeling job → wait for completion → (optional) verification job → update Feature Store → return rejected items to queue
-  - 5-6 Lambda functions powering the state machine steps
-  - SageMaker Feature Group integration for persisting labeled data
-  - EventBridge Scheduler for configurable workflow triggers
-  - Optional verification labeling job with automatic re-queue of rejected items
-  - Full MDAA compliance: MdaaRole, MdaaKmsKey, MdaaBucket, MdaaManagedPolicy, CDK Nag, SSM parameter exports
-  - Comprehensive and minimal sample configs with inline documentation
-- Added SageMaker L2 constructs: `MdaaSageMakerProjectTemplate`, `MdaaGroundTruth`, and `MdaaModelMonitor` for ML lifecycle management (project templates, data labeling, model monitoring)
-- Data Quality App:
-  - Added multi-source support for data quality rulesets — each ruleset can now specify a `source` block with `sourceType` (glue, s3, redshift), connection details, and S3 paths. Source metadata is published to SSM for downstream DQ evaluation jobs.
-  - Added `smusAssetId` per-ruleset field for mapping DQ results to DataZone assets
-  - Added recommendation-based rulesets via `recommendationRunId` — delegates rule generation to Glue DQ recommendations instead of requiring explicit DQDL rules (metadata-only, no CfnDataQualityRuleset created)
-  - Added dynamic target discovery via `dynamicTargets` — configure S3 directories for runtime dataset enumeration by DQ evaluation jobs
-  - Added `smusPublishing` configuration for publishing data quality metrics to SageMaker Unified Studio (DataZone)
-- Agentcore Runtime app:
-  - Added enableTransactionSearch(boolean) config param to optionally prevent creation of X-Ray Transaction Search Config if it already exists
-  - Added optional `allowedModelArns` configuration parameter to scope execution role Bedrock model invocation permissions to specific model ARNs for least-privilege access
-  - Added optional `enforceVpcOnly` configuration to restrict JWT/OAuth callers to VPC-only invocation via an auto-generated resource-based policy
-  - Added optional `networkConfiguration.vpcId` field (required when `enforceVpcOnly` is true) to identify the VPC for the resource policy condition
-  - Added new `@aws-mdaa/agentcore-shared` package for shared AgentCore construct utilities (reusable by future Gateway module)
-  - **Built-in log data protection**: customer-managed KMS encryption and CloudWatch Data Protection PII masking are now always applied to the service-created runtime log groups on every deployment. A built-in comprehensive set of PII identifiers (email addresses, credit card numbers, SSNs, names, addresses, US phone numbers, IP addresses) is always masked. **Upgrade impact**: existing deployments will gain a new KMS key, a Data Protection policy, and a log-protection custom resource on next deploy.
-  - Added optional `dataProtection.additionalIdentifiers` configuration to mask additional AWS-managed data identifiers on top of the built-in set. This field is additive only and cannot reduce the built-in masking baseline. **Breaking change**: replaces the previous `dataProtection.enabled`/`dataProtection.identifiers` configuration — protection is no longer opt-in and the identifier list can no longer be narrowed. Existing configs using the old keys will be silently ignored; remove them to avoid confusion.
-  - Added optional `logRetentionDays` configuration to set CloudWatch Logs retention on the runtime log groups (defaults to 30 days)
-  - **Migrated to typed `CfnRuntime`/`CfnRuntimeEndpoint` constructs**: compile-time validation of property names/shapes. Logical IDs unchanged. **Upgrade impact**: existing runtimes will gain standard MDAA stack tags on next deploy — in-place tag update with no resource replacement.
-- Bedrock Builder app: Bedrock Builder constructs now publish SSM parameters and CloudFormation outputs identifying their deployed resource IDs, making them discoverable for downstream consumers: Bedrock Agent (id, ARN, alias id), Aurora PgVector vector store (cluster endpoint and secret name), OpenSearch Serverless collection (id, ARN), and the OpenSearch Serverless VPC endpoints. **Upgrade impact**: additive only — new SSM parameters and stack outputs appear on the next deploy; no existing resources are modified.
-- Dataops Job app: added pre-built data quality evaluation scripts enabling users to deploy a working DQ evaluation Glue job without writing any code
-- Datalake app:
-  - Added optional S3 Storage Lens support — enable via storageLensEnabled: true
-  - Added optional CORS support - enable via corsRules property
-- CLI: added permission boundary name as an optional input to apply an IAM policy as permission boundary to all IAM roles
-- Data Warehouse app: Added `multiAz` (multi-AZ high availability) and `backupRegion` (cross-region snapshot copy) config options
-- Roles app: added an optional `additionalTrustedActions` for the role primary principal, allowing additional actions like
-  `sts:TagSession` to be added to the trust policy;
-- Account-level modules (Glue Catalog, LakeFormation Settings, Macie Session, QuickSight Account) now create a static SSM parameter (`/account-module-lock/<module-name>`) that prevents multiple deployments of the same module to a single AWS account
-- DMS Constructs: Added `expectedBucketOwner` support to S3 endpoint settings for cross-account bucket sniping prevention.
-- DataZone/SMUS: added simplified `authorizations` interface for domain and domain unit configuration — supports `projectCreators`, `eligibleProjectMembers`, `domainUnitCreators`, `glossaryCreators`, and `environmentCreators` fields as a concise alternative to full `authorizationPolicies` objects
-- DataZone/SMUS: `authorizationPolicies` and `authorizations` are now supported on the root domain level (`BaseDomainProps`), not just on individual domain units
-- DataZone/SMUS: domain owners (users, groups, and associated account CDK users) now automatically receive version-aware project creation authorization policies in addition to `ADD_TO_PROJECT_MEMBER_POOL`
-- **EC2**: Added optional `rules` configuration to the `ec2` module to authorize additional ingress/egress rules on pre-existing (externally-owned) security groups referenced by id (supports `ssm:` references). Unlike `securityGroups`, it creates no security group; each rule renders to a standalone `SecurityGroupIngress`/`SecurityGroupEgress` resource, enabling connectivity between two security groups owned by different modules without a circular cross-stack dependency.
-- **QuickSight**: Added optional `resourceAccessRolePermissions` to grant the QuickSight resource-access role (`aws-quicksight-service-role-v0`) the AWS-managed policies and S3/KMS access its data sources need; the `quicksight-account` module owns the role while `quicksight-project` attaches data-source-specific grants. The `quicksight-project` module also gained optional `secretsManager` authentication for data sources.
-- **CLI**: Module deployment hook commands now resolve `{{context:<key>}}` references against the module's effective context.
-- **CLI**: The `mdaa` CLI now validates `--domain`, `--env`, and `--module` filter values against the loaded config and fails fast with an error listing the unknown value(s) and the valid options, instead of silently matching nothing.
-- Fixed intermittent deployment failures caused by concurrent `AWS::DataZone::Owner` creation triggering DynamoDB transaction collisions (`Transaction cancelled ... ConditionalCheckFailed ... AlreadyExists`). `CfnOwner` resources that target the same domain unit are now chained sequentially via CloudFormation `DependsOn`, eliminating the race; owners on different domain units remain parallel. The chain order is derived from the owner construct id, so reordering a config's owner list produces no template change.
+
+### DataOps Module Changes
+
+#### DataOps Job Module
+
+- Expanded the supported `workerType` values beyond `Standard`, `G.1X`, and `G.2X` to include the larger general-purpose G family (`G.4X`, `G.8X`, `G.12X`, `G.16X`) and the memory-optimized R family (`R.1X`, `R.2X`, `R.4X`, `R.8X`) for demanding and memory-intensive ETL workloads. Existing configurations are unaffected (backwards compatible). Note: `G.12X`, `G.16X`, and all R types require a compatible Glue version and regional availability; incompatible combinations surface as CloudFormation deploy-time errors rather than at synth.
+
+### Data Science/AI/ML Changes
+
+#### Bedrock AgentCore Runtime Module
+
+- Added optional `allowedModelArns` configuration parameter to scope execution role Bedrock model invocation permissions to specific model ARNs for least-privilege access
+- Added optional `enforceVpcOnly` configuration to restrict JWT/OAuth callers to VPC-only invocation via an auto-generated resource-based policy
+- Added optional `networkConfiguration.vpcId` field (required when `enforceVpcOnly` is true) to identify the VPC for the resource policy condition
+- Added new `@aws-mdaa/agentcore-shared` package for shared AgentCore construct utilities (reusable by future Gateway module)
+- Added built-in log data protection: customer-managed KMS encryption and CloudWatch Data Protection PII masking are now always applied to the service-created runtime log groups on every deployment. A built-in comprehensive set of PII identifiers (email addresses, credit card numbers, SSNs, names, addresses, US phone numbers, IP addresses) is always masked. Upgrade impact: existing deployments will gain a new KMS key, a Data Protection policy, and a log-protection custom resource on next deploy.
+- Added optional `dataProtection.additionalIdentifiers` configuration to mask additional AWS-managed data identifiers on top of the built-in set. This field is additive only and cannot reduce the built-in masking baseline. Breaking change: replaces the previous `dataProtection.enabled`/`dataProtection.identifiers` configuration — protection is no longer opt-in and the identifier list can no longer be narrowed. Existing configs using the old keys will be silently ignored; remove them to avoid confusion.
+- Added optional `logRetentionDays` configuration to set CloudWatch Logs retention on the runtime log groups (defaults to 30 days)
+- Migrated to typed `CfnRuntime`/`CfnRuntimeEndpoint` constructs for compile-time validation of property names/shapes. Logical IDs unchanged. Upgrade impact: existing runtimes will gain standard MDAA stack tags on next deploy — in-place tag update with no resource replacement.
+
+#### Bedrock Builder Module
+
+- Added SSM parameters and CloudFormation outputs identifying deployed resource IDs, making them discoverable for downstream consumers: Bedrock Agent (id, ARN, alias id), Aurora PgVector vector store (cluster endpoint and secret name), OpenSearch Serverless collection (id, ARN), and the OpenSearch Serverless VPC endpoints. Upgrade impact: additive only — new SSM parameters and stack outputs appear on the next deploy; no existing resources are modified.
+
+### Data Analytics Changes
+
+#### QuickSight Namespace Module
+
+- Added an optional `enableEmailSyncing` flag (default `false`) to each federation configuration. When enabled, the SAML federation role trust policy also grants `sts:TagSession`, scoped by conditions to only the `Email` session tag. This enables QuickSight email syncing for federated users.
+
+#### QuickSight Account and Project Modules
+
+- Added optional `resourceAccessRolePermissions` to grant the QuickSight resource-access role (`aws-quicksight-service-role-v0`) the AWS-managed policies and S3/KMS access its data sources need; the `quicksight-account` module owns the role while `quicksight-project` attaches data-source-specific grants.
+- Added optional `secretsManager` authentication for data sources in the `quicksight-project` module.
+
+### Governance Module Changes
+
+#### Audit Trail Module
+
+- Added optional `eventSelectors` configuration to scope CloudTrail S3 data event capture to specific buckets and key prefixes instead of logging all S3 data events account-wide. Each selector accepts a `bucketName` (or SSM parameter reference) and an optional `objectPrefix`. When omitted, the existing behavior (capture all S3 data events) is preserved.
+- Added a new `trails` configuration property accepting a map of named trail configurations. Each key becomes the trail's resource name segment, enabling multiple independent trails with separate S3 destinations, KMS keys, and event selectors in a single deployment. The existing `trail` property is now deprecated — migrate to `trails` with a key of `'s3-audit'` for equivalent behavior. Both properties can coexist during migration.
+
+### Utility Module Changes
+
+#### EC2 Module
+
+- Added optional `rules` configuration to authorize additional ingress/egress rules on pre-existing (externally-owned) security groups referenced by id (supports `ssm:` references). Unlike `securityGroups`, it creates no security group; each rule renders to a standalone `SecurityGroupIngress`/`SecurityGroupEgress` resource, enabling connectivity between two security groups owned by different modules without a circular cross-stack dependency.
+
+#### CLI
+
+- Module deployment hook commands now resolve `{{context:<key>}}` references against the module's effective context.
+- The `mdaa` CLI now validates `--domain`, `--env`, and `--module` filter values against the loaded config and fails fast with an error listing the unknown value(s) and the valid options, instead of silently matching nothing.
+
+### Core Framework Changes
+
+- **Naming**: Added `MdaaResourceType` enum and `withResourceType()` method to `IMdaaResourceNaming` interface, enabling custom naming modules to inject service-type abbreviations of the implementer's choosing into resource names (the abbreviations themselves are not produced by the enum). The default implementation is unchanged — no impact on existing deployments.
 
 ### Deprecations
 
 - **GAIA v1 removal target set to v1.9.0**: `@aws-mdaa/gaia` and `@aws-mdaa/gaia-l3-construct` (GAIA v1), deprecated in favor of `@aws-mdaa/gaia-v2` and `@aws-mdaa/gaia-v2-l3-construct`, now have a firm removal target of **v1.9.0**. Previously the removal was documented only as "a future release". v1 remains published and functional for existing deployments until then and will not receive new features. See [MIGRATION_TO_V2.md](packages/apps/ai/gaia-app/MIGRATION_TO_V2.md) for migration guidance.
 
-### Bug Fixes
+### General Changes
 
+- **aws-cdk-lib upgrade to 2.258.0**: `aws-cdk-lib` has been updated from 2.192.0 to 2.258.0. This version removes the `lambda.Runtime.PYTHON_3_13` enum value and upgrades it to `Runtime.PYTHON_3_14`. Any MDAA config that references `python3.13` as a Lambda runtime must be updated to `python3.13t` (thread-based) or another supported runtime (e.g., `python3.14`).
+- Updated dependencies to address CVEs (`cryptography`, `requests`, `yaml`, `fast-xml-parser`, `follow-redirects`, `tmp`, `pytest`)
+
+### Bug Fixes
 - Added allowlist validation of `region` (`^[a-z0-9-]+$`) and `account` (12-digit) config values before they are interpolated into CLI shell commands, at both config-parse time (for concrete values) and after reference resolution. Dynamic references (`{{...}}`) and the `default` sentinel are unaffected.
+- Fixed intermittent deployment failures caused by concurrent `AWS::DataZone::Owner` creation triggering DynamoDB transaction collisions (`Transaction cancelled ... ConditionalCheckFailed ... AlreadyExists`). `CfnOwner` resources that target the same domain unit are now chained sequentially via CloudFormation `DependsOn`, eliminating the race; owners on different domain units remain parallel. The chain order is derived from the owner construct id, so reordering a config's owner list produces no template change.
+- Fixed cross-account SMUS deploy failure in DataZone v2 domain config handler due to insufficient IAM authorization after recent AWS service update
+- Fixed DataOps Project cross-account resource link creation (one resource link per account)
+- Fixed missing KMS encryption on Data Warehouse cluster events SNS topic
+- Fixed GAIA v2 REST API missing per-method and per-user throttling
+- Fixed GAIA v2 REST API pagination tokens to be opaque and versioned
 
 ## [1.6.0] - 2026-05-22
 
@@ -242,7 +237,7 @@
 - Fixed unique-environment generation in SageMaker projects when the user supplies tooling
 - Fixed Lambda Alias `CurrentVersion` no longer being incorrectly flagged by CDK diff baseline testing
 - Fixed SageMaker endpoint construct using a non-fixed model name to avoid update conflicts
-- Fixed LakeFormation Settings SSO application ARN hardcoding the data platform account ID, which caused `CreateLakeFormationIdentityCenterConfiguration` to fail in Control Tower / AWS Organizations deployments where IAM Identity Center runs in a separate management or delegated-admin account
+- Fixed LakeFormation Settings SSO application ARN failing in Control Tower / delegated-admin IdC setups by no longer hardcoding the data platform account ID
 
 ## [1.5.0] - 2026-03-13
 
