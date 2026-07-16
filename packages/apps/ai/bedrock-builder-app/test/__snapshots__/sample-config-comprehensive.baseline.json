@@ -3165,7 +3165,7 @@
         "BackupRetentionPeriod": 20,
         "CopyTagsToSnapshot": true,
         "DBClusterIdentifier": "test-org-test-env-test-domain-test-bedrock-builder-app-7a3f5737",
-        "DBClusterParameterGroupName": "default.aurora-postgresql15",
+        "DBClusterParameterGroupName": "default.aurora-postgresql16",
         "DBSubnetGroupName": {
           "Ref": "bedrockbuilderbedrockkbtestknowledgebasepgvectortestvectorstoreSubnets1484F421"
         },
@@ -3176,7 +3176,7 @@
         "EnableHttpEndpoint": true,
         "EnableIAMDatabaseAuthentication": true,
         "Engine": "aurora-postgresql",
-        "EngineVersion": "15.5",
+        "EngineVersion": "16.13",
         "KmsKeyId": "arn:test-partition:kms:test-region:test-account:key/test-key-id",
         "MasterUserPassword": {
           "Fn::Join": [
@@ -7564,6 +7564,20 @@
         }
       }
     },
+    "bedrockbuilderbedrockagenttestagentBedrockInvokePermission04EB5FAC1": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": "arn:test-partition:lambda:test-region:test-account:function:existing-lambda-function",
+        "Principal": "bedrock.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "bedrockbuilderbedrockagenttestagentmdaabedrockagenttestagent1271847A",
+            "AgentArn"
+          ]
+        }
+      }
+    },
     "bedrockbuilderbedrockagenttestagentmdaabedrockagenttestagentalias7801124A": {
       "Type": "AWS::Bedrock::AgentAlias",
       "Properties": {
@@ -7599,20 +7613,6 @@
           "Fn::GetAtt": [
             "bedrockbuilderbedrockagenttestagentmdaabedrockagenttestagentalias7801124A",
             "AgentAliasId"
-          ]
-        }
-      }
-    },
-    "bedrockbuilderbedrockagenttestagentBedrockInvokePermission04EB5FAC1": {
-      "Type": "AWS::Lambda::Permission",
-      "Properties": {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": "arn:test-partition:lambda:test-region:test-account:function:existing-lambda-function",
-        "Principal": "bedrock.amazonaws.com",
-        "SourceArn": {
-          "Fn::GetAtt": [
-            "bedrockbuilderbedrockagenttestagentmdaabedrockagenttestagent1271847A",
-            "AgentArn"
           ]
         }
       }

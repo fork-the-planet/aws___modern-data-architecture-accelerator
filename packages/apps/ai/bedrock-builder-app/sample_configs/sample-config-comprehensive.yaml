@@ -532,7 +532,7 @@ vectorStores:
     # scaling (enum: 1, 2, 4, 8, 16, 32, 64, 128, 192, 256, 384)
     maxCapacity: 8
     # (Optional) PostgreSQL engine version
-    engineVersion: '15.5'
+    engineVersion: '16.13'
     # (Optional) Database port for Aurora PostgreSQL connectivity
     port: 5432
   test-vector-store2:

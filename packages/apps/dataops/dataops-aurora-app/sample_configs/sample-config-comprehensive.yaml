@@ -30,7 +30,7 @@ postgresql:
   # Primary analytics cluster with full configuration
   analytics-primary:
     # Aurora PostgreSQL engine version in major.minor format
-    engineVersion: '16.6'
+    engineVersion: '16.13'
 
     # VPC ID for Aurora cluster deployment
     # Often created by your VPC/networking stack.
@@ -105,7 +105,7 @@ postgresql:
 
   # Secondary lightweight cluster using a project-created security group
   dev-sandbox:
-    engineVersion: '16.6'
+    engineVersion: '16.13'
 
     vpcId: vpc-a1b2c3d4
 

@@ -40,7 +40,7 @@ describe('MdaaRdsDataResource Tests', () => {
     const cluster = new MdaaRdsServerlessCluster(testApp.testStack, 'TestCluster', {
       naming: testApp.naming,
       engine: 'aurora-postgresql',
-      engineVersion: AuroraPostgresEngineVersion.VER_16_6,
+      engineVersion: AuroraPostgresEngineVersion.VER_16_13,
       clusterIdentifier: 'test-cluster',
       masterUsername: 'testadmin',
       encryptionKey: kmsKey,
@@ -122,7 +122,7 @@ describe('MdaaRdsDataResource Tests', () => {
     const cluster = new MdaaRdsServerlessCluster(testApp.testStack, 'TestCluster', {
       naming: testApp.naming,
       engine: 'aurora-postgresql',
-      engineVersion: AuroraPostgresEngineVersion.VER_16_6,
+      engineVersion: AuroraPostgresEngineVersion.VER_16_13,
       clusterIdentifier: 'test-cluster',
       masterUsername: 'testadmin',
       encryptionKey: kmsKey,
@@ -184,7 +184,7 @@ describe('MdaaRdsDataResource Tests', () => {
     const cluster = new MdaaRdsServerlessCluster(testApp.testStack, 'TestCluster', {
       naming: testApp.naming,
       engine: 'aurora-postgresql',
-      engineVersion: AuroraPostgresEngineVersion.VER_16_6,
+      engineVersion: AuroraPostgresEngineVersion.VER_16_13,
       clusterIdentifier: 'test-cluster',
       masterUsername: 'testadmin',
       encryptionKey: kmsKey,

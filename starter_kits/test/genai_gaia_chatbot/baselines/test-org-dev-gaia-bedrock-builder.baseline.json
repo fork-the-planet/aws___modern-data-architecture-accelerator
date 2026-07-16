@@ -756,7 +756,7 @@
         "EnableHttpEndpoint": true,
         "EnableIAMDatabaseAuthentication": true,
         "Engine": "aurora-postgresql",
-        "EngineVersion": "16.6",
+        "EngineVersion": "16.13",
         "KmsKeyId": {
           "Fn::GetAtt": [
             "bedrockcmk710EFABC",

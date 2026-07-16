@@ -16,7 +16,7 @@ describe('DataOps Aurora L3 Construct Tests', () => {
     const constructProps: DataopsAuroraL3ConstructProps = {
       postgresqlClusters: {
         'test-cluster': {
-          engineVersion: '16.6',
+          engineVersion: '16.13',
           vpcId: 'vpc-12345',
           subnets: [
             { subnetId: 'subnet-1a2b3c4d', availabilityZone: 'test-regiona' },
@@ -55,7 +55,7 @@ describe('DataOps Aurora L3 Construct Tests', () => {
     const constructProps: DataopsAuroraL3ConstructProps = {
       postgresqlClusters: {
         'sg-ingress-cluster': {
-          engineVersion: '16.6',
+          engineVersion: '16.13',
           vpcId: 'vpc-12345',
           subnets: [
             { subnetId: 'subnet-1a2b3c4d', availabilityZone: 'test-regiona' },
@@ -86,7 +86,7 @@ describe('DataOps Aurora L3 Construct Tests', () => {
     const constructProps: DataopsAuroraL3ConstructProps = {
       postgresqlClusters: {
         'primary-db': {
-          engineVersion: '16.6',
+          engineVersion: '16.13',
           vpcId: 'vpc-12345',
           subnets: [
             { subnetId: 'subnet-1a2b3c4d', availabilityZone: 'test-regiona' },
@@ -106,7 +106,7 @@ describe('DataOps Aurora L3 Construct Tests', () => {
           clusterAccessRoles: [{ arn: 'arn:test-partition:iam::test-account:role/app-role' }],
         },
         'secondary-db': {
-          engineVersion: '16.6',
+          engineVersion: '16.13',
           vpcId: 'vpc-12345',
           subnets: [
             { subnetId: 'subnet-1a2b3c4d', availabilityZone: 'test-regiona' },
@@ -141,7 +141,7 @@ describe('DataOps Aurora L3 Construct Tests', () => {
     const constructProps: DataopsAuroraL3ConstructProps = {
       postgresqlClusters: {
         'standalone-db': {
-          engineVersion: '16.6',
+          engineVersion: '16.13',
           vpcId: 'vpc-12345',
           subnets: [
             { subnetId: 'subnet-1a2b3c4d', availabilityZone: 'test-regiona' },
@@ -171,7 +171,7 @@ describe('DataOps Aurora L3 Construct Tests', () => {
     const constructProps: DataopsAuroraL3ConstructProps = {
       postgresqlClusters: {
         'imported-sg-cluster': {
-          engineVersion: '16.6',
+          engineVersion: '16.13',
           vpcId: 'vpc-12345',
           subnets: [
             { subnetId: 'subnet-1a2b3c4d', availabilityZone: 'test-regiona' },

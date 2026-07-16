@@ -106,7 +106,7 @@
                     "type": "boolean"
                 },
                 "engineVersion": {
-                    "description": "Aurora PostgreSQL engine version string in major.minor format.\n\nUse cases: Version pinning; Feature availability; Upgrade planning\n\nAWS: Aurora PostgreSQL engine version\n\nValidation: Required; valid Aurora PostgreSQL version string (e.g., '16.6')",
+                    "description": "Aurora PostgreSQL engine version string in major.minor format.\n\nUse cases: Version pinning; Feature availability; Upgrade planning\n\nAWS: Aurora PostgreSQL engine version\n\nValidation: Required; valid Aurora PostgreSQL version string (e.g., '16.13')",
                     "type": "string"
                 },
                 "maxCapacity": {

@@ -27,7 +27,7 @@ export interface MdaaAuroraPgVectorProps extends MdaaConstructProps {
   /**
    * Aurora PostgreSQL engine version string.
    * The default value is provided for backward-compatibility but will not be maintained long-term. Explicitly setting this is recommended.
-   * @default '16.6'
+   * @default '16.13'
    */
   readonly engineVersion?: string;
   /** Minimum Aurora capacity units for serverless scaling controlling minimum compute resources and cost management */
@@ -72,7 +72,7 @@ export class MdaaAuroraPgVector extends MdaaRdsServerlessCluster {
 
     if (props.engineVersion && !/^\d+\.\d+(\.\d+)?(-limitless)?$/.test(props.engineVersion)) {
       throw new Error(
-        `Invalid engineVersion format: '${props.engineVersion}'. Expected format: 'major.minor' (e.g., '16.6')`,
+        `Invalid engineVersion format: '${props.engineVersion}'. Expected format: 'major.minor' (e.g., '16.13')`,
       );
     }
 
@@ -94,7 +94,7 @@ export class MdaaAuroraPgVector extends MdaaRdsServerlessCluster {
 
     const engineVersion = props.engineVersion
       ? rds.AuroraPostgresEngineVersion.of(props.engineVersion, props.engineVersion.split('.')[0])
-      : rds.AuroraPostgresEngineVersion.VER_16_6;
+      : rds.AuroraPostgresEngineVersion.VER_16_13;
 
     return {
       enableDataApi: props.enableDataApi,

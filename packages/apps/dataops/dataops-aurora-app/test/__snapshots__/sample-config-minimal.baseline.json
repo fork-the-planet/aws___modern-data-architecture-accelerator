@@ -717,7 +717,7 @@
         ],
         "EnableIAMDatabaseAuthentication": true,
         "Engine": "aurora-postgresql",
-        "EngineVersion": "16.6",
+        "EngineVersion": "16.13",
         "KmsKeyId": {
           "Ref": "SsmParameterValuetestorgtestdomaindataopsprojectsamplekmsArndefaultC96584B6F00A464EAD1953AFF4B05118Parameter"
         },
@@ -1523,15 +1523,15 @@
     "aurorapganalyticsdbRotationSingleUserSARMappingE4DD2A6D": {
       "aws": {
         "applicationId": "arn:aws:serverlessrepo:us-east-1:297356227824:applications/SecretsManagerRDSPostgreSQLRotationSingleUser",
-        "semanticVersion": "1.1.618"
+        "semanticVersion": "1.1.671"
       },
       "aws-cn": {
         "applicationId": "arn:aws-cn:serverlessrepo:cn-north-1:193023089310:applications/SecretsManagerRDSPostgreSQLRotationSingleUser",
-        "semanticVersion": "1.1.237"
+        "semanticVersion": "1.1.440"
       },
       "aws-us-gov": {
         "applicationId": "arn:aws-us-gov:serverlessrepo:us-gov-west-1:023102451235:applications/SecretsManagerRDSPostgreSQLRotationSingleUser",
-        "semanticVersion": "1.1.213"
+        "semanticVersion": "1.1.397"
       }
     }
   },

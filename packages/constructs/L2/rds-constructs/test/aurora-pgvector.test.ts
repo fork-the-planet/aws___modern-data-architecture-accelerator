@@ -42,11 +42,11 @@ function buildStack(overrides: { engineVersion?: string; numberOfReaderInstances
 }
 
 describe('MdaaAuroraPgVector engine version', () => {
-  test('defaults to 16.6 when not specified', () => {
+  test('defaults to 16.13 when not specified', () => {
     const template = buildStack();
     template.hasResourceProperties('AWS::RDS::DBCluster', {
       Engine: 'aurora-postgresql',
-      EngineVersion: '16.6',
+      EngineVersion: '16.13',
     });
   });
 
@@ -60,7 +60,7 @@ describe('MdaaAuroraPgVector engine version', () => {
 
   test('throws on invalid engine version format', () => {
     expect(() => buildStack({ engineVersion: 'banana' })).toThrow(
-      "Invalid engineVersion format: 'banana'. Expected format: 'major.minor' (e.g., '16.6')",
+      "Invalid engineVersion format: 'banana'. Expected format: 'major.minor' (e.g., '16.13')",
     );
   });
 

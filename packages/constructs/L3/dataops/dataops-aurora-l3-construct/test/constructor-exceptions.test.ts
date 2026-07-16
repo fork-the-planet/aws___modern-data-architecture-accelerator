@@ -51,7 +51,7 @@ describe('DataOps Aurora Constructor Edge Cases', () => {
     const constructProps: DataopsAuroraL3ConstructProps = {
       postgresqlClusters: {
         'no-roles-cluster': {
-          engineVersion: '16.6',
+          engineVersion: '16.13',
           vpcId: 'vpc-12345',
           subnets: [
             { subnetId: 'subnet-1a2b3c4d', availabilityZone: 'test-regiona' },

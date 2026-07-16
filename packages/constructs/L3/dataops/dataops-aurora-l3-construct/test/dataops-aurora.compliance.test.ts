@@ -15,7 +15,7 @@ describe('DataOps Aurora Compliance Tests', () => {
   const constructProps: DataopsAuroraL3ConstructProps = {
     postgresqlClusters: {
       'compliance-cluster': {
-        engineVersion: '16.6',
+        engineVersion: '16.13',
         vpcId: 'vpc-12345',
         subnets: [
           { subnetId: 'subnet-1a2b3c4d', availabilityZone: 'test-regiona' },
@@ -122,7 +122,7 @@ describe('DataOps Aurora Access Policy Tests', () => {
     const constructProps: DataopsAuroraL3ConstructProps = {
       postgresqlClusters: {
         'policy-cluster': {
-          engineVersion: '16.6',
+          engineVersion: '16.13',
           vpcId: 'vpc-12345',
           subnets: [
             { subnetId: 'subnet-1a2b3c4d', availabilityZone: 'test-regiona' },

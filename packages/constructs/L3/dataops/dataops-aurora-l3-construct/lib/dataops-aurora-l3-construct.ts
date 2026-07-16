@@ -74,7 +74,7 @@ export interface AuroraPostgresqlClusterProps {
    *
    * AWS: Aurora PostgreSQL engine version
    *
-   * Validation: Required; valid Aurora PostgreSQL version string (e.g., '16.6')
+   * Validation: Required; valid Aurora PostgreSQL version string (e.g., '16.13')
    */
   readonly engineVersion: string;
   /**

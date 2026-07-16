@@ -54,6 +54,10 @@
 
 - Added SSM parameters and CloudFormation outputs identifying deployed resource IDs, making them discoverable for downstream consumers: Bedrock Agent (id, ARN, alias id), Aurora PgVector vector store (cluster endpoint and secret name), OpenSearch Serverless collection (id, ARN), and the OpenSearch Serverless VPC endpoints. Upgrade impact: additive only — new SSM parameters and stack outputs appear on the next deploy; no existing resources are modified.
 
+#### RDS Constructs
+
+- `MdaaAuroraPgVector`: the default engine version is now `16.13`, as `16.6` has reached the end of support.
+
 ### Data Analytics Changes
 
 #### QuickSight Namespace Module

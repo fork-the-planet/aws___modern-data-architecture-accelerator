@@ -8,7 +8,7 @@ vectorStores:
       - "{{context:data_subnet_id_1}}"
       - "{{context:data_subnet_id_2}}"
     # OpenSearch Serverless collection engine version for the vector store
-    engineVersion: '16.6'
+    engineVersion: '16.13'
 
 # Knowledge base configuration
 knowledgeBases:

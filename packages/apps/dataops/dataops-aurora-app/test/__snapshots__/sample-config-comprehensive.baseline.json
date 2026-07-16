@@ -823,7 +823,7 @@
         "EnableHttpEndpoint": true,
         "EnableIAMDatabaseAuthentication": true,
         "Engine": "aurora-postgresql",
-        "EngineVersion": "16.6",
+        "EngineVersion": "16.13",
         "KmsKeyId": {
           "Ref": "SsmParameterValuetestorgtestdomaindataopsprojectsamplekmsArndefaultC96584B6F00A464EAD1953AFF4B05118Parameter"
         },
@@ -2340,7 +2340,7 @@
         "EnableHttpEndpoint": true,
         "EnableIAMDatabaseAuthentication": true,
         "Engine": "aurora-postgresql",
-        "EngineVersion": "16.6",
+        "EngineVersion": "16.13",
         "KmsKeyId": {
           "Ref": "SsmParameterValuetestorgtestdomaindataopsprojectsamplekmsArndefaultC96584B6F00A464EAD1953AFF4B05118Parameter"
         },

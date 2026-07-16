@@ -50,7 +50,7 @@ import { DataopsAuroraL3Construct } from '@aws-mdaa/dataops-aurora-l3-construct'
 new DataopsAuroraL3Construct(stack, 'aurora', {
   postgresqlClusters: {
     'analytics-db': {
-      engineVersion: '16.6',
+      engineVersion: '16.13',
       vpcId: 'vpc-12345',
       subnets: [
         { subnetId: 'subnet-aaa', availabilityZone: 'us-east-1a' },

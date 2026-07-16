@@ -10,7 +10,7 @@ postgresql:
   # Cluster name (becomes the cluster identifier after MDAA naming)
   analytics-db:
     # Aurora PostgreSQL engine version in major.minor format
-    engineVersion: '16.6'
+    engineVersion: '16.13'
 
     # VPC ID for Aurora cluster deployment
     # Often created by your VPC/networking stack.

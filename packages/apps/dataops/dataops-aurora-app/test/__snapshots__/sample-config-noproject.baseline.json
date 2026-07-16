@@ -695,7 +695,7 @@
         ],
         "EnableIAMDatabaseAuthentication": true,
         "Engine": "aurora-postgresql",
-        "EngineVersion": "16.6",
+        "EngineVersion": "16.13",
         "KmsKeyId": "arn:test-partition:kms:test-region:test-account:key/my-aurora-key-id",
         "MasterUserPassword": {
           "Fn::Join": [
