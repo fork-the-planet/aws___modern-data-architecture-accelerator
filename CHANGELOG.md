@@ -90,6 +90,8 @@
 ### Deprecations
 
 - **GAIA v1 removal target set to v1.9.0**: `@aws-mdaa/gaia` and `@aws-mdaa/gaia-l3-construct` (GAIA v1), deprecated in favor of `@aws-mdaa/gaia-v2` and `@aws-mdaa/gaia-v2-l3-construct`, now have a firm removal target of **v1.9.0**. Previously the removal was documented only as "a future release". v1 remains published and functional for existing deployments until then and will not receive new features. See [MIGRATION_TO_V2.md](packages/apps/ai/gaia-app/MIGRATION_TO_V2.md) for migration guidance.
+- **Bedrock Agent module deprecation**: `@aws-mdaa/bedrock-agent-l3-construct` is deprecated, as the Amazon Bedrock Agents service will no longer be open to new customers starting on July 30, 2026. Existing customers can continue to use the service as normal. We will support similar capabilities in the next release.
+- **SageMaker Ground Truth and Model Monitoring modules deprecation**: `@aws-mdaa/sagemaker-ground-truth-l3-construct` and `@aws-mdaa/sagemaker-model-monitoring-l3-construct` are deprecated, as both services will no longer be open to new customers starting on July 30, 2026. Existing customers can continue to use both services as normal. We will support similar capabilities in the next release.
 
 ### General Changes
 

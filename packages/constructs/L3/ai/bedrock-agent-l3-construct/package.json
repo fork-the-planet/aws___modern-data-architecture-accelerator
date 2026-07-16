@@ -1,7 +1,8 @@
 {
   "name": "@aws-mdaa/bedrock-agent-l3-construct",
   "version": "1.6.0",
-  "description": "MDAA Bedrock Agent L3 Construct",
+  "description": "[DEPRECATED] MDAA Bedrock Agent L3 Construct",
+  "deprecated": "Amazon Bedrock Agents service will no longer be open to new customers starting on July 30, 2026. Existing customers can continue to use the service as normal.",
   "license": "Apache-2.0",
   "author": {
     "name": "Amazon Web Services",
